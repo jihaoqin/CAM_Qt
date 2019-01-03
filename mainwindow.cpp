@@ -9,7 +9,8 @@ MainWindow::MainWindow(QWidget *parent)
     QMenu* menu = new QMenu("File");
     menuBar->addMenu(menu);
     setMenuBar(menuBar);
-    GLWidget widget;
+    //GLWidget *widget = new GLWidget;
+    //setCentralWidget(widget);
     setCentralWidget(&widget);
 }
 
