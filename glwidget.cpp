@@ -2,6 +2,7 @@
 
 #include <QDebug>
 #include <iostream>
+#include <QOpenGLContext>
 const char *vertexShaderSource =
         "#version 330 core\n"
         "layout(location = 0) in vec3 aPos;\n"
@@ -22,10 +23,10 @@ GLWidget::GLWidget(QWidget *parent):QOpenGLWidget (0), point{0.5,0.5,0.5, 0.2,0.
     fmt.setProfile(QSurfaceFormat::CoreProfile);
     QSurfaceFormat::setDefaultFormat(fmt);
     setFormat(fmt);
-    resize(800,600);
 }
 
 void GLWidget::initializeGL(){
+
     makeCurrent();
     initializeOpenGLFunctions();
     glClearColor(0, 0, 0, 1);

@@ -27,14 +27,22 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    glwidget.cpp
+    glwidget.cpp \
+    Mesh.cpp \
+#    Model.cpp \
+#    Shader.cpp \
+#    stb_image.cpp
 
 HEADERS += \
         mainwindow.h \
-    glwidget.h
+    glwidget.h \
+    Mesh.h \
+#    Model.h \
+#    Shader.h \
+#    stb_image.h
 
 INCLUDEPATH += \
-    ./3rdparty/includes
+    ./3rdparty/includes/
 
 LIBS += \
     $$PWD/3rdparty/libs/assimp-vc140-mt.lib
