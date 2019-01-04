@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     //GLWidget *widget = new GLWidget;
     //setCentralWidget(widget);
     setCentralWidget(&widget);
+    resize(800,600);
 }
 
 MainWindow::~MainWindow()

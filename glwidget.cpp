@@ -22,6 +22,7 @@ GLWidget::GLWidget(QWidget *parent):QOpenGLWidget (0), point{0.5,0.5,0.5, 0.2,0.
     fmt.setProfile(QSurfaceFormat::CoreProfile);
     QSurfaceFormat::setDefaultFormat(fmt);
     setFormat(fmt);
+    resize(800,600);
 }
 
 void GLWidget::initializeGL(){

@@ -33,6 +33,12 @@ HEADERS += \
         mainwindow.h \
     glwidget.h
 
+INCLUDEPATH += \
+    ./3rdparty/includes
+
+LIBS += \
+    $$PWD/3rdparty/libs/assimp-vc140-mt.lib
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
