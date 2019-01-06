@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
 #include <string>
-#include "Shader.h"
 #include <3rdparty/includes/glm/glm.hpp>
+#include <QOpenGLContext>
 using std::vector;
 struct Texture {
 	unsigned int id;
@@ -16,14 +16,16 @@ struct Vertex {
 class Mesh
 {
 public:
-    Mesh(vector<Vertex> , vector<unsigned int> , vector<Texture> );
+    Mesh(vector<Vertex> , vector<unsigned int> );
 	~Mesh();
+public:
 	void print();
+    void bindGL(QOpenGLContext*);
 	std::vector<Vertex> vertexVec;
+    unsigned int VAO, VBO, EBO;
 private:
-	unsigned int VAO, VBO, EBO;
-	std::vector<unsigned int> indexVec;
-	std::vector<Texture> textureVec;
+    std::vector<unsigned int> indexVec;
+    bool binded;
 };
 
 vector<Vertex> arrayToVec(unsigned int size, const float a[]);

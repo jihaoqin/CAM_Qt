@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include "glwidget.h"
-
+#include "Model.h"
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -13,6 +13,7 @@ public:
     ~MainWindow();
 private:
     GLWidget widget;
+    Model model;
 };
 
 #endif // MAINWINDOW_H

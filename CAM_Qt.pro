@@ -29,23 +29,19 @@ SOURCES += \
         mainwindow.cpp \
     glwidget.cpp \
     Mesh.cpp \
-#    Model.cpp \
-#    Shader.cpp \
-#    stb_image.cpp
+    Model.cpp \
+    boundingbox.cpp
 
 HEADERS += \
         mainwindow.h \
     glwidget.h \
     Mesh.h \
-#    Model.h \
-#    Shader.h \
-#    stb_image.h
+    Model.h \
+    boundingbox.h
 
 INCLUDEPATH += \
     ./3rdparty/includes/
 
-LIBS += \
-    $$PWD/3rdparty/libs/assimp-vc140-mt.lib
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -55,3 +51,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES += \
     vertexShader.vs \
     loadingModel.fs
+
+LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt \
+
+INCLUDEPATH += $$PWD/3rdparty/libs
+DEPENDPATH += $$PWD/3rdparty/libs
+

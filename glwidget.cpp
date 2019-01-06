@@ -17,7 +17,7 @@ const char *fragmentShaderSource =
         "}\n\0";
 
 
-GLWidget::GLWidget(QWidget *parent):QOpenGLWidget (0), point{0.5,0.5,0.5, 0.2,0.1,0.4, -0.3,0.0,0.1}
+GLWidget::GLWidget(QWidget *parent):QOpenGLWidget (0), point{0.5f,0.5f,0.5f, 0.2f,0.1f,0.4f, -0.3f,0.0f,0.1f},model("F:\\0qin\\Qt\\CAM_Qt\\3.STL")
 {
     QSurfaceFormat fmt;
     fmt.setProfile(QSurfaceFormat::CoreProfile);
@@ -29,6 +29,7 @@ void GLWidget::initializeGL(){
 
     makeCurrent();
     initializeOpenGLFunctions();
+    bindGL(model);
     glClearColor(0, 0, 0, 1);
     QOpenGLShaderProgram program;
     if (!program.addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource)){
@@ -44,9 +45,9 @@ void GLWidget::initializeGL(){
     program.link();
     program.bind();
 
+    paint(model);
     glGenVertexArrays(1,&VAO);
     glBindVertexArray(VAO);
-
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(point), point, GL_STATIC_DRAW);
@@ -65,4 +66,23 @@ void GLWidget::paintGL(){
 
 void GLWidget::resizeGL(int w, int h){
     glViewport(0,0,w,h);
+}
+
+void GLWidget::bindGL(Mesh& mesh){
+    makeCurrent();
+    QOpenGLContext *c = QOpenGLContext::currentContext();
+    mesh.bindGL(c);
+}
+void GLWidget::bindGL(Model& model){
+    makeCurrent();
+    QOpenGLContext *c = QOpenGLContext::currentContext();
+    model.bindGL(c);
+}
+void paint(Mesh& m){
+    glBindVertexArray();
+}
+void paint(Model& m){
+    for (int i =0; i<m.meshVec.size(); i++) {
+        paint(m.meshVec.at(i));
+    }
 }

@@ -3,16 +3,15 @@
 #include <QMenu>
 #include "glwidget.h"
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent),model("F:\\0qin\\Qt\\CAM_Qt\\3.STL")
 {
     QMenuBar* menuBar = new QMenuBar();
     QMenu* menu = new QMenu("File");
     menuBar->addMenu(menu);
     setMenuBar(menuBar);
-    //GLWidget *widget = new GLWidget;
-    //setCentralWidget(widget);
     setCentralWidget(&widget);
     resize(800,600);
+    //widget.bindGL(model);
 }
 
 MainWindow::~MainWindow()
