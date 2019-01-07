@@ -30,14 +30,21 @@ SOURCES += \
     glwidget.cpp \
     Mesh.cpp \
     Model.cpp \
-    boundingbox.cpp
+    boundingbox.cpp \
+    Camera2.cpp \
+    PerspectiveMat.cpp \
+    utility.cpp
 
 HEADERS += \
         mainwindow.h \
     glwidget.h \
     Mesh.h \
     Model.h \
-    boundingbox.h
+    boundingbox.h \
+    Camera2.h \
+    PerspectiveMat.h \
+    utility.h \
+    config.h
 
 INCLUDEPATH += \
     ./3rdparty/includes/

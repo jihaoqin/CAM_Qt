@@ -3,7 +3,7 @@
 #include <QMenu>
 #include "glwidget.h"
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent),model("F:\\0qin\\Qt\\CAM_Qt\\3.STL")
+    : QMainWindow(parent)
 {
     QMenuBar* menuBar = new QMenuBar();
     QMenu* menu = new QMenu("File");

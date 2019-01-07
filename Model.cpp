@@ -23,7 +23,7 @@ Model::Model(const char* filePath):modelMatrix(glm::mat4(1.0))
 	else {
 		loadModel(scene);
 	}
-	//¼ÆËã°üÎ§ºÐ
+	//è®¡ç®—åŒ…å›´ç›’
 	box = BoundingBox(meshVec);
 }
 
@@ -103,5 +103,11 @@ Mesh Model::processMesh(const unsigned int index, const aiScene *s) {
 void Model::bindGL(QOpenGLContext *c){
     for(unsigned int i = 0; i < meshVec.size(); i++){
        meshVec.at(i).bindGL(c);
+    }
+}
+
+void Model::draw(QOpenGLContext *c){
+	for(unsigned int i = 0; i < meshVec.size(); i++){
+       meshVec.at(i).draw(c);
     }
 }

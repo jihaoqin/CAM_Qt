@@ -19,8 +19,6 @@ protected:
     void resizeGL(int w, int h) override;
 private:
     void bindGL(Mesh&);
-    void paint(Model&);
-    void paint(Mesh&);
     Model model;
     const float point[9];
     GLuint VAO, VBO;

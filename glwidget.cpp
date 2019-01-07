@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <iostream>
 #include <QOpenGLContext>
+#include <QOpenGLFunctions_4_3_Core>
 const char *vertexShaderSource =
         "#version 330 core\n"
         "layout(location = 0) in vec3 aPos;\n"
@@ -17,7 +18,7 @@ const char *fragmentShaderSource =
         "}\n\0";
 
 
-GLWidget::GLWidget(QWidget *parent):QOpenGLWidget (0), point{0.5f,0.5f,0.5f, 0.2f,0.1f,0.4f, -0.3f,0.0f,0.1f},model("F:\\0qin\\Qt\\CAM_Qt\\3.STL")
+GLWidget::GLWidget(QWidget *parent):QOpenGLWidget (0), point{0.5f,0.5f,0.5f, 0.2f,0.1f,0.4f, -0.3f,0.0f,0.1f},model("E:\\0qin\\Qt\\CAM_Qt\\3.STL")
 {
     QSurfaceFormat fmt;
     fmt.setProfile(QSurfaceFormat::CoreProfile);
@@ -29,39 +30,32 @@ void GLWidget::initializeGL(){
 
     makeCurrent();
     initializeOpenGLFunctions();
-    bindGL(model);
     glClearColor(0, 0, 0, 1);
     QOpenGLShaderProgram program;
-    if (!program.addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource)){
+    if (!program.addShaderFromSourceFile(QOpenGLShader::Vertex, "E:\\0qin\\Qt\\CAM_Qt\\vertexShader.vs")){
         qDebug()<<"Failed to load vertexShader: "<<program.log()<<"\n";
     }else{
         // do nothing
     }
-    if (!program.addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource)){
+    if (!program.addShaderFromSourceFile(QOpenGLShader::Fragment, "E:\\0qin\\Qt\\CAM_Qt\\loadingModel.fs")){
         qDebug()<<"Failed to load fragmentShader: "<<program.log()<<"\n";
     }else{
         // do nothing
     }
     program.link();
     program.bind();
-
-    paint(model);
-    glGenVertexArrays(1,&VAO);
-    glBindVertexArray(VAO);
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(point), point, GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float)*3, (void *)0);
+    bindGL(model);
 }
 
 void GLWidget::paintGL(){
     program.bind();
+    QOpenGLContext *c = QOpenGLContext::currentContext();
     glClearColor(0.2f,0.3f,0.3f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    model.draw(c);
 }
 
 void GLWidget::resizeGL(int w, int h){
@@ -78,11 +72,4 @@ void GLWidget::bindGL(Model& model){
     QOpenGLContext *c = QOpenGLContext::currentContext();
     model.bindGL(c);
 }
-void paint(Mesh& m){
-    glBindVertexArray();
-}
-void paint(Model& m){
-    for (int i =0; i<m.meshVec.size(); i++) {
-        paint(m.meshVec.at(i));
-    }
-}
+

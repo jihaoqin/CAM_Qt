@@ -14,6 +14,7 @@ public:
     std::vector<Mesh> meshVec;
 public:
     void bindGL(QOpenGLContext*);
+	void draw(QOpenGLContext*);
 private:
 	std::string directory;
 	glm::mat4 modelMatrix;

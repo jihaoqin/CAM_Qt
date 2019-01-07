@@ -13,7 +13,6 @@ public:
     ~MainWindow();
 private:
     GLWidget widget;
-    Model model;
 };
 
 #endif // MAINWINDOW_H

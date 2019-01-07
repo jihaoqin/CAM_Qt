@@ -21,12 +21,9 @@ public:
 public:
 	void print();
     void bindGL(QOpenGLContext*);
+	void draw(QOpenGLContext*);
 	std::vector<Vertex> vertexVec;
     unsigned int VAO, VBO, EBO;
-private:
     std::vector<unsigned int> indexVec;
     bool binded;
 };
-
-vector<Vertex> arrayToVec(unsigned int size, const float a[]);
-vector<unsigned int> initVecUint(unsigned int size);
