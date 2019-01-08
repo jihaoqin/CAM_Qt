@@ -4,8 +4,10 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLFunctions_4_3_Core>
 #include <QOpenGLShaderProgram>
+#include <QWheelEvent>
 #include "Mesh.h"
 #include "Model.h"
+#include "Camera2.h"
 
 class GLWidget : public  QOpenGLWidget, protected QOpenGLFunctions_4_3_Core
 {
@@ -17,12 +19,18 @@ protected:
     void initializeGL() override;
     void paintGL() override;
     void resizeGL(int w, int h) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void wheelEvent(QWheelEvent* event)	override;
 private:
-    void bindGL(Mesh&);
+    void setMat4(const char*, const glm::mat4);
+    //model和camera的顺序很重要，camera依赖于model
     Model model;
-    const float point[9];
+    Camera2 camera;
     GLuint VAO, VBO;
     QOpenGLShaderProgram program;
+    QOpenGLContext* context;
+    QPoint mLastPos;
 };
 
 #endif // GLWIDGET_H

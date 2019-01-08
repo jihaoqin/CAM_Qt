@@ -6,7 +6,7 @@
 #include <string>
 
 using std::vector;
-Model::Model(const char* filePath):modelMatrix(glm::mat4(1.0))
+Model::Model(const char* filePath):modelMat(glm::mat4(1.0))
 {
 	Assimp::Importer importer;
 	const aiScene *scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -24,7 +24,7 @@ Model::Model(const char* filePath):modelMatrix(glm::mat4(1.0))
 		loadModel(scene);
 	}
 	//计算包围盒
-	box = BoundingBox(meshVec);
+    box = BoundingBox(meshVec);
 }
 
 
@@ -110,4 +110,7 @@ void Model::draw(QOpenGLContext *c){
 	for(unsigned int i = 0; i < meshVec.size(); i++){
        meshVec.at(i).draw(c);
     }
+}
+glm::mat4 Model::modelMatrix(){
+    return modelMat;
 }

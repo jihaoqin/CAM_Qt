@@ -1,5 +1,6 @@
 #include "utility.h"
-
+#include <iostream>
+#include <sstream>
 glm::mat4 utility::createMat(glm::vec3 pos, glm::vec3 zDir, glm::vec3 upDir)
 {
 	zDir = glm::normalize(zDir);
@@ -41,3 +42,30 @@ double utility::length(glm::vec3 v)
 	return l;
 }
 
+bool utility::isZero(double num){
+   double MIN = 1e-6;
+   if (abs(num) < MIN){
+       return true;
+   }
+   else{
+       return false;
+   }
+}
+
+void utility::print(glm::vec3 v){
+    std::cout<<"["<<v.x<<", "<<v.y<<", "<<v.z<<"]\n";
+}
+
+std::string utility::matLog(glm::mat4 m){
+    std::string str;
+    std::ostringstream stream;
+    for (int i = 0; i<4 ; i++){
+        //stream<<m[i][0] <<", "<<m[i][1] <<", "<<m[i][2] <<", "<<m[i][3] <<",\n";
+        stream<<m[0][i] <<", "<<m[1][i] <<", "<<m[2][i] <<", "<<m[3][i] <<",\n";
+        str = str + stream.str();
+        stream.str("");
+    }
+    str.insert(0, "[");
+    str.insert(str.end()-1,']');
+    return str;
+}

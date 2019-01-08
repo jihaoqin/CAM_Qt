@@ -25,5 +25,4 @@ public:
 	std::vector<Vertex> vertexVec;
     unsigned int VAO, VBO, EBO;
     std::vector<unsigned int> indexVec;
-    bool binded;
 };

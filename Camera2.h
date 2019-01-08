@@ -7,12 +7,13 @@ class Camera2
 {
 public:
 	Camera2(glm::vec3 pos, glm::vec3 zDir, glm::vec3 upDir);
-	Camera2(BoundingBox& b);
+    Camera2(BoundingBox b);
 	~Camera2();
 public:
 	void rotateScene(glm::vec3 pos, float rad, glm::vec3 axis);
 	glm::vec3 getPos();
-	void updateShader(Shader&);
+    glm::mat4 viewMatrix();
+    glm::mat4 perspectiveMatrix();
 	void bindBoundingBox(BoundingBox b);
 	void processMouseMove(float deltaX, float deltaY);
 	void processScroll(double yOffset);

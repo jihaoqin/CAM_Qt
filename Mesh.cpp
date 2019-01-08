@@ -3,7 +3,7 @@
 #include <QOpenGLFunctions_4_3_Core>
 
 
-Mesh::Mesh(vector<Vertex> vertexs, vector<unsigned int> indexs):binded(false)
+Mesh::Mesh(vector<Vertex> vertexs, vector<unsigned int> indexs)
 {
 	this->vertexVec = vertexs;
 	this->indexVec = indexs;
@@ -44,5 +44,6 @@ void Mesh::draw(QOpenGLContext *c){
 	QOpenGLFunctions_4_3_Core *core = c->versionFunctions<QOpenGLFunctions_4_3_Core>();
 	core->glBindVertexArray(VAO);
     core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     core->glDrawElements(GL_TRIANGLES, indexVec.size(), GL_UNSIGNED_INT, 0);
 }
