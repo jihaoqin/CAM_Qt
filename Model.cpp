@@ -107,6 +107,7 @@ void Model::bindGL(QOpenGLContext *c){
 }
 
 void Model::draw(QOpenGLContext *c){
+
 	for(unsigned int i = 0; i < meshVec.size(); i++){
        meshVec.at(i).draw(c);
     }

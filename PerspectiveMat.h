@@ -11,6 +11,7 @@ public:
 	float getNearPlane();
 	float getFov();
 	void setFov(float);
+    void setRatio(float);
 private:
 	float fov;
 	float ratio;

@@ -30,3 +30,7 @@ void PerspectiveMat::setFov(float value)
 	update();
 }
 
+void PerspectiveMat::setRatio(float r){
+    ratio = r;
+    update();
+}

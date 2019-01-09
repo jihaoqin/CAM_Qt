@@ -33,7 +33,9 @@ SOURCES += \
     boundingbox.cpp \
     Camera2.cpp \
     PerspectiveMat.cpp \
-    utility.cpp
+    utility.cpp \
+    Line.cpp \
+    GLBinder.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -44,7 +46,9 @@ HEADERS += \
     Camera2.h \
     PerspectiveMat.h \
     utility.h \
-    config.h
+    config.h \
+    Line.h \
+    GLBinder.h
 
 INCLUDEPATH += \
     ./3rdparty/includes/

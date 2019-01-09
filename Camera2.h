@@ -17,6 +17,7 @@ public:
 	void bindBoundingBox(BoundingBox b);
 	void processMouseMove(float deltaX, float deltaY);
 	void processScroll(double yOffset);
+    void viewPortRatio(int w, int h);
 private:
 	PerspectiveMat perspective;
 	BoundingBox box;

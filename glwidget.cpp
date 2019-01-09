@@ -7,7 +7,7 @@
 #include <QOpenGLFunctions_4_3_Core>
 
 
-GLWidget::GLWidget(QWidget *parent):QOpenGLWidget (0), model(MODEL_PATH), camera(model.boundingBox()),context(0)
+GLWidget::GLWidget(QWidget *parent):QOpenGLWidget (0), model(MODEL_PATH), camera(model.boundingBox()),context(0),line()
 {
     QSurfaceFormat fmt;
     fmt.setProfile(QSurfaceFormat::CoreProfile);
@@ -33,7 +33,9 @@ void GLWidget::initializeGL(){
     }
     program.link();
     program.bind();
-    bindGL(model);
+    glEnable(GL_DEPTH_TEST);
+    model.bindGL(context);
+    line.bindGL(context);
 }
 
 void GLWidget::paintGL(){
@@ -44,17 +46,18 @@ void GLWidget::paintGL(){
     setMat4("model", model.modelMatrix());
     setMat4("view", camera.viewMatrix());
     setMat4("perspective", camera.perspectiveMatrix());
+    setVec4("color", glm::vec4(1.0f, 0.0f,0.5f, 1.0f));
     model.draw(context);
+    setVec4("color", glm::vec4(0.0f, 1.0f,0.5f, 1.0f));
+    line.draw(context);
+    update();
 }
 
 void GLWidget::resizeGL(int w, int h){
+    camera.viewPortRatio(w, h);
     glViewport(0,0,w,h);
 }
 
-void GLWidget::bindGL(Model& model){
-    makeCurrent();
-    model.bindGL(context);
-}
 
 void GLWidget::setMat4(const char* name, const glm::mat4 t){
     GLuint location = program.uniformLocation(name);
@@ -65,13 +68,13 @@ void GLWidget::mousePressEvent(QMouseEvent *event){
     mLastPos = event->pos();
 }
 void GLWidget::mouseMoveEvent(QMouseEvent *event){
-   QPoint mPos = event->pos();
-   float deltaX = mPos.x() - mLastPos.x();
-   float deltaY = mPos.y() - mLastPos.y();
-
     if (event->buttons() & Qt::MidButton) {
-       camera.processMouseMove(deltaX, deltaY);
-       update();
+        QPoint mPos = event->pos();
+        float deltaX = mPos.x() - mLastPos.x();
+        float deltaY = mPos.y() - mLastPos.y();
+        camera.processMouseMove(deltaX, deltaY);
+        update();
+        mLastPos = mPos;
     }
 }
 
@@ -79,4 +82,8 @@ void GLWidget::wheelEvent(QWheelEvent *event){
    auto degree = event->angleDelta();
    camera.processScroll(degree.y());
    update();
+}
+void GLWidget::setVec4(const char *name, const glm::vec4 value){
+    GLuint location = program.uniformLocation(name);
+    glUniform4fv(location, 1, glm::value_ptr(value));
 }

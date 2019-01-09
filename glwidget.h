@@ -8,13 +8,13 @@
 #include "Mesh.h"
 #include "Model.h"
 #include "Camera2.h"
+#include "Line.h"
 
 class GLWidget : public  QOpenGLWidget, protected QOpenGLFunctions_4_3_Core
 {
     Q_OBJECT
 public:
     GLWidget(QWidget *parent = 0);
-    void bindGL(Model&);
 protected:
     void initializeGL() override;
     void paintGL() override;
@@ -24,10 +24,12 @@ protected:
     void wheelEvent(QWheelEvent* event)	override;
 private:
     void setMat4(const char*, const glm::mat4);
+    void setVec4(const char*, const glm::vec4);
     //model和camera的顺序很重要，camera依赖于model
     Model model;
     Camera2 camera;
     GLuint VAO, VBO;
+    Line line;
     QOpenGLShaderProgram program;
     QOpenGLContext* context;
     QPoint mLastPos;

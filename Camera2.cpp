@@ -45,7 +45,6 @@ void Camera2::rotateScene(glm::vec3 pos, float rad, glm::vec3 axis)
 	glm::vec3 yDir = glm::vec3(camBaseWorld[1][0], camBaseWorld[1][1], camBaseWorld[1][2]);
 	camBaseWorld = utility::createMat(posNew, zDir, yDir);
 	worldBaseCam = glm::inverse(camBaseWorld);
-    std::cout<<utility::matLog(camBaseWorld);
 }
 
 glm::vec3 Camera2::getPos()
@@ -102,4 +101,9 @@ glm::mat4 Camera2::viewMatrix(){
 }
 glm::mat4 Camera2::perspectiveMatrix(){
    return perspective.getMatrix();
+}
+
+void Camera2::viewPortRatio(int w, int h){
+    float ratio = w*1.0/h;
+   perspective.setRatio(ratio);
 }

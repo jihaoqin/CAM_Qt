@@ -4,8 +4,8 @@
 glm::mat4 utility::createMat(glm::vec3 pos, glm::vec3 zDir, glm::vec3 upDir)
 {
 	zDir = glm::normalize(zDir);
-	glm::vec3 xDir = glm::cross(upDir, zDir);
-	glm::vec3 yDir = glm::cross(zDir, xDir);
+    glm::vec3 xDir = glm::normalize(glm::cross(upDir, zDir));
+    glm::vec3 yDir = glm::normalize(glm::cross(zDir, xDir));
 	glm::mat4 matrix(1.0f);
 	matrix[0][0] = xDir[0];
 	matrix[0][1] = xDir[1];
