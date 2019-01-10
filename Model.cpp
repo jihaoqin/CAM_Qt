@@ -106,10 +106,10 @@ void Model::bindGL(QOpenGLContext *c){
     }
 }
 
-void Model::draw(QOpenGLContext *c){
+void Model::draw(){
 
 	for(unsigned int i = 0; i < meshVec.size(); i++){
-       meshVec.at(i).draw(c);
+       meshVec.at(i).draw();
     }
 }
 glm::mat4 Model::modelMatrix(){

@@ -11,6 +11,7 @@ Mesh::Mesh(vector<Vertex> vertexs, vector<unsigned int> indexs)
 
 Mesh::~Mesh()
 {
+    GLBinder::~GLBinder();
 }
 
 
@@ -22,7 +23,7 @@ void Mesh::print() {
 }
 
 void Mesh::bindGL(QOpenGLContext *c){
-    QOpenGLFunctions_4_3_Core *core = c->versionFunctions<QOpenGLFunctions_4_3_Core>();
+    core = c->versionFunctions<QOpenGLFunctions_4_3_Core>();
     core->glGenVertexArrays(1, &VAO);
     core->glBindVertexArray(VAO);
     core->glGenBuffers(1,&VBO);
@@ -40,8 +41,7 @@ void Mesh::bindGL(QOpenGLContext *c){
     core->glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(6*sizeof(float)));
 }
 
-void Mesh::draw(QOpenGLContext *c){
-	QOpenGLFunctions_4_3_Core *core = c->versionFunctions<QOpenGLFunctions_4_3_Core>();
+void Mesh::draw(){
 	core->glBindVertexArray(VAO);
     core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
     core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);

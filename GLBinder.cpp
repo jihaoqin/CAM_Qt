@@ -6,7 +6,4 @@ GLBinder::GLBinder()
 }
 
 GLBinder::~GLBinder(){
-    core->glDeleteVertexArrays(1, &VAO);
-    core->glDeleteBuffers(1, &VBO);
-    core->glDeleteBuffers(1, &EBO);
 }

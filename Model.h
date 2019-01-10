@@ -5,19 +5,20 @@
 #include "boundingbox.h"
 #include <string>
 #include <QOpenGLContext>
-class Model
+#include "GLBinder.h"
+class Model: public GLBinder
 {
 public:
 	Model(const char* filePath);
 	~Model();
 	BoundingBox boundingBox();
     glm::mat4 modelMatrix();
-    std::vector<Mesh> meshVec;
 public:
-    void bindGL(QOpenGLContext*);
-	void draw(QOpenGLContext*);
+    virtual void bindGL(QOpenGLContext*) override;
+    virtual void draw() override;
 private:
-	std::string directory;
+    std::vector<Mesh> meshVec;
+    std::string directory;
     glm::mat4 modelMat;
 	BoundingBox box;
 	void loadModel(const aiScene*);

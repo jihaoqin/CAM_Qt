@@ -35,7 +35,10 @@ SOURCES += \
     PerspectiveMat.cpp \
     utility.cpp \
     Line.cpp \
-    GLBinder.cpp
+    GLBinder.cpp \
+    Data.cpp \
+    Controller.cpp \
+    GLMemory.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -48,7 +51,10 @@ HEADERS += \
     utility.h \
     config.h \
     Line.h \
-    GLBinder.h
+    GLBinder.h \
+    Data.h \
+    Controller.h \
+    GLMemory.h
 
 INCLUDEPATH += \
     ./3rdparty/includes/

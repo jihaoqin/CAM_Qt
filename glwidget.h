@@ -9,7 +9,7 @@
 #include "Model.h"
 #include "Camera2.h"
 #include "Line.h"
-
+#include "Controller.h"
 class GLWidget : public  QOpenGLWidget, protected QOpenGLFunctions_4_3_Core
 {
     Q_OBJECT
@@ -25,10 +25,10 @@ protected:
 private:
     void setMat4(const char*, const glm::mat4);
     void setVec4(const char*, const glm::vec4);
+    Controller* ctrl;
     //model和camera的顺序很重要，camera依赖于model
     Model model;
     Camera2 camera;
-    GLuint VAO, VBO;
     Line line;
     QOpenGLShaderProgram program;
     QOpenGLContext* context;

@@ -1,6 +1,6 @@
 #include "Line.h"
 
-Line::Line():GLBinder()
+Line::Line()
 {
     float R = 100.1;
     int sideNum = 100;
@@ -48,7 +48,7 @@ void Line::bindGL(QOpenGLContext* context){
     core->glEnableVertexAttribArray(2);
     core->glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(6*sizeof(float)));
 }
-void Line::draw(QOpenGLContext *context){
+void Line::draw(){
     core->glBindVertexArray(VAO);
     core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
     core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);

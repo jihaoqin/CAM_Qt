@@ -34,8 +34,10 @@ void GLWidget::initializeGL(){
     program.link();
     program.bind();
     glEnable(GL_DEPTH_TEST);
-    model.bindGL(context);
-    line.bindGL(context);
+    ctrl->addModel(MODEL_PATH);
+    ctrl->addLine();
+    //model.bindGL(context);
+    //line.bindGL(context);
 }
 
 void GLWidget::paintGL(){
@@ -47,9 +49,7 @@ void GLWidget::paintGL(){
     setMat4("view", camera.viewMatrix());
     setMat4("perspective", camera.perspectiveMatrix());
     setVec4("color", glm::vec4(1.0f, 0.0f,0.5f, 1.0f));
-    model.draw(context);
-    setVec4("color", glm::vec4(0.0f, 1.0f,0.5f, 1.0f));
-    line.draw(context);
+    ctrl->draw();
     update();
 }
 
