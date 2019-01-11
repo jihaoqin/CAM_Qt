@@ -18,3 +18,7 @@ MainWindow::~MainWindow()
 {
 
 }
+
+void MainWindow::bindController(Controller *c){
+    widget.bindController(c);
+}

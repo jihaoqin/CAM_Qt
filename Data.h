@@ -1,6 +1,4 @@
-#ifndef DATA_H
-#define DATA_H
-
+#pragma once
 #include "Model.h"
 #include "config.h"
 #include <vector>
@@ -23,5 +21,3 @@ private:
     Camera2 camera;
     BoundingBox box;
 };
-
-#endif // DATA_H

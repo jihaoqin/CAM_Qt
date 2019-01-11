@@ -10,6 +10,7 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = 0);
+    void bindController(Controller*);
     ~MainWindow();
 private:
     GLWidget widget;

@@ -16,6 +16,7 @@ class GLWidget : public  QOpenGLWidget, protected QOpenGLFunctions_4_3_Core
     Q_OBJECT
 public:
     GLWidget(QWidget *parent = 0);
+    void bindController(Controller*);
 protected:
     void initializeGL() override;
     void paintGL() override;
@@ -26,7 +27,7 @@ protected:
 private:
     Controller* ctrl;
     //model和camera的顺序很重要，camera依赖于model
-    Camera2 camera;
+    std::shared_ptr<Camera2> camera;
     std::shared_ptr<GLProgram> program;
     QOpenGLContext* context;
     QPoint mLastPos;

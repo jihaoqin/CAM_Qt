@@ -3,9 +3,12 @@
 #include <vector>
 #include "Mesh.h"
 class BoundingBox {
+
 public:
+    static BoundingBox OrBox(vector<BoundingBox>);
     BoundingBox();
     BoundingBox( std::vector<Mesh>&);
+    BoundingBox(double, double, double, double, double, double);
     glm::vec3 center();
     double xmin;
     double xmax;

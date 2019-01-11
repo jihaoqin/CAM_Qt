@@ -1,6 +1,6 @@
 #include "Data.h"
 using std::shared_ptr;
-Data::Data()
+Data::Data():camera(BoundingBox()),box()
 {
 
 }

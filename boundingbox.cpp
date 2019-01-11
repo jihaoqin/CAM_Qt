@@ -47,3 +47,32 @@ glm::vec3 BoundingBox::center()
 void BoundingBox::print() {
     std::cout << "[xmin, xmax, ymin, ymax] = ["<<xmin << ", "<<xmax<<", "<<ymin<<", "<<ymax<<"]";
 }
+
+BoundingBox BoundingBox::OrBox(vector<BoundingBox> boxVec){
+    assert(boxVec.size()>0);
+    BoundingBox f = boxVec.at(0);
+    double xmin = f.xmin;
+    double xmax = f.xmax;
+    double ymin = f.ymin;
+    double ymax = f.ymax;
+    double zmin = f.zmin;
+    double zmax = f.zmax;
+    for(auto b:boxVec){
+            auto MIN = [](float a, float b)->float {return a < b ? a : b; };
+            auto MAX = [](float a, float b)->float {return a > b ? a : b; };
+            xmin = MIN(xmin, b.xmin);
+            xmax = MAX(xmax, b.xmax);
+            ymin = MIN(ymin, b.ymin);
+            ymax = MAX(ymax, b.ymax);
+            zmin = MIN(zmin, b.zmin);
+            zmax = MAX(zmax, b.zmax);
+    }
+    BoundingBox result;
+    result.xmin = xmin;
+    result.xmax = xmax;
+    result.ymin = ymin;
+    result.ymax = ymax;
+    result.zmin = zmin;
+    result.zmax = zmax;
+    return result;
+}

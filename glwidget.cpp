@@ -24,6 +24,7 @@ void GLWidget::initializeGL(){
     context = QOpenGLContext::currentContext();
     program = std::make_shared<GLProgram>();
     ctrl->initialGLVar(context, program);
+    camera = ctrl->getCamera();
     if (!program->addShaderFromSourceFile(QOpenGLShader::Vertex, VERTEX_PATH)){
         qDebug()<<"Failed to load vertexShader: "<<program->log()<<"\n";
     }else{
@@ -39,6 +40,7 @@ void GLWidget::initializeGL(){
     glEnable(GL_DEPTH_TEST);
     ctrl->addModel(MODEL_PATH);
     ctrl->addLine();
+    ctrl->updateCamera();
 }
 
 void GLWidget::paintGL(){
@@ -46,14 +48,12 @@ void GLWidget::paintGL(){
     glClearColor(0.2f,0.3f,0.3f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    program->setMat4("view", camera.viewMatrix());
-    program->setMat4("perspective", camera.perspectiveMatrix());
-    ctrl->draw();
+    ctrl->draw(program);
     update();
 }
 
 void GLWidget::resizeGL(int w, int h){
-    camera.viewPortRatio(w, h);
+    camera->viewPortRatio(w, h);
     glViewport(0,0,w,h);
 }
 
@@ -65,7 +65,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
         QPoint mPos = event->pos();
         float deltaX = mPos.x() - mLastPos.x();
         float deltaY = mPos.y() - mLastPos.y();
-        camera.processMouseMove(deltaX, deltaY);
+        camera->processMouseMove(deltaX, deltaY);
         update();
         mLastPos = mPos;
     }
@@ -73,6 +73,10 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
 
 void GLWidget::wheelEvent(QWheelEvent *event){
    auto degree = event->angleDelta();
-   camera.processScroll(degree.y());
+   camera->processScroll(degree.y());
    update();
+}
+
+void GLWidget::bindController(Controller *c){
+    ctrl = c;
 }
