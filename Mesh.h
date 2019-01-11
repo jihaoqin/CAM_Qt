@@ -4,15 +4,12 @@
 #include <3rdparty/includes/glm/glm.hpp>
 #include <QOpenGLContext>
 #include "GLMemory.h"
+#include "vertex.h"
+#include "boundingbox.h"
 using std::vector;
 struct Texture {
 	unsigned int id;
 	std::string type;
-};
-struct Vertex {
-	glm::vec3 vertex;
-	glm::vec3 normal;
-	glm::vec2 coordinate;
 };
 class Mesh:public GLMemory
 {
@@ -23,6 +20,8 @@ public:
 	void print();
     virtual void bindGL(QOpenGLContext*) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;
+    BoundingBox boundingBox();
 private:
 	std::vector<Vertex> vertexVec;
+    BoundingBox box;
 };

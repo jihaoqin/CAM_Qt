@@ -47,6 +47,7 @@ void Line::bindGL(QOpenGLContext* context){
     core->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(3*sizeof(float)));
     core->glEnableVertexAttribArray(2);
     core->glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(6*sizeof(float)));
+    binded = true;
 }
 void Line::draw(std::shared_ptr<GLProgram> program){
     core->glBindVertexArray(VAO);

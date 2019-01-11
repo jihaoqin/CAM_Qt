@@ -107,3 +107,7 @@ void Camera2::viewPortRatio(int w, int h){
     float ratio = w*1.0/h;
    perspective.setRatio(ratio);
 }
+
+void Camera2::setBoundingBox(BoundingBox b){
+     box = b;
+}

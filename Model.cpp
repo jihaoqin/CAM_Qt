@@ -24,7 +24,11 @@ Model::Model(const char* filePath):modelMat(glm::mat4(1.0))
 		loadModel(scene);
 	}
 	//计算包围盒
-    box = BoundingBox(meshVec);
+    vector<BoundingBox> boxVec;
+    for(auto m:meshVec){
+        boxVec.push_back(m.boundingBox());
+    }
+    box = BoundingBox::OrBox(boxVec);
 }
 
 
@@ -104,6 +108,7 @@ void Model::bindGL(QOpenGLContext *c){
     for(unsigned int i = 0; i < meshVec.size(); i++){
        meshVec.at(i).bindGL(c);
     }
+    binded = true;
 }
 
 void Model::draw(std::shared_ptr<GLProgram> program){

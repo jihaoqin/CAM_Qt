@@ -5,7 +5,6 @@
 #include "Line.h"
 #include <memory>
 #include "Camera2.h"
-#include <Controller.h>
 
 class Data
 {

@@ -12,6 +12,9 @@ public:
     ~GLBinder();
     virtual void bindGL(QOpenGLContext*) = 0;
     virtual void draw(std::shared_ptr<GLProgram>) = 0;
+    bool isBinded();
+protected:
+    bool binded;
 };
 
 #endif // OPENGLBINDER_H

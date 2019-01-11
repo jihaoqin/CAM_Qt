@@ -8,7 +8,8 @@ Controller::Controller()
 
 void Controller::addModel(std::string str){
     shared_ptr<Model> m = make_shared<Model>(str.c_str());
-    data->addModel(m);
+    m->bindGL(context);
+    data->modelVec.push_back(m);
 }
 
 void Controller::bindGL(QOpenGLContext *c, shared_ptr<GLBinder> obj){
@@ -17,7 +18,8 @@ void Controller::bindGL(QOpenGLContext *c, shared_ptr<GLBinder> obj){
 
 void Controller::addLine(){
     shared_ptr<Line> l = make_shared<Line>();
-    data->addLine(l);
+    l->bindGL(context);
+    data->lineVec.push_back(l);
 }
 void Controller::draw(std::shared_ptr<GLProgram> program){
     program->setMat4("view", data->camera.viewMatrix());
@@ -44,11 +46,12 @@ void Controller::bindData(std::shared_ptr<Data> d){
     data = d;
 }
 
-void Controller::updateBoundingBox(){
+BoundingBox Controller::updateBoundingBox(){
    vector<BoundingBox> boxVec;
    for(auto m:data->modelVec){
        BoundingBox b = m->boundingBox();
        boxVec.push_back(b);
    }
    data->box = BoundingBox::OrBox(boxVec);
+   return data->box;
 }

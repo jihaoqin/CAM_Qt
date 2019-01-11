@@ -22,7 +22,7 @@ void GLWidget::initializeGL(){
     initializeOpenGLFunctions();
     glClearColor(0.2f,0.3f,0.3f,1.0f);
     context = QOpenGLContext::currentContext();
-    program = std::make_shared<GLProgram>();
+    program = std::make_shared<GLProgram>(context);
     ctrl->initialGLVar(context, program);
     camera = ctrl->getCamera();
     if (!program->addShaderFromSourceFile(QOpenGLShader::Vertex, VERTEX_PATH)){
@@ -40,7 +40,7 @@ void GLWidget::initializeGL(){
     glEnable(GL_DEPTH_TEST);
     ctrl->addModel(MODEL_PATH);
     ctrl->addLine();
-    ctrl->updateCamera();
+    camera->setBoundingBox(ctrl->updateBoundingBox());
 }
 
 void GLWidget::paintGL(){

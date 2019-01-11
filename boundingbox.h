@@ -1,14 +1,12 @@
-#ifndef BOUNDINGBOX_H
-#define BOUNDINGBOX_H
+#pragma once
 #include <vector>
-#include "Mesh.h"
+#include "vertex.h"
 class BoundingBox {
-
 public:
-    static BoundingBox OrBox(vector<BoundingBox>);
+    static BoundingBox OrBox(std::vector<BoundingBox>);
     BoundingBox();
-    BoundingBox( std::vector<Mesh>&);
-    BoundingBox(double, double, double, double, double, double);
+    BoundingBox( std::vector<Vertex>&);
+    void setBoundingBox(BoundingBox);
     glm::vec3 center();
     double xmin;
     double xmax;
@@ -19,4 +17,3 @@ public:
     void print();
 };
 
-#endif // BOUNDINGBOX_H

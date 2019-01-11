@@ -1,8 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define LAB
-//#define ROOM
+//#define LAB
+#define ROOM
 
 #ifdef LAB
 #define VERTEX_PATH "E:\\0qin\\Qt\\CAM_Qt\\vertexShader.vs"

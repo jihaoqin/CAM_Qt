@@ -5,12 +5,12 @@
 #include "GLProgram.h"
 #include <QOpenGLFunctions_4_3_Core>
 #include <memory>
-
+//class Data;
 class Controller
 {
 public:
     Controller();
-    void updateBoundingBox();
+    BoundingBox updateBoundingBox();
     void bindData(std::shared_ptr<Data>);
     void addModel(std::string);
     void addLine();

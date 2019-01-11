@@ -56,7 +56,8 @@ HEADERS += \
     Data.h \
     Controller.h \
     GLMemory.h \
-    GLProgram.h
+    GLProgram.h \
+    vertex.h
 
 INCLUDEPATH += \
     ./3rdparty/includes/
