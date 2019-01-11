@@ -3,8 +3,9 @@
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <QOpenGLFunctions_4_3_Core>
-#include <QOpenGLShaderProgram>
+#include "GLProgram.h"
 #include <QWheelEvent>
+#include <memory>
 #include "Mesh.h"
 #include "Model.h"
 #include "Camera2.h"
@@ -23,14 +24,10 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
     void wheelEvent(QWheelEvent* event)	override;
 private:
-    void setMat4(const char*, const glm::mat4);
-    void setVec4(const char*, const glm::vec4);
     Controller* ctrl;
     //model和camera的顺序很重要，camera依赖于model
-    Model model;
     Camera2 camera;
-    Line line;
-    QOpenGLShaderProgram program;
+    std::shared_ptr<GLProgram> program;
     QOpenGLContext* context;
     QPoint mLastPos;
 };

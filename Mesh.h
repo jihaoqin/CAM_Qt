@@ -22,7 +22,7 @@ public:
 public:
 	void print();
     virtual void bindGL(QOpenGLContext*) override;
-    virtual void draw() override;
+    virtual void draw(std::shared_ptr<GLProgram>) override;
 private:
 	std::vector<Vertex> vertexVec;
 };

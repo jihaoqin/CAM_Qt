@@ -38,7 +38,8 @@ SOURCES += \
     GLBinder.cpp \
     Data.cpp \
     Controller.cpp \
-    GLMemory.cpp
+    GLMemory.cpp \
+    GLProgram.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -54,7 +55,8 @@ HEADERS += \
     GLBinder.h \
     Data.h \
     Controller.h \
-    GLMemory.h
+    GLMemory.h \
+    GLProgram.h
 
 INCLUDEPATH += \
     ./3rdparty/includes/

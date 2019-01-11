@@ -11,11 +11,3 @@ void Data::addModel(shared_ptr<Model> m){
 void Data::addLine(std::shared_ptr<Line> l){
    lineVec.push_back(l);
 }
-void Data::draw(){
-    for (auto m : modelVec){
-        m->draw();
-    }
-    for(auto l : lineVec){
-        l->draw();
-    }
-}

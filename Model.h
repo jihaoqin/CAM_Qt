@@ -15,7 +15,7 @@ public:
     glm::mat4 modelMatrix();
 public:
     virtual void bindGL(QOpenGLContext*) override;
-    virtual void draw() override;
+    virtual void draw(std::shared_ptr<GLProgram>) override;
 private:
     std::vector<Mesh> meshVec;
     std::string directory;
