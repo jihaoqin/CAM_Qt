@@ -8,7 +8,7 @@ Mesh::Mesh(vector<Vertex> vertexs, vector<unsigned int> indexs)
 	this->vertexVec = vertexs;
 	this->indexVec = indexs;
     vector<BoundingBox> boxVec;
-    BoundingBox b(vertexVec);
+    box = BoundingBox(vertexVec);
 }
 
 Mesh::~Mesh()

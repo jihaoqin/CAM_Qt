@@ -17,6 +17,6 @@ public:
 private:
     vector<std::shared_ptr<Model>> modelVec;
     vector<std::shared_ptr<Line>> lineVec;
-    Camera2 camera;
+    std::shared_ptr<Camera2> camera;
     BoundingBox box;
 };

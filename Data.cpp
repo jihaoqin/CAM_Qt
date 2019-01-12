@@ -1,8 +1,8 @@
 #include "Data.h"
 using std::shared_ptr;
-Data::Data():camera(BoundingBox()),box()
+Data::Data():box()
 {
-
+    camera = std::make_shared<Camera2>(BoundingBox());
 }
 
 void Data::addModel(shared_ptr<Model> m){

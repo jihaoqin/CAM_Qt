@@ -10,7 +10,6 @@ public:
     Camera2(BoundingBox b);
 	~Camera2();
 public:
-    void setBoundingBox(BoundingBox);
 	void rotateScene(glm::vec3 pos, float rad, glm::vec3 axis);
 	glm::vec3 getPos();
     glm::mat4 viewMatrix();

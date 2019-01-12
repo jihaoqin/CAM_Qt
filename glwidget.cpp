@@ -40,7 +40,7 @@ void GLWidget::initializeGL(){
     glEnable(GL_DEPTH_TEST);
     ctrl->addModel(MODEL_PATH);
     ctrl->addLine();
-    camera->setBoundingBox(ctrl->updateBoundingBox());
+    camera->bindBoundingBox(ctrl->updateBoundingBox());
 }
 
 void GLWidget::paintGL(){

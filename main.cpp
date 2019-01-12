@@ -3,7 +3,6 @@
 #include "Controller.h"
 #include <QApplication>
 #include "glwidget.h"
-可能是camera有问题
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

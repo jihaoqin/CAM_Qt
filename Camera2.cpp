@@ -12,14 +12,7 @@ Camera2::Camera2(glm::vec3 pos, glm::vec3 lookDir, glm::vec3 upDir):perspective(
 Camera2::Camera2(BoundingBox  b)
 {
     //相机坐标系的Z轴是从被观察点指向相机的，Y轴是向上的，右手坐标系
-	box = b;
-    glm::vec3 zDir = glm::vec3(b.xmax, b.ymax, b.zmax) - b.center();
-    glm::vec3 pos = b.center()+20.0f*zDir;
-    glm::vec3 upDir = glm::vec3(0.0, 1.0, 0.0);
-	camBaseWorld = utility::createMat(pos, zDir, upDir);
-	worldBaseCam = glm::inverse(camBaseWorld);
-	double diameter = 2 * utility::length(zDir);
-    perspective = PerspectiveMat(45.0f, 8.0 / 6.0, 0.1*diameter, 30 * diameter);
+    bindBoundingBox(b);
 }
 
 
@@ -40,7 +33,6 @@ void Camera2::rotateScene(glm::vec3 pos, float rad, glm::vec3 axis)
 	glm::mat4 log = view * model * R * glm::inverse(model);
 	camBaseWorld = glm::inverse(log);
 	glm::vec3 posNew = glm::vec3(camBaseWorld[3][0], camBaseWorld[3][1], camBaseWorld[3][2]);
-    utility::print(posNew);
 	glm::vec3 zDir = glm::vec3(camBaseWorld[2][0], camBaseWorld[2][1], camBaseWorld[2][2]);
 	glm::vec3 yDir = glm::vec3(camBaseWorld[1][0], camBaseWorld[1][1], camBaseWorld[1][2]);
 	camBaseWorld = utility::createMat(posNew, zDir, yDir);
@@ -108,6 +100,3 @@ void Camera2::viewPortRatio(int w, int h){
    perspective.setRatio(ratio);
 }
 
-void Camera2::setBoundingBox(BoundingBox b){
-     box = b;
-}
