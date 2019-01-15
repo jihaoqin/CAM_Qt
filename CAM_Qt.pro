@@ -39,7 +39,9 @@ SOURCES += \
     Data.cpp \
     Controller.cpp \
     GLMemory.cpp \
-    GLProgram.cpp
+    GLProgram.cpp \
+    LineLight.cpp \
+    Color.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -57,7 +59,9 @@ HEADERS += \
     Controller.h \
     GLMemory.h \
     GLProgram.h \
-    vertex.h
+    vertex.h \
+    LineLight.h \
+    Color.h
 
 INCLUDEPATH += \
     ./3rdparty/includes/

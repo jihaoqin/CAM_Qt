@@ -22,15 +22,11 @@ void Controller::addLine(){
     data->lineVec.push_back(l);
 }
 void Controller::draw(std::shared_ptr<GLProgram> program){
-    program->setMat4("view", data->camera->viewMatrix());
-    program->setMat4("perspective", data->camera->perspectiveMatrix());
+    data->camera->setUniform(program);
     for (auto m : data->modelVec){
-        program->setMat4("model", m->modelMatrix());
-        program->setVec4("color", glm::vec4(1.0f, 0.0f,0.5f, 1.0f));
         m->draw(program);
     }
     for(auto l : data->lineVec){
-        program->setVec4("color", glm::vec4(0.0f, 0.0f,0.5f, 1.0f));
         l->draw(program);
     }
 }

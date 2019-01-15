@@ -69,3 +69,21 @@ std::string utility::matLog(glm::mat4 m){
     str.insert(str.end()-1,']');
     return str;
 }
+
+glm::mat3 utility::RInMatrix(glm::mat4 m){
+    glm::mat3 R;
+
+    R[0][0] = m[0][0];
+    R[0][1] = m[0][1];
+    R[0][2] = m[0][2];
+
+    R[1][0] = m[1][0];
+    R[1][1] = m[1][1];
+    R[1][2] = m[1][2];
+
+    R[2][0] = m[2][0];
+    R[2][1] = m[2][1];
+    R[2][2] = m[2][2];
+
+    return R;
+}

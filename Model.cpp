@@ -6,7 +6,7 @@
 #include <string>
 
 using std::vector;
-Model::Model(const char* filePath):modelMat(glm::mat4(1.0))
+Model::Model(const char* filePath):modelMat(glm::mat4(1.0)), color(Color::RED)
 {
 	Assimp::Importer importer;
 	const aiScene *scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -113,6 +113,8 @@ void Model::bindGL(QOpenGLContext *c){
 
 void Model::draw(std::shared_ptr<GLProgram> program){
 
+    program->setMat4("model", modelMat);
+    program->setVec3("material.color", color.rgb);
 	for(unsigned int i = 0; i < meshVec.size(); i++){
        meshVec.at(i).draw(program);
     }

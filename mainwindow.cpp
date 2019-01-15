@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     menuBar->addMenu(menu);
     setMenuBar(menuBar);
     setCentralWidget(&widget);
-    resize(800,600);
+    resize(800, 600);
     //widget.bindGL(model);
 }
 

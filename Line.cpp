@@ -50,6 +50,7 @@ void Line::bindGL(QOpenGLContext* context){
     binded = true;
 }
 void Line::draw(std::shared_ptr<GLProgram> program){
+    program->setVec3("material.color", glm::vec3(0.0f, 1.0f, 0.0f));
     core->glBindVertexArray(VAO);
     core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
     core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);

@@ -1,5 +1,6 @@
 ﻿#include "Camera2.h"
 #include "utility.h"
+#include <string>
 
 
 
@@ -7,12 +8,14 @@ Camera2::Camera2(glm::vec3 pos, glm::vec3 lookDir, glm::vec3 upDir):perspective(
 {
 	camBaseWorld = utility::createMat(pos, -lookDir, upDir);
 	worldBaseCam = glm::inverse(camBaseWorld);
+    initializeLineLight();
 }
 
 Camera2::Camera2(BoundingBox  b)
 {
     //相机坐标系的Z轴是从被观察点指向相机的，Y轴是向上的，右手坐标系
     bindBoundingBox(b);
+    initializeLineLight();
 }
 
 
@@ -77,7 +80,7 @@ void Camera2::processMouseMove(float deltaX, float deltaY)
 void Camera2::processScroll(double yOffset)
 {
 	float fov = perspective.getFov();
-    float fovNew = fov - yOffset/120*3;
+    float fovNew = fov - yOffset/120*scrollCoefficient(fov);
     if (fovNew >= 1.0f && fovNew <= 88.0f)
         perspective.setFov(fovNew);
     else if (fovNew <= 1.0f)
@@ -100,3 +103,39 @@ void Camera2::viewPortRatio(int w, int h){
    perspective.setRatio(ratio);
 }
 
+void Camera2::setUniform(std::shared_ptr<GLProgram> p){
+    //设置灯光
+    for(int i = 0; i<4; i++){
+        std::string rgbName = "lineLight_" + std::to_string(i) + ".color";
+        std::string dirNmae = "lineLight_" + std::to_string(i) + ".direction";
+        p->setVec3(rgbName.c_str(), lightGroup[i].color);
+        glm::vec3 dir = utility::RInMatrix(camBaseWorld) * lightGroup[i].direction;
+        p->setVec3(dirNmae.c_str(), dir);
+    }
+    //设置camera的位置
+    p->setVec3("viewPos", getPos());
+    p->setMat4("view", viewMatrix());
+    p->setMat4("perspective", perspectiveMatrix());
+}
+
+void Camera2::initializeLineLight(){
+    LineLight light_0(glm::vec3(0.7f), glm::vec3(0,0,-1.0));
+    lightGroup[0] = light_0;
+
+    LineLight light_1(glm::vec3(0.7f), glm::vec3(0, -1, -1));
+    lightGroup[1] = light_1;
+
+    LineLight light_2(glm::vec3(0.7f), glm::vec3(1, 1, -1.0));
+    lightGroup[2] = light_2;
+
+    LineLight light_3(glm::vec3(0.7f), glm::vec3(-1, 1.0, -1.0));
+    lightGroup[3] = light_3;
+}
+
+float Camera2::scrollCoefficient(float fov){
+    //用抛物线函数设定视窗角度的改变速率
+    //max代表最快的速率
+    float max = 3;//degree
+    float A = max/(-49*39);
+    return A*(fov -1)*(fov - 89);
+}

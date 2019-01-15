@@ -47,14 +47,14 @@ void GLWidget::paintGL(){
     program->bind();
     glClearColor(0.2f,0.3f,0.3f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-
+    glViewport(0,0, 800, 700);
     ctrl->draw(program);
     update();
 }
 
 void GLWidget::resizeGL(int w, int h){
+    makeCurrent();
     camera->viewPortRatio(w, h);
-    glViewport(0,0,w,h);
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event){

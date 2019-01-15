@@ -1,8 +1,11 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <vector>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Model.h"
 #include "PerspectiveMat.h"
+#include "LineLight.h"
+#include <QOpenGLShaderProgram>
 class Camera2
 {
 public:
@@ -18,7 +21,11 @@ public:
 	void processMouseMove(float deltaX, float deltaY);
 	void processScroll(double yOffset);
     void viewPortRatio(int w, int h);
+    void setUniform(std::shared_ptr<GLProgram>);
 private:
+    void initializeLineLight();
+    float scrollCoefficient(float);
+    LineLight lightGroup[4];
 	PerspectiveMat perspective;
 	BoundingBox box;
 	glm::mat4 camBaseWorld;

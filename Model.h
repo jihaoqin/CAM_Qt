@@ -6,6 +6,7 @@
 #include <string>
 #include <QOpenGLContext>
 #include "GLBinder.h"
+#include "Color.h"
 class Model: public GLBinder
 {
 public:
@@ -21,6 +22,7 @@ private:
     std::string directory;
     glm::mat4 modelMat;
 	BoundingBox box;
+    Color color;
 	void loadModel(const aiScene*);
 	void processNode(const aiNode *, const aiScene *);
 	Mesh processMesh(const unsigned int, const aiScene *);
