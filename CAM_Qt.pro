@@ -41,7 +41,8 @@ SOURCES += \
     GLMemory.cpp \
     GLProgram.cpp \
     LineLight.cpp \
-    Color.cpp
+    Color.cpp \
+    Tee.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -61,7 +62,8 @@ HEADERS += \
     GLProgram.h \
     vertex.h \
     LineLight.h \
-    Color.h
+    Color.h \
+    Tee.h
 
 INCLUDEPATH += \
     ./3rdparty/includes/

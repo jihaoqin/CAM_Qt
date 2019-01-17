@@ -87,3 +87,22 @@ glm::mat3 utility::RInMatrix(glm::mat4 m){
 
     return R;
 }
+glm::vec3 utility::lineRotatePoint(glm::vec3 anchor, glm::vec3 dir, glm::vec3 p, float alpha){
+    float coe = glm::dot(dir, p-anchor)/glm::dot(dir, dir);
+    glm::vec3 nearest = anchor + dir*coe;
+    glm::vec3 dirNew = glm::cross(dir, p - nearest);
+    glm::vec3 dirX = p - nearest;
+    glm::vec3 dirY = glm::normalize(dirNew) * (float)utility::length(dirX);
+    glm::vec3 pNew = dirX*cos(alpha) + dirY*sin(alpha);
+    return pNew;
+}
+glm::vec3 utility::lineRotateVector(glm::vec3 line, glm::vec3 vec, float alpha){
+    return lineRotatePoint(glm::vec3(0), line, vec, alpha);
+}
+
+Vertex utility::lineRotateVertex(glm::vec3 anchor, glm::vec3 dir, Vertex p, float alpha){
+    glm::vec3 pp = lineRotatePoint(anchor, dir, p.vertex, alpha);
+    glm::vec3 norm = lineRotateVector(dir, p.normal, alpha);
+    Vertex v = {pp, norm, p.coordinate};
+    return v;
+}
