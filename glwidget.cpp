@@ -2,9 +2,11 @@
 #include "config.h"
 #include <QDebug>
 #include <QMouseEvent>
+#include <QKeyEvent>
 #include <iostream>
 #include <QOpenGLContext>
 #include <QOpenGLFunctions_4_3_Core>
+#include <QApplication>
 
 
 GLWidget::GLWidget(QWidget *parent):QOpenGLWidget (0), context(0)
@@ -47,7 +49,7 @@ void GLWidget::paintGL(){
     program->bind();
     glClearColor(0.2f,0.3f,0.3f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    glViewport(0,0, 800, 700);
+    glViewport(0, 0, width(), height());
     ctrl->draw(program);
     update();
 }
@@ -60,14 +62,26 @@ void GLWidget::resizeGL(int w, int h){
 void GLWidget::mousePressEvent(QMouseEvent *event){
     mLastPos = event->pos();
 }
+
 void GLWidget::mouseMoveEvent(QMouseEvent *event){
     if (event->buttons() & Qt::MidButton) {
-        QPoint mPos = event->pos();
-        float deltaX = mPos.x() - mLastPos.x();
-        float deltaY = mPos.y() - mLastPos.y();
-        camera->processMouseMove(deltaX, deltaY);
-        update();
-        mLastPos = mPos;
+        //按下了鼠标中键
+        if(QApplication::keyboardModifiers() == Qt::ControlModifier){
+            //按下了control键
+            QPoint mPos = event->pos();
+            glm::vec4 viewPort(0,0,width(),height());
+            camera->processTranslation(mPos, mLastPos, viewPort);
+            update();
+            mLastPos = mPos;
+        }
+        else{
+            QPoint mPos = event->pos();
+            float deltaX = mPos.x() - mLastPos.x();
+            float deltaY = mPos.y() - mLastPos.y();
+            camera->processRotation(deltaX, deltaY);
+            update();
+            mLastPos = mPos;
+        }
     }
 }
 

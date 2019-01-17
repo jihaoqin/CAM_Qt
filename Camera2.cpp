@@ -65,7 +65,7 @@ void Camera2::bindBoundingBox(BoundingBox b)
 	perspective = PerspectiveMat(45.0f, 8.0 / 6.0, 0.1*diameter, 30 * diameter);
 }
 
-void Camera2::processMouseMove(float deltaX, float deltaY)
+void Camera2::processRotation(float deltaX, float deltaY)
 {
     deltaY = -1 * deltaY;
     if (utility::isZero(deltaX)&&utility::isZero(deltaY)){
@@ -138,4 +138,27 @@ float Camera2::scrollCoefficient(float fov){
     float max = 3;//degree
     float A = max/(-49*39);
     return A*(fov -1)*(fov - 89);
+}
+
+BoundingBox Camera2::boundingBox(){
+    return box;
+}
+
+void Camera2::processTranslation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort){
+    //unProject函数的第一个输入，应该是glViewPort所指定的坐标系的坐标，及屏幕左下角为(0,0)
+    //屏幕上的点+z buffer的深度信息后，都可以映射到世界坐标系内
+    //处理平移是通过将鼠标在屏幕上的两点间移动，映射到世界坐标系内anchor plane上两点的移动
+    //anchor plane 就是包围盒中心点所定义的面
+    mPos.ry() = viewPort[3] - mPos.y();
+    mLastPos.ry() = viewPort[3] - mLastPos.y();
+    glm::mat4 viewModel = viewMatrix()*glm::mat4(1.0);
+    glm::vec3 centerScr = glm::project(box.center(), viewModel, perspectiveMatrix(), viewPort);
+    glm::vec3 lastScr = glm::vec3(mLastPos.x(), mLastPos.y(), centerScr.z);
+    glm::vec3 nowScr = glm::vec3(mPos.x(), mPos.y(), centerScr.z);
+    glm::vec3 lastObj = glm::unProject(lastScr, viewModel, perspectiveMatrix(), viewPort);
+    glm::vec3 nowObj = glm::unProject(nowScr, viewModel, perspectiveMatrix(), viewPort);
+    glm::vec3 deltaCam = lastObj - nowObj;
+    glm::vec3 newCamPos = getPos() + deltaCam;
+    camBaseWorld = utility::setPos(camBaseWorld, newCamPos);
+    worldBaseCam = glm::inverse(camBaseWorld);
 }

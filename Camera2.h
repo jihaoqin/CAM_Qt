@@ -18,7 +18,9 @@ public:
     glm::mat4 viewMatrix();
     glm::mat4 perspectiveMatrix();
 	void bindBoundingBox(BoundingBox b);
-	void processMouseMove(float deltaX, float deltaY);
+    BoundingBox boundingBox();
+    void processTranslation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort);
+    void processRotation(float deltaX, float deltaY);
 	void processScroll(double yOffset);
     void viewPortRatio(int w, int h);
     void setUniform(std::shared_ptr<GLProgram>);
