@@ -5,6 +5,7 @@
 #include "Line.h"
 #include <memory>
 #include "Camera2.h"
+#include "Tee.h"
 
 class Data
 {
@@ -18,5 +19,6 @@ private:
     vector<std::shared_ptr<Model>> modelVec;
     vector<std::shared_ptr<Line>> lineVec;
     std::shared_ptr<Camera2> camera;
+    std::shared_ptr<Tee> tee;
     BoundingBox box;
 };

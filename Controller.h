@@ -13,6 +13,7 @@ public:
     BoundingBox updateBoundingBox();
     void bindData(std::shared_ptr<Data>);
     void addModel(std::string);
+    void addTee();
     void addLine();
     void bindGL(QOpenGLContext*, std::shared_ptr<GLBinder>);
     void initialGLVar(QOpenGLContext*, std::shared_ptr<GLProgram>);

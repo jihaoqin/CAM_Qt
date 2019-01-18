@@ -44,6 +44,8 @@ void Controller::bindData(std::shared_ptr<Data> d){
 }
 
 BoundingBox Controller::updateBoundingBox(){
+    //TODO::
+    //更新BoundingBox到包括Tee
    vector<BoundingBox> boxVec;
    for(auto m:data->modelVec){
        BoundingBox b = m->boundingBox();
@@ -51,4 +53,9 @@ BoundingBox Controller::updateBoundingBox(){
    }
    data->box = BoundingBox::OrBox(boxVec);
    return data->box;
+}
+
+void Controller::addTee(){
+    std::shared_ptr<Tee> t = std::make_shared<Tee>();
+    data->tee = t;
 }
