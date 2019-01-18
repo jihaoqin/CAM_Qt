@@ -93,7 +93,7 @@ glm::vec3 utility::lineRotatePoint(glm::vec3 anchor, glm::vec3 dir, glm::vec3 p,
     glm::vec3 dirNew = glm::cross(dir, p - nearest);
     glm::vec3 dirX = p - nearest;
     glm::vec3 dirY = glm::normalize(dirNew) * (float)utility::length(dirX);
-    glm::vec3 pNew = dirX*cos(alpha) + dirY*sin(alpha);
+    glm::vec3 pNew = nearest + dirX*cos(alpha) + dirY*sin(alpha);
     return pNew;
 }
 glm::vec3 utility::lineRotateVector(glm::vec3 line, glm::vec3 vec, float alpha){

@@ -23,12 +23,13 @@ void Controller::addLine(){
 }
 void Controller::draw(std::shared_ptr<GLProgram> program){
     data->camera->setUniform(program);
-    for (auto m : data->modelVec){
-        m->draw(program);
-    }
+    //for (auto m : data->modelVec){
+    //    m->draw(program);
+    //}
     for(auto l : data->lineVec){
         l->draw(program);
     }
+    data->tee->draw(program);
 }
 void Controller::initialGLVar(QOpenGLContext *c, std::shared_ptr<GLProgram> proPtr){
     context = c;
@@ -57,5 +58,6 @@ BoundingBox Controller::updateBoundingBox(){
 
 void Controller::addTee(){
     std::shared_ptr<Tee> t = std::make_shared<Tee>();
+    t->bindGL(context);
     data->tee = t;
 }

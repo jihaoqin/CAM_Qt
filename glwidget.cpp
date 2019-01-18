@@ -42,6 +42,7 @@ void GLWidget::initializeGL(){
     glEnable(GL_DEPTH_TEST);
     ctrl->addModel(MODEL_PATH);
     ctrl->addLine();
+    ctrl->addTee();
     camera->bindBoundingBox(ctrl->updateBoundingBox());
 }
 

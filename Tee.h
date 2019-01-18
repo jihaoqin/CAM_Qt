@@ -15,10 +15,15 @@ public:
 private:
     Mesh generateLeftRing();
     Mesh generateRightRing();
-    Mesh generateCylinder();
+    Mesh generateMainPipe();
+    Mesh generateBranchPipe();
+    Mesh generateCylinder(glm::vec3 end_1, glm::vec3 end_2, float r);
+    Mesh generateCircle(glm::vec3 anchor, glm::vec3 dir, float r);
+    Mesh generateRevolution(glm::vec3 anchor, glm::vec3 dir, std::vector<Vertex> v, float angle);
     std::vector<Mesh> meshVec;
     glm::mat4 modelMat;
     Color color;
+    BoundingBox box;
     float pipeR;
     float sideR;
     float lengthMain;
