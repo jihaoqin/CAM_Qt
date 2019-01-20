@@ -9,14 +9,23 @@ Tee::Tee():modelMat(glm::mat4(1.0)), color(Color::RED)
     //rightRing
     pipeR = 100;
     sideR = 50;
-    lengthBranch = 150;
+    lengthBranch = 300;
+    lengthMain = 600;
 
     Mesh m = generateLeftRing();
     Mesh mR = generateRightRing();
     Mesh mBranch = generateBranchPipe();
+    Mesh mMain = generateMainPipe();
+    Mesh up = generateCircle(glm::vec3(0, lengthBranch, 0), glm::vec3(0, 1, 0), pipeR);
+    Mesh left = generateCircle(glm::vec3(-1.0*lengthMain/2, 0, 0), glm::vec3(-1, 0, 0),pipeR);
+    Mesh right = generateCircle(glm::vec3(1.0*lengthMain/2, 0, 0), glm::vec3(1, 0, 0),pipeR);
     meshVec.push_back(m);
     meshVec.push_back(mR);
     meshVec.push_back(mBranch);
+    meshVec.push_back(mMain);
+    meshVec.push_back(up);
+    meshVec.push_back(left);
+    meshVec.push_back(right);
     vector<BoundingBox> boxVec;
     for (auto mesh:meshVec){
         boxVec.push_back(mesh.boundingBox());
@@ -114,7 +123,15 @@ Mesh Tee::generateCylinder(glm::vec3 end_1, glm::vec3 end_2, float r){
     vector<Vertex> edge;
     int COLUMN = 180;
     glm::vec3 dir = end_2 - end_1;
-    glm::vec3 rand = dir + glm::vec3(10, 0, 0);
+    glm::vec3 a;
+    if(!utility::isParallel(dir, glm::vec3(dir.y, -1*dir.x, dir.z))){
+       a = glm::vec3(dir.y, -1*dir.x, dir.z);
+    }
+    if(!utility::isParallel(dir, glm::vec3(dir.z, dir.y, -1*dir.x))){
+       a = glm::vec3(dir.z, dir.y, -1*dir.x);
+    }
+    glm::vec3 rand = dir + a;
+    auto c = glm::cross(dir, rand);
     glm::vec3 radiusVec = glm::normalize(glm::cross(dir, rand)) * r;
     glm::vec3 end_1_new = end_1 + radiusVec;
     for(int i = 0; i< COLUMN+1; i++){
@@ -132,7 +149,53 @@ Mesh Tee::generateCylinder(glm::vec3 end_1, glm::vec3 end_2, float r){
 
 Mesh Tee::generateBranchPipe(){
     glm::vec3 end_1(0, pipeR + sideR, 0);
-    glm::vec3 end_2 = glm::vec3(end_1.x, end_1.y+lengthBranch, end_1.z);
+    glm::vec3 end_2 = glm::vec3(end_1.x, lengthBranch, end_1.z);
     Mesh m = generateCylinder(end_1, end_2, pipeR);
+    return m;
+}
+
+Mesh Tee::generateMainPipe(){
+    float sideLength = lengthMain/2;
+    glm::vec3 end_1(-1*sideLength, 0, 0);
+    glm::vec3 end_2(sideLength, 0, 0);
+    Mesh m = generateCylinder(end_1, end_2, pipeR);
+    return m;
+}
+
+Mesh Tee::generateCircle(glm::vec3 anchor, glm::vec3 dir, float r){
+    glm::vec3 a;
+    if(!utility::isParallel(dir, glm::vec3(dir.y, -1*dir.x, dir.z))){
+       a = glm::vec3(dir.y, -1*dir.x, dir.z);
+    }
+    if(!utility::isParallel(dir, glm::vec3(dir.z, dir.y, -1*dir.x))){
+       a = glm::vec3(dir.z, dir.y, -1*dir.x);
+    }
+    glm::vec3 rand = dir + a;
+    glm::vec3 radiusVec_1 = glm::normalize(glm::cross(dir, rand)) * r;
+    glm::vec3 radiusVec_2 = glm::normalize(glm::cross(dir, radiusVec_1)) * r;
+
+    Vertex point;
+    point.vertex = anchor;
+    point.normal = dir;
+    point.coordinate = glm::vec2(0);
+    vector<Vertex> verVec;
+    verVec.push_back(point);
+    int NUM = 180;
+    for (int i = 0; i<NUM+1; i++){
+        Vertex p;
+        float theta = 2*utility::PI/NUM*i;
+        auto t = anchor + radiusVec_1*cos(theta) + radiusVec_2 * sin(theta);
+        p.vertex = t;
+        p.normal = dir;
+        p.coordinate = glm::vec2(0);
+        verVec.push_back(p);
+    }
+    vector<unsigned int> indexVec;
+    for (int i = 1; i<NUM+1; i++){
+        indexVec.push_back(0);
+        indexVec.push_back(i);
+        indexVec.push_back(i+1);
+    }
+    Mesh m(verVec, indexVec);
     return m;
 }

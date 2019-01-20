@@ -88,6 +88,9 @@ glm::mat3 utility::RInMatrix(glm::mat4 m){
     return R;
 }
 glm::vec3 utility::lineRotatePoint(glm::vec3 anchor, glm::vec3 dir, glm::vec3 p, float alpha){
+    if(isParallel(dir, p - anchor)){
+        return p;
+    }
     float coe = glm::dot(dir, p-anchor)/glm::dot(dir, dir);
     glm::vec3 nearest = anchor + dir*coe;
     glm::vec3 dirNew = glm::cross(dir, p - nearest);
@@ -105,4 +108,16 @@ Vertex utility::lineRotateVertex(glm::vec3 anchor, glm::vec3 dir, Vertex p, floa
     glm::vec3 norm = lineRotateVector(dir, p.normal, alpha);
     Vertex v = {pp, norm, p.coordinate};
     return v;
+}
+
+bool utility::isParallel(glm::vec3 vec1, glm::vec3 vec2){
+    vec1 = glm::normalize(vec1);
+    vec2 = glm::normalize(vec2);
+    glm::vec3 c =glm::cross(vec1, vec2);
+    if (length(c) < 1e-5){
+        return true;
+    }
+    else{
+        return false;
+    }
 }

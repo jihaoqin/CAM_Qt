@@ -65,31 +65,7 @@ void Camera2::bindBoundingBox(BoundingBox b)
 	perspective = PerspectiveMat(45.0f, 8.0 / 6.0, 0.1*diameter, 30 * diameter);
 }
 
-void Camera2::processRotation(float deltaX, float deltaY)
-{
-    deltaY = -1 * deltaY;
-    if (utility::isZero(deltaX)&&utility::isZero(deltaY)){
-        return;
-    }
-	float length = sqrt(pow(deltaX, 2)+pow(deltaY, 2));
-    float rad = length / 800.0 * 2 * 3.14;
-    glm::vec3 axis(deltaY * -1.0, deltaX, 0.0);//旋转轴为逆时针旋转90°
-	rotateScene(box.center(), rad, axis);
-}
 
-void Camera2::processScroll(double yOffset)
-{
-	float fov = perspective.getFov();
-    float fovNew = fov - yOffset/120*scrollCoefficient(fov);
-    if (fovNew >= 1.0f && fovNew <= 88.0f)
-        perspective.setFov(fovNew);
-    else if (fovNew <= 1.0f)
-		perspective.setFov(1.0f);
-    else if (fovNew >= 88.0f)
-		perspective.setFov(88.0f);
-	else
-		;
-}
 
 glm::mat4 Camera2::viewMatrix(){
    return worldBaseCam;
@@ -161,4 +137,50 @@ void Camera2::processTranslation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPor
     glm::vec3 newCamPos = getPos() + deltaCam;
     camBaseWorld = utility::setPos(camBaseWorld, newCamPos);
     worldBaseCam = glm::inverse(camBaseWorld);
+}
+
+void Camera2::processScroll(double yOffset)
+{
+    float fov = perspective.getFov();
+    float fovNew = fov - yOffset/120*scrollCoefficient(fov);
+    if (fovNew >= 1.0f && fovNew <= 88.0f)
+        perspective.setFov(fovNew);
+    else if (fovNew <= 1.0f)
+        perspective.setFov(1.0f);
+    else if (fovNew >= 88.0f)
+        perspective.setFov(88.0f);
+    else
+        ;
+}
+
+/*
+void Camera2::processRotation(float deltaX, float deltaY)
+{
+    deltaY = -1 * deltaY;
+    if (utility::isZero(deltaX)&&utility::isZero(deltaY)){
+        return;
+    }
+    float length = sqrt(pow(deltaX, 2)+pow(deltaY, 2));
+    float rad = length / 800.0 * 2 * 3.14;
+    glm::vec3 axis(deltaY * -1.0, deltaX, 0.0);//旋转轴为逆时针旋转90°
+    rotateScene(box.center(), rad, axis);
+}
+*/
+
+void Camera2::processRotation(QPoint mPos, QPoint lastPos, glm::vec4 viewPort){
+    float deltaX = mPos.x() - lastPos.x();
+    float deltaY = mPos.y() - lastPos.y();
+    if (utility::isZero(deltaX)&&utility::isZero(deltaY)){
+        return;
+    }
+    deltaY = -1*deltaY;
+    viewPort = glm::vec4(0, 0, 800, 577);
+    glm::mat4 viewModel = viewMatrix()*glm::mat4(1.0);
+    glm::vec3 centerScr = glm::project(box.center(), viewModel, perspectiveMatrix(), viewPort);
+    glm::vec3 p(400, 288.5, centerScr.z);
+    glm::vec3 pObj = glm::unProject(p, viewModel, perspectiveMatrix(), viewPort);
+    float length = sqrt(pow(deltaX, 2)+pow(deltaY, 2));
+    float rad = length / 800.0 * 2 * 3.14;
+    glm::vec3 axis(deltaY * -1.0, deltaX, 0.0);//旋转轴为逆时针旋转90°
+    rotateScene(pObj, rad, axis);
 }

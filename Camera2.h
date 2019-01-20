@@ -20,7 +20,8 @@ public:
 	void bindBoundingBox(BoundingBox b);
     BoundingBox boundingBox();
     void processTranslation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort);
-    void processRotation(float deltaX, float deltaY);
+    //void processRotation(float deltaX, float deltaY);
+    void processRotation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort);
 	void processScroll(double yOffset);
     void viewPortRatio(int w, int h);
     void setUniform(std::shared_ptr<GLProgram>);

@@ -79,7 +79,9 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
             QPoint mPos = event->pos();
             float deltaX = mPos.x() - mLastPos.x();
             float deltaY = mPos.y() - mLastPos.y();
-            camera->processRotation(deltaX, deltaY);
+            //camera->processRotation(deltaX, deltaY);
+            glm::vec4 viewPort(0,0,width(),height());
+            camera->processRotation(mPos, mLastPos, viewPort);
             update();
             mLastPos = mPos;
         }
