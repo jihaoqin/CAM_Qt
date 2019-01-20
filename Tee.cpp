@@ -1,5 +1,6 @@
 #include "Tee.h"
 #include "utility.h"
+#include <algorithm>
 using namespace std;
 Tee::Tee():modelMat(glm::mat4(1.0)), color(Color::RED)
 
@@ -10,7 +11,7 @@ Tee::Tee():modelMat(glm::mat4(1.0)), color(Color::RED)
     pipeR = 100;
     sideR = 50;
     lengthBranch = 300;
-    lengthMain = 600;
+    lengthMain = 1200;
 
     Mesh m = generateLeftRing();
     Mesh mR = generateRightRing();
@@ -19,6 +20,8 @@ Tee::Tee():modelMat(glm::mat4(1.0)), color(Color::RED)
     Mesh up = generateCircle(glm::vec3(0, lengthBranch, 0), glm::vec3(0, 1, 0), pipeR);
     Mesh left = generateCircle(glm::vec3(-1.0*lengthMain/2, 0, 0), glm::vec3(-1, 0, 0),pipeR);
     Mesh right = generateCircle(glm::vec3(1.0*lengthMain/2, 0, 0), glm::vec3(1, 0, 0),pipeR);
+    Mesh front = generateFrontPlane();
+    Mesh back = generateBackPlane();
     meshVec.push_back(m);
     meshVec.push_back(mR);
     meshVec.push_back(mBranch);
@@ -26,6 +29,8 @@ Tee::Tee():modelMat(glm::mat4(1.0)), color(Color::RED)
     meshVec.push_back(up);
     meshVec.push_back(left);
     meshVec.push_back(right);
+    meshVec.push_back(front);
+    meshVec.push_back(back);
     vector<BoundingBox> boxVec;
     for (auto mesh:meshVec){
         boxVec.push_back(mesh.boundingBox());
@@ -198,4 +203,85 @@ Mesh Tee::generateCircle(glm::vec3 anchor, glm::vec3 dir, float r){
     }
     Mesh m(verVec, indexVec);
     return m;
+}
+
+Mesh Tee::generatePlane(glm::vec3 anchor, vector<vector<glm::vec3>> edgeVec){
+    vector<Vertex> verVec;
+    for(int i = 0; i < edgeVec.size() - 1; i++){
+        vector<glm::vec3> &edge = edgeVec.at(i);
+        for(int j = 0; j<edge.size() - 1; j++){
+            Vertex v1;
+            Vertex v2;
+            Vertex v3;
+            v1.vertex = anchor;
+            glm::vec3 normal = glm::normalize(glm::cross(edge.at(j) - anchor, edge.at(j+1) - anchor));
+            v1.normal = normal;
+            v1.coordinate = glm::vec2(0);
+
+            v2.vertex = edge.at(j);
+            v2.normal = normal;
+            v2.coordinate = glm::vec2(0);
+
+            v3.vertex = edge.at(j+1);
+            v3.normal = normal;
+            v3.coordinate = glm::vec2(0);
+
+            verVec.push_back(v1);
+            verVec.push_back(v2);
+            verVec.push_back(v3);
+        }
+    }
+    vector<unsigned int> indexVec;
+    for(int i = 0; i<verVec.size(); i++){
+        indexVec.push_back(i);
+    }
+    return Mesh(verVec, indexVec);
+}
+
+Mesh Tee::generateFrontPlane(){
+    glm::vec3 anchor(0, 0, pipeR);
+    vector<vector<glm::vec3>> edgeVec;
+    edgeVec.push_back(vector<glm::vec3>());
+    edgeVec.push_back(vector<glm::vec3>());
+    edgeVec.push_back(vector<glm::vec3>());
+    vector<glm::vec3> &edge_1 = edgeVec.at(0);
+    vector<glm::vec3> &edge_2 = edgeVec.at(1);
+    vector<glm::vec3> &edge_3 = edgeVec.at(2);
+    int NUM = 50;
+    for (int i = 0; i<NUM +1;i++){
+        float theta = utility::PI/2*(-1)/NUM * i;
+        glm::vec3 p =glm::vec3(sideR + pipeR,0,0) * cos(theta) + glm::vec3(0,sideR + pipeR,0) * sin(theta) + glm::vec3(-1*(pipeR + sideR), pipeR + sideR,anchor.z);
+        edge_1.push_back(p);
+        edge_2.push_back(glm::vec3(p.x*(-1), p.y, p.z));
+    }
+    reverse(edge_2.begin(), edge_2.end());
+    edge_3.push_back(edge_1.back());
+    edge_3.push_back(edge_2.front());
+    return generatePlane(anchor, edgeVec);
+}
+
+Mesh Tee::generateBackPlane(){
+    glm::vec3 anchor(0, 0, -1*pipeR);
+    vector<vector<glm::vec3>> edgeVec;
+    edgeVec.push_back(vector<glm::vec3>());
+    edgeVec.push_back(vector<glm::vec3>());
+    edgeVec.push_back(vector<glm::vec3>());
+    vector<glm::vec3> &edge_1 = edgeVec.at(0);
+    vector<glm::vec3> &edge_2 = edgeVec.at(1);
+    vector<glm::vec3> &edge_3 = edgeVec.at(2);
+    int NUM = 50;
+    for (int i = 0; i<NUM +1;i++){
+        float theta = utility::PI/2*(-1)/NUM * i;
+        glm::vec3 p =glm::vec3(sideR + pipeR,0,0) * cos(theta) + glm::vec3(0,sideR + pipeR,0) * sin(theta) + glm::vec3(-1*(pipeR + sideR), pipeR + sideR,anchor.z);
+        edge_1.push_back(p);
+        edge_2.push_back(glm::vec3(p.x*(-1), p.y, p.z));
+    }
+    reverse(edge_1.begin(), edge_1.end());
+    edge_3.push_back(edge_2.back());
+    edge_3.push_back(edge_1.front());
+    return generatePlane(anchor, edgeVec);
+}
+
+BoundingBox Tee::boundingBox(){
+    return box;
 }

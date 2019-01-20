@@ -23,9 +23,9 @@ void Controller::addLine(){
 }
 void Controller::draw(std::shared_ptr<GLProgram> program){
     data->camera->setUniform(program);
-    //for (auto m : data->modelVec){
-    //    m->draw(program);
-    //}
+    for (auto m : data->modelVec){
+        m->draw(program);
+    }
     for(auto l : data->lineVec){
         l->draw(program);
     }
@@ -46,12 +46,16 @@ void Controller::bindData(std::shared_ptr<Data> d){
 
 BoundingBox Controller::updateBoundingBox(){
     //TODO::
-    //更新BoundingBox到包括Tee
+    //更新BoundingBox到包扩line
    vector<BoundingBox> boxVec;
    for(auto m:data->modelVec){
        BoundingBox b = m->boundingBox();
        boxVec.push_back(b);
    }
+   //for (auto l:data->lineVec){
+       //boxVec.push_back(l->boundingBox());
+   //}
+   boxVec.push_back(data->tee->boundingBox());
    data->box = BoundingBox::OrBox(boxVec);
    return data->box;
 }

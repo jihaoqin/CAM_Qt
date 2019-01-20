@@ -58,7 +58,7 @@ void Camera2::bindBoundingBox(BoundingBox b)
 	box = b;
 	glm::vec3 zDir = glm::vec3(b.xmax, b.ymax, b.zmax) - b.center();
 	double diameter = 2 * utility::length(zDir);
-	glm::vec3 pos = b.center() + 20.0f * zDir;
+    glm::vec3 pos = b.center() + 5.0f * zDir;
 	glm::vec3 upDir = glm::vec3(0.0, 1.0, 0.0);
 	camBaseWorld = utility::createMat(pos, zDir, upDir);
 	worldBaseCam = glm::inverse(camBaseWorld);
@@ -153,19 +153,6 @@ void Camera2::processScroll(double yOffset)
         ;
 }
 
-/*
-void Camera2::processRotation(float deltaX, float deltaY)
-{
-    deltaY = -1 * deltaY;
-    if (utility::isZero(deltaX)&&utility::isZero(deltaY)){
-        return;
-    }
-    float length = sqrt(pow(deltaX, 2)+pow(deltaY, 2));
-    float rad = length / 800.0 * 2 * 3.14;
-    glm::vec3 axis(deltaY * -1.0, deltaX, 0.0);//旋转轴为逆时针旋转90°
-    rotateScene(box.center(), rad, axis);
-}
-*/
 
 void Camera2::processRotation(QPoint mPos, QPoint lastPos, glm::vec4 viewPort){
     float deltaX = mPos.x() - lastPos.x();
@@ -174,10 +161,9 @@ void Camera2::processRotation(QPoint mPos, QPoint lastPos, glm::vec4 viewPort){
         return;
     }
     deltaY = -1*deltaY;
-    viewPort = glm::vec4(0, 0, 800, 577);
     glm::mat4 viewModel = viewMatrix()*glm::mat4(1.0);
     glm::vec3 centerScr = glm::project(box.center(), viewModel, perspectiveMatrix(), viewPort);
-    glm::vec3 p(400, 288.5, centerScr.z);
+    glm::vec3 p(viewPort[2]/2, viewPort[3]/2, centerScr.z);
     glm::vec3 pObj = glm::unProject(p, viewModel, perspectiveMatrix(), viewPort);
     float length = sqrt(pow(deltaX, 2)+pow(deltaY, 2));
     float rad = length / 800.0 * 2 * 3.14;
