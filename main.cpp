@@ -3,6 +3,7 @@
 #include "Controller.h"
 #include <QApplication>
 #include "glwidget.h"
+#include "test_only.h"
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -12,5 +13,7 @@ int main(int argc, char *argv[])
     ctrl.bindData(data);
     w.bindController(&ctrl);
     w.show();
+
+    testVec3Serialization();
     return a.exec();
 }

@@ -6,7 +6,6 @@
 #include <memory>
 #include "Camera2.h"
 #include "Tee.h"
-
 class Data
 {
 public:

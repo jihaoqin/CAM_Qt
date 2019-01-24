@@ -40,6 +40,7 @@ void GLWidget::initializeGL(){
     program->link();
     program->bind();
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_MULTISAMPLE);
     //ctrl->addModel(MODEL_PATH);
     ctrl->addTee();
     camera->bindBoundingBox(ctrl->updateBoundingBox());
@@ -47,7 +48,7 @@ void GLWidget::initializeGL(){
 
 void GLWidget::paintGL(){
     program->bind();
-    glClearColor(0.2f,0.3f,0.3f,1.0f);
+    glClearColor(1.0,1.0,1.0,1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     glViewport(0, 0, width(), height());
     ctrl->draw(program);

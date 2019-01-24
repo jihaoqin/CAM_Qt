@@ -13,6 +13,8 @@ public:
     void bindController(Controller*);
     ~MainWindow();
 private:
+    void configureStatusBar();
+    void configureMenuBar();
     GLWidget widget;
 };
 

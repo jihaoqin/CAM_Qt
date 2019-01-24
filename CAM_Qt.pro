@@ -63,11 +63,14 @@ HEADERS += \
     vertex.h \
     LineLight.h \
     Color.h \
-    Tee.h
+    Tee.h \
+    serialization.h \
+    test_only.h
+include ($$PWD/3rdparty/3rdparty.pri)
 
-INCLUDEPATH += \
-    ./3rdparty/includes/
+LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt
 
+DEPENDPATH += $$PWD/3rdparty/libs
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -76,10 +79,13 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     vertexShader.vs \
-    loadingModel.fs
+    loadingModel.fs \
+    3rdparty/3rdparty.pri
 
-LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt \
 
-INCLUDEPATH += $$PWD/3rdparty/libs
-DEPENDPATH += $$PWD/3rdparty/libs
-
+# BOOST lib configuration
+BOOST_ROOT = E:\boost_1_69_0
+INCLUDEPATH += $$BOOST_ROOT
+LIBS += -L$$BOOST_ROOT\stage\lib -llibboost_serialization-vc141-mt-gd-x32-1_69 \
+        -L$$BOOST_ROOT\stage\lib -llibboost_wserialization-vc141-mt-gd-x32-1_69
+DEPENDPATH += $$BOOST_ROOT\stage
