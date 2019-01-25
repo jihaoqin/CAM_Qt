@@ -65,7 +65,8 @@ HEADERS += \
     Color.h \
     Tee.h \
     serialization.h \
-    test_only.h
+    test_only.h \
+    serialization_.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt

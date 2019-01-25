@@ -14,6 +14,6 @@ int main(int argc, char *argv[])
     w.bindController(&ctrl);
     w.show();
 
-    testVec3Serialization();
+    MainTest();
     return a.exec();
 }
