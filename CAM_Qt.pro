@@ -85,7 +85,13 @@ DISTFILES += \
 
 
 # BOOST lib configuration
-BOOST_ROOT = E:\boost_1_69_0
+DEFINES += ROOM
+if(contains(DEFINES, ROOM)){
+        BOOST_ROOT = F:\boost_1_69_0
+}else{
+        BOOST_ROOT = E:\boost_1_69_0
+}
+
 INCLUDEPATH += $$BOOST_ROOT
 LIBS += -L$$BOOST_ROOT\stage\lib -llibboost_serialization-vc141-mt-gd-x32-1_69 \
         -L$$BOOST_ROOT\stage\lib -llibboost_wserialization-vc141-mt-gd-x32-1_69
