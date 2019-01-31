@@ -11,7 +11,6 @@
 
 GLWidget::GLWidget(QWidget *parent):QOpenGLWidget (0), context(0)
 {
-    //初始化camera
     QSurfaceFormat fmt;
     fmt.setProfile(QSurfaceFormat::CoreProfile);
     QSurfaceFormat::setDefaultFormat(fmt);
@@ -25,8 +24,6 @@ void GLWidget::initializeGL(){
     glClearColor(0.2f,0.3f,0.3f,1.0f);
     context = QOpenGLContext::currentContext();
     program = std::make_shared<GLProgram>(context);
-    ctrl->initialGLVar(context, program);
-    camera = ctrl->getCamera();
     if (!program->addShaderFromSourceFile(QOpenGLShader::Vertex, VERTEX_PATH)){
         qDebug()<<"Failed to load vertexShader: "<<program->log()<<"\n";
     }else{
@@ -41,9 +38,6 @@ void GLWidget::initializeGL(){
     program->bind();
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
-    //ctrl->addModel(MODEL_PATH);
-    ctrl->addTee();
-    camera->bindBoundingBox(ctrl->updateBoundingBox());
 }
 
 void GLWidget::paintGL(){
@@ -57,7 +51,7 @@ void GLWidget::paintGL(){
 
 void GLWidget::resizeGL(int w, int h){
     makeCurrent();
-    camera->viewPortRatio(w, h);
+    ctrl->setViewPortRatio(w,h);
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event){
@@ -71,7 +65,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
             //按下了control键
             QPoint mPos = event->pos();
             glm::vec4 viewPort(0,0,width(),height());
-            camera->processTranslation(mPos, mLastPos, viewPort);
+            ctrl->processTranslation(mPos, mLastPos, viewPort);
             update();
             mLastPos = mPos;
         }
@@ -79,9 +73,8 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
             QPoint mPos = event->pos();
             float deltaX = mPos.x() - mLastPos.x();
             float deltaY = mPos.y() - mLastPos.y();
-            //camera->processRotation(deltaX, deltaY);
             glm::vec4 viewPort(0,0,width(),height());
-            camera->processRotation(mPos, mLastPos, viewPort);
+            ctrl->processRotation(mPos, mLastPos, viewPort);
             update();
             mLastPos = mPos;
         }
@@ -90,10 +83,17 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
 
 void GLWidget::wheelEvent(QWheelEvent *event){
    auto degree = event->angleDelta();
-   camera->processScroll(degree.y());
+   ctrl->processScroll(degree.y());
    update();
 }
 
 void GLWidget::bindController(Controller *c){
     ctrl = c;
 }
+
+void GLWidget::addTee(float mainLength,float branchLength,float R, float sideR){
+    makeCurrent();
+    context = QOpenGLContext::currentContext();
+    ctrl->addTee(context, mainLength, branchLength, R, sideR);
+}
+

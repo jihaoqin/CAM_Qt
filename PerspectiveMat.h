@@ -2,6 +2,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+
 class PerspectiveMat {
 public:
 	PerspectiveMat();
@@ -13,6 +16,11 @@ public:
 	void setFov(float);
     void setRatio(float);
 private:
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive& ar, const unsigned int version){
+        ar & fov & ratio & nearPlane & farPlane & matrix;
+    }
 	float fov;
 	float ratio;
 	float nearPlane;

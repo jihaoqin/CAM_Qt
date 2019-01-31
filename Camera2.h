@@ -6,6 +6,8 @@
 #include "PerspectiveMat.h"
 #include "LineLight.h"
 #include <QOpenGLShaderProgram>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
 class Camera2
 {
 public:
@@ -25,6 +27,14 @@ public:
     void viewPortRatio(int w, int h);
     void setUniform(std::shared_ptr<GLProgram>);
 private:
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive& ar, const unsigned int version){
+        for(int i =0; i < 4; i++){
+            ar & lightGroup[i];
+        }
+        ar & perspective & box & camBaseWorld & worldBaseCam;
+    }
     void initializeLineLight();
     float scrollCoefficient(float);
     LineLight lightGroup[4];

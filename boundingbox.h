@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 #include "vertex.h"
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
 class BoundingBox {
 public:
     static BoundingBox OrBox(std::vector<BoundingBox>);
@@ -15,5 +17,10 @@ public:
     double zmin;
     double zmax;
     void print();
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive& ar, const unsigned int version){
+        ar&xmin&xmax&ymin&ymax&zmin&zmax;
+    }
 };
 

@@ -17,6 +17,8 @@ class GLWidget : public  QOpenGLWidget, protected QOpenGLFunctions_4_3_Core
 public:
     GLWidget(QWidget *parent = 0);
     void bindController(Controller*);
+public slots:
+    void addTee(float, float, float, float);
 protected:
     void initializeGL() override;
     void paintGL() override;

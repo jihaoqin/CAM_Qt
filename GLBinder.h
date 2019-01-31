@@ -4,6 +4,8 @@
 #include <QOpenGLContext>
 #include <GLProgram.h>
 #include <memory>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
 
 class GLBinder
 {
@@ -15,6 +17,12 @@ public:
     bool isBinded();
 protected:
     bool binded;
+private:
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive& ar, const unsigned int version){
+        ar & binded;
+    }
 };
 
 #endif // OPENGLBINDER_H

@@ -2,17 +2,10 @@
 #include "utility.h"
 #include <algorithm>
 using namespace std;
-Tee::Tee():modelMat(glm::mat4(1.0)), color(Color::RED)
+Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR):modelMat(glm::mat4(1.0)), color(Color::RED),
+        lengthMain(_lengthMain), lengthBranch(_lengthBranch), pipeR(_pipeR), sideR(_sideR)
 
 {
-    //TODO::
-    //初始化lengthMain, lengthBranch
-    //rightRing
-    pipeR = 100;
-    sideR = 50;
-    lengthBranch = 300;
-    lengthMain = 1200;
-
     Mesh m = generateLeftRing();
     Mesh mR = generateRightRing();
     Mesh mBranch = generateBranchPipe();

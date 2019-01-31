@@ -6,35 +6,16 @@ Controller::Controller()
 
 }
 
-void Controller::addModel(std::string str){
-    shared_ptr<Model> m = make_shared<Model>(str.c_str());
-    m->bindGL(context);
-    data->modelVec.push_back(m);
-}
 
 void Controller::bindGL(QOpenGLContext *c, shared_ptr<GLBinder> obj){
    obj->bindGL(c);
 }
 
-void Controller::addLine(){
-    shared_ptr<Line> l = make_shared<Line>();
-    l->bindGL(context);
-    data->lineVec.push_back(l);
-}
 void Controller::draw(std::shared_ptr<GLProgram> program){
     data->camera->setUniform(program);
-    for (auto m : data->modelVec){
-        m->draw(program);
+    if(data->tee){
+        data->tee->draw(program);
     }
-    for(auto l : data->lineVec){
-        l->draw(program);
-    }
-    data->tee->draw(program);
-}
-void Controller::initialGLVar(QOpenGLContext *c, std::shared_ptr<GLProgram> proPtr){
-    context = c;
-    program = proPtr;
-    core = context->versionFunctions<QOpenGLFunctions_4_3_Core>();
 }
 
 std::shared_ptr<Camera2> Controller::getCamera(){
@@ -45,23 +26,36 @@ void Controller::bindData(std::shared_ptr<Data> d){
 }
 
 BoundingBox Controller::updateBoundingBox(){
-    //TODO::
-    //更新BoundingBox到包扩line
    vector<BoundingBox> boxVec;
-   for(auto m:data->modelVec){
-       BoundingBox b = m->boundingBox();
-       boxVec.push_back(b);
+   if(data->tee){
+        boxVec.push_back(data->tee->boundingBox());
    }
-   //for (auto l:data->lineVec){
-       //boxVec.push_back(l->boundingBox());
-   //}
-   boxVec.push_back(data->tee->boundingBox());
    data->box = BoundingBox::OrBox(boxVec);
    return data->box;
 }
 
-void Controller::addTee(){
-    std::shared_ptr<Tee> t = std::make_shared<Tee>();
+void Controller::addTee(QOpenGLContext* context, float mainLength, float branchLength, float R, float sideR){
+    std::shared_ptr<Tee> t = std::make_shared<Tee>(mainLength, branchLength, R, sideR);
     t->bindGL(context);
-    data->tee = t;
+    data->addTee(t);
+}
+
+bool Controller::hasTee(){
+    return data->hasTee();
+}
+
+void Controller::setViewPortRatio(int w, int h){
+    data->setViewPortRatio(w, h);
+}
+
+void Controller::processTranslation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort){
+    data->processTranslation(mPos, mLastPos, viewPort);
+}
+
+void Controller::processRotation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort){
+    data->processRotation(mPos, mLastPos, viewPort);
+}
+
+void Controller::processScroll(double yOffset){
+    data->processScroll(yOffset);
 }

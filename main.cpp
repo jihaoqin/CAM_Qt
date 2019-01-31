@@ -4,6 +4,9 @@
 #include <QApplication>
 #include "glwidget.h"
 #include "test_only.h"
+#include <fstream>
+#include <boost/archive/text_oarchive.hpp>
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -15,5 +18,10 @@ int main(int argc, char *argv[])
     w.show();
 
     MainTest();
+    std::ofstream ofile("out.txt");
+    boost::archive::text_oarchive oa(ofile);
+    oa<<*data;
+    ofile.close();
+
     return a.exec();
 }

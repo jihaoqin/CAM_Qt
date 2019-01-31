@@ -45,7 +45,9 @@ void BoundingBox::print() {
 }
 
 BoundingBox BoundingBox::OrBox(vector<BoundingBox> boxVec){
-    assert(boxVec.size()>0);
+    if(boxVec.size() == 0){
+        return BoundingBox();
+    }
     BoundingBox f = boxVec.at(0);
     double xmin = f.xmin;
     double xmax = f.xmax;

@@ -42,7 +42,8 @@ SOURCES += \
     GLProgram.cpp \
     LineLight.cpp \
     Color.cpp \
-    Tee.cpp
+    Tee.cpp \
+    TeeParameterDialog.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -66,7 +67,7 @@ HEADERS += \
     Tee.h \
     serialization.h \
     test_only.h \
-    serialization_.h
+    TeeParameterDialog.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt
@@ -96,3 +97,6 @@ INCLUDEPATH += $$BOOST_ROOT
 LIBS += -L$$BOOST_ROOT\stage\lib -llibboost_serialization-vc141-mt-gd-x32-1_69 \
         -L$$BOOST_ROOT\stage\lib -llibboost_wserialization-vc141-mt-gd-x32-1_69
 DEPENDPATH += $$BOOST_ROOT\stage
+
+RESOURCES += \
+    res.qrc
