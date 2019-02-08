@@ -20,7 +20,7 @@ TeeParameterDialog::TeeParameterDialog(MainWindow *parent):QDialog(dynamic_cast<
     const int lineWidth = 50;
     const int labelWidth = 120;
     QDoubleValidator *doubleReg = new QDoubleValidator(this);
-    doubleReg->setBottom(0);
+    doubleReg->setBottom(0.1);
 
     mainLengthLine = new QLineEdit(this);
     mainLengthLine->setValidator(doubleReg);
@@ -105,6 +105,18 @@ void TeeParameterDialog::readData(){
 }
 
 bool TeeParameterDialog::isValid(float mainLength, float branchLength, float R , float sideR){
+    if(mainLength <= 0){
+        return false;
+    }
+    if(branchLength <= 0){
+        return false;
+    }
+    if(R<=0){
+        return false;
+    }
+    if(sideR<=0){
+        return false;
+    }
     if(mainLength < 2*(sideR+R)){
         return false;
     }

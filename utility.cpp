@@ -25,7 +25,7 @@ glm::mat4 utility::createMat(glm::vec3 pos, glm::vec3 zDir, glm::vec3 upDir)
 	return matrix;
 }
 
-glm::mat4 utility::setPos(glm::mat4 matrix, glm::vec3 pos)
+glm::mat4 utility::setPos(glm::mat4& matrix, glm::vec3 pos)
 {
 	matrix[3][0] = pos[0];
 	matrix[3][1] = pos[1];
@@ -120,4 +120,56 @@ bool utility::isParallel(glm::vec3 vec1, glm::vec3 vec2){
     else{
         return false;
     }
+}
+
+glm::mat4 utility::setXDir(glm::mat4& matrix, glm::vec3 pos){
+    matrix[0][0] = pos[0];
+    matrix[0][1] = pos[1];
+    matrix[0][2] = pos[2];
+    return matrix;
+}
+
+glm::mat4 utility::setYDir(glm::mat4& matrix, glm::vec3 pos){
+    matrix[1][0] = pos[0];
+    matrix[1][1] = pos[1];
+    matrix[1][2] = pos[2];
+    return matrix;
+}
+
+glm::mat4 utility::setZDir(glm::mat4& matrix, glm::vec3 pos){
+    matrix[2][0] = pos[0];
+    matrix[2][1] = pos[1];
+    matrix[2][2] = pos[2];
+    return matrix;
+}
+
+Mesh utility::generateRevolution(glm::vec3 anchor, glm::vec3 dir, std::vector<Vertex> edge, float angle){
+
+    vector<Vertex> verVec;
+    int COLUMN = edge.size()-1;
+    int ROW = 100;
+    for (int i = 0; i< ROW+1; i++){
+        float alpha_i = angle/ROW*i;
+        for (auto p:edge){
+            Vertex pNew = utility::lineRotateVertex(anchor, dir, p, alpha_i);
+            verVec.push_back(pNew);
+        }
+    }
+    auto INDEX = [COLUMN](int i, int j)->int{return i+(COLUMN+1)*j;};
+    vector<unsigned int> indexVec;
+    for (int i =0; i<COLUMN; i++){
+        for(int j = 0; j< ROW; j++){
+            //可能是normal出现了问题
+            indexVec.push_back(INDEX(i,j));
+            indexVec.push_back(INDEX(i+1, j));
+            indexVec.push_back(INDEX(i, j+1));
+
+            indexVec.push_back(INDEX(i+1, j));
+            indexVec.push_back(INDEX(i+1, j+1));
+            indexVec.push_back(INDEX(i, j+1));
+        }
+    }
+    //可以优化成return Mesh(verVec, indexVec);
+    Mesh m(verVec, indexVec);
+    return m;
 }

@@ -1,11 +1,14 @@
 #include "mainwindow.h"
-#include <QMenuBar>
+#include <QList>
+#include <QString>
 #include <QMenu>
 #include <QLabel>
 #include <QStatusBar>
 #include "glwidget.h"
 #include "TeeParameterDialog.h"
 #include <QMessageBox>
+#include <QFileDialog>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ctrl(nullptr)
 {
@@ -35,12 +38,14 @@ void MainWindow::configureStatusBar(){
 
 void MainWindow::configureMenuBar(){
     QMenuBar* menubar = menuBar();
-    QMenu* menu = new QMenu("File");
-    menubar->addMenu(menu);
-    QAction* actionNew = menu->addAction("New");
-    QAction* actionOpen = menu->addAction("Open");
-    QAction* actionSave = menu->addAction("Save");
+    fileMenu = new QMenu("File");
+    menubar->addMenu(fileMenu);
+    QAction* actionNew = fileMenu->addAction("New");
+    QAction* actionOpen = fileMenu->addAction("Open");
+    QAction* actionSave = fileMenu->addAction("Save");
 
+    //update the status of actions below "File" menu
+    connect(fileMenu, &QMenu::aboutToShow, this, &MainWindow::updateMenu);
     //configure New operation
     connect(actionNew, &QAction::triggered, this, &MainWindow::saveOrNot);
 }
@@ -49,16 +54,31 @@ void MainWindow::saveOrNot(){
         //弹出说明是否保存
         int ret =QMessageBox::warning(this,"Warning",tr("Save changes to document?"),QMessageBox::Save|QMessageBox::Discard|QMessageBox::Cancel,QMessageBox::Save);
         switch(ret){
-            case QMessageBox::Save:
-                //保存data,之后弹出tee参数化对话框
-                break;
-            case QMessageBox::Discard:
-                //不保存data, 之后弹出tee参数化对话框
-                break;
-            case QMessageBox::Cancel:
-                break;
-            default:
-                break;
+        case QMessageBox::Save:{
+            //保存data,之后弹出tee参数化对话框
+            QString savePath = QFileDialog::getSaveFileName();
+            if(savePath.isNull()){
+                //do nothing
+            }
+            else{
+                ctrl->save(savePath);
+            }
+            ctrl->clearData();
+            showTeeParameterDialog();
+            break;
+        }
+        case QMessageBox::Discard:{
+            //不保存data, 之后弹出tee参数化对话框
+            ctrl->clearData();
+            showTeeParameterDialog();
+            break;
+        }
+        case QMessageBox::Cancel:{
+            //do nothing
+            break;
+        }
+        default:
+            break;
         }
     }
     else{
@@ -71,4 +91,26 @@ void MainWindow::showTeeParameterDialog(){
     connect(teeNewDialog, &TeeParameterDialog::addTee, &widget, &GLWidget::addTee);
     teeNewDialog->exec();
     delete teeNewDialog;
+}
+
+void MainWindow::updateMenu(){
+    QList<QAction*> actions = fileMenu->actions();
+    for(auto action : actions){
+        QString s = action->text();
+        if(s == QString("Save")){
+            bool empty = ctrl->getEmpty();
+            bool changed = ctrl->getChanged();
+            if(empty == true){
+                action->setEnabled(false);
+            }
+            else{
+                if(changed == true){
+                    action->setEnabled(true);
+                }
+                else{
+                    action->setEnabled(false);
+                }
+            }
+        }
+    }
 }

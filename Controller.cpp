@@ -13,7 +13,7 @@ void Controller::bindGL(QOpenGLContext *c, shared_ptr<GLBinder> obj){
 
 void Controller::draw(std::shared_ptr<GLProgram> program){
     data->camera->setUniform(program);
-    if(data->tee){
+    if(data->getEmpty() == false){
         data->tee->draw(program);
     }
 }
@@ -27,7 +27,7 @@ void Controller::bindData(std::shared_ptr<Data> d){
 
 BoundingBox Controller::updateBoundingBox(){
    vector<BoundingBox> boxVec;
-   if(data->tee){
+   if(data->getEmpty() == false){
         boxVec.push_back(data->tee->boundingBox());
    }
    data->box = BoundingBox::OrBox(boxVec);
@@ -58,4 +58,20 @@ void Controller::processRotation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPor
 
 void Controller::processScroll(double yOffset){
     data->processScroll(yOffset);
+}
+
+void Controller::save(QString savePath){
+    data->save(savePath);
+}
+
+void Controller::clearData(){
+    data->clear();
+}
+
+bool Controller::getEmpty(){
+    return data->getEmpty();
+}
+
+bool Controller::getChanged(){
+    return data->getChanged();
 }

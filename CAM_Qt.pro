@@ -43,7 +43,10 @@ SOURCES += \
     LineLight.cpp \
     Color.cpp \
     Tee.cpp \
-    TeeParameterDialog.cpp
+    TeeParameterDialog.cpp \
+    DataState.cpp \
+    Cylinder.cpp \
+    Ring.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -67,7 +70,10 @@ HEADERS += \
     Tee.h \
     serialization.h \
     test_only.h \
-    TeeParameterDialog.h
+    TeeParameterDialog.h \
+    DataState.h \
+    Cylinder.h \
+    Ring.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt

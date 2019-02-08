@@ -2,8 +2,18 @@
 #include <iostream>
 #include <QOpenGLFunctions_4_3_Core>
 #include "GLProgram.h"
+Mesh::Mesh(){
 
-Mesh::Mesh(vector<Vertex> vertexs, vector<unsigned int> indexs)
+}
+
+void Mesh::setData(vector<Vertex> vertexs, vector<unsigned int> indexs){
+    this->vertexVec = vertexs;
+    this->indexVec = indexs;
+    vector<BoundingBox> boxVec;
+    box = BoundingBox(vertexVec);
+    binded = false;
+}
+Mesh::Mesh(vector<Vertex> vertexs, vector<unsigned int> indexs):GLMemory()
 {
 	this->vertexVec = vertexs;
 	this->indexVec = indexs;
@@ -45,6 +55,10 @@ void Mesh::bindGL(QOpenGLContext *c){
 }
 
 void Mesh::draw(std::shared_ptr<GLProgram> program){
+    if(binded == false){
+        assert(binded == true);
+        return;
+    }
 	core->glBindVertexArray(VAO);
     core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
     core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);

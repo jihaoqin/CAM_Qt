@@ -14,14 +14,15 @@ struct Texture {
 class Mesh:public GLMemory
 {
 public:
+    Mesh();
     Mesh(vector<Vertex> , vector<unsigned int> );
 	~Mesh();
-public:
+    void setData(vector<Vertex> , vector<unsigned int>);
 	void print();
     virtual void bindGL(QOpenGLContext*) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;
     BoundingBox boundingBox();
-private:
+protected:
 	std::vector<Vertex> vertexVec;
     BoundingBox box;
 };

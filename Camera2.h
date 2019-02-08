@@ -8,6 +8,7 @@
 #include <QOpenGLShaderProgram>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
+#include "serialization.h"
 class Camera2
 {
 public:

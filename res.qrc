@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/images">
-        <file alias="tee">C:/Users/qinjihao/Desktop/tee.jpg</file>
+        <file alias="tee">C:/Users/qinjihao/Desktop/a.PNG</file>
     </qresource>
+    <qresource prefix="/"/>
 </RCC>

@@ -1,6 +1,7 @@
 #pragma once
 #include "Data.h"
 #include <string>
+#include <QString>
 #include <QOpenGLContext>
 #include "GLProgram.h"
 #include <QOpenGLFunctions_4_3_Core>
@@ -10,9 +11,8 @@ class Controller
 public:
     Controller();
     BoundingBox updateBoundingBox();
-    void save();
+    void save(QString);
     void bindData(std::shared_ptr<Data>);
-    void addModel(std::string);
     void addTee(QOpenGLContext*, float ,float ,float ,float);
     void addLine();
     void bindGL(QOpenGLContext*, std::shared_ptr<GLBinder>);
@@ -22,8 +22,10 @@ public:
     void processTranslation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort);
     void processRotation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort);
     void processScroll(double yOffset);
+    void clearData();
     std::shared_ptr<Camera2> getCamera();
+    bool getEmpty();
+    bool getChanged();
 private:
     std::shared_ptr<Data> data;
 };
-

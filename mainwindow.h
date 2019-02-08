@@ -2,6 +2,7 @@
 #include <QMainWindow>
 #include "glwidget.h"
 #include "Model.h"
+#include <QMenuBar>
 class TeeParameterDialog;
 class MainWindow : public QMainWindow
 {
@@ -14,11 +15,13 @@ public:
 public slots:
     void showTeeParameterDialog();
     void saveOrNot();
+    void updateMenu();
 private:
     void configureStatusBar();
     void configureMenuBar();
     Controller* ctrl;
     GLWidget widget;
     TeeParameterDialog *teeNewDialog;
+    QMenu* fileMenu;
 };
 
