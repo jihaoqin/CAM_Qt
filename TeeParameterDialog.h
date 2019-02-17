@@ -5,17 +5,22 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <mainwindow.h>
+struct TeePara{
+    float mainLength;
+    float branchLength;
+    float R;
+    float sideR;
+};
+
 class TeeParameterDialog: public QDialog
 {
     Q_OBJECT
 
 public:
     TeeParameterDialog(MainWindow* parent);
-
+    TeePara getTeePara();
 public slots:
     void readData();
-signals:
-    void addTee(float, float, float, float);
 
 private:
     bool isValid(float ,float ,float , float);
@@ -35,5 +40,7 @@ private:
     QLabel *RLabel;
 
     QLabel *teePic;
+
+    TeePara para;
 };
 

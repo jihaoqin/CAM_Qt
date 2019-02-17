@@ -2,5 +2,7 @@
     <qresource prefix="/images">
         <file alias="tee">C:/Users/qinjihao/Desktop/a.PNG</file>
     </qresource>
-    <qresource prefix="/"/>
+    <qresource prefix="/icons">
+        <file alias="newCurve">C:/Users/qinjihao/Desktop/未标题-1.png</file>
+    </qresource>
 </RCC>

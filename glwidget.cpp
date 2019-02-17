@@ -9,8 +9,9 @@
 #include <QApplication>
 
 
-GLWidget::GLWidget(QWidget *parent):QOpenGLWidget (0), context(0)
+GLWidget::GLWidget(QWidget *parent):QOpenGLWidget (parent), context(0)
 {
+    setMinimumSize(400,300);
     QSurfaceFormat fmt;
     fmt.setProfile(QSurfaceFormat::CoreProfile);
     QSurfaceFormat::setDefaultFormat(fmt);
@@ -42,9 +43,11 @@ void GLWidget::initializeGL(){
 
 void GLWidget::paintGL(){
     program->bind();
-    glClearColor(1.0,1.0,1.0,1.0f);
+    //glClearColor(1.0,1.0,1.0,1.0f);
+    glClearColor(0.2f,0.3f,0.3f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     glViewport(0, 0, width(), height());
+    ctrl->setViewPortRatio(width(),height());
     ctrl->draw(program);
     update();
 }
@@ -59,6 +62,7 @@ void GLWidget::mousePressEvent(QMouseEvent *event){
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event){
+    event->ignore();
     if (event->buttons() & Qt::MidButton) {
         //按下了鼠标中键
         if(QApplication::keyboardModifiers() == Qt::ControlModifier){
@@ -89,11 +93,12 @@ void GLWidget::wheelEvent(QWheelEvent *event){
 
 void GLWidget::bindController(Controller *c){
     ctrl = c;
+    c->bindGLWidget(this);
 }
 
-void GLWidget::addTee(float mainLength,float branchLength,float R, float sideR){
+
+
+QOpenGLContext* GLWidget::getGLContext(){
     makeCurrent();
-    context = QOpenGLContext::currentContext();
-    ctrl->addTee(context, mainLength, branchLength, R, sideR);
+    return QOpenGLContext::currentContext();
 }
-

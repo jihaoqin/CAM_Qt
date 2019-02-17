@@ -6,6 +6,7 @@
 #include "GLProgram.h"
 #include <QOpenGLFunctions_4_3_Core>
 #include <memory>
+class GLWidget;
 class Controller
 {
 public:
@@ -13,7 +14,8 @@ public:
     BoundingBox updateBoundingBox();
     void save(QString);
     void bindData(std::shared_ptr<Data>);
-    void addTee(QOpenGLContext*, float ,float ,float ,float);
+    void bindGLWidget(GLWidget*);
+    void addTee(float ,float ,float ,float);
     void addLine();
     void bindGL(QOpenGLContext*, std::shared_ptr<GLBinder>);
     void draw(std::shared_ptr<GLProgram>);
@@ -28,4 +30,5 @@ public:
     bool getChanged();
 private:
     std::shared_ptr<Data> data;
+    GLWidget* widget;
 };

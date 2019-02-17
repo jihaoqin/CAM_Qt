@@ -1,9 +1,9 @@
 #pragma once
 #include <QMainWindow>
-#include "glwidget.h"
-#include "Model.h"
 #include <QMenuBar>
 class TeeParameterDialog;
+class CentralWidget;
+class Controller;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -15,13 +15,15 @@ public:
 public slots:
     void showTeeParameterDialog();
     void saveOrNot();
-    void updateMenu();
+    void updateAction();
 private:
     void configureStatusBar();
     void configureMenuBar();
+    void configureToolBar();
     Controller* ctrl;
-    GLWidget widget;
+    CentralWidget* widget;
     TeeParameterDialog *teeNewDialog;
     QMenu* fileMenu;
+    QToolBar* toolBar;
 };
 

@@ -46,7 +46,12 @@ SOURCES += \
     TeeParameterDialog.cpp \
     DataState.cpp \
     Cylinder.cpp \
-    Ring.cpp
+    Ring.cpp \
+    TabWidget.cpp \
+    CentralWidget.cpp \
+    LeftRibbonLayout.cpp \
+    TabBackground.cpp \
+    StrechLabel.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -73,7 +78,12 @@ HEADERS += \
     TeeParameterDialog.h \
     DataState.h \
     Cylinder.h \
-    Ring.h
+    Ring.h \
+    TabWidget.h \
+    CentralWidget.h \
+    LeftRibbonLayout.h \
+    TabBackground.h \
+    StrechLabel.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt

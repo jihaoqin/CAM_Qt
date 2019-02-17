@@ -1,5 +1,6 @@
 #include "Controller.h"
 #include <memory>
+#include "glwidget.h"
 using namespace  std;
 Controller::Controller()
 {
@@ -33,10 +34,18 @@ BoundingBox Controller::updateBoundingBox(){
    data->box = BoundingBox::OrBox(boxVec);
    return data->box;
 }
-
+/*
 void Controller::addTee(QOpenGLContext* context, float mainLength, float branchLength, float R, float sideR){
     std::shared_ptr<Tee> t = std::make_shared<Tee>(mainLength, branchLength, R, sideR);
-    t->bindGL(context);
+    t->bindGL(c);
+    data->addTee(t);
+}
+*/
+
+void Controller::addTee(float mainLength, float branchLength, float R, float sideR){
+    std::shared_ptr<Tee> t = std::make_shared<Tee>(mainLength, branchLength, R, sideR);
+    QOpenGLContext* c = widget->getGLContext();
+    t->bindGL(c);
     data->addTee(t);
 }
 
@@ -74,4 +83,8 @@ bool Controller::getEmpty(){
 
 bool Controller::getChanged(){
     return data->getChanged();
+}
+
+void Controller::bindGLWidget(GLWidget* w){
+    widget = w;
 }

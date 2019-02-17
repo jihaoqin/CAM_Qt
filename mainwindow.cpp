@@ -1,21 +1,28 @@
 #include "mainwindow.h"
 #include <QList>
+#include <QToolBar>
 #include <QString>
 #include <QMenu>
 #include <QLabel>
 #include <QStatusBar>
-#include "glwidget.h"
 #include "TeeParameterDialog.h"
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QHBoxLayout>
+#include "CentralWidget.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ctrl(nullptr)
 {
+    //setStyleSheet("background-color:rgb(255,255,255)");
     configureMenuBar();
     configureStatusBar();
-    setCentralWidget(&widget);
-    resize(800, 600);
+    configureToolBar();
+    setMouseTracking(true);
+    widget = new CentralWidget(this);
+    setCentralWidget(widget);
+    centralWidget()->setMouseTracking(true);
+    //resize(800, 600);
 }
 
 MainWindow::~MainWindow()
@@ -24,7 +31,7 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::bindController(Controller *c){
-    widget.bindController(c);
+    widget->bindController(c);
     ctrl = c;
 }
 
@@ -45,7 +52,7 @@ void MainWindow::configureMenuBar(){
     QAction* actionSave = fileMenu->addAction("Save");
 
     //update the status of actions below "File" menu
-    connect(fileMenu, &QMenu::aboutToShow, this, &MainWindow::updateMenu);
+    connect(fileMenu, &QMenu::aboutToShow, this, &MainWindow::updateAction);
     //configure New operation
     connect(actionNew, &QAction::triggered, this, &MainWindow::saveOrNot);
 }
@@ -88,12 +95,16 @@ void MainWindow::saveOrNot(){
 
 void MainWindow::showTeeParameterDialog(){
     teeNewDialog = new TeeParameterDialog(this);
-    connect(teeNewDialog, &TeeParameterDialog::addTee, &widget, &GLWidget::addTee);
-    teeNewDialog->exec();
+    int flag = teeNewDialog->exec();
+    if(flag){
+        TeePara para = teeNewDialog->getTeePara();
+        ctrl->addTee(para.mainLength, para.branchLength, para.R, para.sideR);
+        updateAction();
+    }
     delete teeNewDialog;
 }
 
-void MainWindow::updateMenu(){
+void MainWindow::updateAction(){
     QList<QAction*> actions = fileMenu->actions();
     for(auto action : actions){
         QString s = action->text();
@@ -113,4 +124,27 @@ void MainWindow::updateMenu(){
             }
         }
     }
+
+    //toolBar
+    QList<QAction*> actionsTool = toolBar->actions();
+    for(auto action:actionsTool){
+        QString s = action->text();
+        if(s == QString("newCurve")){
+            bool empty = ctrl->getEmpty();
+            if(empty == true){
+                action->setEnabled(false);
+            }
+            else{
+                action->setEnabled(true);
+            }
+        }
+    }
+}
+
+void MainWindow::configureToolBar(){
+    toolBar = addToolBar("newCurve");
+    toolBar->setIconSize(QSize(40,40));
+    QAction* newCurve = new QAction(QIcon(":/icons/newCurve"),"newCurve", this);
+    newCurve->setEnabled(false);
+    toolBar->addAction(newCurve);
 }

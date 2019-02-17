@@ -99,8 +99,9 @@ void TeeParameterDialog::readData(){
         QMessageBox::information(NULL, "Info", "Invalid data!", QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
     }
     else{
-        emit addTee(mainLength, branchLength, R, sideR);
+        para = TeePara{mainLength, branchLength, R, sideR};
         close();
+        setResult(QDialog::Accepted);
     }
 }
 
@@ -128,4 +129,8 @@ bool TeeParameterDialog::isValid(float mainLength, float branchLength, float R ,
             return true;
         }
     }
+}
+
+TeePara TeeParameterDialog::getTeePara(){
+    return para;
 }
