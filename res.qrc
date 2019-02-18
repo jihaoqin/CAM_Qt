@@ -1,8 +1,8 @@
 <RCC>
     <qresource prefix="/images">
-        <file alias="tee">C:/Users/qinjihao/Desktop/a.PNG</file>
+        <file alias="tee">pic/tee.PNG</file>
     </qresource>
     <qresource prefix="/icons">
-        <file alias="newCurve">C:/Users/qinjihao/Desktop/未标题-1.png</file>
+        <file alias="newCurve">pic/newCurve.png</file>
     </qresource>
 </RCC>
