@@ -51,7 +51,8 @@ SOURCES += \
     CentralWidget.cpp \
     LeftRibbonLayout.cpp \
     TabBackground.cpp \
-    StrechLabel.cpp
+    StrechLabel.cpp \
+    NewCurveTab.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -83,7 +84,9 @@ HEADERS += \
     CentralWidget.h \
     LeftRibbonLayout.h \
     TabBackground.h \
-    StrechLabel.h
+    StrechLabel.h \
+    numpy.h \
+    NewCurveTab.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt
@@ -102,7 +105,7 @@ DISTFILES += \
 
 
 # BOOST lib configuration
-DEFINES += LAB
+DEFINES += ROOM
 if(contains(DEFINES, ROOM)){
         BOOST_ROOT = F:\boost_1_69_0
 }else{

@@ -11,8 +11,8 @@ class TabWidget: public QTabWidget
 
 public:
     TabWidget(QWidget* parent = nullptr);
+    void showNewCurveTab();
 private:
     TabBackground* first;
-    TabBackground* second;
 };
 

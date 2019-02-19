@@ -11,9 +11,6 @@ TabWidget::TabWidget(QWidget* parent)
     //setMinimumWidth(200);
     first = new TabBackground(this);
     first->setMouseTracking(true);
-    second = new TabBackground(this);
-    second->setMouseTracking(true);
     addTab(first, "first");
-    addTab(second, "first");
 }
 
