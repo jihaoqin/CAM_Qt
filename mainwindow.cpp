@@ -11,17 +11,18 @@
 #include <QHBoxLayout>
 #include "CentralWidget.h"
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(Controller* c, QWidget *parent)
     : QMainWindow(parent), ctrl(nullptr)
 {
     //setStyleSheet("background-color:rgb(255,255,255)");
+    widget = new CentralWidget(this);
     configureMenuBar();
     configureStatusBar();
     configureToolBar();
     setMouseTracking(true);
-    widget = new CentralWidget(this);
     setCentralWidget(widget);
     centralWidget()->setMouseTracking(true);
+    bindController(c);
     //resize(800, 600);
 }
 
@@ -33,6 +34,7 @@ MainWindow::~MainWindow()
 void MainWindow::bindController(Controller *c){
     widget->bindController(c);
     ctrl = c;
+    ctrl->bindMainWindow(this);
 }
 
 void MainWindow::configureStatusBar(){
@@ -147,5 +149,5 @@ void MainWindow::configureToolBar(){
     QAction* newCurve = new QAction(QIcon(":/icons/newCurve"),"newCurve");
     newCurve->setEnabled(false);
     toolBar->addAction(newCurve);
-    connect(newCurve, &QAction::triggered, widget, &CentralWidget::doSome);
+    connect(newCurve, &QAction::triggered, widget, &CentralWidget::showNewCurveTab);
 }

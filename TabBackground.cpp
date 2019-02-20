@@ -2,7 +2,8 @@
 #include <QMouseEvent>
 #include <QVBoxLayout>
 #include <QDebug>
-TabBackground::TabBackground(QWidget* parent):QWidget(parent)
+#include "NewCurveTab.h"
+TabBackground::TabBackground(QWidget* parent):QWidget(parent), center(nullptr),layout(nullptr)
 {
     layout = new QVBoxLayout(this);
     setLayout(layout);
@@ -19,8 +20,10 @@ void TabBackground::mousePressEvent(QMouseEvent *event){
 }
 
 void TabBackground::setWidget(QWidget *w){
-    if(!center){
+    if(center){
         layout->removeWidget(center);
+        delete center;
+        center = nullptr;
     }
     else{
         //do nothing

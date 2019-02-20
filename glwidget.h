@@ -16,6 +16,7 @@ class GLWidget : public  QOpenGLWidget, protected QOpenGLFunctions_4_3_Core
     Q_OBJECT
 public:
     GLWidget(QWidget *parent = 0);
+    ~GLWidget();
     void bindController(Controller*);
     QOpenGLContext* getGLContext();
 protected:

@@ -7,10 +7,12 @@
 #include <QOpenGLFunctions_4_3_Core>
 #include <memory>
 class GLWidget;
+class MainWindow;
 class Controller
 {
 public:
     Controller();
+    void bindMainWindow(MainWindow* m);
     BoundingBox updateBoundingBox();
     void save(QString);
     void bindData(std::shared_ptr<Data>);
@@ -31,4 +33,5 @@ public:
 private:
     std::shared_ptr<Data> data;
     GLWidget* widget;
+    MainWindow* mainWindow;
 };

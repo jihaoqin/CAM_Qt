@@ -10,18 +10,11 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
     std::shared_ptr<Data> data = std::make_shared<Data>();
     Controller ctrl;
     ctrl.bindData(data);
-    w.bindController(&ctrl);
+    MainWindow w(&ctrl);
     w.show();
-
-    MainTest();
-    std::ofstream ofile("out.txt");
-    boost::archive::text_oarchive oa(ofile);
-    oa<<*data;
-    ofile.close();
-
+    ctrl.addTee(100, 100, 10, 10);
     return a.exec();
 }

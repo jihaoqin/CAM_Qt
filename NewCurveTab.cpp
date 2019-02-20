@@ -9,7 +9,7 @@
 
 NewCurveTab::NewCurveTab(QWidget* parent):QWidget(parent)
 {
-    pointBox = new QGroupBox("Point");
+    pointBox = new QGroupBox("Point",this);
     pointLabel = new QLabel("point",this);
     pointText = new QTextEdit(this);
     pointText->setFixedHeight(50);
@@ -18,7 +18,7 @@ NewCurveTab::NewCurveTab(QWidget* parent):QWidget(parent)
     layout_1->addWidget(pointText);
     pointBox->setLayout(layout_1);
 
-    dirBox = new QGroupBox("Direction");
+    dirBox = new QGroupBox("Direction",this);
     dirLabel = new QLabel("direction",this);
     dirText = new QTextEdit(this);
     dirText->setFixedHeight(50);
@@ -41,4 +41,7 @@ NewCurveTab::NewCurveTab(QWidget* parent):QWidget(parent)
     setLayout(mainLayout);
 }
 
+
+NewCurveTab::~NewCurveTab(){
+}
 

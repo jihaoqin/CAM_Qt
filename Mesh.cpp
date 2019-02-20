@@ -23,7 +23,6 @@ Mesh::Mesh(vector<Vertex> vertexs, vector<unsigned int> indexs):GLMemory()
 
 Mesh::~Mesh()
 {
-    GLBinder::~GLBinder();
 }
 
 

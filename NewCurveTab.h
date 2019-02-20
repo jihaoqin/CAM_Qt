@@ -12,6 +12,7 @@ class NewCurveTab:public QWidget
 
 public:
     NewCurveTab(QWidget* parent = nullptr);
+    virtual ~NewCurveTab();
 private:
     QGroupBox* pointBox;
     QLabel* pointLabel;

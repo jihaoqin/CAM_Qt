@@ -56,9 +56,6 @@ void CentralWidget::strech(int deltaX){
 }
 
 void CentralWidget::showNewCurveTab(){
-    //tabWidget->showNewCurveTab();
+    tabWidget->showNewCurveTab();
 }
 
-void CentralWidget::doSome(){
-
-}

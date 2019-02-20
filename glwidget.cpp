@@ -18,6 +18,10 @@ GLWidget::GLWidget(QWidget *parent):QOpenGLWidget (parent), context(0)
     setFormat(fmt);
 }
 
+GLWidget::~GLWidget(){
+
+}
+
 void GLWidget::initializeGL(){
 
     makeCurrent();

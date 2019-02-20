@@ -1,6 +1,8 @@
 #include "Controller.h"
 #include <memory>
 #include "glwidget.h"
+#include "mainwindow.h"
+
 using namespace  std;
 Controller::Controller()
 {
@@ -47,6 +49,7 @@ void Controller::addTee(float mainLength, float branchLength, float R, float sid
     QOpenGLContext* c = widget->getGLContext();
     t->bindGL(c);
     data->addTee(t);
+    mainWindow->updateAction();
 }
 
 bool Controller::hasTee(){
@@ -87,4 +90,8 @@ bool Controller::getChanged(){
 
 void Controller::bindGLWidget(GLWidget* w){
     widget = w;
+}
+
+void Controller::bindMainWindow(MainWindow* m){
+    mainWindow = m;
 }
