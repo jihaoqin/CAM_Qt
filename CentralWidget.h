@@ -10,9 +10,13 @@ class StrechLabel;
 class CentralWidget : public QWidget
 {
     Q_OBJECT
+
 public:
     explicit CentralWidget(QWidget *parent = nullptr);
     void bindController(Controller*);
+public slots:
+    void showNewCurveTab();
+    void doSome();
 protected:
     void mouseMoveEvent(QMouseEvent*) override;
     void mousePressEvent(QMouseEvent*) override;

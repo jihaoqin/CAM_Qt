@@ -17,7 +17,11 @@ TabWidget::TabWidget(QWidget* parent)
     operation = new TabBackground(this);
     addTab(operation, "op");
 
+}
+
+void TabWidget::showNewCurveTab(){
     NewCurveTab* newCurve = new NewCurveTab(this);
     operation->setWidget(newCurve);
+    setCurrentIndex(1);
 }
 

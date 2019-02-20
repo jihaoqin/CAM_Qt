@@ -144,7 +144,8 @@ void MainWindow::updateAction(){
 void MainWindow::configureToolBar(){
     toolBar = addToolBar("newCurve");
     toolBar->setIconSize(QSize(40,40));
-    QAction* newCurve = new QAction(QIcon(":/icons/newCurve"),"newCurve", this);
+    QAction* newCurve = new QAction(QIcon(":/icons/newCurve"),"newCurve");
     newCurve->setEnabled(false);
     toolBar->addAction(newCurve);
+    connect(newCurve, &QAction::triggered, widget, &CentralWidget::doSome);
 }

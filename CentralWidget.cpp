@@ -19,29 +19,12 @@ CentralWidget::CentralWidget(QWidget *parent) : QWidget(parent), tabWidget(nullp
     block->resize(10, 30);
     block->raise();
     connect(block, &StrechLabel::strech, this, &CentralWidget::strech);
-    if(1){
+
     LeftRibbonLayout* l = new LeftRibbonLayout;
     l->addBottomWidget(glWidget);
     l->addLeftWidget(tabWidget);
     l->addStrechLabel(block);
     setLayout(l);
-    }
-    else{
-        QHBoxLayout* layout = new QHBoxLayout;
-        layout->addWidget(tabWidget);
-        layout->addWidget(glWidget);
-        setLayout(layout);
-    }
-
-    /*
-    QLabel *label = new QLabel(this);
-    label->setMouseTracking(true);
-    label->setText("big");
-    label->resize(400,500);
-    QHBoxLayout* layout = new QHBoxLayout;
-    layout->addWidget(label);
-    setLayout(layout);
-    */
 }
 
 
@@ -70,4 +53,12 @@ void CentralWidget::strech(int deltaX){
     else{
         tabWidget->resize(nextWidth, height());
     }
+}
+
+void CentralWidget::showNewCurveTab(){
+    //tabWidget->showNewCurveTab();
+}
+
+void CentralWidget::doSome(){
+
 }
