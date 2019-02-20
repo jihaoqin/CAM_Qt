@@ -45,7 +45,7 @@ void MainWindow::configureStatusBar(){
 
 void MainWindow::configureMenuBar(){
     QMenuBar* menubar = menuBar();
-    fileMenu = new QMenu("File");
+    fileMenu = new QMenu("File",this);
     menubar->addMenu(fileMenu);
     QAction* actionNew = fileMenu->addAction("New");
     QAction* actionOpen = fileMenu->addAction("Open");

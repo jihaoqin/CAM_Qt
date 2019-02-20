@@ -2,9 +2,10 @@
 #include <QDebug>
 #include "TabBackground.h"
 #include <QLabel>
+#include "NewCurveTab.h"
 
 TabWidget::TabWidget(QWidget* parent)
-    :QTabWidget(parent),first(nullptr), second(nullptr)
+    :QTabWidget(parent),first(nullptr)
 {
     setMouseTracking(true);
     setStyleSheet("background-color:rgb(255,255,255)");
@@ -12,5 +13,11 @@ TabWidget::TabWidget(QWidget* parent)
     first = new TabBackground(this);
     first->setMouseTracking(true);
     addTab(first, "first");
+
+    operation = new TabBackground(this);
+    addTab(operation, "op");
+
+    NewCurveTab* newCurve = new NewCurveTab(this);
+    operation->setWidget(newCurve);
 }
 

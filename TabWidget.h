@@ -4,6 +4,7 @@
 #include <QMouseEvent>
 
 class TabBackground;
+class NewCurveTab;
 class QLabel;
 class TabWidget: public QTabWidget
 {
@@ -11,8 +12,10 @@ class TabWidget: public QTabWidget
 
 public:
     TabWidget(QWidget* parent = nullptr);
-    void showNewCurveTab();
+public slots:
+    void setOpTab(QWidget* w);
 private:
     TabBackground* first;
+    TabBackground* operation;
 };
 
