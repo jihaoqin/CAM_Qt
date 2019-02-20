@@ -1,3 +1,6 @@
-2019/02/20
+﻿2019/02/20
 GLMemory的析构函数中的core指针变成了野指针。
 原因：在关掉MainWindow后，GLWidget的析构函数比Mesh的析构函数早执行，造成了属于GLWidget的core指针变成了野指针，所以在Mesh的析构函数中调用core->glDelete...时，提示access violation.
+
+管理GUI的按钮状态。
+最好的方法是询问式，不是设定flag，设置flag导致变量过多，维护困难。

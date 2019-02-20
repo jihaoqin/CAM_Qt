@@ -31,3 +31,12 @@ void TabBackground::setWidget(QWidget *w){
     center = w;
     layout->addWidget(center);
 }
+
+bool TabBackground::isSet(){
+    if(center == nullptr){
+        return false;
+    }
+    else{
+        return true;
+    }
+}

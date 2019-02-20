@@ -11,6 +11,7 @@ class TabWidget: public QTabWidget
 
 public:
     TabWidget(QWidget* parent = nullptr);
+    bool isOperating();
 public slots:
     void showNewCurveTab();
 private:

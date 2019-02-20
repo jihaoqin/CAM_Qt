@@ -107,6 +107,10 @@ void MainWindow::showTeeParameterDialog(){
 }
 
 void MainWindow::updateAction(){
+    bool opFlag = false;
+    if(widget->isOperating()){
+        opFlag = true;
+    }
     QList<QAction*> actions = fileMenu->actions();
     for(auto action : actions){
         QString s = action->text();
@@ -124,6 +128,28 @@ void MainWindow::updateAction(){
                     action->setEnabled(false);
                 }
             }
+            if(true == opFlag){
+                action->setEnabled(false);
+            }
+            else{
+                //do nothing
+            }
+        }
+        else if(s == QString("New")){
+            if(true == opFlag){
+                action->setEnabled(false);
+            }
+            else{
+                action->setEnabled(true);
+            }
+        }
+        else if(s == QString("Open")){
+            if(true == opFlag){
+                action->setEnabled(false);
+            }
+            else{
+                action->setEnabled(true);
+            }
         }
     }
 
@@ -139,6 +165,9 @@ void MainWindow::updateAction(){
             else{
                 action->setEnabled(true);
             }
+            if(true == opFlag){
+                action->setEnabled(false);
+            }
         }
     }
 }
@@ -149,5 +178,10 @@ void MainWindow::configureToolBar(){
     QAction* newCurve = new QAction(QIcon(":/icons/newCurve"),"newCurve");
     newCurve->setEnabled(false);
     toolBar->addAction(newCurve);
-    connect(newCurve, &QAction::triggered, widget, &CentralWidget::showNewCurveTab);
+    connect(newCurve, &QAction::triggered, this, &MainWindow::showNewCurveTab);
+}
+
+void MainWindow::showNewCurveTab(){
+    widget->showNewCurveTab();
+    updateAction();
 }

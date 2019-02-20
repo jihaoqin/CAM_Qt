@@ -25,3 +25,7 @@ void TabWidget::showNewCurveTab(){
     setCurrentIndex(1);
 }
 
+
+bool TabWidget::isOperating(){
+    return operation->isSet();
+}
