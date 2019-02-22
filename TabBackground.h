@@ -10,6 +10,7 @@ class TabBackground: public QWidget
 public:
     TabBackground(QWidget* parent);
     void setWidget(QWidget* w);
+    bool isSet();
 protected:
     void mouseMoveEvent(QMouseEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;

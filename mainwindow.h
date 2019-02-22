@@ -16,6 +16,8 @@ public slots:
     void showTeeParameterDialog();
     void saveOrNot();
     void updateAction();
+private slots:
+    void showNewCurveTab();
 private:
     void configureStatusBar();
     void configureMenuBar();

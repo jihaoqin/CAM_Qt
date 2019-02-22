@@ -14,6 +14,7 @@ class CentralWidget : public QWidget
 public:
     explicit CentralWidget(QWidget *parent = nullptr);
     void bindController(Controller*);
+    bool isOperating();
 public slots:
     void showNewCurveTab();
 protected:

@@ -59,3 +59,7 @@ void CentralWidget::showNewCurveTab(){
     tabWidget->showNewCurveTab();
 }
 
+
+bool CentralWidget::isOperating(){
+    return tabWidget->isOperating();
+}
