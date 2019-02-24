@@ -124,7 +124,9 @@ void GLWidget::setClickable(bool flag){
 
 bool GLWidget::eventFilter(QObject *watched, QEvent *event){
     if(watched == this){
-        qDebug()<<"GLWidget clicked";
+        if(event->type() == QEvent::MouseButtonPress){
+            qDebug()<<"GLWidget clicked";
+        }
         return true;
     }
     else{

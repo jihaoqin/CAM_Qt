@@ -64,7 +64,7 @@ bool NewCurveTab::eventFilter(QObject *target, QEvent *event){
     qDebug()<<target;
     if(target == pointText->viewport()){
         if(event->type() == QEvent::MouseButtonPress){
-            //connector->setGLWidgetMouseClickable(true);
+            connector->setGLWidgetClickable(true);
             return true;
         }
         else if(event->type() == QEvent::Enter){
@@ -72,7 +72,7 @@ bool NewCurveTab::eventFilter(QObject *target, QEvent *event){
             return true;
         }
         else if(event->type() == QEvent::FocusOut){
-            //connector->setGLWidgetMouseClickable(false);
+            connector->setGLWidgetClickable(false);
             return true;
         }
     }
