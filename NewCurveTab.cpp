@@ -1,4 +1,5 @@
 #include "NewCurveTab.h"
+#include <QDebug>
 #include <QLabel>
 #include <QTextEdit>
 #include <QGroupBox>
@@ -6,6 +7,9 @@
 #include <QGroupBox>
 #include <QFormLayout>
 #include <QPushButton>
+#include "GuiConnector.h"
+#include <QEvent>
+#include <QColor>
 
 NewCurveTab::NewCurveTab(QWidget* parent):QWidget(parent)
 {
@@ -13,6 +17,8 @@ NewCurveTab::NewCurveTab(QWidget* parent):QWidget(parent)
     pointLabel = new QLabel("point",this);
     pointText = new QTextEdit(this);
     pointText->setFixedHeight(50);
+    pointText->setReadOnly(true);
+    pointText->setStyleSheet(QString(":focus{ background-color: #E6E6E6; }"));
     QFormLayout* layout_1 = new QFormLayout(pointBox);
     layout_1->addWidget(pointLabel);
     layout_1->addWidget(pointText);
@@ -22,6 +28,8 @@ NewCurveTab::NewCurveTab(QWidget* parent):QWidget(parent)
     dirLabel = new QLabel("direction",this);
     dirText = new QTextEdit(this);
     dirText->setFixedHeight(50);
+    dirText->setReadOnly(true);
+    dirText->setStyleSheet(QString(":focus{ background-color: #E6E6E6; }"));
     QFormLayout* layout_2 = new QFormLayout(dirBox);
     layout_2->addWidget(dirLabel);
     layout_2->addWidget(dirText);
@@ -39,9 +47,36 @@ NewCurveTab::NewCurveTab(QWidget* parent):QWidget(parent)
     mainLayout->addLayout(layout_3);
     mainLayout->addStretch(1);
     setLayout(mainLayout);
+
+    pointText->viewport()->installEventFilter(this);
 }
 
 
 NewCurveTab::~NewCurveTab(){
 }
 
+
+void NewCurveTab::setConnector(GuiConnector* c){
+    connector = c;
+}
+
+bool NewCurveTab::eventFilter(QObject *target, QEvent *event){
+    qDebug()<<target;
+    if(target == pointText->viewport()){
+        if(event->type() == QEvent::MouseButtonPress){
+            //connector->setGLWidgetMouseClickable(true);
+            return true;
+        }
+        else if(event->type() == QEvent::Enter){
+            pointText->viewport()->setCursor(Qt::ArrowCursor);
+            return true;
+        }
+        else if(event->type() == QEvent::FocusOut){
+            //connector->setGLWidgetMouseClickable(false);
+            return true;
+        }
+    }
+    else{
+        return QWidget::eventFilter(target, event);
+    }
+}

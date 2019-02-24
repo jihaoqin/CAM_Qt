@@ -10,9 +10,10 @@
 #include <QFileDialog>
 #include <QHBoxLayout>
 #include "CentralWidget.h"
+#include "GuiConnector.h"
 
 MainWindow::MainWindow(Controller* c, QWidget *parent)
-    : QMainWindow(parent), ctrl(nullptr)
+    : QMainWindow(parent), ctrl(nullptr), widget(nullptr), teeNewDialog(nullptr), connector(nullptr)
 {
     //setStyleSheet("background-color:rgb(255,255,255)");
     widget = new CentralWidget(this);
@@ -23,6 +24,9 @@ MainWindow::MainWindow(Controller* c, QWidget *parent)
     setCentralWidget(widget);
     centralWidget()->setMouseTracking(true);
     bindController(c);
+    connector = new GuiConnector;
+    connector->setRoot(this);
+    widget->setConnector(connector);
     //resize(800, 600);
 }
 

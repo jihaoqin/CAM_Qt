@@ -6,6 +6,7 @@
 #include "glwidget.h"
 
 class StrechLabel;
+class GuiConnector;
 
 class CentralWidget : public QWidget
 {
@@ -15,6 +16,8 @@ public:
     explicit CentralWidget(QWidget *parent = nullptr);
     void bindController(Controller*);
     bool isOperating();
+    void setConnector(GuiConnector*);
+    friend class GuiConnector;
 public slots:
     void showNewCurveTab();
 protected:
@@ -27,6 +30,7 @@ private:
     GLWidget* glWidget;
     StrechLabel* block;
     Controller* ctrl;
+    GuiConnector* connector;
 };
 
 #endif // CENTRALWIDGET_H

@@ -1,6 +1,7 @@
 #include "StrechLabel.h"
 #include <QDebug>
 #include <QMouseEvent>
+#include "GuiConnector.h"
 
 StrechLabel::StrechLabel(QWidget* parent)
     :QLabel(parent)
@@ -30,4 +31,8 @@ void StrechLabel::mouseMoveEvent(QMouseEvent *event){
 
 void StrechLabel::mousePressEvent(QMouseEvent* event){
     lastPos = event->globalPos();
+}
+
+void StrechLabel::setConnector(GuiConnector *c){
+    connector = c;
 }

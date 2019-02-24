@@ -3,6 +3,8 @@
 #include <QVBoxLayout>
 #include <QDebug>
 #include "NewCurveTab.h"
+#include "GuiConnector.h"
+
 TabBackground::TabBackground(QWidget* parent):QWidget(parent), center(nullptr),layout(nullptr)
 {
     layout = new QVBoxLayout(this);
@@ -39,4 +41,8 @@ bool TabBackground::isSet(){
     else{
         return true;
     }
+}
+
+void TabBackground::setConnector(GuiConnector *c){
+    connector = c;
 }
