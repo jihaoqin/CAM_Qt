@@ -4,6 +4,7 @@
 class TeeParameterDialog;
 class CentralWidget;
 class Controller;
+class GuiConnector;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -12,6 +13,7 @@ public:
     MainWindow( Controller* c, QWidget *parent = 0);
     void bindController(Controller*);
     ~MainWindow();
+    friend class GuiConnector;
 public slots:
     void showTeeParameterDialog();
     void saveOrNot();
@@ -25,6 +27,7 @@ private:
     Controller* ctrl;
     CentralWidget* widget;
     TeeParameterDialog *teeNewDialog;
+    GuiConnector* connector;
     QMenu* fileMenu;
     QToolBar* toolBar;
 };

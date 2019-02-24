@@ -52,7 +52,8 @@ SOURCES += \
     LeftRibbonLayout.cpp \
     TabBackground.cpp \
     StrechLabel.cpp \
-    NewCurveTab.cpp
+    NewCurveTab.cpp \
+    GuiConnector.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -86,7 +87,8 @@ HEADERS += \
     TabBackground.h \
     StrechLabel.h \
     numpy.h \
-    NewCurveTab.h
+    NewCurveTab.h \
+    GuiConnector.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt

@@ -7,6 +7,7 @@
 #include <QOpenGLContext>
 #include <QOpenGLFunctions_4_3_Core>
 #include <QApplication>
+#include "GuiConnector.h"
 
 
 GLWidget::GLWidget(QWidget *parent):QOpenGLWidget (parent), context(0)
@@ -105,4 +106,28 @@ void GLWidget::bindController(Controller *c){
 QOpenGLContext* GLWidget::getGLContext(){
     makeCurrent();
     return QOpenGLContext::currentContext();
+}
+
+void GLWidget::setConnector(GuiConnector *c){
+    connector = c;
+}
+
+void GLWidget::setClickable(bool flag){
+    if(flag){
+        removeEventFilter(this);
+        installEventFilter(this);
+    }
+    else{
+        removeEventFilter(this);
+    }
+}
+
+bool GLWidget::eventFilter(QObject *watched, QEvent *event){
+    if(watched == this){
+        qDebug()<<"GLWidget clicked";
+        return true;
+    }
+    else{
+        return QOpenGLWidget::eventFilter(watched, event);
+    }
 }

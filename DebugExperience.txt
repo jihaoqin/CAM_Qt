@@ -4,3 +4,7 @@ GLMemory的析构函数中的core指针变成了野指针。
 
 管理GUI的按钮状态。
 最好的方法是询问式，不是设定flag，设置flag导致变量过多，维护困难。
+
+2019/02/24
+设置QTextEdit相应mousePress操作时，无效。
+详细：给QTextEdit安装了eventFilter,在Filter中判断了watched == textEdit的话就执行相关操作。

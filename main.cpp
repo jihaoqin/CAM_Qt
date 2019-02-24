@@ -6,6 +6,7 @@
 #include "test_only.h"
 #include <fstream>
 #include <boost/archive/text_oarchive.hpp>
+#include "GuiConnector.h"
 
 int main(int argc, char *argv[])
 {

@@ -6,7 +6,8 @@
 #include <QHBoxLayout>
 #include "StrechLabel.h"
 
-CentralWidget::CentralWidget(QWidget *parent) : QWidget(parent), tabWidget(nullptr), glWidget(nullptr), ctrl(nullptr)
+CentralWidget::CentralWidget(QWidget *parent)
+    : QWidget(parent), tabWidget(nullptr), glWidget(nullptr), ctrl(nullptr)
 {
     setMouseTracking(true);
     tabWidget = new TabWidget(this);
@@ -62,4 +63,11 @@ void CentralWidget::showNewCurveTab(){
 
 bool CentralWidget::isOperating(){
     return tabWidget->isOperating();
+}
+
+void CentralWidget::setConnector(GuiConnector *c){
+    connector = c;
+    tabWidget->setConnector(c);
+    glWidget->setConnector(c);
+    block->setConnector(c);
 }

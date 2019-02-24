@@ -3,6 +3,7 @@
 #include "TabBackground.h"
 #include <QLabel>
 #include "NewCurveTab.h"
+#include "GuiConnector.h"
 
 TabWidget::TabWidget(QWidget* parent)
     :QTabWidget(parent),first(nullptr)
@@ -21,6 +22,7 @@ TabWidget::TabWidget(QWidget* parent)
 
 void TabWidget::showNewCurveTab(){
     NewCurveTab* newCurve = new NewCurveTab(this);
+    newCurve->setConnector(connector);
     operation->setWidget(newCurve);
     setCurrentIndex(1);
 }
@@ -28,4 +30,10 @@ void TabWidget::showNewCurveTab(){
 
 bool TabWidget::isOperating(){
     return operation->isSet();
+}
+
+void TabWidget::setConnector(GuiConnector *c){
+    connector = c;
+    first->setConnector(c);
+    operation->setConnector(c);
 }

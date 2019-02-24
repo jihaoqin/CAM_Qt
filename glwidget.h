@@ -11,6 +11,9 @@
 #include "Camera2.h"
 #include "Line.h"
 #include "Controller.h"
+
+class GuiConnector;
+
 class GLWidget : public  QOpenGLWidget, protected QOpenGLFunctions_4_3_Core
 {
     Q_OBJECT
@@ -19,6 +22,9 @@ public:
     ~GLWidget();
     void bindController(Controller*);
     QOpenGLContext* getGLContext();
+    void setConnector(GuiConnector*);
+    void setClickable(bool);
+    friend class GuiConnector;
 protected:
     void initializeGL() override;
     void paintGL() override;
@@ -26,6 +32,7 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void wheelEvent(QWheelEvent* event)	override;
+    bool eventFilter(QObject* watched, QEvent* event) override;
 private:
     Controller* ctrl;
     //model和camera的顺序很重要，camera依赖于model
@@ -33,6 +40,7 @@ private:
     std::shared_ptr<GLProgram> program;
     QOpenGLContext* context;
     QPoint mLastPos;
+    GuiConnector* connector;
 };
 
 #endif // GLWIDGET_H
