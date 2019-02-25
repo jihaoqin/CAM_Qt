@@ -20,6 +20,5 @@ void GuiConnector::setGLWidgetClickable(bool flag){
 
 bool GuiConnector::isPointTextEmpty(){
     if(mainWindow->widget->tabWidget->operation->isSet()){//如果是newCurveOperation
-
     }
 }
