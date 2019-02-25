@@ -14,6 +14,7 @@ public:
     void bindController(Controller*);
     ~MainWindow();
     friend class GuiConnector;
+    GuiConnector* connector;
 public slots:
     void showTeeParameterDialog();
     void saveOrNot();
@@ -27,7 +28,6 @@ private:
     Controller* ctrl;
     CentralWidget* widget;
     TeeParameterDialog *teeNewDialog;
-    GuiConnector* connector;
     QMenu* fileMenu;
     QToolBar* toolBar;
 };

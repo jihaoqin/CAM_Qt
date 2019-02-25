@@ -9,6 +9,7 @@ public:
     GuiConnector();
     void setRoot(MainWindow*);
     void setGLWidgetClickable(bool);
+    bool isPointTextEmpty();
 private:
     MainWindow* mainWindow;
 };

@@ -30,6 +30,8 @@ public:
     std::shared_ptr<Camera2> getCamera();
     bool getEmpty();
     bool getChanged();
+    void addIntersectionPoint(glm::vec3 begin, glm::vec3 dir);
+    void processIntersectionPoint(glm::vec3 begin, glm::vec3 dir);
 private:
     std::shared_ptr<Data> data;
     GLWidget* widget;

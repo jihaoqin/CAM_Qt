@@ -33,6 +33,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
     void wheelEvent(QWheelEvent* event)	override;
     bool eventFilter(QObject* watched, QEvent* event) override;
+    void processIntersection(QMouseEvent* event);
 private:
     Controller* ctrl;
     //model和camera的顺序很重要，camera依赖于model
@@ -41,6 +42,8 @@ private:
     QOpenGLContext* context;
     QPoint mLastPos;
     GuiConnector* connector;
+private:
+    glm::vec4 getGLViewport();
 };
 
 #endif // GLWIDGET_H

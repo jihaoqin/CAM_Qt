@@ -8,7 +8,7 @@
 #include <QOpenGLFunctions_4_3_Core>
 #include <QApplication>
 #include "GuiConnector.h"
-
+#include <QMouseEvent>
 
 GLWidget::GLWidget(QWidget *parent):QOpenGLWidget (parent), context(0)
 {
@@ -125,11 +125,37 @@ void GLWidget::setClickable(bool flag){
 bool GLWidget::eventFilter(QObject *watched, QEvent *event){
     if(watched == this){
         if(event->type() == QEvent::MouseButtonPress){
-            qDebug()<<"GLWidget clicked";
+            QMouseEvent* mouseEvent = dynamic_cast<QMouseEvent*>(event);
+            //construct a line
+            if(mouseEvent->button() == Qt::LeftButton){
+                processIntersection(mouseEvent);
+                return true;
+            }
+            else{
+                return QOpenGLWidget::eventFilter(watched, event);
+            }
         }
-        return true;
+        else{
+            return QOpenGLWidget::eventFilter(watched, event);
+        }
     }
     else{
         return QOpenGLWidget::eventFilter(watched, event);
     }
+}
+
+void GLWidget::processIntersection(QMouseEvent *event){
+    int x = event->x();
+    int y = event->y();
+    glm::vec3 nearScreen{x, y, 0};
+    glm::vec3 farScreen(x, y, 1);
+    glm::vec3 nearPoint = glm::unProject(nearScreen, camera->viewMatrix()*glm::mat4(1.0f),
+                                         camera->perspectiveMatrix(), getGLViewport());
+    glm::vec3 farPoint = glm::unProject(farScreen, camera->viewMatrix()*glm::mat4(1.0f),
+                                         camera->perspectiveMatrix(), getGLViewport());
+    ctrl->processIntersectionPoint(nearPoint, farPoint-nearPoint);
+}
+
+glm::vec4 GLWidget::getGLViewport(){
+    return glm::vec4(0,0,width(),height());
 }

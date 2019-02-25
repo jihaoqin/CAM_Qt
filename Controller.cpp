@@ -95,3 +95,21 @@ void Controller::bindGLWidget(GLWidget* w){
 void Controller::bindMainWindow(MainWindow* m){
     mainWindow = m;
 }
+
+void Controller::processIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
+    //判断是创建点，还是选择点
+        //根据pointText内是否已有可视点，如果有可视点，就是选择点操作，如果无可视点就是创建点操作
+    //如果是选择点操作
+        //后面的点击操作只改变此点的位置，并不新创建点
+    //如果是创建点操作
+        //创建点
+    if (mainWindow->connector->isPointTextEmpty()){
+        //创建点
+    }
+    else{
+        //选择点
+    }
+}
+
+void Controller::addIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
+}
