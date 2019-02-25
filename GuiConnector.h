@@ -1,5 +1,6 @@
 #ifndef GUICONNECTOR_H
 #define GUICONNECTOR_H
+#include <QString>
 
 class MainWindow;
 
@@ -9,7 +10,7 @@ public:
     GuiConnector();
     void setRoot(MainWindow*);
     void setGLWidgetClickable(bool);
-    bool isPointTextEmpty();
+    QString getPointText();
 private:
     MainWindow* mainWindow;
 };

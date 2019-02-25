@@ -2,6 +2,7 @@
 #include <memory>
 #include "glwidget.h"
 #include "mainwindow.h"
+#include "GuiConnector.h"
 
 using namespace  std;
 Controller::Controller()
@@ -103,8 +104,10 @@ void Controller::processIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
         //后面的点击操作只改变此点的位置，并不新创建点
     //如果是创建点操作
         //创建点
-    if (mainWindow->connector->isPointTextEmpty()){
+    QString pointId = mainWindow->connector->getPointText();
+    if (pointId.isEmpty()){
         //创建点
+        addIntersectionPoint(begin, dir);
     }
     else{
         //选择点
@@ -112,4 +115,5 @@ void Controller::processIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
 }
 
 void Controller::addIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
+    //TODO
 }

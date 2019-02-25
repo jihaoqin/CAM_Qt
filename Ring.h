@@ -19,10 +19,6 @@ private:
     glm::vec3 zdir;
     glm::vec3 xdir;
     Mesh m;
-    std::vector<glm::vec2> edge1;
-    std::vector<glm::vec2> edge2;
-    std::vector<glm::vec2> edge3;
-    std::vector<glm::vec2> edge4;
 };
 
 #endif // RING_H
