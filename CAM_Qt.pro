@@ -54,7 +54,8 @@ SOURCES += \
     StrechLabel.cpp \
     NewCurveTab.cpp \
     GuiConnector.cpp \
-    Circle.cpp
+    Circle.cpp \
+    Point.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -90,7 +91,8 @@ HEADERS += \
     numpy.h \
     NewCurveTab.h \
     GuiConnector.h \
-    Circle.h
+    Circle.h \
+    Point.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt

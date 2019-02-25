@@ -29,7 +29,6 @@ Mesh::~Mesh()
 void Mesh::print() {
 	for (int i = 0; i < vertexVec.size(); i++) {
 		auto vertex = vertexVec.at(i);
-		//std::cout << "point = " << vertex.vertex.x << ", " << vertex.vertex.y << ", " << vertex.vertex.z << "\n";
 	}
 }
 
