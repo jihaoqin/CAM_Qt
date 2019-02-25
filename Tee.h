@@ -5,6 +5,8 @@
 #include "vertex.h"
 #include "Mesh.h"
 #include "Color.h"
+#include "Ring.h"
+#include "Cylinder.h"
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/shared_ptr.hpp>
@@ -30,6 +32,8 @@ private:
     Mesh generateCircle(glm::vec3 anchor, glm::vec3 dir, float r);
     Mesh generateRevolution(glm::vec3 anchor, glm::vec3 dir, std::vector<Vertex> v, float angle);
     std::vector<Mesh> meshVec;
+    std::vector<Ring> ringVec;
+    std::vector<Cylinder> cylinderVec;
     glm::mat4 modelMat;
     Color color;
     BoundingBox box;
