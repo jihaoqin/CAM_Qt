@@ -19,6 +19,8 @@ public:
     void bindGLWidget(GLWidget*);
     void addTee(float ,float ,float ,float);
     void addLine();
+    void addCylinder(glm::vec3 begin, glm::vec3 end, float r);
+    void addRing(double R_, double r_, double angle_ , glm::vec3 anchor_, glm::vec3 zdir_, glm::vec3 xdir_);
     void bindGL(QOpenGLContext*, std::shared_ptr<GLBinder>);
     void draw(std::shared_ptr<GLProgram>);
     bool hasTee();

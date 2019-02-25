@@ -10,6 +10,8 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <QString>
 #include <DataState.h>
+class Cylinder;
+class Ring;
 class Data
 {
 public:
@@ -17,6 +19,8 @@ public:
 public:
     Data();
     void addTee(std::shared_ptr<Tee>);
+    void addCylinder(std::shared_ptr<Cylinder>);
+    void addRing(std::shared_ptr<Ring>);
     bool hasTee();
     void setViewPortRatio(int w, int h);
     void processTranslation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort);
@@ -29,6 +33,8 @@ public:
 private:
     std::shared_ptr<Camera2> camera;
     std::shared_ptr<Tee> tee;
+    std::shared_ptr<Cylinder> cyliner;
+    std::shared_ptr<Ring> ring;
     BoundingBox box;
     DataState state;
     void updateBoundingBox();

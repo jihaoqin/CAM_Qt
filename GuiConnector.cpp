@@ -2,6 +2,8 @@
 #include "mainwindow.h"
 #include "CentralWidget.h"
 #include "TabBackground.h"
+#include "NewCurveTab.h"
+#include <QTextEdit>
 
 GuiConnector::GuiConnector()
     :mainWindow(nullptr)
@@ -18,7 +20,11 @@ void GuiConnector::setGLWidgetClickable(bool flag){
     glWidget->setClickable(flag);
 }
 
-bool GuiConnector::isPointTextEmpty(){
-    if(mainWindow->widget->tabWidget->operation->isSet()){//如果是newCurveOperation
+QString GuiConnector::getPointText(){
+    TabBackground* op = mainWindow->widget->tabWidget->operation;
+    if(op->isSet()){//如果是newCurveOperation
+       NewCurveTab* newCurveTab = dynamic_cast<NewCurveTab*>(op->center);
+       QString pointId = newCurveTab->pointText->toPlainText();
+       return pointId;
     }
 }

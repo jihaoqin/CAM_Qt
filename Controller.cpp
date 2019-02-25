@@ -2,6 +2,9 @@
 #include <memory>
 #include "glwidget.h"
 #include "mainwindow.h"
+#include "GuiConnector.h"
+#include "Cylinder.h"
+#include "Ring.h"
 
 using namespace  std;
 Controller::Controller()
@@ -18,6 +21,8 @@ void Controller::draw(std::shared_ptr<GLProgram> program){
     data->camera->setUniform(program);
     if(data->getEmpty() == false){
         data->tee->draw(program);
+        data->cyliner->draw(program);
+        data->ring->draw(program);
     }
 }
 
@@ -36,19 +41,20 @@ BoundingBox Controller::updateBoundingBox(){
    data->box = BoundingBox::OrBox(boxVec);
    return data->box;
 }
-/*
-void Controller::addTee(QOpenGLContext* context, float mainLength, float branchLength, float R, float sideR){
-    std::shared_ptr<Tee> t = std::make_shared<Tee>(mainLength, branchLength, R, sideR);
-    t->bindGL(c);
-    data->addTee(t);
-}
-*/
 
 void Controller::addTee(float mainLength, float branchLength, float R, float sideR){
     std::shared_ptr<Tee> t = std::make_shared<Tee>(mainLength, branchLength, R, sideR);
     QOpenGLContext* c = widget->getGLContext();
     t->bindGL(c);
     data->addTee(t);
+    mainWindow->updateAction();
+}
+
+void Controller::addRing(double R_, double r_, double angle_, glm::vec3 anchor_, glm::vec3 zdir_, glm::vec3 xdir_){
+    std::shared_ptr<Ring> ring = std::make_shared<Ring>(R_, r_, angle_, anchor_, zdir_, xdir_);
+    QOpenGLContext* c = widget->getGLContext();
+    ring->bindGL(c);
+    data->addRing(ring);
     mainWindow->updateAction();
 }
 
@@ -103,8 +109,10 @@ void Controller::processIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
         //后面的点击操作只改变此点的位置，并不新创建点
     //如果是创建点操作
         //创建点
-    if (mainWindow->connector->isPointTextEmpty()){
+    QString pointId = mainWindow->connector->getPointText();
+    if (pointId.isEmpty()){
         //创建点
+        addIntersectionPoint(begin, dir);
     }
     else{
         //选择点
@@ -112,4 +120,13 @@ void Controller::processIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
 }
 
 void Controller::addIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
+    //TODO
+}
+
+void Controller::addCylinder(glm::vec3 begin, glm::vec3 end, float r){
+    std::shared_ptr<Cylinder> cylinder = std::make_shared<Cylinder>(begin, end, r);
+    QOpenGLContext* c = widget->getGLContext();
+    cylinder->bindGL(c);
+    data->addCylinder(cylinder);
+    mainWindow->updateAction();
 }

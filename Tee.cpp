@@ -6,19 +6,21 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR):mod
         lengthMain(_lengthMain), lengthBranch(_lengthBranch), pipeR(_pipeR), sideR(_sideR)
 
 {
-    Mesh m = generateLeftRing();
-    Mesh mR = generateRightRing();
-    Mesh mBranch = generateBranchPipe();
-    Mesh mMain = generateMainPipe();
     Mesh up = generateCircle(glm::vec3(0, lengthBranch, 0), glm::vec3(0, 1, 0), pipeR);
     Mesh left = generateCircle(glm::vec3(-1.0*lengthMain/2, 0, 0), glm::vec3(-1, 0, 0),pipeR);
     Mesh right = generateCircle(glm::vec3(1.0*lengthMain/2, 0, 0), glm::vec3(1, 0, 0),pipeR);
     Mesh front = generateFrontPlane();
     Mesh back = generateBackPlane();
-    meshVec.push_back(m);
-    meshVec.push_back(mR);
-    meshVec.push_back(mBranch);
-    meshVec.push_back(mMain);
+    Ring ringLeft(sideR+pipeR, pipeR, utility::PI/2,
+                    glm::vec3(-(pipeR+sideR), pipeR+sideR,0), glm::vec3(0,0,-1), glm::vec3(1,0,0));
+    Ring ringRight(sideR+pipeR, pipeR, utility::PI/2,
+                    glm::vec3(pipeR+sideR, pipeR+sideR,0), glm::vec3(0,0,1), glm::vec3(-1,0,0));
+    ringVec.push_back(ringLeft);
+    ringVec.push_back(ringRight);
+    Cylinder branch(glm::vec3(0, pipeR + sideR, 0), glm::vec3(0, lengthBranch, 0), pipeR);
+    Cylinder mainPipe(glm::vec3(-lengthMain/2, 0, 0), glm::vec3(lengthMain/2, 0, 0), pipeR);
+    cylinderVec.push_back(branch);
+    cylinderVec.push_back(mainPipe);
     meshVec.push_back(up);
     meshVec.push_back(left);
     meshVec.push_back(right);
@@ -76,6 +78,12 @@ void Tee::bindGL(QOpenGLContext * c){
     for(unsigned int i = 0; i < meshVec.size(); i++){
        meshVec.at(i).bindGL(c);
     }
+    for(unsigned int i = 0; i < ringVec.size(); i++){
+        ringVec.at(i).bindGL(c);
+    }
+    for(unsigned int i = 0; i < cylinderVec.size(); i++){
+        cylinderVec.at(i).bindGL(c);
+    }
     binded = true;
 }
 
@@ -84,6 +92,12 @@ void Tee::draw(std::shared_ptr<GLProgram> program){
     program->setVec3("material.color", color.rgb);
     for(unsigned int i = 0; i < meshVec.size(); i++){
        meshVec.at(i).draw(program);
+    }
+    for(unsigned int i = 0; i < ringVec.size(); i++){
+        ringVec.at(i).draw(program);
+    }
+    for(unsigned int i = 0; i < cylinderVec.size(); i++){
+        cylinderVec.at(i).draw(program);
     }
 }
 

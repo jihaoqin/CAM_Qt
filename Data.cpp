@@ -1,5 +1,7 @@
 #include "Data.h"
 #include <fstream>
+#include "Cylinder.h"
+#include "Ring.h"
 using std::shared_ptr;
 Data::Data():box(), tee(nullptr), state()
 {
@@ -21,6 +23,14 @@ void Data::addTee(std::shared_ptr<Tee> t){
      camera->bindBoundingBox(box);
      state.setEmpty(false);
      state.setChanged(true);
+}
+
+void Data::addCylinder(shared_ptr<Cylinder> c){
+    cyliner = c;
+}
+
+void Data::addRing(shared_ptr<Ring> r){
+    ring = r;
 }
 
 bool Data::hasTee(){
