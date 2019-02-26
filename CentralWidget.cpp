@@ -34,9 +34,6 @@ void CentralWidget::bindController(Controller *c){
     ctrl = c;
 }
 
-void CentralWidget::mouseMoveEvent(QMouseEvent *event){
-    qDebug()<<"CentralWidget mouseMove";
-}
 
 void CentralWidget::mousePressEvent(QMouseEvent *event){
     qDebug()<<"CentralWidget mousePress";

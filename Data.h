@@ -9,9 +9,11 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <QString>
-#include <DataState.h>
+#include "DataState.h"
+#include "IdGenerator.h"
 class Cylinder;
 class Ring;
+class Point;
 class Data
 {
 public:
@@ -19,8 +21,7 @@ public:
 public:
     Data();
     void addTee(std::shared_ptr<Tee>);
-    void addCylinder(std::shared_ptr<Cylinder>);
-    void addRing(std::shared_ptr<Ring>);
+    void addPoint(std::shared_ptr<Point>);
     bool hasTee();
     void setViewPortRatio(int w, int h);
     void processTranslation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort);
@@ -35,8 +36,10 @@ private:
     std::shared_ptr<Tee> tee;
     std::shared_ptr<Cylinder> cyliner;
     std::shared_ptr<Ring> ring;
+    std::shared_ptr<Point> point;
     BoundingBox box;
     DataState state;
+    IdGenerator idGenerator;
     void updateBoundingBox();
 
     //serialization

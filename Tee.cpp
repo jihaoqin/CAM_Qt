@@ -1,11 +1,13 @@
 #include "Tee.h"
 #include "utility.h"
 #include <algorithm>
+#include "config.h"
 using namespace std;
 Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR):modelMat(glm::mat4(1.0)), color(Color::RED),
-        lengthMain(_lengthMain), lengthBranch(_lengthBranch), pipeR(_pipeR), sideR(_sideR)
+        lengthMain(_lengthMain), lengthBranch(_lengthBranch), pipeR(_pipeR), sideR(_sideR), program(nullptr)
 
 {
+    setId("tee");
     Mesh up = generateCircle(glm::vec3(0, lengthBranch, 0), glm::vec3(0, 1, 0), pipeR);
     Mesh left = generateCircle(glm::vec3(-1.0*lengthMain/2, 0, 0), glm::vec3(-1, 0, 0),pipeR);
     Mesh right = generateCircle(glm::vec3(1.0*lengthMain/2, 0, 0), glm::vec3(1, 0, 0),pipeR);
@@ -75,6 +77,24 @@ Mesh Tee::generateRightRing(){
     return m;
 }
 void Tee::bindGL(QOpenGLContext * c){
+    if(true == binded){
+        qDebug()<<"Tee has been binded.\n";
+        return;
+    }
+    program = std::make_shared<GLProgram>(c);
+
+    if (!program->addShaderFromSourceFile(QOpenGLShader::Vertex, VERTEX_PATH)){
+        qDebug()<<"Failed to load vertexShader: "<<program->log()<<"\n";
+    }else{
+        // do nothing
+    }
+    if (!program->addShaderFromSourceFile(QOpenGLShader::Fragment, FRAGMENT_PATH)){
+        qDebug()<<"Failed to load fragmentShader: "<<program->log()<<"\n";
+    }else{
+        // do nothing
+    }
+    program->link();
+
     for(unsigned int i = 0; i < meshVec.size(); i++){
        meshVec.at(i).bindGL(c);
     }
@@ -87,17 +107,21 @@ void Tee::bindGL(QOpenGLContext * c){
     binded = true;
 }
 
-void Tee::draw(std::shared_ptr<GLProgram> program){
+void Tee::draw(std::shared_ptr<GLProgram> p){
     program->setMat4("model", modelMat);
     program->setVec3("material.color", color.rgb);
+    //做到这里了
+    if(visiable == false){
+        return;
+    }
     for(unsigned int i = 0; i < meshVec.size(); i++){
-       meshVec.at(i).draw(program);
+       meshVec.at(i).draw(p);
     }
     for(unsigned int i = 0; i < ringVec.size(); i++){
-        ringVec.at(i).draw(program);
+        ringVec.at(i).draw(p);
     }
     for(unsigned int i = 0; i < cylinderVec.size(); i++){
-        cylinderVec.at(i).draw(program);
+        cylinderVec.at(i).draw(p);
     }
 }
 

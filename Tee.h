@@ -12,6 +12,7 @@
 #include <boost/serialization/shared_ptr.hpp>
 #include <boost/serialization/base_object.hpp>
 
+class GLProgram;
 
 class Tee: public GLBinder
 {
@@ -37,6 +38,7 @@ private:
     glm::mat4 modelMat;
     Color color;
     BoundingBox box;
+    std::shared_ptr<GLProgram> program;
     float pipeR;
     float sideR;
     float lengthMain;

@@ -1,4 +1,4 @@
-﻿2019/02/20
+2019/02/20
 GLMemory的析构函数中的core指针变成了野指针。
 原因：在关掉MainWindow后，GLWidget的析构函数比Mesh的析构函数早执行，造成了属于GLWidget的core指针变成了野指针，所以在Mesh的析构函数中调用core->glDelete...时，提示access violation.
 
@@ -7,4 +7,13 @@ GLMemory的析构函数中的core指针变成了野指针。
 
 2019/02/24
 设置QTextEdit相应mousePress操作时，无效。
-详细：给QTextEdit安装了eventFilter,在Filter中判断了watched == textEdit的话就执行相关操作。
+详细：给QTextEdit安装了eventFilter,在Filter中判断了watched == textEdit的话并且event->type == QEvent::MousePressEvent就执行相关操作。但是绑定filter之后，在filter中打印输出发现
+只有QEvent::focusIn,QEvent::paint这种event并没有MousePressEvent。
+解决办法：给textEdit的viewport安装filter就行了，textEdit->viewport()->installEventFilter(this)
+参考：
+https://www.qtcentre.org/threads/8558-MousePressEvent-for-QTextEdit
+
+2019/02/26
+绘制圆形点
+参考：
+https://stackoverflow.com/questions/27098315/render-large-circular-points-in-modern-opengl

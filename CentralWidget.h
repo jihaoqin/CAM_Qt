@@ -21,7 +21,6 @@ public:
 public slots:
     void showNewCurveTab();
 protected:
-    void mouseMoveEvent(QMouseEvent*) override;
     void mousePressEvent(QMouseEvent*) override;
 private slots:
     void strech(int deltaX);

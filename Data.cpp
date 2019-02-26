@@ -2,8 +2,9 @@
 #include <fstream>
 #include "Cylinder.h"
 #include "Ring.h"
+#include "Point.h"
 using std::shared_ptr;
-Data::Data():box(), tee(nullptr), state()
+Data::Data():box(), tee(nullptr), state(), idGenerator()
 {
     camera = std::make_shared<Camera2>(BoundingBox());
 }
@@ -25,12 +26,8 @@ void Data::addTee(std::shared_ptr<Tee> t){
      state.setChanged(true);
 }
 
-void Data::addCylinder(shared_ptr<Cylinder> c){
-    cyliner = c;
-}
-
-void Data::addRing(shared_ptr<Ring> r){
-    ring = r;
+void Data::addPoint(shared_ptr<Point> p){
+    point = p;
 }
 
 bool Data::hasTee(){

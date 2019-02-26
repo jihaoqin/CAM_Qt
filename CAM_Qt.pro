@@ -55,7 +55,8 @@ SOURCES += \
     NewCurveTab.cpp \
     GuiConnector.cpp \
     Circle.cpp \
-    Point.cpp
+    Point.cpp \
+    IdGenerator.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -92,7 +93,8 @@ HEADERS += \
     NewCurveTab.h \
     GuiConnector.h \
     Circle.h \
-    Point.h
+    Point.h \
+    IdGenerator.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt
@@ -111,7 +113,7 @@ DISTFILES += \
 
 
 # BOOST lib configuration
-DEFINES += ROOM
+DEFINES += LAB
 if(contains(DEFINES, ROOM)){
         BOOST_ROOT = F:\boost_1_69_0
 }else{

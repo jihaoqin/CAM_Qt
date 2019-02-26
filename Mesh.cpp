@@ -57,6 +57,9 @@ void Mesh::draw(std::shared_ptr<GLProgram> program){
         assert(binded == true);
         return;
     }
+    if(visiable == false){
+        return;
+    }
 	core->glBindVertexArray(VAO);
     core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
     core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
