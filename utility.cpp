@@ -33,6 +33,13 @@ glm::mat4 utility::setPos(glm::mat4& matrix, glm::vec3 pos)
 	return matrix;
 }
 
+glm::vec3 utility::getPos(glm::mat4& matrix){
+    glm::vec3 pos;
+    pos[0] = matrix[3][0];
+    pos[1] = matrix[3][1];
+    pos[2] = matrix[3][2];
+    return pos;
+}
 double utility::length(glm::vec3 v)
 {
 	double x = v.x;

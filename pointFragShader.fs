@@ -23,12 +23,7 @@ uniform vec3 viewPos;
 vec4 calcLineLight(LineLight light);
 
 void main(){
-        vec4 color_0 = calcLineLight(lineLight_0);
-        vec4 color_1 = calcLineLight(lineLight_1);
-        vec4 color_2 = calcLineLight(lineLight_2);
-        vec4 color_3 = calcLineLight(lineLight_3);
-        FragColor = color_0 + color_1 + color_2 + color_3;
-        //FragColor = color_2;
+        FragColor = vec4(material.color,1.0);
 }
 
 vec4 calcLineLight(LineLight light){

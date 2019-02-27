@@ -38,7 +38,8 @@ private:
     Controller* ctrl;
     //model和camera的顺序很重要，camera依赖于model
     std::shared_ptr<Camera2> camera;
-    std::shared_ptr<GLProgram> program;
+    std::shared_ptr<GLProgram> meshProgram;
+    std::shared_ptr<GLProgram> pointProgram;
     QOpenGLContext* context;
     QPoint mLastPos;
     GuiConnector* connector;

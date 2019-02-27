@@ -5,7 +5,7 @@
 #include "GLMemory.h"
 
 
-class Line: public GLMemory
+class Line: public GLMemory, DataObject
 {
 public:
     Line();

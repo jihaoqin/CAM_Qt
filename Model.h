@@ -5,9 +5,9 @@
 #include "boundingbox.h"
 #include <string>
 #include <QOpenGLContext>
-#include "GLBinder.h"
+#include "DataObject.h"
 #include "Color.h"
-class Model: public GLBinder
+class Model: public DataObject
 {
 public:
 	Model(const char* filePath);

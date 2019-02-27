@@ -11,7 +11,7 @@ void Mesh::setData(vector<Vertex> vertexs, vector<unsigned int> indexs){
     this->indexVec = indexs;
     vector<BoundingBox> boxVec;
     box = BoundingBox(vertexVec);
-    binded = false;
+    //binded = false;
 }
 Mesh::Mesh(vector<Vertex> vertexs, vector<unsigned int> indexs):GLMemory()
 {
@@ -49,10 +49,11 @@ void Mesh::bindGL(QOpenGLContext *c){
     core->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(3*sizeof(float)));
     core->glEnableVertexAttribArray(2);
     core->glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(6*sizeof(float)));
-    binded = true;
+    //binded = true;
 }
 
-void Mesh::draw(std::shared_ptr<GLProgram> program){
+void Mesh::draw(){
+    /*
     if(binded == false){
         assert(binded == true);
         return;
@@ -60,6 +61,7 @@ void Mesh::draw(std::shared_ptr<GLProgram> program){
     if(visiable == false){
         return;
     }
+    */
 	core->glBindVertexArray(VAO);
     core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
     core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);

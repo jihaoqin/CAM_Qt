@@ -20,7 +20,7 @@ public:
     void setData(vector<Vertex> , vector<unsigned int>);
 	void print();
     virtual void bindGL(QOpenGLContext*) override;
-    virtual void draw(std::shared_ptr<GLProgram>) override;
+    virtual void draw() override;
     BoundingBox boundingBox();
 protected:
 	std::vector<Vertex> vertexVec;

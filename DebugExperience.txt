@@ -17,3 +17,9 @@ https://www.qtcentre.org/threads/8558-MousePressEvent-for-QTextEdit
 绘制圆形点
 参考：
 https://stackoverflow.com/questions/27098315/render-large-circular-points-in-modern-opengl
+
+2019/02/27
+TODO:
+Data里面的updateBoundingBox还有问题，只只针对tee有用
+camera的旋转还有问题，旋转后的boundingBox的中心变了
+	解决：原因：旋转操作设计的计算较多，可能出现了截断误差，导致计算前后的物体在相机坐标系下的重心发生了偏离。通过将最后的姿态矩阵中的位置信息设置同旋转前的姿态矩阵一样可以解决此问题。

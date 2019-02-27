@@ -14,15 +14,11 @@ Controller::Controller()
 }
 
 
-void Controller::bindGL(QOpenGLContext *c, shared_ptr<GLBinder> obj){
-   obj->bindGL(c);
-}
 
-void Controller::draw(std::shared_ptr<GLProgram> program){
-    data->camera->setUniform(program);
-    if(data->getEmpty() == false){
-        data->tee->draw(program);
-        data->point->draw(program);
+void Controller::draw(){
+    if(hasTee() == true){
+        drawDataObject(data->tee);
+        drawDataObject(data->point);
     }
 }
 
@@ -52,7 +48,8 @@ void Controller::addTee(float mainLength, float branchLength, float R, float sid
 
 
 void Controller::addPoint(glm::vec3 p){
-    std::shared_ptr<Point> point = std::make_shared<Point>(p);
+    QString id = data->idGenerator.getPointId();
+    std::shared_ptr<Point> point = std::make_shared<Point>(p, id.toLatin1().data());
     QOpenGLContext* c = widget->getGLContext();
     point->bindGL(c);
     data->addPoint(point);
@@ -124,3 +121,16 @@ void Controller::addIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
     //TODO
 }
 
+void Controller::drawDataObject(std::shared_ptr<DataObject> ob){
+    QString id(ob->getId());
+    std::shared_ptr<GLProgram> p;
+    if(id.contains("point")){
+        p = mainWindow->connector->getPointProgram();
+    }
+    else{
+        p = mainWindow->connector->getMeshProgram();
+    }
+    p->bind();
+    data->camera->setUniform(p);
+    ob->draw(p);
+}

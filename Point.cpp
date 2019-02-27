@@ -1,7 +1,8 @@
 #include "Point.h"
 
-Point::Point(glm::vec3 p):GLMemory()
+Point::Point(glm::vec3 p, const char* c):color(Color::GREEN), box()
 {
+    setId(c);
     pos = p;
     Vertex v;
     v.normal = glm::vec3(1,0,0);
@@ -9,6 +10,7 @@ Point::Point(glm::vec3 p):GLMemory()
     v.coordinate = glm::vec2(0,0);
     vertexVec.push_back(v);
     indexVec.push_back(0);
+    updateBoundingBox();
 }
 
 void Point::bindGL(QOpenGLContext *c){
@@ -36,6 +38,8 @@ void Point::draw(std::shared_ptr<GLProgram> program){
         assert(binded == true);
         return;
     }
+    program->setMat4("model", glm::mat4(1.0));
+    program->setVec3("material.color", color.rgb);
     core->glBindVertexArray(VAO);
     core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
     core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -43,4 +47,15 @@ void Point::draw(std::shared_ptr<GLProgram> program){
     //core->glDrawElements(GL_POINTS, indexVec.size(), GL_UNSIGNED_INT, 0);
     core->glPointSize(6);
     core->glDrawArrays(GL_POINTS, 0 ,1);
+}
+
+void Point::updateBoundingBox(){
+    box.xmin = pos.x;
+    box.xmax = pos.x;
+
+    box.ymin = pos.y;
+    box.ymax = pos.y;
+
+    box.zmin = pos.z;
+    box.zmax = pos.z;
 }

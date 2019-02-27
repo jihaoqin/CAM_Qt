@@ -3,8 +3,12 @@
 #include "Mesh.h"
 #include "glm/glm.hpp"
 #include <vector>
+#include "DataObject.h"
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include "utility.h"
 
-class Ring:public GLBinder
+class Ring:public DataObject
 {
 public:
     Ring(double R_, double r_, double angle_ , glm::vec3 anchor_, glm::vec3 zdir_, glm::vec3 xdir_);
@@ -12,6 +16,7 @@ public:
     virtual void draw(std::shared_ptr<GLProgram>) override;
     BoundingBox boundingBox();
 private:
+    vector<Vertex> generateEdge();
     double R;
     double r;
     double angle;//弧度制
@@ -19,6 +24,21 @@ private:
     glm::vec3 zdir;
     glm::vec3 xdir;
     Mesh m;
+
+    //serialization
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void save(Archive& ar, const unsigned int version) const {
+        ar & boost::serialization::base_object<DataObject>(*this);
+        ar & R & r & angle & anchor & zdir & xdir;
+    }
+    template<typename Archive>
+    void load(Archive& ar, const unsigned int version){
+        ar & boost::serialization::base_object<DataObject>(*this);
+        ar & R & r & angle & anchor & zdir & xdir;
+        vector<Vertex> edge = generateEdge();
+        m = utility::generateRevolution(anchor,zdir, edge, angle);
+    }
 };
 
 #endif // RING_H

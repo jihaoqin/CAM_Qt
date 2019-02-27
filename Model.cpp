@@ -116,7 +116,7 @@ void Model::draw(std::shared_ptr<GLProgram> program){
     program->setMat4("model", modelMat);
     program->setVec3("material.color", color.rgb);
 	for(unsigned int i = 0; i < meshVec.size(); i++){
-       meshVec.at(i).draw(program);
+       meshVec.at(i).draw();
     }
 }
 glm::mat4 Model::modelMatrix(){

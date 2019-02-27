@@ -2,7 +2,7 @@
 #include "utility.h"
 
 Cylinder::Cylinder(glm::vec3 begin_, glm::vec3 end_, double R_)
-    :GLBinder(), begin(begin_), end(end_), R(R_)
+    :DataObject(), begin(begin_), end(end_), R(R_)
 {
     generateCyliner(begin, end, R);
 }
@@ -41,5 +41,9 @@ void Cylinder::bindGL(QOpenGLContext* c){
     m.bindGL(c);
 }
 void Cylinder::draw(std::shared_ptr<GLProgram> program){
-    m.draw(program);
+    m.draw();
+}
+
+BoundingBox Cylinder::boundingBox(){
+    return m.boundingBox();
 }

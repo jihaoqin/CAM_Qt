@@ -30,6 +30,7 @@ void Camera2::rotateScene(glm::vec3 pos, float rad, glm::vec3 axis)
 	//其中Model为inverse(View)，移动到pos点的矩阵，R为旋转矩阵
     //其中旧为模型在旋转之前的坐标系，新为旋转视角之后的模型的坐标系
 	//新的View矩阵为 View_new = View*Model*R*inverse(Model)
+    glm::vec3 centerBaseCam = utility::getPos(worldBaseCam);
 	glm::mat4 view = worldBaseCam;
 	glm::mat4 model = utility::setPos(camBaseWorld, pos);
 	glm::mat4 R = glm::rotate(glm::mat4(1.0f), rad, axis);
@@ -40,6 +41,8 @@ void Camera2::rotateScene(glm::vec3 pos, float rad, glm::vec3 axis)
 	glm::vec3 yDir = glm::vec3(camBaseWorld[1][0], camBaseWorld[1][1], camBaseWorld[1][2]);
 	camBaseWorld = utility::createMat(posNew, zDir, yDir);
 	worldBaseCam = glm::inverse(camBaseWorld);
+    utility::setPos(worldBaseCam, centerBaseCam);
+    camBaseWorld = glm::inverse(worldBaseCam);
 }
 
 glm::vec3 Camera2::getPos()
@@ -57,6 +60,9 @@ void Camera2::bindBoundingBox(BoundingBox b)
 {
 	box = b;
 	glm::vec3 zDir = glm::vec3(b.xmax, b.ymax, b.zmax) - b.center();
+    if(utility::length(zDir) == 0){
+        zDir = glm::vec3(1, 0, 0);
+    }
 	double diameter = 2 * utility::length(zDir);
     glm::vec3 pos = b.center() + 5.0f * zDir;
 	glm::vec3 upDir = glm::vec3(0.0, 1.0, 0.0);

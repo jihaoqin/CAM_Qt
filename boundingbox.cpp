@@ -2,7 +2,9 @@
 #include <iostream>
 
 using std::vector;
-BoundingBox::BoundingBox() {
+BoundingBox::BoundingBox():type(null)
+{
+    在null时禁止访问数据
     xmin = 0;
     xmax = 0;
     ymin = 0;

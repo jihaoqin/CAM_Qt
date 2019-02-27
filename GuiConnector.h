@@ -3,6 +3,7 @@
 #include <QString>
 
 class MainWindow;
+class GLProgram;
 
 class GuiConnector
 {
@@ -10,6 +11,8 @@ public:
     GuiConnector();
     void setRoot(MainWindow*);
     void setGLWidgetClickable(bool);
+    std::shared_ptr<GLProgram> getMeshProgram();
+    std::shared_ptr<GLProgram> getPointProgram();
     QString getPointText();
 private:
     MainWindow* mainWindow;

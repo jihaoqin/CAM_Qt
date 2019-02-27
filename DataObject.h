@@ -10,15 +10,16 @@
 
 
 
-class GLBinder
+class DataObject
 {
 public:
-    GLBinder();
-    ~GLBinder();
+    DataObject();
+    ~DataObject();
     virtual void bindGL(QOpenGLContext*) = 0;
     virtual void draw(std::shared_ptr<GLProgram>) = 0;
     bool isBinded();
     void setId(const char*);
+    const char* getId();
     void setVisiable(bool);
 protected:
     bool binded;
@@ -28,7 +29,7 @@ private:
     friend class boost::serialization::access;
     template<typename Archive>
     void serialize(Archive& ar, const unsigned int version){
-        ar & binded &id;
+        ar & binded &id &visiable;
     }
 };
 

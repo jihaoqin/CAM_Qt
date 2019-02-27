@@ -6,6 +6,7 @@
 #include "GLProgram.h"
 #include <QOpenGLFunctions_4_3_Core>
 #include <memory>
+#include "DataObject.h"
 class GLWidget;
 class MainWindow;
 class Controller
@@ -20,8 +21,8 @@ public:
     void addTee(float ,float ,float ,float);
     void addLine();
     void addPoint(glm::vec3);
-    void bindGL(QOpenGLContext*, std::shared_ptr<GLBinder>);
-    void draw(std::shared_ptr<GLProgram>);
+    void draw();
+    void drawDataObject(std::shared_ptr<DataObject>);
     bool hasTee();
     void setViewPortRatio(int w, int h);
     void processTranslation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort);

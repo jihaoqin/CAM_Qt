@@ -3,13 +3,15 @@
 
 #include <QOpenGLContext>
 #include <QOpenGLFunctions_4_3_Core>
-#include "GLBinder.h"
+#include "DataObject.h"
 
-class GLMemory: public GLBinder
+class GLMemory
 {
 public:
     GLMemory();
     ~GLMemory();
+    virtual void bindGL(QOpenGLContext*) = 0;
+    virtual void draw() = 0;
 protected:
     unsigned int VAO,VBO,EBO;
     std::vector<unsigned int> indexVec;

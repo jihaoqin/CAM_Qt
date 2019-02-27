@@ -35,7 +35,6 @@ SOURCES += \
     PerspectiveMat.cpp \
     utility.cpp \
     Line.cpp \
-    GLBinder.cpp \
     Data.cpp \
     Controller.cpp \
     GLMemory.cpp \
@@ -54,9 +53,10 @@ SOURCES += \
     StrechLabel.cpp \
     NewCurveTab.cpp \
     GuiConnector.cpp \
-    Circle.cpp \
     Point.cpp \
-    IdGenerator.cpp
+    IdGenerator.cpp \
+    DataObject.cpp \
+    Node.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -69,7 +69,6 @@ HEADERS += \
     utility.h \
     config.h \
     Line.h \
-    GLBinder.h \
     Data.h \
     Controller.h \
     GLMemory.h \
@@ -92,9 +91,10 @@ HEADERS += \
     numpy.h \
     NewCurveTab.h \
     GuiConnector.h \
-    Circle.h \
     Point.h \
-    IdGenerator.h
+    IdGenerator.h \
+    DataObject.h \
+    Node.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt
@@ -108,8 +108,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     vertexShader.vs \
-    loadingModel.fs \
-    3rdparty/3rdparty.pri
+    3rdparty/3rdparty.pri \
+    meshFragShader.fs \
+    pointFragShader.fs
 
 
 # BOOST lib configuration

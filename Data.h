@@ -14,6 +14,7 @@
 class Cylinder;
 class Ring;
 class Point;
+class Node;
 class Data
 {
 public:
@@ -33,10 +34,9 @@ public:
     bool getEmpty();
 private:
     std::shared_ptr<Camera2> camera;
-    std::shared_ptr<Tee> tee;
-    std::shared_ptr<Cylinder> cyliner;
-    std::shared_ptr<Ring> ring;
-    std::shared_ptr<Point> point;
+    //std::shared_ptr<Tee> tee;
+    //std::shared_ptr<Point> point;
+    std::shared_ptr<Node> root;
     BoundingBox box;
     DataState state;
     IdGenerator idGenerator;

@@ -1,5 +1,4 @@
 #include "Ring.h"
-#include "utility.h"
 
 using namespace utility;
 using namespace std;
@@ -8,6 +7,23 @@ Ring::Ring(double R_, double r_, double angle_, glm::vec3 anchor_, glm::vec3 zdi
     :R(R_), r(r_), angle(angle_), anchor(anchor_), zdir(zdir_), xdir(xdir_), m(){
     zdir = glm::normalize(zdir_);
     xdir = glm::normalize(xdir_);
+    vector<Vertex> edge = generateEdge();
+    m = utility::generateRevolution(anchor,zdir, edge, angle);
+}
+
+BoundingBox Ring::boundingBox(){
+    return m.boundingBox();
+}
+
+void Ring::bindGL(QOpenGLContext *c){
+    m.bindGL(c);
+}
+
+void Ring::draw(std::shared_ptr<GLProgram> p){
+    m.draw();
+}
+
+vector<Vertex> Ring::generateEdge(){
     glm::vec3 ydir = glm::cross(zdir, xdir);
     glm::mat4 T;
     utility::setPos(T, anchor);
@@ -30,17 +46,5 @@ Ring::Ring(double R_, double r_, double angle_, glm::vec3 anchor_, glm::vec3 zdi
         v.coordinate = glm::vec2(0);
         edge.push_back(v);
     }
-    m = utility::generateRevolution(anchor,zdir, edge, angle);
-}
-
-BoundingBox Ring::boundingBox(){
-    return m.boundingBox();
-}
-
-void Ring::bindGL(QOpenGLContext *c){
-    m.bindGL(c);
-}
-
-void Ring::draw(std::shared_ptr<GLProgram> p){
-    m.draw(p);
+    return edge;
 }

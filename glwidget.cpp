@@ -29,30 +29,18 @@ void GLWidget::initializeGL(){
     initializeOpenGLFunctions();
     glClearColor(0.2f,0.3f,0.3f,1.0f);
     context = QOpenGLContext::currentContext();
-    program = std::make_shared<GLProgram>(context);
-    if (!program->addShaderFromSourceFile(QOpenGLShader::Vertex, VERTEX_PATH)){
-        qDebug()<<"Failed to load vertexShader: "<<program->log()<<"\n";
-    }else{
-        // do nothing
-    }
-    if (!program->addShaderFromSourceFile(QOpenGLShader::Fragment, FRAGMENT_PATH)){
-        qDebug()<<"Failed to load fragmentShader: "<<program->log()<<"\n";
-    }else{
-        // do nothing
-    }
-    program->link();
-    program->bind();
+    meshProgram = std::make_shared<GLProgram>(context, GLProgram::Mesh);
+    pointProgram = std::make_shared<GLProgram>(context, GLProgram::Point);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
 }
 
 void GLWidget::paintGL(){
-    program->bind();
     glClearColor(0.2f,0.3f,0.3f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     glViewport(0, 0, width(), height());
     ctrl->setViewPortRatio(width(),height());
-    ctrl->draw(program);
+    ctrl->draw();
     update();
 }
 

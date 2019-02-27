@@ -4,6 +4,8 @@
 #include "TabBackground.h"
 #include "NewCurveTab.h"
 #include <QTextEdit>
+#include "GLProgram.h"
+#include <memory>
 
 GuiConnector::GuiConnector()
     :mainWindow(nullptr)
@@ -27,4 +29,14 @@ QString GuiConnector::getPointText(){
        QString pointId = newCurveTab->pointText->toPlainText();
        return pointId;
     }
+}
+
+std::shared_ptr<GLProgram> GuiConnector::getMeshProgram(){
+    GLWidget* glWidget = mainWindow->widget->glWidget;
+    return glWidget->meshProgram;
+}
+
+std::shared_ptr<GLProgram> GuiConnector::getPointProgram(){
+    GLWidget* glWidget = mainWindow->widget->glWidget;
+    return glWidget->pointProgram;
 }

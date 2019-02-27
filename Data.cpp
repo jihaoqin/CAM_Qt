@@ -3,8 +3,9 @@
 #include "Cylinder.h"
 #include "Ring.h"
 #include "Point.h"
+#include "Node.h"
 using std::shared_ptr;
-Data::Data():box(), tee(nullptr), state(), idGenerator()
+Data::Data():box(), /*tee(nullptr),*/ state(), idGenerator(), root(nullptr)
 {
     camera = std::make_shared<Camera2>(BoundingBox());
 }
@@ -12,6 +13,7 @@ Data::Data():box(), tee(nullptr), state(), idGenerator()
 
 void Data::updateBoundingBox(){
    vector<BoundingBox> boxVec;
+   解决树的遍历问题;
    if(tee){
         boxVec.push_back(tee->boundingBox());
    }
@@ -19,15 +21,20 @@ void Data::updateBoundingBox(){
 }
 
 void Data::addTee(std::shared_ptr<Tee> t){
-     tee = t;
-     updateBoundingBox();
-     camera->bindBoundingBox(box);
-     state.setEmpty(false);
-     state.setChanged(true);
+    //tee = t;
+    root = std::make_shared<Node>(t);
+    updateBoundingBox();
+    camera->bindBoundingBox(box);
+    state.setEmpty(false);
+    state.setChanged(true);
 }
 
 void Data::addPoint(shared_ptr<Point> p){
-    point = p;
+    //point = p;
+    updateBoundingBox();
+    camera->bindBoundingBox(box);
+    state.setEmpty(false);
+    state.setChanged(true);
 }
 
 bool Data::hasTee(){
