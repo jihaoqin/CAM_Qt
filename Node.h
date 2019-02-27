@@ -23,7 +23,7 @@ public:
     };
     Node();
     Node(DataObjectPtr);
-    BoundingBox boudingBox();
+    BoundingBox boudingBoxUnion();
     void setFather(NodePtr papa);
     void deleteChild(NodePtr child);
     const char* Id();

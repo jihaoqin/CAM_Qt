@@ -5,7 +5,6 @@
 #include <boost/serialization/split_free.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
-#include <boundingbox.h>
 
 //vec3
 BOOST_SERIALIZATION_SPLIT_FREE(glm::vec3);

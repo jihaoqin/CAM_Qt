@@ -59,7 +59,7 @@ glm::vec3 Camera2::getPos()
 void Camera2::bindBoundingBox(BoundingBox b)
 {
 	box = b;
-	glm::vec3 zDir = glm::vec3(b.xmax, b.ymax, b.zmax) - b.center();
+    glm::vec3 zDir = b.max() - b.center();
     if(utility::length(zDir) == 0){
         zDir = glm::vec3(1, 0, 0);
     }

@@ -6,18 +6,10 @@ Mesh::Mesh(){
 
 }
 
-void Mesh::setData(vector<Vertex> vertexs, vector<unsigned int> indexs){
-    this->vertexVec = vertexs;
-    this->indexVec = indexs;
-    vector<BoundingBox> boxVec;
-    box = BoundingBox(vertexVec);
-    //binded = false;
-}
 Mesh::Mesh(vector<Vertex> vertexs, vector<unsigned int> indexs):GLMemory()
 {
 	this->vertexVec = vertexs;
 	this->indexVec = indexs;
-    vector<BoundingBox> boxVec;
     box = BoundingBox(vertexVec);
 }
 

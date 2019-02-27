@@ -4,23 +4,21 @@
 using std::vector;
 BoundingBox::BoundingBox():type(null)
 {
-    在null时禁止访问数据
-    xmin = 0;
-    xmax = 0;
-    ymin = 0;
-    ymax = 0;
-    zmin = 0;
-    zmax = 0;
+    data = peakValue{0,0,0,0,0,0};
 }
-BoundingBox::BoundingBox(vector<Vertex>& verVec) {
-    assert(verVec.size()>0);
+BoundingBox::BoundingBox(vector<Vertex>& verVec): type(null)
+{
+    if(verVec.size() == 0){
+        return;
+    }
+    type = some;
     glm::vec3 firstVertex = verVec.at(0).vertex;
-    xmin = firstVertex.x;
-    xmax = xmin;
-    ymin = firstVertex.y;
-    ymax = ymin;
-    zmin = firstVertex.z;
-    zmax = zmin;
+    float xmin = firstVertex.x;
+    float xmax = xmin;
+    float ymin = firstVertex.y;
+    float ymax = ymin;
+    float zmin = firstVertex.z;
+    float zmax = zmin;
     for (auto& v : verVec) {
         float x = v.vertex.x;
         float y = v.vertex.y;
@@ -34,48 +32,50 @@ BoundingBox::BoundingBox(vector<Vertex>& verVec) {
         zmin = MIN(zmin, z);
         zmax = MAX(zmax, z);
     }
+    data = peakValue{xmin, xmax, ymin, ymax, zmin, zmax};
 }
 glm::vec3 BoundingBox::center()
 {
-    float x = (xmin + xmax) / 2;
-    float y = (ymin + ymax) / 2;
-    float z = (zmin + zmax) / 2;
+    assert(type != null);
+    float x = (data.xmin + data.xmax) / 2;
+    float y = (data.ymin + data.ymax) / 2;
+    float z = (data.zmin + data.zmax) / 2;
     return glm::vec3(x, y, z);
-}
-void BoundingBox::print() {
-    std::cout << "[xmin, xmax, ymin, ymax] = ["<<xmin << ", "<<xmax<<", "<<ymin<<", "<<ymax<<"]";
 }
 
 BoundingBox BoundingBox::OrBox(vector<BoundingBox> boxVec){
-    if(boxVec.size() == 0){
-        return BoundingBox();
-    }
-    BoundingBox f = boxVec.at(0);
-    double xmin = f.xmin;
-    double xmax = f.xmax;
-    double ymin = f.ymin;
-    double ymax = f.ymax;
-    double zmin = f.zmin;
-    double zmax = f.zmax;
-    for(auto b:boxVec){
-            auto MIN = [](float a, float b)->float {return a < b ? a : b; };
-            auto MAX = [](float a, float b)->float {return a > b ? a : b; };
-            xmin = MIN(xmin, b.xmin);
-            xmax = MAX(xmax, b.xmax);
-            ymin = MIN(ymin, b.ymin);
-            ymax = MAX(ymax, b.ymax);
-            zmin = MIN(zmin, b.zmin);
-            zmax = MAX(zmax, b.zmax);
-    }
     BoundingBox result;
-    result.xmin = xmin;
-    result.xmax = xmax;
-    result.ymin = ymin;
-    result.ymax = ymax;
-    result.zmin = zmin;
-    result.zmax = zmax;
+    for(auto box:boxVec){
+        result.OR(box);
+    }
     return result;
 }
 void BoundingBox::setBoundingBox(BoundingBox b){
     *this = b;
+}
+
+BoundingBox& BoundingBox::OR(BoundingBox b){
+    if (b.type == some){
+        if(type == some){
+            data.OR(b.data);
+        }
+        else{
+            type = some;
+            data = b.data;
+        }
+
+    }
+    else{
+        //keep type
+        return *this;
+    }
+
+}
+void BoundingBox::setData(peakValue d){
+    type = some;
+    data = d;
+}
+
+glm::vec3 BoundingBox::max(){
+    return glm::vec3(data.xmax, data.ymax, data.zmax);
 }

@@ -1,6 +1,6 @@
 #include "Point.h"
 
-Point::Point(glm::vec3 p, const char* c):color(Color::GREEN), box()
+Point::Point(glm::vec3 p, const char* c):color(Color::GREEN)
 {
     setId(c);
     pos = p;
@@ -50,12 +50,5 @@ void Point::draw(std::shared_ptr<GLProgram> program){
 }
 
 void Point::updateBoundingBox(){
-    box.xmin = pos.x;
-    box.xmax = pos.x;
-
-    box.ymin = pos.y;
-    box.ymax = pos.y;
-
-    box.zmin = pos.z;
-    box.zmax = pos.z;
+    box.setData(peakValue{pos.x, pos.x, pos.y, pos.y, pos.z, pos.z});
 }

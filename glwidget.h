@@ -6,10 +6,7 @@
 #include "GLProgram.h"
 #include <QWheelEvent>
 #include <memory>
-#include "Mesh.h"
-#include "Model.h"
 #include "Camera2.h"
-#include "Line.h"
 #include "Controller.h"
 
 class GuiConnector;

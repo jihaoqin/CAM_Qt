@@ -3,29 +3,48 @@
 #include "vertex.h"
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
+struct peakValue{
+    peakValue& OR(peakValue p){
+        auto MIN = [](float a, float b)->float {return a < b ? a : b; };
+        auto MAX = [](float a, float b)->float {return a > b ? a : b; };
+        xmin = MIN(xmin, p.xmin);
+        xmax = MAX(xmax, p.xmax);
+        ymin = MIN(ymin, p.ymin);
+        ymax = MAX(ymax, p.ymax);
+        zmin = MIN(zmin, p.zmin);
+        zmax = MAX(zmax, p.zmax);
+        return *this;
+    }
+    float xmin;
+    float xmax;
+    float ymin;
+    float ymax;
+    float zmin;
+    float zmax;
+};
 class BoundingBox {
 public:
     enum Type{
         null,
-        volume
+        some
     };
     static BoundingBox OrBox(std::vector<BoundingBox>);
     BoundingBox();
     BoundingBox( std::vector<Vertex>&);
+    peakValue peak();
+    peakValue peak(peakValue);
+    BoundingBox& OR(BoundingBox);
+    void setData(peakValue);
+    glm::vec3 max();
     void setBoundingBox(BoundingBox);
     glm::vec3 center();
     Type type;
-    double xmin;
-    double xmax;
-    double ymin;
-    double ymax;
-    double zmin;
-    double zmax;
-    void print();
+private:
+    peakValue data;
     friend class boost::serialization::access;
     template<typename Archive>
     void serialize(Archive& ar, const unsigned int version){
-        ar&type&xmin&xmax&ymin&ymax&zmin&zmax;
+        ar&type&data.xmin&data.xmax&data.ymin&data.ymax&data.zmin&data.zmax;
     }
 };
 

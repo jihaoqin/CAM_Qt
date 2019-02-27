@@ -1,5 +1,4 @@
 #include "glwidget.h"
-#include "config.h"
 #include <QDebug>
 #include <QMouseEvent>
 #include <QKeyEvent>

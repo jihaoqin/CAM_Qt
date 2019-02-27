@@ -38,7 +38,6 @@ private:
     std::vector<Cylinder> cylinderVec;
     glm::mat4 modelMat;
     Color color;
-    BoundingBox box;
     float pipeR;
     float sideR;
     float lengthMain;
@@ -48,12 +47,12 @@ private:
     template<typename Archive>
     void save(Archive& ar, const unsigned int version) const {
         ar & boost::serialization::base_object<DataObject>(*this);
-        ar & modelMat & color & box & pipeR & sideR & lengthMain & lengthBranch;
+        ar & modelMat & color & pipeR & sideR & lengthMain & lengthBranch;
     }
     template<typename Archive>
     void load(Archive& ar, const unsigned int version){
         ar & boost::serialization::base_object<DataObject>(*this);
-        ar & modelMat & color & box & pipeR & sideR & lengthMain & lengthBranch;
+        ar & modelMat & color & pipeR & sideR & lengthMain & lengthBranch;
         Mesh up = generateCircle(glm::vec3(0, lengthBranch, 0), glm::vec3(0, 1, 0), pipeR);
         Mesh left = generateCircle(glm::vec3(-1.0*lengthMain/2, 0, 0), glm::vec3(-1, 0, 0),pipeR);
         Mesh right = generateCircle(glm::vec3(1.0*lengthMain/2, 0, 0), glm::vec3(1, 0, 0),pipeR);

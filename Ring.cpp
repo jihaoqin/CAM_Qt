@@ -9,10 +9,11 @@ Ring::Ring(double R_, double r_, double angle_, glm::vec3 anchor_, glm::vec3 zdi
     xdir = glm::normalize(xdir_);
     vector<Vertex> edge = generateEdge();
     m = utility::generateRevolution(anchor,zdir, edge, angle);
+    box = m.boundingBox();
 }
 
 BoundingBox Ring::boundingBox(){
-    return m.boundingBox();
+    return box;
 }
 
 void Ring::bindGL(QOpenGLContext *c){

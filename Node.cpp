@@ -1,6 +1,7 @@
 #include "Node.h"
 #include "DataObject.h"
 #include <QDebug>
+#include "Tee.h"
 
 Node::Node():father(nullptr), type(nothing),data(nullptr)
 {
@@ -50,8 +51,10 @@ const char* Node::Id(){
     return data->getId();
 }
 
-BoundingBox Node::boudingBox(){
+BoundingBox Node::boudingBoxUnion(){
     if(type == direction || type == direction){
-        return
+        return BoundingBox();
     }
+    BoundingBox result;
+    result.OR(data->boundingBox());
 }

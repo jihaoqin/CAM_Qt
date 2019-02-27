@@ -7,6 +7,7 @@
 #include <string>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
+#include "boundingbox.h"
 
 
 
@@ -21,9 +22,11 @@ public:
     void setId(const char*);
     const char* getId();
     void setVisiable(bool);
+    BoundingBox boundingBox();
 protected:
     bool binded;
     bool visiable;
+    BoundingBox box;
 private:
     std::string id;
     friend class boost::serialization::access;

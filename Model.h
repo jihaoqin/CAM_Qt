@@ -21,7 +21,6 @@ private:
     std::vector<Mesh> meshVec;
     std::string directory;
     glm::mat4 modelMat;
-	BoundingBox box;
     Color color;
 	void loadModel(const aiScene*);
 	void processNode(const aiNode *, const aiScene *);

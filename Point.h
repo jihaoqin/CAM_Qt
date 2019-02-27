@@ -5,7 +5,6 @@
 #include "vertex.h"
 #include <vector>
 #include "Color.h"
-#include "boundingbox.h"
 
 class Point:public DataObject
 {
@@ -21,7 +20,6 @@ private:
     QOpenGLFunctions_4_3_Core *core;
     unsigned int VAO,VBO,EBO;
     Color color;
-    BoundingBox box;
 };
 
 #endif // POINT_H
