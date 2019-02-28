@@ -307,3 +307,7 @@ Mesh Tee::generateBackPlane(){
 BoundingBox Tee::boundingBox(){
     return box;
 }
+
+Tee::~Tee(){
+
+}

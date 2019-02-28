@@ -12,6 +12,7 @@ class Ring:public DataObject
 {
 public:
     Ring(double R_, double r_, double angle_ , glm::vec3 anchor_, glm::vec3 zdir_, glm::vec3 xdir_);
+    virtual ~Ring();
     virtual void bindGL(QOpenGLContext *) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;
     BoundingBox boundingBox();

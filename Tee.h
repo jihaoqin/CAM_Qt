@@ -19,6 +19,7 @@ class Tee: public DataObject
 {
 public:
     Tee(float , float , float , float );
+    virtual ~Tee();
     virtual void bindGL(QOpenGLContext*) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;
     BoundingBox boundingBox();
