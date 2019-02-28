@@ -5,6 +5,7 @@
 #include "Point.h"
 #include "Node.h"
 using std::shared_ptr;
+using std::make_shared;
 Data::Data():box(), /*tee(nullptr),*/ state(), idGenerator(), root(nullptr)
 {
     camera = std::make_shared<Camera2>(BoundingBox());
@@ -13,15 +14,10 @@ Data::Data():box(), /*tee(nullptr),*/ state(), idGenerator(), root(nullptr)
 
 void Data::updateBoundingBox(){
    vector<BoundingBox> boxVec;
-   解决树的遍历问题;
-   if(tee){
-        boxVec.push_back(tee->boundingBox());
-   }
-   box = BoundingBox::OrBox(boxVec);
+   box = root->boudingBoxUnion();
 }
 
 void Data::addTee(std::shared_ptr<Tee> t){
-    //tee = t;
     root = std::make_shared<Node>(t);
     updateBoundingBox();
     camera->bindBoundingBox(box);
@@ -30,7 +26,7 @@ void Data::addTee(std::shared_ptr<Tee> t){
 }
 
 void Data::addPoint(shared_ptr<Point> p){
-    //point = p;
+    root->addChild(make_shared<Node>(p));
     updateBoundingBox();
     camera->bindBoundingBox(box);
     state.setEmpty(false);
@@ -38,7 +34,7 @@ void Data::addPoint(shared_ptr<Point> p){
 }
 
 bool Data::hasTee(){
-    if(tee){
+    if(root->getData() != nullptr){
         return true;
     }
     else{
@@ -84,7 +80,6 @@ void Data::clear(){
     }
     state.setEmpty(true);
 
-    tee = nullptr;
     updateBoundingBox();
 }
 

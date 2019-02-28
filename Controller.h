@@ -1,5 +1,4 @@
 #pragma once
-#include "Data.h"
 #include <string>
 #include <QString>
 #include <QOpenGLContext>
@@ -9,6 +8,8 @@
 #include "DataObject.h"
 class GLWidget;
 class MainWindow;
+class Data;
+class Camera2;
 class Controller
 {
 public:

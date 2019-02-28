@@ -6,6 +6,8 @@
 #include "Cylinder.h"
 #include "Ring.h"
 #include "Point.h"
+#include "Data.h"
+#include "Node.h"
 
 using namespace  std;
 Controller::Controller()
@@ -16,9 +18,10 @@ Controller::Controller()
 
 
 void Controller::draw(){
-    if(hasTee() == true){
-        drawDataObject(data->tee);
-        drawDataObject(data->point);
+    NodePtr root = data->root;
+    if(root != nullptr){
+        auto drawFunc = [=](DataObjectPtr p)->void{ if(p != nullptr){drawDataObject(p);}};
+        root->dataOperation(drawFunc);
     }
 }
 
@@ -30,12 +33,8 @@ void Controller::bindData(std::shared_ptr<Data> d){
 }
 
 BoundingBox Controller::updateBoundingBox(){
-   vector<BoundingBox> boxVec;
-   if(data->getEmpty() == false){
-        boxVec.push_back(data->tee->boundingBox());
-   }
-   data->box = BoundingBox::OrBox(boxVec);
-   return data->box;
+    data->updateBoundingBox();
+    return data->box;
 }
 
 void Controller::addTee(float mainLength, float branchLength, float R, float sideR){
@@ -126,6 +125,12 @@ void Controller::drawDataObject(std::shared_ptr<DataObject> ob){
     std::shared_ptr<GLProgram> p;
     if(id.contains("point")){
         p = mainWindow->connector->getPointProgram();
+    }
+    else if(id.contains("line")){
+        //to do
+    }
+    else if(id.contains("direction")){
+        //to do
     }
     else{
         p = mainWindow->connector->getMeshProgram();

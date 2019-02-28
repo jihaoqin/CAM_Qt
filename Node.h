@@ -24,9 +24,24 @@ public:
     Node();
     Node(DataObjectPtr);
     BoundingBox boudingBoxUnion();
+    NodePtr fatherPtr();
+    std::vector<NodePtr> childrenPtrVec();
     void setFather(NodePtr papa);
     void deleteChild(NodePtr child);
+    void addChild(NodePtr child);
+    DataObjectPtr getData();
     const char* Id();
+    template<typename T>
+    void dataOperation(T func){
+        if(data != nullptr){
+            func(data);
+        }
+        for(auto child:children){
+            if(child != nullptr){
+                child->dataOperation(func);
+            }
+        }
+    }
 private:
     NodePtr father;
     Type type;

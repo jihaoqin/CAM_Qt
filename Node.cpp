@@ -47,14 +47,36 @@ void Node::deleteChild(NodePtr child){
     }
 }
 
+void Node::addChild(NodePtr child){
+    child->setFather(static_cast<NodePtr>(this));
+    children.push_back(child);
+}
+
 const char* Node::Id(){
     return data->getId();
 }
 
 BoundingBox Node::boudingBoxUnion(){
-    if(type == direction || type == direction){
+    if(type == direction || type == nothing){
         return BoundingBox();
     }
     BoundingBox result;
     result.OR(data->boundingBox());
+    for(auto child:children){
+        result.OR(child->boudingBoxUnion());
+    }
+    return result;
 }
+
+
+DataObjectPtr Node::getData(){
+    return data;
+}
+
+NodePtr Node::fatherPtr(){
+    return father;
+}
+std::vector<NodePtr> Node::childrenPtrVec(){
+    return children;
+}
+

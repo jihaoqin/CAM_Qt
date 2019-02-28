@@ -59,16 +59,21 @@ glm::vec3 Camera2::getPos()
 void Camera2::bindBoundingBox(BoundingBox b)
 {
 	box = b;
-    glm::vec3 zDir = b.max() - b.center();
-    if(utility::length(zDir) == 0){
+    glm::vec3 zDir;
+    glm::vec3 pos;
+    if(b.type == BoundingBox::null){
         zDir = glm::vec3(1, 0, 0);
+        pos = 5.0f*zDir;
     }
-	double diameter = 2 * utility::length(zDir);
-    glm::vec3 pos = b.center() + 5.0f * zDir;
+    else{
+        zDir = b.max() - b.center();
+        pos = b.center() + 5.0f * zDir;
+    }
 	glm::vec3 upDir = glm::vec3(0.0, 1.0, 0.0);
 	camBaseWorld = utility::createMat(pos, zDir, upDir);
 	worldBaseCam = glm::inverse(camBaseWorld);
-	perspective = PerspectiveMat(45.0f, 8.0 / 6.0, 0.1*diameter, 30 * diameter);
+    double diameter = 2 * utility::length(zDir);
+    perspective = PerspectiveMat(45.0f, 8.0 / 6.0, 0.1*diameter, 30 * diameter);
 }
 
 
