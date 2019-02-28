@@ -1,7 +1,7 @@
 #ifndef GUICONNECTOR_H
 #define GUICONNECTOR_H
 #include <QString>
-
+#include <memory>
 class MainWindow;
 class GLProgram;
 

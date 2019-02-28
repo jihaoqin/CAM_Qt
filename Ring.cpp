@@ -59,7 +59,7 @@ vector<glm::vec3> Ring::intersectionPoints(glm::vec3 begin, glm::vec3 dir){
     Root solutions = utility::root4(coe);
     vector<double> realSolutions;
     auto isReal = [](complex<double> num)->bool{
-        abs(num.imag())<0.000001? true:false;
+        return abs(num.imag())<0.000001? true:false;
     };
     if(isReal(solutions.x1)){
         realSolutions.push_back(solutions.x1.real());

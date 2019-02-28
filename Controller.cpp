@@ -123,12 +123,19 @@ void Controller::addIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
         return;
     }
     vector<glm::vec3> points = tee->intersectionPoints(begin, dir);
-    如果points为空，则什么都不做
-    否则找到最近的point
-    新建一个point，并添加到树的末尾
-    更新树的显示
-
-    //TODO
+    if(points.size() == 0){
+        return;
+    }
+    float dist = utility::length(points.at(0) - begin);
+    int minIndex = 0;
+    for(int i = 0; i < points.size(); i++){
+        float l = utility::length(points.at(i) - begin);
+        if(l < dist){
+            dist = l;
+            minIndex = i;
+        }
+    }
+    addPoint(points.at(minIndex));
 }
 
 void Controller::drawDataObject(std::shared_ptr<DataObject> ob){

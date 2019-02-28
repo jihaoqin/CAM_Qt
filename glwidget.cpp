@@ -1,4 +1,5 @@
 #include "glwidget.h"
+#include "utility.h"
 #include <QDebug>
 #include <QMouseEvent>
 #include <QKeyEvent>
@@ -84,6 +85,7 @@ void GLWidget::wheelEvent(QWheelEvent *event){
 
 void GLWidget::bindController(Controller *c){
     ctrl = c;
+    camera = c->getCamera();
     c->bindGLWidget(this);
 }
 
@@ -139,7 +141,9 @@ void GLWidget::processIntersection(QMouseEvent *event){
                                          camera->perspectiveMatrix(), getGLViewport());
     glm::vec3 farPoint = glm::unProject(farScreen, camera->viewMatrix()*glm::mat4(1.0f),
                                          camera->perspectiveMatrix(), getGLViewport());
-    ctrl->processIntersectionPoint(nearPoint, farPoint-nearPoint);
+    glm::vec3 dir = farPoint-nearPoint;
+    dir = glm::normalize(dir);
+    ctrl->processIntersectionPoint(nearPoint, dir);
 }
 
 glm::vec4 GLWidget::getGLViewport(){
