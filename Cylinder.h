@@ -12,6 +12,7 @@ class Cylinder:public DataObject
 {
 public:
     Cylinder(glm::vec3 begin_, glm::vec3 end_, double R_);
+    virtual ~Cylinder();
     virtual void bindGL(QOpenGLContext*) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;
     BoundingBox boundingBox();

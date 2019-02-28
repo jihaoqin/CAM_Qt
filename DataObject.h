@@ -15,7 +15,7 @@ class DataObject
 {
 public:
     DataObject();
-    ~DataObject();
+    virtual ~DataObject();
     virtual void bindGL(QOpenGLContext*) = 0;
     virtual void draw(std::shared_ptr<GLProgram>) = 0;
     bool isBinded();

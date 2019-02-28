@@ -22,6 +22,7 @@ public:
     virtual ~Tee();
     virtual void bindGL(QOpenGLContext*) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;
+    vector<glm::vec3> intersectionPoints(glm::vec3 pos, glm::vec3 dir);
     BoundingBox boundingBox();
 private:
     Mesh generateLeftRing();

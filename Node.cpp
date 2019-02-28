@@ -3,11 +3,11 @@
 #include <QDebug>
 #include "Tee.h"
 
-Node::Node():father(nullptr), type(nothing),data(nullptr)
+Node::Node():father(), type(nothing),data(nullptr)
 {
 
 }
-Node::Node(DataObjectPtr dataPtr_):father(nullptr), type(nothing), data(nullptr)
+Node::Node(DataObjectPtr dataPtr_):father(), type(nothing), data(nullptr)
 {
     assert(dataPtr_ != nullptr);
     QString id(dataPtr_->getId());
@@ -28,10 +28,7 @@ Node::Node(DataObjectPtr dataPtr_):father(nullptr), type(nothing), data(nullptr)
     }
     data = dataPtr_;
 }
-void Node::setFather(NodePtr papa){
-    if(nullptr != father){
-        father->deleteChild(static_cast<NodePtr>(this));
-    }
+void Node::setFather(Node* papa){
     father = papa;
 }
 
@@ -48,7 +45,7 @@ void Node::deleteChild(NodePtr child){
 }
 
 void Node::addChild(NodePtr child){
-    child->setFather(static_cast<NodePtr>(this));
+    child->setFather(this);
     children.push_back(child);
 }
 
@@ -72,11 +69,36 @@ BoundingBox Node::boudingBoxUnion(){
 DataObjectPtr Node::getData(){
     return data;
 }
-
-NodePtr Node::fatherPtr(){
+Node* Node::fatherPtr(){
     return father;
 }
 std::vector<NodePtr> Node::childrenPtrVec(){
     return children;
 }
 
+
+Node::~Node(){
+
+}
+
+DataObjectPtr Node::findObjectId(const char *id){
+    DataObjectPtr result = nullptr;
+    QString nowId(Id());
+    if(nowId.contains(id)){
+        result = data;
+        return result;
+    }
+    else{
+        for(auto child:children){
+            DataObjectPtr o = child->findObjectId(id);
+            if(o != nullptr){
+                result = o;
+                return result;
+            }
+            else{
+                //do nothing
+            }
+        }
+    }
+    return result;
+}

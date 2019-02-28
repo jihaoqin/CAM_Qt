@@ -2,14 +2,14 @@
 #define NUMPY_H
 #include <complex>
 
-struct root{
+struct Root{
     std::complex<double> x1;
     std::complex<double> x2;
     std::complex<double> x3;
     std::complex<double> x4;
 };
 
-root root4(double a, double b, double c, double d, double e){
+Root root4(double a, double b, double c, double d, double e){
     double delta_1 = pow(c, 2) - 3*b*d +12*a*e;
     double delta_2 = 2*pow(c, 3) - 9*b*c*d +27*a*pow(d, 2) + 27*pow(b, 2)*e - 72*a*c*e;
     std::complex<double> m1 = pow(delta_2 + sqrt(-4*pow(delta_1,3) + pow(delta_2, 2)), 1.0/3);
@@ -24,6 +24,6 @@ root root4(double a, double b, double c, double d, double e){
     std::complex<double> x2 = m4 - m5 +m6a;
     std::complex<double> x3 = m4 + m5 -m6b;
     std::complex<double> x4 = m4 + m5 +m6b;
-    return root{x1, x2, x3, x4};
+    return Root{x1, x2, x3, x4};
 }
 #endif // NUMPY_H

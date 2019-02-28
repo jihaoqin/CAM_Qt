@@ -10,6 +10,7 @@ class DataObject;
 
 using DataObjectPtr = std::shared_ptr<DataObject>;
 using NodePtr = std::shared_ptr<Node>;
+using wNodePtr = std::weak_ptr<Node>;
 
 class Node
 {
@@ -22,17 +23,20 @@ public:
         nothing
     };
     Node();
+    virtual ~Node();
     Node(DataObjectPtr);
     BoundingBox boudingBoxUnion();
-    NodePtr fatherPtr();
+    DataObjectPtr findObjectId(const char*);
+    Node* fatherPtr();
     std::vector<NodePtr> childrenPtrVec();
-    void setFather(NodePtr papa);
     void deleteChild(NodePtr child);
     void addChild(NodePtr child);
     DataObjectPtr getData();
     const char* Id();
     template<typename T>
-    void dataOperation(T func){
+    void dataOperation(T& func){
+        int i = 0;
+        bool flag = data != nullptr;
         if(data != nullptr){
             func(data);
         }
@@ -43,7 +47,8 @@ public:
         }
     }
 private:
-    NodePtr father;
+    void setFather(Node* papa);
+    Node* father;
     Type type;
     std::vector<NodePtr> children;
     DataObjectPtr data;

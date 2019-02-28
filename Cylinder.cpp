@@ -47,3 +47,7 @@ void Cylinder::draw(std::shared_ptr<GLProgram> program){
 BoundingBox Cylinder::boundingBox(){
     return m.boundingBox();
 }
+
+Cylinder::~Cylinder(){
+
+}

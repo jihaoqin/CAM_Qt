@@ -117,6 +117,17 @@ void Controller::processIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
 }
 
 void Controller::addIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
+    DataObjectPtr teeBase = data->root->findObjectId("tee");
+    auto tee = dynamic_pointer_cast<Tee>(teeBase);
+    if(tee == nullptr){
+        return;
+    }
+    vector<glm::vec3> points = tee->intersectionPoints(begin, dir);
+    如果points为空，则什么都不做
+    否则找到最近的point
+    新建一个point，并添加到树的末尾
+    更新树的显示
+
     //TODO
 }
 

@@ -52,3 +52,7 @@ void Point::draw(std::shared_ptr<GLProgram> program){
 void Point::updateBoundingBox(){
     box.setData(peakValue{pos.x, pos.x, pos.y, pos.y, pos.z, pos.z});
 }
+
+Point::~Point(){
+
+}

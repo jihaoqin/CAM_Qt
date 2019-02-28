@@ -311,3 +311,31 @@ BoundingBox Tee::boundingBox(){
 Tee::~Tee(){
 
 }
+
+vector<glm::vec3> Tee::intersectionPoints(glm::vec3 pos, glm::vec3 dir){
+    vector<glm::vec3> result;
+    vector<glm::vec3> ringPoints;
+    vector<glm::vec3> cylinderPoints;
+    vector<glm::vec3> planePoints;
+    for(auto r:ringVec){
+        ringPoints = r.intersectionPoints(pos, dir);
+        for(auto p:ringPoints){
+            result.push_back(p);
+        }
+    }
+    /*
+    for(auto c:cylinderVec){
+        cylinderPoints = c.intersectionPoints(pos, dir);
+        for(auto p:cylinderPoints){
+            result.push_back(p);
+        }
+    }
+    for(auto p:planeVec){
+        planePoints = p.intersectionPoints(pos, dir);
+        for(auto i:planePoints){
+            result.push_back(i);
+        }
+    }
+    */
+    return result;
+}

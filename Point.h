@@ -10,6 +10,7 @@ class Point:public DataObject
 {
 public:
     Point(glm::vec3 p, const char* c);
+    virtual ~Point();
     void bindGL(QOpenGLContext*) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;
 private:
