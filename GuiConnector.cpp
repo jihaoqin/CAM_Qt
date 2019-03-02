@@ -30,6 +30,13 @@ QString GuiConnector::getPointText(){
        return pointId;
     }
 }
+void GuiConnector::setPointText(QString s){
+    TabBackground* op = mainWindow->widget->tabWidget->operation;
+    if(op->isSet()){//如果是newCurveOperation
+       NewCurveTab* newCurveTab = dynamic_cast<NewCurveTab*>(op->center);
+       newCurveTab->pointText->setText(s);
+    }
+}
 
 std::shared_ptr<GLProgram> GuiConnector::getMeshProgram(){
     GLWidget* glWidget = mainWindow->widget->glWidget;

@@ -46,13 +46,14 @@ void Controller::addTee(float mainLength, float branchLength, float R, float sid
 }
 
 
-void Controller::addPoint(glm::vec3 p){
+std::shared_ptr<Point> Controller::addPoint(glm::vec3 p){
     QString id = data->idGenerator.getPointId();
     std::shared_ptr<Point> point = std::make_shared<Point>(p, id.toLatin1().data());
     QOpenGLContext* c = widget->getGLContext();
     point->bindGL(c);
     data->addPoint(point);
     mainWindow->updateAction();
+    return point;
 }
 
 bool Controller::hasTee(){
@@ -109,22 +110,23 @@ void Controller::processIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
     QString pointId = mainWindow->connector->getPointText();
     if (pointId.isEmpty()){
         //创建点
-        addIntersectionPoint(begin, dir);
+        QString id = addIntersectionPoint(begin, dir);
+        mainWindow->connector->setPointText(id);
     }
     else{
         //选择点
     }
 }
 
-void Controller::addIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
+QString Controller::addIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
     DataObjectPtr teeBase = data->root->findObjectId("tee");
     auto tee = dynamic_pointer_cast<Tee>(teeBase);
     if(tee == nullptr){
-        return;
+        return QString();
     }
     vector<glm::vec3> points = tee->intersectionPoints(begin, dir);
     if(points.size() == 0){
-        return;
+        return QString();
     }
     else{
         float dist = utility::length(points.at(0) - begin);
@@ -136,7 +138,8 @@ void Controller::addIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
                 minIndex = i;
             }
         }
-        addPoint(points.at(minIndex));
+        auto pointPtr = addPoint(points.at(minIndex));
+        return QString(pointPtr->getId());
     }
 }
 

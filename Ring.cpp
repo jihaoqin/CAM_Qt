@@ -104,7 +104,7 @@ vector<glm::vec3> Ring::intersectionPoints(glm::vec3 worldPos, glm::vec3 worldDi
     vector<float> sol;
     vector<vector<float>> group;
     for(auto i:realSolutions){
-        glm::vec3 testPoint(-7.965087890625,-6.321,1.829);
+        auto testPoint = pos+dir*(float)i;
         vector<float> para = paraWithPoint(testPoint);
         group.push_back(para);
         float theta = para.at(0);
@@ -182,7 +182,7 @@ vector<float> Ring::paraWithPoint(glm::vec3 pos){
     }
     else{
         theta_3 = acos(costheta_34);
-        theta_4 = theta_3 - utility::PI;
+        theta_4 = -1*theta_3;
     }
     // 判断参数解{theta, alpha}是否和pos相符
     vector<float> group1{theta_1, alpha_1};
@@ -211,7 +211,7 @@ bool Ring::isSamePoint(float theta, float alpha, glm::vec3 pos){
     posFromPara.y = (R+r*cos(alpha)) * sin(theta);
     posFromPara.z = r*sin(alpha);
     float dist = utility::length(pos - posFromPara);
-    if(dist < 0.0001){
+    if(dist < 0.01){
         return true;
     }
     else{

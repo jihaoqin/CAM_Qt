@@ -9,6 +9,7 @@
 class GLWidget;
 class MainWindow;
 class Data;
+class Point;
 class Camera2;
 class Controller
 {
@@ -21,7 +22,7 @@ public:
     void bindGLWidget(GLWidget*);
     void addTee(float ,float ,float ,float);
     void addLine();
-    void addPoint(glm::vec3);
+    std::shared_ptr<Point> addPoint(glm::vec3);
     void draw();
     void drawDataObject(std::shared_ptr<DataObject>);
     bool hasTee();
@@ -33,7 +34,7 @@ public:
     std::shared_ptr<Camera2> getCamera();
     bool getEmpty();
     bool getChanged();
-    void addIntersectionPoint(glm::vec3 begin, glm::vec3 dir);
+    QString addIntersectionPoint(glm::vec3 begin, glm::vec3 dir);
     void processIntersectionPoint(glm::vec3 begin, glm::vec3 dir);
 private:
     std::shared_ptr<Data> data;

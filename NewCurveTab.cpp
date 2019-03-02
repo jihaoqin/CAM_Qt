@@ -17,7 +17,7 @@ NewCurveTab::NewCurveTab(QWidget* parent):QWidget(parent)
     pointLabel = new QLabel("point",this);
     pointText = new QTextEdit(this);
     pointText->setFixedHeight(50);
-    pointText->setReadOnly(true);
+    //pointText->setReadOnly(true);
     pointText->setStyleSheet(QString(":focus{ background-color: #E6E6E6; }"));
     QFormLayout* layout_1 = new QFormLayout(pointBox);
     layout_1->addWidget(pointLabel);
@@ -49,6 +49,7 @@ NewCurveTab::NewCurveTab(QWidget* parent):QWidget(parent)
     setLayout(mainLayout);
 
     pointText->viewport()->installEventFilter(this);
+    //pointText->installEventFilter(this);
 }
 
 
@@ -61,7 +62,6 @@ void NewCurveTab::setConnector(GuiConnector* c){
 }
 
 bool NewCurveTab::eventFilter(QObject *target, QEvent *event){
-    qDebug()<<target;
     if(target == pointText->viewport()){
         if(event->type() == QEvent::MouseButtonPress){
             connector->setGLWidgetClickable(true);
@@ -69,10 +69,6 @@ bool NewCurveTab::eventFilter(QObject *target, QEvent *event){
         }
         else if(event->type() == QEvent::Enter){
             pointText->viewport()->setCursor(Qt::ArrowCursor);
-            return true;
-        }
-        else if(event->type() == QEvent::FocusOut){
-            connector->setGLWidgetClickable(false);
             return true;
         }
     }

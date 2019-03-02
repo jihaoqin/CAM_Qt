@@ -14,6 +14,7 @@ public:
     std::shared_ptr<GLProgram> getMeshProgram();
     std::shared_ptr<GLProgram> getPointProgram();
     QString getPointText();
+    void setPointText(QString);
 private:
     MainWindow* mainWindow;
 };

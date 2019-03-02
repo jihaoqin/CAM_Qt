@@ -143,15 +143,6 @@ void GLWidget::processIntersection(QMouseEvent *event){
     glm::vec3 farPoint = glm::unProject(farScreen, camera->viewMatrix()*glm::mat4(1.0f),
                                          camera->perspectiveMatrix(), getGLViewport());
     glm::vec3 dir = glm::normalize(farPoint-nearPoint);
-    qDebug()<<"nearPoint = "<<nearPoint.x<< "," <<nearPoint.y<<","<<nearPoint.z<<"\n";
-    qDebug()<<"farPoint = "<<farPoint.x<< "," <<farPoint.y<<","<<farPoint.z<<"\n";
-    glm::vec3 cameraPos = camera->getPos();
-    qDebug()<<"cameraPos = "<<cameraPos.x<< "," <<cameraPos.y<<","<<cameraPos.z<<"\n";
-    qDebug()<<"dir = "<<dir.x<< "," <<dir.y<<","<<dir.z<<"\n";
-    //test
-    //nearPoint = glm::vec3(-279.49 , 277.946 , -9.82994);
-    //farPoint = glm::vec3(3093.11 , -2648.51 , -579.937);
-    //dir = glm::vec3(0.749215 , -0.650105 , -0.126648);
     ctrl->processIntersectionPoint(nearPoint, dir);
 }
 
