@@ -1,5 +1,7 @@
 #include "Ring.h"
 #include <cmath>
+#include <algorithm>
+#include "numpy.h"
 using namespace utility;
 using namespace std;
 
@@ -54,48 +56,77 @@ Ring::~Ring(){
 
 }
 
-vector<glm::vec3> Ring::intersectionPoints(glm::vec3 begin, glm::vec3 dir){
-    auto coe = generateCoe(begin, dir);
-    Root solutions = utility::root4(coe);
+vector<glm::vec3> Ring::intersectionPoints(glm::vec3 worldPos, glm::vec3 worldDir){
+
+    glm::mat4 T = utility::createMat(anchor,zdir,glm::cross(zdir, xdir));
+    glm::mat4 invT = glm::inverse(T);
+    glm::mat3 invR = utility::RInMatrix(invT);
+    glm::vec3 pos = utility::getPos(invT*glm::vec4(worldPos.x, worldPos.y, worldPos.z, 1.0));
+    glm::vec3 dir = invR*worldDir;
+
     vector<double> realSolutions;
-    auto isReal = [](complex<double> num)->bool{
-        return abs(num.imag())<0.000001? true:false;
-    };
-    if(isReal(solutions.x1)){
-        realSolutions.push_back(solutions.x1.real());
-    }
-    if(isReal(solutions.x2)){
-        realSolutions.push_back(solutions.x2.real());
-    }
-    if(isReal(solutions.x3)){
-        realSolutions.push_back(solutions.x3.real());
-    }
-    if(isReal(solutions.x4)){
-        realSolutions.push_back(solutions.x4.real());
-    }
+
+
+        auto coe = generateCoe(pos, dir);
+        //Root solutions = utility::root4(coe);
+        //vector<complex<double>> solVec{solutions.x1, solutions.x2, solutions.x3, solutions.x4};
+        auto solVec = numpy::roots(coe);
+
+        /*
+    vector<complex<double>> solVec = utility::findRoot(coe);
+    */
+        auto isReal = [](complex<double> num)->bool{
+            return abs(num.imag())<0.000001? true:false;
+        };
+        vector<glm::vec3> allPoints;
+        for(auto i:solVec){
+            if(isReal(i)&&i.real()>0){
+                realSolutions.push_back(i.real());
+                allPoints.push_back(pos + dir*(float)i.real());
+            }
+        }
+        if(realSolutions.empty()){
+            return vector<glm::vec3>();
+        }
+        /*
+        double minReal = *std::min_element(realSolutions.begin(), realSolutions.end());
+        glm::vec3 nearestPoint = pos + dir*(float)minReal;
+        if(utility::length(pos - nearestPoint) < 1e-2){
+            break;
+        }
+        else{
+            glm::vec3 lastPos = pos;
+            pos = pos + 0.33f*(nearestPoint - pos);
+        }
+        */
 
     //检查解是否在参数空间内
-    vector<double> sol;
+    vector<float> sol;
+    vector<vector<float>> group;
     for(auto i:realSolutions){
-        vector<float> para = paraWithPoint(begin + dir*(float)i);
-        sol.push_back(i);
+        glm::vec3 testPoint(-7.965087890625,-6.321,1.829);
+        vector<float> para = paraWithPoint(testPoint);
+        group.push_back(para);
+        float theta = para.at(0);
+        float alpha = para.at(1);
+        if(theta<=angle && theta >=0){
+            if((-1*PI<=alpha && alpha<=-0.5*PI)||( 0.5*PI<=alpha && alpha<PI)){
+                sol.push_back(i);
+            }
+        }
     }
-
     //输出解
     vector<glm::vec3> points;
     for(auto i:sol){
-        auto p = begin + dir*(float)i;
-        points.push_back(p);
+        auto p = pos + dir*(float)i;
+        auto homo = glm::vec4(p,1.0);
+        glm::vec3 worldP = T*glm::vec4(p, 1.0);
+        points.push_back(worldP);
     }
     return points;
 }
 
-vector<double> Ring::generateCoe(glm::vec3 worldPos, glm::vec3 worldDir){
-    glm::mat4 T = utility::createMat(anchor,zdir,glm::cross(zdir, xdir));
-    glm::mat4 invT = glm::inverse(T);
-    glm::mat3 invR = utility::RInMatrix(invT);
-    glm::vec3 pos = invT*glm::vec4(worldPos.x, worldPos.y, worldPos.z, 1.0);
-    glm::vec3 dir = invR*worldDir;
+vector<double> Ring::generateCoe(glm::vec3 pos, glm::vec3 dir){
     double x0 = pos.x;
     double y0 = pos.y;
     double z0 = pos.z;
@@ -126,10 +157,10 @@ vector<float> Ring::paraWithPoint(glm::vec3 pos){
     float alpha_2;
     float theta_3; float theta_4;
     if(alpha_1 >0){
-        alpha_2 = alpha_1 - utility::PI;
+        alpha_2 = utility::PI - alpha_1;
     }
     else{
-        alpha_2 = alpha_1 + utility::PI;
+        alpha_2 = -1*utility::PI - alpha_1;
     }
 
     double costheta_12 = x /(R+r*cos(alpha_1));
@@ -140,7 +171,7 @@ vector<float> Ring::paraWithPoint(glm::vec3 pos){
     }
     else{
         theta_1 = acos(costheta_12);
-        theta_2 = theta_1 - utility::PI;
+        theta_2 = -1*theta_1;
     }
 
     double costheta_34 = x /(R+r*cos(alpha_2));
@@ -159,29 +190,19 @@ vector<float> Ring::paraWithPoint(glm::vec3 pos){
     vector<float> group3{theta_3, alpha_2};
     vector<float> group4{theta_4, alpha_2};
 
-    vector<vector<float>> group;
     if(isSamePoint(theta_1, alpha_1, pos)){
-        group.push_back(group1);
+        return group1;
     }
     if(isSamePoint(theta_2, alpha_1, pos)){
-        group.push_back(group2);
+        return group2;
     }
     if(isSamePoint(theta_3, alpha_2, pos)){
-        group.push_back(group3);
+        return group3;
     }
     if(isSamePoint(theta_4, alpha_2, pos)){
-        group.push_back(group4);
+        return group4;
     }
 
-    for(auto i:group){
-        float theta = i.at(0);
-        float alpha = i.at(1);
-        if(theta<=angle && theta >=0){
-            if((-1*PI<=alpha && alpha<=-0.5*PI)||( 0.5*PI<=alpha && alpha<PI)){
-                return i;
-            }
-        }
-    }
 }
 
 bool Ring::isSamePoint(float theta, float alpha, glm::vec3 pos){

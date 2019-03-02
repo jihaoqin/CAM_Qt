@@ -1,6 +1,7 @@
 #include "utility.h"
 #include <iostream>
 #include <sstream>
+#include "find_polynomial_roots_jenkins_traub.h"
 glm::mat4 utility::createMat(glm::vec3 pos, glm::vec3 zDir, glm::vec3 upDir)
 {
 	zDir = glm::normalize(zDir);
@@ -33,11 +34,19 @@ glm::mat4 utility::setPos(glm::mat4& matrix, glm::vec3 pos)
 	return matrix;
 }
 
-glm::vec3 utility::getPos(glm::mat4& matrix){
+glm::vec3 utility::getPos(glm::mat4 matrix){
     glm::vec3 pos;
     pos[0] = matrix[3][0];
     pos[1] = matrix[3][1];
     pos[2] = matrix[3][2];
+    return pos;
+}
+
+glm::vec3 utility::getPos(glm::vec4 homo){
+    glm::vec3 pos;
+    pos[0] = homo[0];
+    pos[1] = homo[1];
+    pos[2] = homo[2];
     return pos;
 }
 double utility::length(glm::vec3 v)
@@ -204,4 +213,22 @@ utility::Root utility::root4(vector<double> coe){
     std::complex<double> x3 = m4 + m5 -m6b;
     std::complex<double> x4 = m4 + m5 +m6b;
     return Root{x1, x2, x3, x4};
+}
+
+std::vector<std::complex<double>> utility::findRoot(vector<double> c){
+    Eigen::VectorXd coe(c.size());
+    for(int i = 0; i<c.size(); i++){
+        coe(i) = c.at(i);
+    }
+    Eigen::VectorXd real(c.size());
+    Eigen::VectorXd imag(c.size());
+    rpoly_plus_plus::FindPolynomialRootsJenkinsTraub(coe, &real, &imag);
+    std::vector<std::complex<double>> result;
+    for(int i = 0; i<c.size()-1; i++){
+        std::complex<double> r;
+        r.real(real(i));
+        r.imag(imag(i));
+        result.push_back(r);
+    }
+    return result;
 }

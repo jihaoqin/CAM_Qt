@@ -28,7 +28,6 @@ void Data::addTee(std::shared_ptr<Tee> t){
 void Data::addPoint(shared_ptr<Point> p){
     root->addChild(make_shared<Node>(p));
     updateBoundingBox();
-    camera->bindBoundingBox(box);
     state.setEmpty(false);
     state.setChanged(true);
 }

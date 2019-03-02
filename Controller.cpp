@@ -126,16 +126,18 @@ void Controller::addIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
     if(points.size() == 0){
         return;
     }
-    float dist = utility::length(points.at(0) - begin);
-    int minIndex = 0;
-    for(int i = 0; i < points.size(); i++){
-        float l = utility::length(points.at(i) - begin);
-        if(l < dist){
-            dist = l;
-            minIndex = i;
+    else{
+        float dist = utility::length(points.at(0) - begin);
+        int minIndex = 0;
+        for(int i = 0; i < points.size(); i++){
+            float l = utility::length(points.at(i) - begin);
+            if(l < dist){
+                dist = l;
+                minIndex = i;
+            }
         }
+        addPoint(points.at(minIndex));
     }
-    addPoint(points.at(minIndex));
 }
 
 void Controller::drawDataObject(std::shared_ptr<DataObject> ob){

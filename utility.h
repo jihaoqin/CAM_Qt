@@ -5,6 +5,7 @@
 #include "vertex.h"
 #include "Mesh.h"
 #include <complex>
+#include <vector>
 
 namespace utility {
 const float PI = 3.1415926;
@@ -15,9 +16,11 @@ struct Root{
     std::complex<double> x4;
 };
 Root root4(vector<double> coe);
+std::vector<std::complex<double>> findRoot(vector<double> coe);
 glm::mat4 createMat(glm::vec3 pos, glm::vec3 zDir, glm::vec3 upDir);
 glm::mat4 setPos(glm::mat4& matrix, glm::vec3 pos);
-glm::vec3 getPos(glm::mat4& matrix);
+glm::vec3 getPos(glm::mat4 matrix);
+glm::vec3 getPos(glm::vec4 homo);
 glm::mat4 setXDir(glm::mat4& matrix, glm::vec3 pos);
 glm::mat4 setYDir(glm::mat4& matrix, glm::vec3 pos);
 glm::mat4 setZDir(glm::mat4& matrix, glm::vec3 pos);
