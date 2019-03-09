@@ -13,6 +13,8 @@ public:
     virtual ~Point();
     void bindGL(QOpenGLContext*) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;
+    glm::vec3 getPos();
+    bool picked;
 private:
     void updateBoundingBox();
     glm::vec3 pos;

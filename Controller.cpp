@@ -101,7 +101,7 @@ void Controller::bindMainWindow(MainWindow* m){
     mainWindow = m;
 }
 
-void Controller::processIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
+void Controller::processIntersectionPoint(glm::vec3 begin, glm::vec3 dir, glm::vec2 glXY){
     //判断是创建点，还是选择点
         //根据pointText内是否已有可视点，如果有可视点，就是选择点操作，如果无可视点就是创建点操作
     //如果是选择点操作
@@ -113,13 +113,31 @@ void Controller::processIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
     QString dirId = newCurveTab->getDirText();
     bool focusOnPointText = newCurveTab->isPointTextFocused();
     bool focusOnDirText = newCurveTab->isDirTextFocused();
-    if (pointId.isEmpty()){
-        //创建点
-        QString id = addIntersectionPoint(begin, dir);
-        //mainWindow->connector->setPointText(id);
+
+    if(focusOnPointText == true){
+        if(pointId.isEmpty()){
+            //创建点
+            QString id = addIntersectionPoint(begin, dir);
+            mainWindow->connector->setPointText(id);
+        }
+        else{
+            //赋选中点picked
+            clickOnPoint(pointId, glXY);
+        }
+    }
+    else if(focusOnDirText == true){
+        if(dirId.isEmpty()){
+            if(!pointId.isEmpty()){
+                //创建direction
+            }
+        }
+        else{
+            //判断是否选中了当前点
+            //clickOnDir(dirId);
+        }
     }
     else{
-        //选择点
+        // do nothing
     }
 }
 
@@ -166,4 +184,65 @@ void Controller::drawDataObject(std::shared_ptr<DataObject> ob){
     p->bind();
     data->camera->setUniform(p);
     ob->draw(p);
+}
+
+
+void Controller::clickOnPoint(QString id, glm::vec2 sample2D){
+    auto root = data->root;
+    if(root == nullptr){
+        return ;
+    }
+    DataObjectPtr objectPtr = root->findObjectId(id.toLatin1().data());
+    if(objectPtr == nullptr){
+        return ;
+    }
+    auto pointPtr = dynamic_pointer_cast<Point>(objectPtr);
+    glm::vec3 pos3D = pointPtr->getPos();
+    GLWidget *glWidget = mainWindow->connector->getGLWidget();
+    glm::vec2 pos2D = glWidget->spatialTo2D(pos3D);
+    if(utility::length(sample2D - pos2D) < 4){
+        pointPtr->picked = true;
+    }
+}
+
+void Controller::processIntersectionWhenRelease(){
+    setPointPickState(true);
+}
+
+void Controller::exitPick(){
+    setPointPickState(false);
+}
+
+void Controller::setPointPickState(bool state){
+    NewCurveTab* newCurveTab = mainWindow->connector->getNewCurveTabWidget();
+    QString pointId = newCurveTab->getPointText();
+    QString dirId = newCurveTab->getDirText();
+    bool focusOnPointText = newCurveTab->isPointTextFocused();
+    bool focusOnDirText = newCurveTab->isDirTextFocused();
+    QString id;
+    if(focusOnDirText == true){
+        if(pointId.isEmpty()){
+            return ;
+        }
+        else{
+            id = pointId;
+        }
+    }
+    else if(focusOnPointText == true){
+        if(dirId.isEmpty()){
+            return;
+        }
+        else{
+            id = dirId;
+        }
+    }
+    else{
+        //do nothing
+    }
+    DataObjectPtr ptr = data->root->findObjectId(id.toLatin1().data());
+    if(!ptr){
+        auto pointPtr = dynamic_pointer_cast<Point>(ptr);
+        pointPtr->picked = state;
+        qDebug()<<state;
+    }
 }

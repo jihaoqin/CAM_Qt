@@ -26,6 +26,7 @@ glm::mat4 setYDir(glm::mat4& matrix, glm::vec3 pos);
 glm::mat4 setZDir(glm::mat4& matrix, glm::vec3 pos);
 glm::mat3 RInMatrix(glm::mat4 matrix);
 double length(glm::vec3 v);
+double length(glm::vec2 v);
 bool isZero(double);
 void print(glm::vec3 v);
 std::string matLog(glm::mat4 m);

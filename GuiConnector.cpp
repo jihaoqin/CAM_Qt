@@ -58,3 +58,8 @@ NewCurveTab* GuiConnector::getNewCurveTabWidget(){
         return nullptr;
     }
 }
+
+GLWidget* GuiConnector::getGLWidget(){
+    GLWidget* glWidget = mainWindow->widget->glWidget;
+    return glWidget;
+}

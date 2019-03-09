@@ -116,10 +116,33 @@ bool GLWidget::eventFilter(QObject *watched, QEvent *event){
             QMouseEvent* mouseEvent = dynamic_cast<QMouseEvent*>(event);
             //construct a line
             if(mouseEvent->buttons() == Qt::LeftButton){
-                processIntersection(mouseEvent);
+                processIntersectionWhenPress(mouseEvent);
                 return true;
             }
             else{
+                return QOpenGLWidget::eventFilter(watched, event);
+            }
+        }
+        else if(event->type() == QEvent::MouseButtonRelease){
+            QMouseEvent* mouseEvent = dynamic_cast<QMouseEvent*>(event);
+            if(mouseEvent->button() == Qt::LeftButton){
+                ctrl->processIntersectionWhenRelease();
+            }
+        }
+        else if(event->type() == QEvent::MouseMove){
+            QMouseEvent* mouseEvent = dynamic_cast<QMouseEvent*>(event);
+            //什么都没按下
+            if(mouseEvent->buttons() == Qt::NoButton){
+                return true;
+            }
+            //只按下了左键
+            else if(mouseEvent->buttons() == Qt::LeftButton){
+                //移动点
+                return true;
+            }
+            else{
+                //让点不可选
+                ctrl->exitPick();
                 return QOpenGLWidget::eventFilter(watched, event);
             }
         }
@@ -132,20 +155,27 @@ bool GLWidget::eventFilter(QObject *watched, QEvent *event){
     }
 }
 
-void GLWidget::processIntersection(QMouseEvent *event){
+void GLWidget::processIntersectionWhenPress(QMouseEvent *event){
     int x = event->x();
     int y = event->y();
     glm::vec4 viewPort = getGLViewport();
-    glm::vec3 nearScreen{x, viewPort[3] - y, 0};
-    glm::vec3 farScreen(x, viewPort[3] - y, 1);
+    int glY = viewPort[3] - y;
+    glm::vec3 nearScreen{x, glY, 0};
+    glm::vec3 farScreen(x, glY, 1);
     glm::vec3 nearPoint = glm::unProject(nearScreen, camera->viewMatrix()*glm::mat4(1.0f),
                                          camera->perspectiveMatrix(), getGLViewport());
     glm::vec3 farPoint = glm::unProject(farScreen, camera->viewMatrix()*glm::mat4(1.0f),
                                          camera->perspectiveMatrix(), getGLViewport());
     glm::vec3 dir = glm::normalize(farPoint-nearPoint);
-    ctrl->processIntersectionPoint(nearPoint, dir);
+    ctrl->processIntersectionPoint(nearPoint, dir, glm::vec2(x, glY));
 }
 
 glm::vec4 GLWidget::getGLViewport(){
     return glm::vec4(0,0,width(),height());
+}
+
+glm::vec2 GLWidget::spatialTo2D(glm::vec3 pos3D){
+    glm::vec3 pos2D = glm::project(pos3D, camera->viewMatrix()*glm::mat4(1.0f),
+                                    camera->perspectiveMatrix(),getGLViewport());
+    return glm::vec2(pos2D[0], pos2D[1]);
 }

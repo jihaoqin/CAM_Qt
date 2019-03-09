@@ -21,6 +21,7 @@ public:
     QOpenGLContext* getGLContext();
     void setConnector(GuiConnector*);
     void setClickable(bool);
+    glm::vec2 spatialTo2D(glm::vec3);
     friend class GuiConnector;
 protected:
     void initializeGL() override;
@@ -30,7 +31,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
     void wheelEvent(QWheelEvent* event)	override;
     bool eventFilter(QObject* watched, QEvent* event) override;
-    void processIntersection(QMouseEvent* event);
+    void processIntersectionWhenPress(QMouseEvent* event);
 private:
     Controller* ctrl;
     //model和camera的顺序很重要，camera依赖于model

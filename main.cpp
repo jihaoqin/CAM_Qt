@@ -17,6 +17,6 @@ int main(int argc, char *argv[])
     ctrl.bindData(data);
     MainWindow w(&ctrl);
     w.show();
-    //ctrl.addTee(100, 100, 10, 10);
+    ctrl.addTee(100, 100, 10, 10);
     return a.exec();
 }

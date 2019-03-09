@@ -232,3 +232,9 @@ std::vector<std::complex<double>> utility::findRoot(vector<double> c){
     }
     return result;
 }
+
+double utility::length(glm::vec2 v){
+    float x = v[0];
+    float y = v[1];
+    return sqrt(x*x + y*y);
+}

@@ -35,7 +35,11 @@ public:
     bool getEmpty();
     bool getChanged();
     QString addIntersectionPoint(glm::vec3 begin, glm::vec3 dir);
-    void processIntersectionPoint(glm::vec3 begin, glm::vec3 dir);
+    void processIntersectionPoint(glm::vec3 begin, glm::vec3 dir, glm::vec2 glXY);
+    void clickOnPoint(QString, glm::vec2);
+    void processIntersectionWhenRelease();
+    void exitPick();
+    void setPointPickState(bool);
 private:
     std::shared_ptr<Data> data;
     GLWidget* widget;

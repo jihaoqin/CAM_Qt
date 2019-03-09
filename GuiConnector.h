@@ -5,6 +5,7 @@
 class MainWindow;
 class GLProgram;
 class NewCurveTab;
+class GLWidget;
 
 class GuiConnector
 {
@@ -17,6 +18,8 @@ public:
     std::shared_ptr<GLProgram> getPointProgram();
     QString getPointText();
     void setPointText(QString);
+    GLWidget* getGLWidget();
+
 private:
     MainWindow* mainWindow;
 };

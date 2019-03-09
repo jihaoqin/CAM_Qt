@@ -1,6 +1,6 @@
 #include "Point.h"
 
-Point::Point(glm::vec3 p, const char* c):color(Color::GREEN)
+Point::Point(glm::vec3 p, const char* c):color(Color::GREEN), picked(false)
 {
     setId(c);
     pos = p;
@@ -55,4 +55,8 @@ void Point::updateBoundingBox(){
 
 Point::~Point(){
 
+}
+
+glm::vec3 Point::getPos(){
+    return pos;
 }
