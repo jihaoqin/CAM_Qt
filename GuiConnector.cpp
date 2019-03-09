@@ -47,3 +47,14 @@ std::shared_ptr<GLProgram> GuiConnector::getPointProgram(){
     GLWidget* glWidget = mainWindow->widget->glWidget;
     return glWidget->pointProgram;
 }
+
+NewCurveTab* GuiConnector::getNewCurveTabWidget(){
+    TabBackground* op = mainWindow->widget->tabWidget->operation;
+    if(op->isSet()){//如果是newCurveOperation
+       NewCurveTab* newCurveTab = dynamic_cast<NewCurveTab*>(op->center);
+       return newCurveTab;
+    }
+    else{
+        return nullptr;
+    }
+}

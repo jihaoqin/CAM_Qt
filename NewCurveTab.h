@@ -15,6 +15,10 @@ public:
     NewCurveTab(QWidget* parent = nullptr);
     virtual ~NewCurveTab();
     void setConnector(GuiConnector*);
+    QString getPointText();
+    QString getDirText();
+    bool isPointTextFocused();
+    bool isDirTextFocused();
     friend class GuiConnector;
 protected:
     virtual bool eventFilter(QObject* target, QEvent* event) override;

@@ -17,7 +17,7 @@ NewCurveTab::NewCurveTab(QWidget* parent):QWidget(parent)
     pointLabel = new QLabel("point",this);
     pointText = new QTextEdit(this);
     pointText->setFixedHeight(50);
-    //pointText->setReadOnly(true);
+    pointText->setReadOnly(true);
     pointText->setStyleSheet(QString(":focus{ background-color: #E6E6E6; }"));
     QFormLayout* layout_1 = new QFormLayout(pointBox);
     layout_1->addWidget(pointLabel);
@@ -71,8 +71,42 @@ bool NewCurveTab::eventFilter(QObject *target, QEvent *event){
             pointText->viewport()->setCursor(Qt::ArrowCursor);
             return true;
         }
+        else{
+            return QWidget::eventFilter(target, event);
+        }
+    }
+    else if(target == dirText->viewport()){
+        if(event->type() == QEvent::MouseButtonPress){
+            connector->setGLWidgetClickable(true);
+            return true;
+        }
+        else if(event->type() == QEvent::Enter){
+            dirText->viewport()->setCursor(Qt::ArrowCursor);
+            return true;
+        }
+        else{
+            return QWidget::eventFilter(target, event);
+        }
     }
     else{
         return QWidget::eventFilter(target, event);
     }
+}
+
+QString NewCurveTab::getPointText(){
+    QString pointId = pointText->toPlainText();
+    return pointId;
+}
+
+QString NewCurveTab::getDirText(){
+    QString dirId = dirText->toPlainText();
+    return dirId;
+}
+
+bool NewCurveTab::isDirTextFocused(){
+    return dirText->hasFocus();
+}
+
+bool NewCurveTab::isPointTextFocused(){
+    return pointText->hasFocus();
 }

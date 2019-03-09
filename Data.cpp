@@ -33,7 +33,7 @@ void Data::addPoint(shared_ptr<Point> p){
 }
 
 bool Data::hasTee(){
-    if(root->getData() != nullptr){
+    if(root!= nullptr && root->getData() != nullptr){
         return true;
     }
     else{
