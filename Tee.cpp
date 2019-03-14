@@ -1,6 +1,7 @@
 #include "Tee.h"
 #include <algorithm>
 #include "config.h"
+#include "HalfPoint.h"
 using namespace std;
 Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR):modelMat(glm::mat4(1.0)), color(Color::RED),
         lengthMain(_lengthMain), lengthBranch(_lengthBranch), pipeR(_pipeR), sideR(_sideR)
@@ -22,14 +23,14 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR):mod
     Cylinder mainPipe(glm::vec3(-lengthMain/2, 0, 0), glm::vec3(lengthMain/2, 0, 0), pipeR);
     cylinderVec.push_back(branch);
     cylinderVec.push_back(mainPipe);
-    meshVec.push_back(up);
-    meshVec.push_back(left);
-    meshVec.push_back(right);
-    meshVec.push_back(front);
-    meshVec.push_back(back);
+    planeVec.push_back(up);
+    planeVec.push_back(left);
+    planeVec.push_back(right);
+    planeVec.push_back(front);
+    planeVec.push_back(back);
     //包围盒
     vector<BoundingBox> boxVec;
-    for (auto mesh:meshVec){
+    for (auto mesh:planeVec){
         boxVec.push_back(mesh.boundingBox());
     }
     for (auto r:ringVec){
@@ -87,8 +88,8 @@ void Tee::bindGL(QOpenGLContext * c){
         qDebug()<<"Tee has been binded.\n";
         return;
     }
-    for(unsigned int i = 0; i < meshVec.size(); i++){
-       meshVec.at(i).bindGL(c);
+    for(unsigned int i = 0; i < planeVec.size(); i++){
+       planeVec.at(i).bindGL(c);
     }
     for(unsigned int i = 0; i < ringVec.size(); i++){
         ringVec.at(i).bindGL(c);
@@ -105,8 +106,8 @@ void Tee::draw(std::shared_ptr<GLProgram> p){
     if(visiable == false){
         return;
     }
-    for(unsigned int i = 0; i < meshVec.size(); i++){
-       meshVec.at(i).draw();
+    for(unsigned int i = 0; i < planeVec.size(); i++){
+       planeVec.at(i).draw();
     }
     for(unsigned int i = 0; i < ringVec.size(); i++){
         ringVec.at(i).draw(p);
@@ -312,11 +313,11 @@ Tee::~Tee(){
 
 }
 
-vector<glm::vec3> Tee::intersectionPoints(glm::vec3 pos, glm::vec3 dir){
-    vector<glm::vec3> result;
-    vector<glm::vec3> ringPoints;
-    vector<glm::vec3> cylinderPoints;
-    vector<glm::vec3> planePoints;
+vector<HalfPoint> Tee::intersectionPoints(glm::vec3 pos, glm::vec3 dir){
+    vector<HalfPoint> result;
+    vector<HalfPoint> ringPoints;
+    vector<HalfPoint> cylinderPoints;
+    vector<HalfPoint> planePoints;
     for(auto r:ringVec){
         ringPoints = r.intersectionPoints(pos, dir);
         for(auto p:ringPoints){
@@ -338,4 +339,27 @@ vector<glm::vec3> Tee::intersectionPoints(glm::vec3 pos, glm::vec3 dir){
     }
     */
     return result;
+}
+
+
+void Tee::setIdUsing(IdGenerator g){
+    for(auto& i:ringVec){
+        auto s = g.getRingId();
+        i.setId(s.toLatin1().data());
+    }
+    for(auto& i:cylinderVec){
+        i.setId(g.getCylinderId().toLatin1().data());
+    }
+    for(auto& i:planeVec){
+        //i.setId(g.getPlaneId().toLatin1().data());
+    }
+}
+
+Ring* Tee::getRing(QString id){
+    for(auto& i:ringVec){
+        if(id == QString(i.getId()) ){
+            return &i;
+        }
+    }
+    return nullptr;
 }

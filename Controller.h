@@ -6,6 +6,7 @@
 #include <QOpenGLFunctions_4_3_Core>
 #include <memory>
 #include "DataObject.h"
+#include "HalfPoint.h"
 class GLWidget;
 class MainWindow;
 class Data;
@@ -21,8 +22,8 @@ public:
     void bindData(std::shared_ptr<Data>);
     void bindGLWidget(GLWidget*);
     void addTee(float ,float ,float ,float);
-    void addLine();
-    std::shared_ptr<Point> addPoint(glm::vec3);
+    void addCurve(QString pId, float uAng);
+    std::shared_ptr<Point> addPoint(HalfPoint);
     void draw();
     void drawDataObject(std::shared_ptr<DataObject>);
     bool hasTee();
@@ -39,7 +40,9 @@ public:
     void clickOnPoint(QString, glm::vec2);
     void processIntersectionWhenRelease();
     void exitPick();
-    void setPointPickState(bool);
+    void setPointPickState(QString, bool);
+    void processMoveWhenMove(glm::vec3, glm::vec3);
+    std::vector<HalfPoint> intersectionPointInTee(glm::vec3, glm::vec3);
 private:
     std::shared_ptr<Data> data;
     GLWidget* widget;

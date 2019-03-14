@@ -18,9 +18,10 @@ void Point::bindGL(QOpenGLContext *c){
     core->glGenVertexArrays(1, &VAO);
     core->glBindVertexArray(VAO);
     core->glGenBuffers(1,&VBO);
+    core->glGenBuffers(1, &EBO);
+    binded = true;
     core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
     core->glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*vertexVec.size(), &(vertexVec[0]), GL_STATIC_DRAW);
-    core->glGenBuffers(1, &EBO);
     core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     core->glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*indexVec.size(), &(indexVec[0]), GL_STATIC_DRAW);
 
@@ -30,12 +31,10 @@ void Point::bindGL(QOpenGLContext *c){
     core->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(3*sizeof(float)));
     core->glEnableVertexAttribArray(2);
     core->glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(6*sizeof(float)));
-    binded = true;
 }
 
 void Point::draw(std::shared_ptr<GLProgram> program){
-    if(binded == false){
-        assert(binded == true);
+    if(visiable == false){
         return;
     }
     program->setMat4("model", glm::mat4(1.0));
@@ -45,7 +44,7 @@ void Point::draw(std::shared_ptr<GLProgram> program){
     core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     //core->glDrawElements(GL_TRIANGLES, indexVec.size(), GL_UNSIGNED_INT, 0);
     //core->glDrawElements(GL_POINTS, indexVec.size(), GL_UNSIGNED_INT, 0);
-    core->glPointSize(6);
+    core->glPointSize(4);
     core->glDrawArrays(GL_POINTS, 0 ,1);
 }
 
@@ -59,4 +58,39 @@ Point::~Point(){
 
 glm::vec3 Point::getPos(){
     return pos;
+}
+
+void Point::setPos(glm::vec3 p){
+    pos = p;
+    updateGL();
+}
+
+void Point::updateGL(){
+    Vertex v;
+    v.normal = glm::vec3(1,0,0);
+    v.vertex = pos;
+    v.coordinate = glm::vec2(0,0);
+    vertexVec.at(0) = v;
+    if(binded == false){
+        return ;
+    }
+    else{
+        core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        core->glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*vertexVec.size(), &(vertexVec[0]), GL_STATIC_DRAW);
+        core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        core->glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*indexVec.size(), &(indexVec[0]), GL_STATIC_DRAW);
+        core->glEnableVertexAttribArray(0);
+        core->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)0);
+        core->glEnableVertexAttribArray(1);
+        core->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(3*sizeof(float)));
+        core->glEnableVertexAttribArray(2);
+        core->glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(6*sizeof(float)));
+    }
+}
+
+const char* Point::meshId(){
+    return meshName.c_str();
+}
+void Point::meshId(const char* s){
+    meshName = std::string(s);
 }

@@ -138,6 +138,7 @@ bool GLWidget::eventFilter(QObject *watched, QEvent *event){
             //只按下了左键
             else if(mouseEvent->buttons() == Qt::LeftButton){
                 //移动点
+                processMoveWhenMove(mouseEvent);
                 return true;
             }
             else{
@@ -162,14 +163,29 @@ void GLWidget::processIntersectionWhenPress(QMouseEvent *event){
     int glY = viewPort[3] - y;
     glm::vec3 nearScreen{x, glY, 0};
     glm::vec3 farScreen(x, glY, 1);
-    glm::vec3 nearPoint = glm::unProject(nearScreen, camera->viewMatrix()*glm::mat4(1.0f),
-                                         camera->perspectiveMatrix(), getGLViewport());
-    glm::vec3 farPoint = glm::unProject(farScreen, camera->viewMatrix()*glm::mat4(1.0f),
-                                         camera->perspectiveMatrix(), getGLViewport());
+    glm::vec3 nearPoint = get3DPoint(nearScreen);
+    glm::vec3 farPoint = get3DPoint(farScreen);
     glm::vec3 dir = glm::normalize(farPoint-nearPoint);
     ctrl->processIntersectionPoint(nearPoint, dir, glm::vec2(x, glY));
 }
+void GLWidget::processMoveWhenMove(QMouseEvent *event){
+    int x = event->x();
+    int y = event->y();
+    glm::vec4 viewPort = getGLViewport();
+    int glY = viewPort[3] - y;
+    glm::vec3 nearScreen{x, glY, 0};
+    glm::vec3 farScreen(x, glY, 1);
+    glm::vec3 nearPoint = get3DPoint(nearScreen);
+    glm::vec3 farPoint = get3DPoint(farScreen);
+    glm::vec3 dir = glm::normalize(farPoint-nearPoint);
+    ctrl->processMoveWhenMove(nearPoint, farPoint);
+}
 
+glm::vec3 GLWidget::get3DPoint(glm::vec3 p2){
+    glm::vec3 p3 = glm::unProject(p2,  camera->viewMatrix()*glm::mat4(1.0f),
+                                         camera->perspectiveMatrix(), getGLViewport());
+    return p3;
+}
 glm::vec4 GLWidget::getGLViewport(){
     return glm::vec4(0,0,width(),height());
 }

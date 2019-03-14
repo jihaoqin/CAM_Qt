@@ -7,22 +7,23 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include "utility.h"
+#include <HalfPoint.h>
 
+class RingAssist;
+class RingCurveAssist;
 class Ring:public DataObject
 {
 public:
+    friend class RingAssist;
+    friend class RingCurveAssist;
     Ring(double R_, double r_, double angle_ , glm::vec3 anchor_, glm::vec3 zdir_, glm::vec3 xdir_);
     virtual ~Ring();
     virtual void bindGL(QOpenGLContext *) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;
     BoundingBox boundingBox();
-    vector<glm::vec3> intersectionPoints(glm::vec3 begin, glm::vec3 dir);
+    vector<HalfPoint> intersectionPoints(glm::vec3 begin, glm::vec3 dir);
 private:
     vector<Vertex> generateEdge();
-    vector<double> generateCoe(glm::vec3 worldPos, glm::vec3 worldDir);
-    bool inParaSpace(double theta, double alpha);
-    vector<float> paraWithPoint(glm::vec3);
-    bool isSamePoint(float theta, float alpha, glm::vec3 pos);
     double R;
     double r;
     double angle;//弧度制

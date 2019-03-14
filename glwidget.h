@@ -22,6 +22,8 @@ public:
     void setConnector(GuiConnector*);
     void setClickable(bool);
     glm::vec2 spatialTo2D(glm::vec3);
+    glm::vec3 get3DPoint(glm::vec3);
+    glm::vec4 getGLViewport();
     friend class GuiConnector;
 protected:
     void initializeGL() override;
@@ -32,6 +34,7 @@ protected:
     void wheelEvent(QWheelEvent* event)	override;
     bool eventFilter(QObject* watched, QEvent* event) override;
     void processIntersectionWhenPress(QMouseEvent* event);
+    void processMoveWhenMove(QMouseEvent* event);
 private:
     Controller* ctrl;
     //model和camera的顺序很重要，camera依赖于model
@@ -42,7 +45,6 @@ private:
     QPoint mLastPos;
     GuiConnector* connector;
 private:
-    glm::vec4 getGLViewport();
 };
 
 #endif // GLWIDGET_H

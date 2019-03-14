@@ -18,8 +18,7 @@ public:
     enum Type{
         tee,
         point,
-        direction,
-        line,
+        curve,
         nothing
     };
     Node();

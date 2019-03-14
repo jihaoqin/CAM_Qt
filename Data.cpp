@@ -4,6 +4,7 @@
 #include "Ring.h"
 #include "Point.h"
 #include "Node.h"
+#include "Curve.h"
 using std::shared_ptr;
 using std::make_shared;
 Data::Data():box(), /*tee(nullptr),*/ state(), idGenerator(), root(nullptr)
@@ -88,4 +89,11 @@ bool Data::getEmpty(){
 
 bool Data::getChanged(){
     return state.getChanged();
+}
+
+void Data::addCurve(std::shared_ptr<Curve> curve){
+    root->addChild(make_shared<Node>(curve));
+    updateBoundingBox();
+    state.setEmpty(false);
+    state.setChanged(true);
 }

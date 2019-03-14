@@ -1,11 +1,13 @@
 #ifndef NEWCURVETAB_H
 #define NEWCURVETAB_H
 #include <QWidget>
+class QSlider;
 class QLabel;
 class QTextEdit;
 class QGroupBox;
 class QPushButton;
 class GuiConnector;
+class QSpinBox;
 
 class NewCurveTab:public QWidget
 {
@@ -16,9 +18,8 @@ public:
     virtual ~NewCurveTab();
     void setConnector(GuiConnector*);
     QString getPointText();
-    QString getDirText();
+    int getWindingAngle();
     bool isPointTextFocused();
-    bool isDirTextFocused();
     friend class GuiConnector;
 protected:
     virtual bool eventFilter(QObject* target, QEvent* event) override;
@@ -29,11 +30,14 @@ private:
 
     QGroupBox* dirBox;
     QLabel* dirLabel;
-    QTextEdit* dirText;
+    QSpinBox* dirSpinBox;
+    QSlider* dirSlider;
 
     QPushButton* ok;
     QPushButton* cancle;
     GuiConnector* connector;
+
+    bool focusOnPoint;
 };
 
 #endif // NEWCURVETAB_H

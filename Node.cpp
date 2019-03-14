@@ -17,11 +17,8 @@ Node::Node(DataObjectPtr dataPtr_):father(), type(nothing), data(nullptr)
     else if(id.contains("point")){
         type = point;
     }
-    else if(id.contains("direction")){
-        type = direction;
-    }
-    else if(id.contains("line")){
-        type = line;
+    else if(id.contains("curve")){
+        type = curve;
     }
     else{
         qDebug()<<"Item with wrong type is being added.\n";
@@ -54,7 +51,7 @@ const char* Node::Id(){
 }
 
 BoundingBox Node::boudingBoxUnion(){
-    if(type == direction || type == nothing){
+    if(type == nothing){
         return BoundingBox();
     }
     BoundingBox result;
@@ -84,7 +81,7 @@ Node::~Node(){
 DataObjectPtr Node::findObjectId(const char *id){
     DataObjectPtr result = nullptr;
     QString nowId(Id());
-    if(nowId.contains(id)){
+    if(nowId == QString(id)){
         result = data;
         return result;
     }

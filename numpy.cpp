@@ -1,17 +1,7 @@
-#ifndef NUMPY_H
-#define NUMPY_H
-#include <complex>
-#include <Eigen/Dense>
-#include <vector>
+#include "numpy.h"
 
-using std::vector;
-namespace numpy{
-std::vector<std::complex<double>> roots(std::vector<double> coe);
-std::vector<float> vPlus(vector<float> v1, vector<float> v2);
-std::vector<float> vMul(vector<float> v1, float factor);
 
-/*
-std::vector<std::complex<double>> roots(std::vector<double> coe){
+std::vector<std::complex<double>> numpy::roots(std::vector<double> coe){
     while(abs(coe.at(0)) < 1e-9){
         coe.erase(coe.begin());
     }
@@ -39,7 +29,7 @@ std::vector<std::complex<double>> roots(std::vector<double> coe){
     return result;
 }
 
-std::vector<float> vPlus(vector<float> v1, vector<float> v2){
+std::vector<float> numpy::vPlus(vector<float> v1, vector<float> v2){
     assert(v1.size() == v2.size());
     vector<float> v(v1.size());
     for(int i =0; i<v1.size(); i++){
@@ -48,14 +38,10 @@ std::vector<float> vPlus(vector<float> v1, vector<float> v2){
     return v;
 }
 
-std::vector<float> vMul(vector<float> v1, float factor){
+std::vector<float> numpy::vMul(vector<float> v1, float factor){
     vector<float> v(v1.size());
     for(int i =0; i<v1.size(); i++){
-        v.at(i) = v1.at(i)*factor; 
+        v.at(i) = v1.at(i)*factor;
     }
     return v;
 }
-*/
-}
-
-#endif // NUMPY_H

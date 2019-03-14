@@ -9,6 +9,8 @@
 #include "Data.h"
 #include "Node.h"
 #include "NewCurveTab.h"
+#include "RingCurveAssist.h"
+#include "Curve.h"
 
 using namespace  std;
 Controller::Controller()
@@ -43,13 +45,15 @@ void Controller::addTee(float mainLength, float branchLength, float R, float sid
     QOpenGLContext* c = widget->getGLContext();
     t->bindGL(c);
     data->addTee(t);
+    t->setIdUsing(data->idGenerator);
     mainWindow->updateAction();
 }
 
 
-std::shared_ptr<Point> Controller::addPoint(glm::vec3 p){
+std::shared_ptr<Point> Controller::addPoint(HalfPoint p){
     QString id = data->idGenerator.getPointId();
-    std::shared_ptr<Point> point = std::make_shared<Point>(p, id.toLatin1().data());
+    std::shared_ptr<Point> point = std::make_shared<Point>(p.pos, id.toLatin1().data());
+    point->meshId(p.meshName.c_str());
     QOpenGLContext* c = widget->getGLContext();
     point->bindGL(c);
     data->addPoint(point);
@@ -110,58 +114,56 @@ void Controller::processIntersectionPoint(glm::vec3 begin, glm::vec3 dir, glm::v
         //创建点
     NewCurveTab* newCurveTab = mainWindow->connector->getNewCurveTabWidget();
     QString pointId = newCurveTab->getPointText();
-    QString dirId = newCurveTab->getDirText();
     bool focusOnPointText = newCurveTab->isPointTextFocused();
-    bool focusOnDirText = newCurveTab->isDirTextFocused();
-
     if(focusOnPointText == true){
         if(pointId.isEmpty()){
             //创建点
             QString id = addIntersectionPoint(begin, dir);
             mainWindow->connector->setPointText(id);
+            float angle = newCurveTab->getWindingAngle()*utility::PI/180;
+            addCurve(id,angle);
         }
         else{
             //赋选中点picked
             clickOnPoint(pointId, glXY);
         }
     }
-    else if(focusOnDirText == true){
-        if(dirId.isEmpty()){
-            if(!pointId.isEmpty()){
-                //创建direction
-            }
-        }
-        else{
-            //判断是否选中了当前点
-            //clickOnDir(dirId);
-        }
-    }
     else{
-        // do nothing
+        return ;
     }
 }
 
-QString Controller::addIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
+std::vector<HalfPoint> Controller::intersectionPointInTee(glm::vec3 begin, glm::vec3 dir){
     DataObjectPtr teeBase = data->root->findObjectId("tee");
     auto tee = dynamic_pointer_cast<Tee>(teeBase);
     if(tee == nullptr){
-        return QString();
+        return vector<HalfPoint>();
     }
-    vector<glm::vec3> points = tee->intersectionPoints(begin, dir);
+    vector<HalfPoint> points = tee->intersectionPoints(begin, dir);
     if(points.size() == 0){
-        return QString();
+        return vector<HalfPoint>();
     }
     else{
-        float dist = utility::length(points.at(0) - begin);
+        float dist = utility::length(points.at(0).pos - begin);
         int minIndex = 0;
         for(int i = 0; i < points.size(); i++){
-            float l = utility::length(points.at(i) - begin);
+            float l = utility::length(points.at(i).pos - begin);
             if(l < dist){
                 dist = l;
                 minIndex = i;
             }
         }
-        auto pointPtr = addPoint(points.at(minIndex));
+        return std::vector<HalfPoint>{points.at(minIndex)};
+    }
+}
+
+QString Controller::addIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
+    auto pointVec = intersectionPointInTee(begin,dir);
+    if(pointVec.size()==0){
+        return QString();
+    }
+    else{
+        auto pointPtr = addPoint(pointVec.at(0));
         return QString(pointPtr->getId());
     }
 }
@@ -206,43 +208,88 @@ void Controller::clickOnPoint(QString id, glm::vec2 sample2D){
 }
 
 void Controller::processIntersectionWhenRelease(){
-    setPointPickState(true);
+    NewCurveTab* newCurveTab = mainWindow->connector->getNewCurveTabWidget();
+    bool focusOnPointText = newCurveTab->isPointTextFocused();
+    if(focusOnPointText){
+        QString pointId = newCurveTab->getPointText();
+        setPointPickState(pointId, false);
+    }
+    else{
+        return;
+    }
 }
 
 void Controller::exitPick(){
-    setPointPickState(false);
+    processIntersectionWhenRelease();
 }
 
-void Controller::setPointPickState(bool state){
-    NewCurveTab* newCurveTab = mainWindow->connector->getNewCurveTabWidget();
-    QString pointId = newCurveTab->getPointText();
-    QString dirId = newCurveTab->getDirText();
-    bool focusOnPointText = newCurveTab->isPointTextFocused();
-    bool focusOnDirText = newCurveTab->isDirTextFocused();
-    QString id;
-    if(focusOnDirText == true){
-        if(pointId.isEmpty()){
-            return ;
-        }
-        else{
-            id = pointId;
-        }
+void Controller::setPointPickState(QString id, bool state){
+    if(id.isEmpty()){
+        return;
     }
-    else if(focusOnPointText == true){
-        if(dirId.isEmpty()){
+    DataObjectPtr ptr = data->root->findObjectId(id.toLatin1().data());
+    if(ptr){
+        auto pointPtr = dynamic_pointer_cast<Point>(ptr);
+        pointPtr->picked = state;
+    }
+}
+
+void Controller::processMoveWhenMove(glm::vec3 begin, glm::vec3 dir){
+    NewCurveTab* newCurveTab = mainWindow->connector->getNewCurveTabWidget();
+    bool focusOnPointText = newCurveTab->isPointTextFocused();
+    if(focusOnPointText){
+        QString pointId = newCurveTab->getPointText();
+        DataObjectPtr ptr = data->root->findObjectId(pointId.toLatin1().data());
+        if(ptr == nullptr){
             return;
         }
         else{
-            id = dirId;
+            auto pointPtr = dynamic_pointer_cast<Point>(ptr);
+            if(pointPtr->picked == true){
+                auto pointVec = intersectionPointInTee(begin,dir);
+                if(pointVec.size()==0){
+                    return;
+                }
+                glm::vec3 pos = pointVec.at(0).pos;
+                pointPtr->setPos(pos);
+                GLWidget * gl = mainWindow->connector->getGLWidget();
+                glm::vec2 p2d = gl->spatialTo2D(pos);
+                glm::vec4 viewport = gl->getGLViewport();
+            }
         }
     }
     else{
-        //do nothing
+        return;
     }
-    DataObjectPtr ptr = data->root->findObjectId(id.toLatin1().data());
-    if(!ptr){
-        auto pointPtr = dynamic_pointer_cast<Point>(ptr);
-        pointPtr->picked = state;
-        qDebug()<<state;
+}
+
+void Controller::addCurve(QString pId, float uAng){
+    if(!pId.contains("point")){
+        return;
+    }
+    auto ptr = data->root->findObjectId(pId.toLatin1().data());
+    if(ptr == nullptr){
+        return ;
+    }
+    auto pointPtr = std::dynamic_pointer_cast<Point>(ptr);
+    auto teeFa = data->root->findObjectId("tee");
+    auto teePtr = std::dynamic_pointer_cast<Tee>(teeFa);
+    QString meshId(pointPtr->meshId());
+    if(meshId.contains("ring")){
+        Ring* r = teePtr->getRing(meshId);
+        RingCurveAssist c(*r);
+        glm::vec3 pos = pointPtr->getPos();
+        auto posDirs = c.genCurve(pos, uAng, 0.1);
+        std::vector<glm::vec3> points;
+        for(auto i:posDirs){
+            points.push_back(i.pos);
+            //addPoint(HalfPoint{i.pos, ""});
+        }
+        QString id = data->idGenerator.getCurveId();
+        std::shared_ptr<Curve> curve = std::make_shared<Curve>(points, id.toLatin1().data());
+        QOpenGLContext* gl = widget->getGLContext();
+        curve->bindGL(gl);
+        data->addCurve(curve);
+        mainWindow->updateAction();
     }
 }

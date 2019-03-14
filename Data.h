@@ -15,6 +15,7 @@ class Cylinder;
 class Ring;
 class Point;
 class Node;
+class Curve;
 class Data
 {
 public:
@@ -23,6 +24,7 @@ public:
     Data();
     void addTee(std::shared_ptr<Tee>);
     void addPoint(std::shared_ptr<Point>);
+    void addCurve(std::shared_ptr<Curve>);
     bool hasTee();
     void setViewPortRatio(int w, int h);
     void processTranslation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort);

@@ -58,7 +58,17 @@ SOURCES += \
     DataObject.cpp \
     Node.cpp \
     find_polynomial_roots_jenkins_traub.cpp \
-    polynomial.cpp
+    polynomial.cpp \
+    RingAssist.cpp \
+    numpy.cpp \
+    Plane.cpp \
+    HalfPoint.cpp \
+    TCurve.cpp \
+    PosDir.cpp \
+    CPPara.cpp \
+    RingCurveAssist.cpp \
+    Curve.cpp \
+    RingCurve.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -98,7 +108,16 @@ HEADERS += \
     DataObject.h \
     Node.h \
     find_polynomial_roots_jenkins_traub.h \
-    polynomial.h
+    polynomial.h \
+    RingAssist.h \
+    Plane.h \
+    HalfPoint.h \
+    TCurve.h \
+    PosDir.h \
+    CPPara.h \
+    RingCurveAssist.h \
+    Curve.h \
+    RingCurve.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt
@@ -118,7 +137,7 @@ DISTFILES += \
 
 
 # BOOST lib configuration
-DEFINES += ROOM
+DEFINES += LAB
 if(contains(DEFINES, ROOM)){
         BOOST_ROOT = F:\boost_1_69_0
 }else{

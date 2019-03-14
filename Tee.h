@@ -12,6 +12,7 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 #include <boost/serialization/base_object.hpp>
+#include "IdGenerator.h"
 
 class GLProgram;
 
@@ -22,8 +23,10 @@ public:
     virtual ~Tee();
     virtual void bindGL(QOpenGLContext*) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;
-    vector<glm::vec3> intersectionPoints(glm::vec3 pos, glm::vec3 dir);
+    vector<HalfPoint> intersectionPoints(glm::vec3 pos, glm::vec3 dir);
     BoundingBox boundingBox();
+    void setIdUsing(IdGenerator);
+    Ring* getRing(QString);
 private:
     Mesh generateLeftRing();
     Mesh generateRightRing();
@@ -35,7 +38,7 @@ private:
     Mesh generateCylinder(glm::vec3 end_1, glm::vec3 end_2, float r);
     Mesh generateCircle(glm::vec3 anchor, glm::vec3 dir, float r);
     Mesh generateRevolution(glm::vec3 anchor, glm::vec3 dir, std::vector<Vertex> v, float angle);
-    std::vector<Mesh> meshVec;
+    std::vector<Mesh> planeVec;
     std::vector<Ring> ringVec;
     std::vector<Cylinder> cylinderVec;
     glm::mat4 modelMat;
@@ -60,11 +63,11 @@ private:
         Mesh right = generateCircle(glm::vec3(1.0*lengthMain/2, 0, 0), glm::vec3(1, 0, 0),pipeR);
         Mesh front = generateFrontPlane();
         Mesh back = generateBackPlane();
-        meshVec.push_back(up);
-        meshVec.push_back(left);
-        meshVec.push_back(right);
-        meshVec.push_back(front);
-        meshVec.push_back(back);
+        planeVec.push_back(up);
+        planeVec.push_back(left);
+        planeVec.push_back(right);
+        planeVec.push_back(front);
+        planeVec.push_back(back);
         Ring ringLeft(sideR+pipeR, pipeR, utility::PI/2,
                     glm::vec3(-(pipeR+sideR), pipeR+sideR,0), glm::vec3(0,0,-1), glm::vec3(1,0,0));
         Ring ringRight(sideR+pipeR, pipeR, utility::PI/2,

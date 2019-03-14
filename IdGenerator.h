@@ -12,16 +12,20 @@ public:
     QString getCylinderId();
     QString getRingId();
     QString getPointId();
+    QString getPlaneId();
+    QString getCurveId();
 private:
     unsigned int cylinderIndex;
     unsigned int ringIndex;
     unsigned int pointIndex;
+    unsigned int planeIndex;
+    unsigned int curveIndex;
 
     //serialization
     friend class boost::serialization::access;
     template<typename Archive>
     void serialize(Archive& ar, const unsigned int version){
-        ar& cylinderIndex & ringIndex & pointIndex;
+        ar& cylinderIndex & ringIndex & pointIndex & planeIndex;
     }
 };
 

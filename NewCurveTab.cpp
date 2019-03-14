@@ -10,8 +10,10 @@
 #include "GuiConnector.h"
 #include <QEvent>
 #include <QColor>
+#include <QSlider>
+#include <QSpinBox>
 
-NewCurveTab::NewCurveTab(QWidget* parent):QWidget(parent)
+NewCurveTab::NewCurveTab(QWidget* parent):QWidget(parent),focusOnPoint(true)
 {
     pointBox = new QGroupBox("Point",this);
     pointLabel = new QLabel("point",this);
@@ -25,15 +27,23 @@ NewCurveTab::NewCurveTab(QWidget* parent):QWidget(parent)
     pointBox->setLayout(layout_1);
 
     dirBox = new QGroupBox("Direction",this);
-    dirLabel = new QLabel("direction",this);
-    dirText = new QTextEdit(this);
-    dirText->setFixedHeight(50);
-    dirText->setReadOnly(true);
-    dirText->setStyleSheet(QString(":focus{ background-color: #E6E6E6; }"));
-    QFormLayout* layout_2 = new QFormLayout(dirBox);
+    dirLabel = new QLabel("winding angle:",this);
+    dirSlider = new QSlider(this);
+    dirSlider->setOrientation(Qt::Horizontal);
+    dirSpinBox = new QSpinBox(this);
+    //dirSpinBox->setFixedSize(QSize(10,10));
+    dirSpinBox->setRange(1,89);
+    dirSpinBox->setSingleStep(1);
+    connect(dirSpinBox, SIGNAL(valueChanged(int)), dirSlider, SLOT(setValue(int)));
+    connect(dirSlider, SIGNAL(valueChanged(int)), dirSpinBox, SLOT(setValue(int)));
+    dirSpinBox->setValue(45);
+    QVBoxLayout* layout_21 = new QVBoxLayout();
+    QFormLayout* layout_2 = new QFormLayout();
     layout_2->addWidget(dirLabel);
-    layout_2->addWidget(dirText);
-    dirBox->setLayout(layout_2);
+    layout_2->addWidget(dirSpinBox);
+    layout_21->addLayout(layout_2);
+    layout_21->addWidget(dirSlider);
+    dirBox->setLayout(layout_21);
 
     ok = new QPushButton("Ok", this);
     cancle = new QPushButton("Cancle",this);
@@ -65,23 +75,11 @@ bool NewCurveTab::eventFilter(QObject *target, QEvent *event){
     if(target == pointText->viewport()){
         if(event->type() == QEvent::MouseButtonPress){
             connector->setGLWidgetClickable(true);
+            focusOnPoint = true;
             return true;
         }
         else if(event->type() == QEvent::Enter){
             pointText->viewport()->setCursor(Qt::ArrowCursor);
-            return true;
-        }
-        else{
-            return QWidget::eventFilter(target, event);
-        }
-    }
-    else if(target == dirText->viewport()){
-        if(event->type() == QEvent::MouseButtonPress){
-            connector->setGLWidgetClickable(true);
-            return true;
-        }
-        else if(event->type() == QEvent::Enter){
-            dirText->viewport()->setCursor(Qt::ArrowCursor);
             return true;
         }
         else{
@@ -98,15 +96,12 @@ QString NewCurveTab::getPointText(){
     return pointId;
 }
 
-QString NewCurveTab::getDirText(){
-    QString dirId = dirText->toPlainText();
-    return dirId;
-}
 
-bool NewCurveTab::isDirTextFocused(){
-    return dirText->hasFocus();
-}
 
 bool NewCurveTab::isPointTextFocused(){
-    return pointText->hasFocus();
+    return focusOnPoint;
+}
+
+int NewCurveTab::getWindingAngle(){
+    return dirSpinBox->value();
 }
