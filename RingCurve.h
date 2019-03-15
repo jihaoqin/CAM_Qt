@@ -10,11 +10,16 @@ class RingCurve:public Curve
 {
 public:
     RingCurve(PointPtr, float angle, float coe, const char* , Ring*);
+    void setWindingAngle(float angle);
+protected:
+    void updateSelf() override;
 private:
     PointPtr point;
     float uAng;
     float lambda;
     RingCurveAssist assist;
+
+
 };
 
 #endif // RINGCURVE_H

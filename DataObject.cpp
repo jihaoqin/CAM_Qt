@@ -33,3 +33,21 @@ const char* DataObject::getId(){
 BoundingBox DataObject::boundingBox(){
     return box;
 }
+
+void DataObject::addChild(DataObjectPtr d){
+    child.push_back(d);
+}
+
+void DataObject::updateSelf(){
+}
+
+void DataObject::update(){
+    updateSelf();
+    updateChild();
+}
+
+void DataObject::updateChild(){
+    for(auto& i:child){
+        i->update();
+    }
+}

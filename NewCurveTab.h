@@ -18,9 +18,13 @@ public:
     virtual ~NewCurveTab();
     void setConnector(GuiConnector*);
     QString getPointText();
+    void setPointText(QString);
+    void setCurveId(QString);
     int getWindingAngle();
     bool isPointTextFocused();
     friend class GuiConnector;
+public slots:
+    void updateCurve(int);
 protected:
     virtual bool eventFilter(QObject* target, QEvent* event) override;
 private:
@@ -35,9 +39,11 @@ private:
 
     QPushButton* ok;
     QPushButton* cancle;
+
     GuiConnector* connector;
 
     bool focusOnPoint;
+    QString curveId;
 };
 
 #endif // NEWCURVETAB_H

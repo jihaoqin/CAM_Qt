@@ -62,10 +62,10 @@ glm::vec3 Point::getPos(){
 
 void Point::setPos(glm::vec3 p){
     pos = p;
-    updateGL();
+    update();
 }
 
-void Point::updateGL(){
+void Point::updateSelf(){
     Vertex v;
     v.normal = glm::vec3(1,0,0);
     v.vertex = pos;

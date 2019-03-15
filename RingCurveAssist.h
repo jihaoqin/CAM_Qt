@@ -14,7 +14,7 @@ public:
     std::vector<PosDir> genCurve(glm::vec3 pos, glm::vec3 dir, float coe);
     std::vector<PosDir> genCurve(glm::vec3 pos, float uAng, float coe);
 private:
-    vector<float> ringDiff(float x, vector<float> y0);
+    vector<float> ringDiff(float s, vector<float> y0);
     typedef vector<float> Ys;
     std::vector<CPPara> genCurve(CPPara);
     vector<CPPara> rungeKutta(vector<float> xspan, Ys y0);

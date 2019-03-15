@@ -8,6 +8,7 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR):mod
 
 {
     setId("tee");
+    //setVisiable(false);
     Mesh up = generateCircle(glm::vec3(0, lengthBranch, 0), glm::vec3(0, 1, 0), pipeR);
     Mesh left = generateCircle(glm::vec3(-1.0*lengthMain/2, 0, 0), glm::vec3(-1, 0, 0),pipeR);
     Mesh right = generateCircle(glm::vec3(1.0*lengthMain/2, 0, 0), glm::vec3(1, 0, 0),pipeR);

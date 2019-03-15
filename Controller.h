@@ -15,6 +15,7 @@ class Camera2;
 class Controller
 {
 public:
+    friend class CurveController;
     Controller();
     void bindMainWindow(MainWindow* m);
     BoundingBox updateBoundingBox();
@@ -22,7 +23,7 @@ public:
     void bindData(std::shared_ptr<Data>);
     void bindGLWidget(GLWidget*);
     void addTee(float ,float ,float ,float);
-    void addCurve(QString pId, float uAng);
+    QString addCurve(QString pId, float uAng);
     std::shared_ptr<Point> addPoint(HalfPoint);
     void draw();
     void drawDataObject(std::shared_ptr<DataObject>);
@@ -43,6 +44,7 @@ public:
     void setPointPickState(QString, bool);
     void processMoveWhenMove(glm::vec3, glm::vec3);
     std::vector<HalfPoint> intersectionPointInTee(glm::vec3, glm::vec3);
+    void updateCurve(QString, float);
 private:
     std::shared_ptr<Data> data;
     GLWidget* widget;

@@ -11,6 +11,7 @@
 #include "NewCurveTab.h"
 #include "RingCurveAssist.h"
 #include "Curve.h"
+#include "RingCurve.h"
 
 using namespace  std;
 Controller::Controller()
@@ -119,9 +120,10 @@ void Controller::processIntersectionPoint(glm::vec3 begin, glm::vec3 dir, glm::v
         if(pointId.isEmpty()){
             //创建点
             QString id = addIntersectionPoint(begin, dir);
-            mainWindow->connector->setPointText(id);
+            newCurveTab->setPointText(id);
             float angle = newCurveTab->getWindingAngle()*utility::PI/180;
-            addCurve(id,angle);
+            QString curveId = addCurve(id,angle);
+            newCurveTab->setCurveId(curveId);
         }
         else{
             //赋选中点picked
@@ -169,6 +171,7 @@ QString Controller::addIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
 }
 
 void Controller::drawDataObject(std::shared_ptr<DataObject> ob){
+    assert(ob);
     QString id(ob->getId());
     std::shared_ptr<GLProgram> p;
     if(id.contains("point")){
@@ -263,13 +266,13 @@ void Controller::processMoveWhenMove(glm::vec3 begin, glm::vec3 dir){
     }
 }
 
-void Controller::addCurve(QString pId, float uAng){
+QString Controller::addCurve(QString pId, float uAng){
     if(!pId.contains("point")){
-        return;
+        return QString("");
     }
     auto ptr = data->root->findObjectId(pId.toLatin1().data());
     if(ptr == nullptr){
-        return ;
+        return QString("");
     }
     auto pointPtr = std::dynamic_pointer_cast<Point>(ptr);
     auto teeFa = data->root->findObjectId("tee");
@@ -277,19 +280,27 @@ void Controller::addCurve(QString pId, float uAng){
     QString meshId(pointPtr->meshId());
     if(meshId.contains("ring")){
         Ring* r = teePtr->getRing(meshId);
-        RingCurveAssist c(*r);
-        glm::vec3 pos = pointPtr->getPos();
-        auto posDirs = c.genCurve(pos, uAng, 0.1);
-        std::vector<glm::vec3> points;
-        for(auto i:posDirs){
-            points.push_back(i.pos);
-            //addPoint(HalfPoint{i.pos, ""});
-        }
         QString id = data->idGenerator.getCurveId();
-        std::shared_ptr<Curve> curve = std::make_shared<Curve>(points, id.toLatin1().data());
+        auto curve = std::make_shared<RingCurve>(pointPtr,uAng,0.1,id.toLatin1().data(), r);
+        pointPtr->addChild(curve);
         QOpenGLContext* gl = widget->getGLContext();
         curve->bindGL(gl);
         data->addCurve(curve);
         mainWindow->updateAction();
+        return id;
+    }
+}
+
+void Controller::updateCurve(QString id, float angle){
+    DataObjectPtr ptr = data->root->findObjectId(id.toLatin1().data());
+    assert(ptr);
+    QString ptrId = QString(ptr->getId());
+    if(!ptrId.contains("curve")){
+        return;
+    }
+    auto curve = std::dynamic_pointer_cast<Curve>(ptr);
+    if(curve->type == Curve::Type::general){
+        auto ringcurve = std::dynamic_pointer_cast<RingCurve>(curve);
+        ringcurve->setWindingAngle(angle);
     }
 }

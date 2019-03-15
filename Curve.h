@@ -9,11 +9,17 @@
 class Curve : public DataObject
 {
 public:
+    enum class Type{
+        ringCurve,
+        tCurve,
+        general
+    };
     Curve(std::vector<glm::vec3>, const char*);
     Curve(const char*);
     void data(std::vector<glm::vec3>);
     virtual void bindGL(QOpenGLContext*) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;
+    Type type;
 private:
     void bufferData();
     void initial(std::vector<glm::vec3>);

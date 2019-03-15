@@ -68,7 +68,9 @@ SOURCES += \
     CPPara.cpp \
     RingCurveAssist.cpp \
     Curve.cpp \
-    RingCurve.cpp
+    RingCurve.cpp \
+    CurveController.cpp \
+    Edge.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -117,7 +119,9 @@ HEADERS += \
     CPPara.h \
     RingCurveAssist.h \
     Curve.h \
-    RingCurve.h
+    RingCurve.h \
+    CurveController.h \
+    Edge.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt

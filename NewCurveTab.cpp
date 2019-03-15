@@ -13,7 +13,7 @@
 #include <QSlider>
 #include <QSpinBox>
 
-NewCurveTab::NewCurveTab(QWidget* parent):QWidget(parent),focusOnPoint(true)
+NewCurveTab::NewCurveTab(QWidget* parent):QWidget(parent),focusOnPoint(true),curveId("")
 {
     pointBox = new QGroupBox("Point",this);
     pointLabel = new QLabel("point",this);
@@ -30,12 +30,13 @@ NewCurveTab::NewCurveTab(QWidget* parent):QWidget(parent),focusOnPoint(true)
     dirLabel = new QLabel("winding angle:",this);
     dirSlider = new QSlider(this);
     dirSlider->setOrientation(Qt::Horizontal);
+    dirSlider->setRange(-90, 90);
     dirSpinBox = new QSpinBox(this);
-    //dirSpinBox->setFixedSize(QSize(10,10));
-    dirSpinBox->setRange(1,89);
+    dirSpinBox->setRange(-90, 90);
     dirSpinBox->setSingleStep(1);
     connect(dirSpinBox, SIGNAL(valueChanged(int)), dirSlider, SLOT(setValue(int)));
     connect(dirSlider, SIGNAL(valueChanged(int)), dirSpinBox, SLOT(setValue(int)));
+    connect(dirSpinBox, SIGNAL(valueChanged(int)), this, SLOT(updateCurve(int)));
     dirSpinBox->setValue(45);
     QVBoxLayout* layout_21 = new QVBoxLayout();
     QFormLayout* layout_2 = new QFormLayout();
@@ -96,7 +97,13 @@ QString NewCurveTab::getPointText(){
     return pointId;
 }
 
+void NewCurveTab::setPointText(QString id){
+    pointText->setText(id);
+}
 
+void NewCurveTab::setCurveId(QString name){
+    curveId = name;
+}
 
 bool NewCurveTab::isPointTextFocused(){
     return focusOnPoint;
@@ -104,4 +111,11 @@ bool NewCurveTab::isPointTextFocused(){
 
 int NewCurveTab::getWindingAngle(){
     return dirSpinBox->value();
+}
+
+void NewCurveTab::updateCurve(int angle){
+    if(curveId.isEmpty()){
+        return;
+    }
+    connector->updateCurve(curveId, angle*1.0/180*3.1415926);
 }

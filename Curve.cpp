@@ -1,12 +1,12 @@
 #include "Curve.h"
 
-Curve::Curve(std::vector<glm::vec3> points, const char* c):color(Color::BLACK)
+Curve::Curve(std::vector<glm::vec3> points, const char* c):color(Color::BLACK),type(Type::general)
 {
     setId(c);
     initial(points);
     box = BoundingBox(vertexVec);
 }
-Curve::Curve(const char* c):color(Color::BLACK)
+Curve::Curve(const char* c):color(Color::BLACK),type(Type::general)
 {
     setId(c);
 }
@@ -46,6 +46,7 @@ void Curve::draw(std::shared_ptr<GLProgram> program){
     core->glDepthMask(GL_FALSE);
     core->glEnable(GL_POLYGON_OFFSET_FILL);
     core->glPolygonOffset(1.0f, 1.0f);
+    core->glEnable(GL_LINE_SMOOTH);
     core->glEnable(GL_BLEND);
     core->glEnable(GL_LINE_SMOOTH);
     core->glHint(GL_LINE_SMOOTH_HINT, GL_FASTEST);

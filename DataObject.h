@@ -5,9 +5,12 @@
 #include <GLProgram.h>
 #include <memory>
 #include <string>
+#include <vector>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include "boundingbox.h"
+class DataObject;
+using DataObjectPtr = std::shared_ptr<DataObject>;
 class DataObject
 {
 public:
@@ -20,7 +23,12 @@ public:
     const char* getId();
     void setVisiable(bool);
     BoundingBox boundingBox();
+    void addChild(DataObjectPtr);
 protected:
+    virtual void updateChild();
+    virtual void update();
+    virtual void updateSelf();
+    std::vector<DataObjectPtr> child;
     bool binded;
     bool visiable;
     BoundingBox box;

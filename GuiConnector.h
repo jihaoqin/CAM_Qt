@@ -13,6 +13,7 @@ public:
     GuiConnector();
     void setRoot(MainWindow*);
     void setGLWidgetClickable(bool);
+    void updateCurve(QString, float);
     NewCurveTab* getNewCurveTabWidget();
     std::shared_ptr<GLProgram> getMeshProgram();
     std::shared_ptr<GLProgram> getPointProgram();

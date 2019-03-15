@@ -33,3 +33,11 @@ Ring,cylinder的西沟函数
 移动点的时候，总是出现鼠标指针和移动后的点位置偏差
 在Ring.cpp中的intersectionPoints函数中可重现bug的数据
 testPoint = glm::vec3(19.777084350585938, 3.0391998291015625, 10);
+
+2019/03/15
+[x]滑线系数可变
+[x]在move的过程中，点的meshId并没有改变
+[x]Plane的构建
+[x]PlanCurve的构建
+[x]Cylinder的构建
+[x]CylinderCurve的构建

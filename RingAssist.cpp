@@ -2,6 +2,7 @@
 #include "utility.h"
 #include <complex>
 #include "numpy.h"
+#include "Edge.h"
 using namespace std;
 RingAssist::RingAssist(Ring& ring)
 {
@@ -11,6 +12,7 @@ RingAssist::RingAssist(Ring& ring)
     anchor = ring.anchor;
     zdir = ring.zdir;
     xdir = ring.xdir;
+    id = ring.getId();
 }
 
 vector<glm::vec3> RingAssist::intersectionPoints(glm::vec3 worldPos, glm::vec3 worldDir){
@@ -48,12 +50,16 @@ vector<glm::vec3> RingAssist::intersectionPoints(glm::vec3 worldPos, glm::vec3 w
             float theta = para.at(0);
             float alpha = para.at(1);
             if(inParaSpace(theta, alpha)){
-                sol.push_back(i);
+                glm::vec3 norm = localNorm(theta, alpha);
+                if(glm::dot(norm, dir) > 0){
+                    sol.push_back(i);
+                }
             }
             else{}
         }
         else{}
     }
+
     //输出解
     vector<glm::vec3> points;
     for(auto i:sol){
@@ -346,4 +352,49 @@ PosDir RingAssist::CPParaToLocal(CPPara p){
     glm::vec3 pos = paraToLocal3D(p.u, p.v);
     glm::vec3 dir = localTangentDir(p.u, p.v, cos(p.uAng), sin(p.uAng));
     return PosDir{pos, dir};
+}
+
+glm::vec3 RingAssist::localNorm(float u, float v){
+    glm::vec3 tanU = localTangentDir(u, v, 1, 0);
+    glm::vec3 tanV = localTangentDir(u, v, 0, 1);
+    glm::vec3 norm = glm::cross(tanU, tanV);
+    return glm::normalize(norm);
+}
+
+vector<EdgePtr> RingAssist::getEdges(){
+    float pi = 3.1415926;
+    auto uZeroEdge = [](float u, float v)->bool{return u<0? true:false;};
+    auto uAngleEdge = [&](float u, float v)->bool {return u>angle? true:false;};
+    auto vEdge1 = [&](float u, float v)->bool{
+        while(v<0.5*pi){
+            v = v+2*pi;
+        }
+        while(v>2*pi){
+            v= v- 2*pi;
+        }
+        return v > 1.5*pi? true:false;
+    };
+    auto vEdge2 = [&](float u, float v)->bool{
+        while(v<0.5*pi){
+            v = v+2*pi;
+        }
+        while(v>2*pi){
+            v= v- 2*pi;
+        }
+        return v < 0.5*pi? true:false;
+    };
+
+    auto e1 = std::make_shared<RingEdge<decltype(uZeroEdge)>>(uZeroEdge);
+    e1->Id(id+"_edge_1");
+    auto e2 = std::make_shared<RingEdge<decltype(uAngleEdge)>>(uAngleEdge);
+    e2->Id(id+"_edge_2");
+    auto e3 = std::make_shared<RingEdge<decltype(vEdge1)>>(vEdge1);
+    e3->Id(id+"_edge_3");
+    auto e4 = std::make_shared<RingEdge<decltype(vEdge2)>>(vEdge2);
+    e4->Id(id+"_edge_4");
+    vector<EdgePtr> edges;
+    edges.push_back(e1);
+    edges.push_back(e2);
+    edges.push_back(e3);
+    edges.push_back(e4);
 }

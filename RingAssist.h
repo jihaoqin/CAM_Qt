@@ -11,6 +11,7 @@ public:
     glm::vec3 worldDir(CPPara);
     vector<glm::vec3> intersectionPoints(glm::vec3 worldPos, glm::vec3 worldDir);
     vector<double> generateCoe(glm::vec3 worldPos, glm::vec3 worldDir);
+    glm::vec3 localNorm(float u, float v);
     vector<float> paraWithLocalPoint(glm::vec3);
     bool isSamePoint(float theta, float alpha, glm::vec3 pos);
     bool inParaSpace(float theta, float alpha);
@@ -23,6 +24,7 @@ public:
     glm::vec3 world3DToLocal(glm::vec3 world, const char*);
     glm::vec3 paraToLocal3D(float theta, float alpha);
     glm::vec3 localTangentDir(float theta, float alpha, double uWeight, double vWeight);
+    vector<EdgePtr> getEdges();
 private:
     double R;
     double r;
@@ -30,6 +32,7 @@ private:
     glm::vec3 anchor;
     glm::vec3 zdir;
     glm::vec3 xdir;
+    QString id;
 };
 
 #endif // RINGASSIST_H

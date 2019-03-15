@@ -6,12 +6,14 @@ using namespace utility;
 using namespace std;
 
 Ring::Ring(double R_, double r_, double angle_, glm::vec3 anchor_, glm::vec3 zdir_, glm::vec3 xdir_)
-    :R(R_), r(r_), angle(angle_), anchor(anchor_), zdir(zdir_), xdir(xdir_), m(){
+    :R(R_), r(r_), angle(angle_), anchor(anchor_), zdir(zdir_), xdir(xdir_), m(),edges(){
     zdir = glm::normalize(zdir_);
     xdir = glm::normalize(xdir_);
     vector<Vertex> edge = generateEdge();
     m = utility::generateRevolution(anchor,zdir, edge, angle);
     box = m.boundingBox();
+    RingAssist assist(*this);
+    edges = assist.getEdges();
 }
 
 BoundingBox Ring::boundingBox(){

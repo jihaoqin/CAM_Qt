@@ -3,12 +3,15 @@
 #include <Eigen/Dense>
 using namespace Eigen;
 
-vector<float> RingCurveAssist::ringDiff(float x, vector<float> y0){
-    float alpha = y0.at(0);
+vector<float> RingCurveAssist::ringDiff(float s, vector<float> y0){
+    float theta = y0.at(0);
     float phi = y0.at(1);
-    vector<float> y(2);
-    y.at(0) = lambda*(-cos(phi)*cos(alpha)-(sin(alpha)*tan(alpha)*(R+r*cos(phi))) / r )-sin(phi);
-    y.at(1) = (R+r*cos(phi))/r*tan(alpha);
+    float alpha = y0.at(2);
+    vector<float> y(3);
+    y.at(0) = cos(alpha)/(R+r*cos(phi));
+    y.at(1) = sin(alpha)/r;
+    y.at(2) = lambda*(-(cos(phi)*pow(cos(alpha),2))/(R+r*cos(phi)) - pow(sin(alpha),2)/r)-
+            (sin(phi)*cos(alpha))/(R+r*cos(phi));
     return y;
 } 
 
@@ -29,26 +32,28 @@ void RingCurveAssist::initial(Ring &ring){
 
 std::vector<CPPara> RingCurveAssist::genCurve(CPPara p){
     vector<CPPara> paras;
-    float x_begin = p.u;
-    Ys y0{p.uAng, p.v};
-    if(x_begin <0||x_begin>angle){
+    float u = p.u;
+    float v = p.v;
+    float uAng = p.uAng;
+    Ys y0{u, v, uAng};
+    if(u < 0|| u > angle){
         return paras;
     }
-    if(abs(x_begin - 0) < 1e-1){
-        //xspan=[x_begin, angle];
-        vector<float> xspan{x_begin, (float)angle};
+    if(abs(u - 0) < 1e-1){
+        float length = (R+r)*1000;
+        vector<float> xspan{0, length};
         paras = rungeKutta(xspan, y0);
     }
-    else if(abs(x_begin -angle)<1e-1){
-        vector<float> xspan{x_begin, 0};
+    else if(abs(u -angle)<1e-1){
+        float length = (R+r)*1000;
+        vector<float> xspan{0, -1*length};
         paras = rungeKutta(xspan, y0);
     }
     else {
-        //xspan = [x_begin 0];
-        vector<float> xspan1{x_begin, 0};
+        float length = (R+r)*1000;
+        vector<float> xspan1{0, length};
         auto paras1 = rungeKutta(xspan1, y0);
-        //xspan = [x_begin angle];
-        vector<float> xspan2{x_begin, (float)angle};
+        vector<float> xspan2{0, -1*length};
         auto paras2 = rungeKutta(xspan2, y0);
         for(auto i = paras1.rbegin(); i!=paras1.rend(); i++){
             paras.push_back(*i);
@@ -62,79 +67,39 @@ std::vector<CPPara> RingCurveAssist::genCurve(CPPara p){
 
 vector<CPPara> RingCurveAssist::rungeKutta(vector<float> xspan, Ys y0){
     using namespace utility;
-    /*
-    float pi = utility::PI;
-    float error_goal = 1e-2;
-    vector<float> xspan(2);
-    xspan.at(0) = 0;
-    xspan.at(1) = angle;
-    float h = (xspan.at(1) - xspan.at(0))/2;
-    vector<float> x;
-    vector<Ys> y;
-    x.push_back(0);
-    y.push_back(Ys{p1.uAng, p1.v});
-    while(true){
-        float x_last = x.back();
-        Ys y_last = y.back();
-
-        Ys y_temp = evalNextRunge(x_last, y_last, h);
-        Ys y_twice = evalNextRunge(x_last, y_last, 2*h);
-        if(abs(y_twice.at(0)-y_temp.at(0)) < error_goal){
-            while(1){
-                h = 2*h;
-                y_temp = y_twice;
-                y_twice = evalNextRunge(x_last, y_last, 2*h);
-                if(abs(y_twice.at(0)-y_temp.at(0)) > error_goal){
-                    break;
-                }
-            }
-        }
-        else{
-            Ys y_half = evalNextRunge(x_last, y_last, h/2);
-            while(abs(y_temp.at(0) - y_half.at(0)) > error_goal){
-                h = h/2;
-                y_temp = y_half;
-                y_half = evalNextRunge(x_last, y_last, h/2);
-            }
-        }
-
-
-    }
-    */
     float x_begin = xspan.at(0);
     vector<float> x;
     x.push_back(x_begin);
     vector<CPPara> para;
-    para.push_back(CPPara{x_begin, y0.at(1), y0.at(0)});
+    para.push_back(CPPara{y0.at(0), y0.at(1), y0.at(2)});
     float spanL = xspan.at(1)-xspan.at(0);
     int sign = spanL>0? 1:-1;
-    float h = sign*1e-2;
+    float h = sign*R/30.0;
     float x_last = x_begin;
-    Ys y_last = Ys{y0.at(0), y0.at(1)};
+    Ys y_last = Ys{y0.at(0), y0.at(1), y0.at(2)};
     while(true){
         Ys y_temp = evalNextRunge(x_last, y_last, h);
         float x_temp = x_last +h;
-        if(abs(y_temp.at(0))>0.5*PI){
+        if(abs(x_temp - x_begin) > abs(spanL)){
             return para;
         }
         else{
-            float xmin = xspan.at(0)<xspan.at(1)? xspan.at(0):xspan.at(1);
-            float xmax = xspan.at(0)<xspan.at(1)? xspan.at(1):xspan.at(0);
-            float theta = x_temp;
-            float alpha = y_temp.at(1);
-            if(theta>xmax || theta<xmin){
+            float u = y_temp.at(0);
+            float v = y_temp.at(1);
+            float uAng = y_temp.at(2);
+            if(u>angle || u<0){
                 return para;
             }
-            while(alpha >2*PI){
-                alpha = alpha -2*PI;
+            while(v >2*PI){
+                v = v -2*PI;
             }
-            while(alpha < 0*PI){
-                alpha = alpha + 2*PI;
+            while(v < 0*PI){
+                v = v + 2*PI;
             }
-            if(alpha < 0.5*PI || alpha > 1.5*PI){
+            if(v < 0.5*PI || v > 1.5*PI){
                 return para;
             }
-            para.push_back(CPPara{theta, y_temp.at(1), y_temp.at(0)});
+            para.push_back(CPPara{u, v, uAng});
             x_last = x_temp;
             y_last = y_temp;
         }
@@ -176,6 +141,7 @@ std::vector<PosDir> RingCurveAssist::genCurve(glm::vec3 pos, glm::vec3 dir, floa
 
 std::vector<PosDir> RingCurveAssist::genCurve(glm::vec3 pos, float uAng, float coe){
     //pos = glm::vec3{11.66718, 14.389130, -0.95986};
+    //pos = glm::vec3{10.0826, 12.8678,-6.27725}; uAng = 80.0*3.1415926/180;
     lambda = coe;
     glm::vec3 localPos = assist.world3DToLocal(pos, "pos");
     auto uv = assist.local3DProjectToUV(localPos);

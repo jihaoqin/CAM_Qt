@@ -11,6 +11,8 @@
 
 class RingAssist;
 class RingCurveAssist;
+class Edge;
+using EdgePtr = std::shared_ptr<Edge>;
 class Ring:public DataObject
 {
 public:
@@ -24,6 +26,7 @@ public:
     vector<HalfPoint> intersectionPoints(glm::vec3 begin, glm::vec3 dir);
 private:
     vector<Vertex> generateEdge();
+    vector<EdgePtr> edges;
     double R;
     double r;
     double angle;//弧度制

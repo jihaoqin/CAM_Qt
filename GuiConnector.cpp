@@ -6,6 +6,7 @@
 #include <QTextEdit>
 #include "GLProgram.h"
 #include <memory>
+#include "CurveController.h"
 
 GuiConnector::GuiConnector()
     :mainWindow(nullptr)
@@ -62,4 +63,9 @@ NewCurveTab* GuiConnector::getNewCurveTabWidget(){
 GLWidget* GuiConnector::getGLWidget(){
     GLWidget* glWidget = mainWindow->widget->glWidget;
     return glWidget;
+}
+
+
+void GuiConnector::updateCurve(QString id, float angle){
+    mainWindow->ctrl->updateCurve(id, angle);
 }

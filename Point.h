@@ -20,7 +20,7 @@ public:
     void meshId(const char*);
 private:
     void updateBoundingBox();
-    void updateGL();
+    void updateSelf() override;
     glm::vec3 pos;
     std::vector<Vertex> vertexVec;
     std::vector<unsigned int> indexVec;
