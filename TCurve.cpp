@@ -5,8 +5,10 @@
 #include "CPPara.h"
 #include "RingCurveAssist.h"
 
-TCurve::TCurve(PointPtr p, float a, TeePtr t):designP(p), uAng(a), tee(t)
+TCurve::TCurve(PointPtr p, float a, float coe, const char*c , TeePtr t)
+    :Curve(c),designP(p), uAng(a), lambda(coe), tee(t)
 {
+
     /*
     PosDir p1, p2;
     QString meshType(p->meshId());
@@ -34,5 +36,30 @@ TCurve::TCurve(PointPtr p, float a, TeePtr t):designP(p), uAng(a), tee(t)
         pushCurve(p1, meshName);
         pushCurve(p2, meshName);
     }
+    */
+}
+
+void TCurve::genCurve(PosDir pd, QString meshId){
+    /*
+    if(meshId.contains("ring")){
+        RingCurveAssist assist;
+        result = assist.genCurve();
+        push result;
+    }
+    else{
+        assert(0);
+    }
+    side1, edge1, side2, edge2;
+    if(!edge1.isBoundary){
+        mesh1 = edge1, meshId;
+        nextMesh = edge1, mesh1;
+        if(nextMesh != meshId){
+            genCurve(side1, mesh1);
+        }
+    }
+    if(!edge2.isBoundaray){
+
+    }
+    tee->getMesh(meshId);
     */
 }

@@ -28,46 +28,39 @@ void RingCurveAssist::initial(Ring &ring){
     anchor = ring.anchor;
     zdir = ring.zdir;
     xdir = ring.xdir;
+    id = ring.getId();
+    edges = ring.edges;
 }
 
 
 
-std::vector<CPPara> RingCurveAssist::genCurve(CPPara p){
+pair<vector<CPPara>, vector<EdgePtr>> RingCurveAssist::genCurve(CPPara p){
     vector<CPPara> paras;
     float u = p.u;
     float v = p.v;
     float uAng = p.uAng;
     Ys y0{u, v, uAng};
     if(u < 0|| u > angle){
-        return paras;
+        return pair<vector<CPPara>, vector<EdgePtr>>();
     }
-    if(abs(u - 0) < 1e-1){
-        float length = (R+r)*1000;
-        vector<float> xspan{0, length};
-        paras = rungeKutta(xspan, y0);
+
+    float length = (R+r)*1000;
+    vector<float> xspan1{0, length};
+    auto paras1 = rungeKutta(xspan1, y0);
+    vector<float> xspan2{0, -1*length};
+    auto paras2 = rungeKutta(xspan2, y0);
+    for(auto i = paras1.first.rbegin(); i!=paras1.first.rend(); i++){
+        paras.push_back(*i);
     }
-    else if(abs(u -angle)<1e-1){
-        float length = (R+r)*1000;
-        vector<float> xspan{0, -1*length};
-        paras = rungeKutta(xspan, y0);
+    for(auto i : paras2.first){
+        paras.push_back(i);
     }
-    else {
-        float length = (R+r)*1000;
-        vector<float> xspan1{0, length};
-        auto paras1 = rungeKutta(xspan1, y0);
-        vector<float> xspan2{0, -1*length};
-        auto paras2 = rungeKutta(xspan2, y0);
-        for(auto i = paras1.rbegin(); i!=paras1.rend(); i++){
-            paras.push_back(*i);
-        }
-        for(auto i : paras2){
-            paras.push_back(i);
-        }
-    }
-    return paras;
+    vector<EdgePtr> edges{paras1.second, paras2.second};
+    pair<vector<CPPara>, vector<EdgePtr>> result{paras, edges};
+    return result;
 }
 
-vector<CPPara> RingCurveAssist::rungeKutta(vector<float> xspan, Ys y0){
+pair<vector<CPPara>, EdgePtr> RingCurveAssist::rungeKutta(vector<float> xspan, Ys y0){
     using namespace utility;
     std::pair<vector<CPPara>, EdgePtr> result;
     float x_begin = xspan.at(0);
@@ -83,19 +76,18 @@ vector<CPPara> RingCurveAssist::rungeKutta(vector<float> xspan, Ys y0){
     while(true){
         Ys y_temp = evalNextRunge(x_last, y_last, h);
         float x_temp = x_last +h;
-        if(abs(x_temp - x_begin) > abs(spanL)){
-            return para;
-        }
-        else{
-            float u = y_temp.at(0);
-            float v = y_temp.at(1);
-            float uAng = y_temp.at(2);
-            for(auto e:edges){
-                if(e->isOut(u, v)){
-                    result = {para, e};
-                }
+        float u = y_temp.at(0);
+        float v = y_temp.at(1);
+        float uAng = y_temp.at(2);
+        u = 0.716991;
+        v = 3.01059;
+        qDebug()<<"u,v = "<<u<<", "<<v;
+        for(auto e:edges){
+            if(e->isOut(u, v)){
+                result = {para, e};
             }
-            /*
+        }
+        /*
             if(u>angle || u<0){
                 return para;
             }
@@ -109,10 +101,9 @@ vector<CPPara> RingCurveAssist::rungeKutta(vector<float> xspan, Ys y0){
                 return para;
             }
             */
-            para.push_back(CPPara{u, v, uAng});
-            x_last = x_temp;
-            y_last = y_temp;
-        }
+        para.push_back(CPPara{u, v, uAng});
+        x_last = x_temp;
+        y_last = y_temp;
     }
 }
 
@@ -140,7 +131,7 @@ std::vector<PosDir> RingCurveAssist::genCurve(glm::vec3 pos, glm::vec3 dir, floa
     CPPara p1 = assist.local3DProjectToPara(localPos, localDir);
     auto paras = genCurve(p1);
     vector<PosDir> pdVec;
-    for(auto i:paras){
+    for(auto i:paras.first){
         auto localPd = assist.CPParaToLocal(i);
         auto worldPos = assist.local3DToWorld(localPd.pos, "pos");
         auto worldDir = assist.local3DToWorld(localPd.dir, "dir");
@@ -158,7 +149,7 @@ std::vector<PosDir> RingCurveAssist::genCurve(glm::vec3 pos, float uAng, float c
     CPPara para{uv.at(0), uv.at(1), uAng};
     auto paras = genCurve(para);
     vector<PosDir> pdVec;
-    for(auto i:paras){
+    for(auto i:paras.first){
         auto localPd = assist.CPParaToLocal(i);
         auto worldPos = assist.local3DToWorld(localPd.pos, "pos");
         auto worldDir = assist.local3DToWorld(localPd.dir, "dir");
