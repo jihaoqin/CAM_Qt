@@ -7,6 +7,7 @@
 
 TCurve::TCurve(PointPtr p, float a, TeePtr t):designP(p), uAng(a), tee(t)
 {
+    /*
     PosDir p1, p2;
     QString meshType(p->meshId());
     if(meshType.contains("ring")){
@@ -33,4 +34,5 @@ TCurve::TCurve(PointPtr p, float a, TeePtr t):designP(p), uAng(a), tee(t)
         pushCurve(p1, meshName);
         pushCurve(p2, meshName);
     }
+    */
 }

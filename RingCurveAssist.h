@@ -26,6 +26,8 @@ private:
     double R;
     double r;
     double angle;//弧度制
+    QString id;
+    vector<EdgePtr> edges;
     glm::vec3 anchor;
     glm::vec3 zdir;
     glm::vec3 xdir;

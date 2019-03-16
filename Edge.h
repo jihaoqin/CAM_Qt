@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include "boundingbox.h"
+#include <functional>
 
 class Edge
 {
@@ -20,17 +21,13 @@ private:
     QString id;
 };
 
-template<typename F>
+
 class RingEdge:public Edge
 {
 public:
-    RingEdge(F& f){
-        func = f;
-    }
-    virtual bool isOut(float u, float v){
-        return f(u,v);
-    }
+    RingEdge(std::function<bool (float, float)> f);
+    virtual bool isOut(float u, float v);
 private:
-    F func;
-}
+    std::function<bool (float, float)> func;
+};
 #endif // EDGE_H

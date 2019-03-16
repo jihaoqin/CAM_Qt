@@ -29,3 +29,11 @@ void Edge::data(std::vector<glm::vec3> points){
     }
     box = BoundingBox(vertexVec);
 }
+
+RingEdge::RingEdge(std::function<bool(float, float)> f){
+    func = f;
+}
+
+bool RingEdge::isOut(float u, float v){
+    return func(u, v);
+}

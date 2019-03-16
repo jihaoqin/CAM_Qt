@@ -1,6 +1,8 @@
 #include "RingCurveAssist.h"
 #include "numpy.h"
 #include <Eigen/Dense>
+#include <utility>
+#include "Edge.h"
 using namespace Eigen;
 
 vector<float> RingCurveAssist::ringDiff(float s, vector<float> y0){
@@ -67,6 +69,7 @@ std::vector<CPPara> RingCurveAssist::genCurve(CPPara p){
 
 vector<CPPara> RingCurveAssist::rungeKutta(vector<float> xspan, Ys y0){
     using namespace utility;
+    std::pair<vector<CPPara>, EdgePtr> result;
     float x_begin = xspan.at(0);
     vector<float> x;
     x.push_back(x_begin);
@@ -87,6 +90,12 @@ vector<CPPara> RingCurveAssist::rungeKutta(vector<float> xspan, Ys y0){
             float u = y_temp.at(0);
             float v = y_temp.at(1);
             float uAng = y_temp.at(2);
+            for(auto e:edges){
+                if(e->isOut(u, v)){
+                    result = {para, e};
+                }
+            }
+            /*
             if(u>angle || u<0){
                 return para;
             }
@@ -99,6 +108,7 @@ vector<CPPara> RingCurveAssist::rungeKutta(vector<float> xspan, Ys y0){
             if(v < 0.5*PI || v > 1.5*PI){
                 return para;
             }
+            */
             para.push_back(CPPara{u, v, uAng});
             x_last = x_temp;
             y_last = y_temp;
