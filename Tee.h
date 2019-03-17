@@ -13,6 +13,7 @@
 #include <boost/serialization/shared_ptr.hpp>
 #include <boost/serialization/base_object.hpp>
 #include "IdGenerator.h"
+#include "TriEdgePlane.h"
 
 class GLProgram;
 
@@ -41,6 +42,7 @@ private:
     std::vector<Mesh> planeVec;
     std::vector<Ring> ringVec;
     std::vector<Cylinder> cylinderVec;
+    std::vector<TriEdgePlane> triEdgePlaneVec;
     glm::mat4 modelMat;
     Color color;
     float pipeR;

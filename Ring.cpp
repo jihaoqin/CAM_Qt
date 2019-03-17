@@ -21,11 +21,16 @@ BoundingBox Ring::boundingBox(){
 }
 
 void Ring::bindGL(QOpenGLContext *c){
-    m.bindGL(c);
+    if(binded == false){
+        m.bindGL(c);
+    }
+    binded = true;
 }
 
 void Ring::draw(std::shared_ptr<GLProgram> p){
-    m.draw();
+    if(visiable == true){
+        m.draw();
+    }
 }
 
 vector<Vertex> Ring::generateEdge(){

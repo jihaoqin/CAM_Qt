@@ -79,28 +79,12 @@ pair<vector<CPPara>, EdgePtr> RingCurveAssist::rungeKutta(vector<float> xspan, Y
         float u = y_temp.at(0);
         float v = y_temp.at(1);
         float uAng = y_temp.at(2);
-        u = 0.716991;
-        v = 3.01059;
-        qDebug()<<"u,v = "<<u<<", "<<v;
         for(auto e:edges){
             if(e->isOut(u, v)){
                 result = {para, e};
+                return result;
             }
         }
-        /*
-            if(u>angle || u<0){
-                return para;
-            }
-            while(v >2*PI){
-                v = v -2*PI;
-            }
-            while(v < 0*PI){
-                v = v + 2*PI;
-            }
-            if(v < 0.5*PI || v > 1.5*PI){
-                return para;
-            }
-            */
         para.push_back(CPPara{u, v, uAng});
         x_last = x_temp;
         y_last = y_temp;

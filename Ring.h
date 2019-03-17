@@ -7,7 +7,7 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include "utility.h"
-#include <HalfPoint.h>
+#include "HalfPoint.h"
 
 class RingAssist;
 class RingCurveAssist;

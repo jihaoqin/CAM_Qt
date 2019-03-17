@@ -12,8 +12,6 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR):mod
     Mesh up = generateCircle(glm::vec3(0, lengthBranch, 0), glm::vec3(0, 1, 0), pipeR);
     Mesh left = generateCircle(glm::vec3(-1.0*lengthMain/2, 0, 0), glm::vec3(-1, 0, 0),pipeR);
     Mesh right = generateCircle(glm::vec3(1.0*lengthMain/2, 0, 0), glm::vec3(1, 0, 0),pipeR);
-    Mesh front = generateFrontPlane();
-    Mesh back = generateBackPlane();
     Ring ringLeft(sideR+pipeR, pipeR, utility::PI/2,
                     glm::vec3(-(pipeR+sideR), pipeR+sideR,0), glm::vec3(0,0,-1), glm::vec3(1,0,0));
     Ring ringRight(sideR+pipeR, pipeR, utility::PI/2,
@@ -27,8 +25,8 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR):mod
     planeVec.push_back(up);
     planeVec.push_back(left);
     planeVec.push_back(right);
-    planeVec.push_back(front);
-    planeVec.push_back(back);
+    triEdgePlaneVec.push_back(TriEdgePlane(pipeR+sideR, glm::vec3{0,0,pipeR}, glm::vec3{1,0,0}, glm::vec3{0,0,1}));
+    triEdgePlaneVec.push_back(TriEdgePlane(pipeR+sideR, glm::vec3{0,0,-1*pipeR}, glm::vec3{-1,0,0}, glm::vec3{0,0,-1}));
     //包围盒
     vector<BoundingBox> boxVec;
     for (auto mesh:planeVec){
@@ -98,6 +96,9 @@ void Tee::bindGL(QOpenGLContext * c){
     for(unsigned int i = 0; i < cylinderVec.size(); i++){
         cylinderVec.at(i).bindGL(c);
     }
+    for(unsigned int i = 0; i<triEdgePlaneVec.size(); i++){
+        triEdgePlaneVec.at(i).bindGL(c);
+    }
     binded = true;
 }
 
@@ -115,6 +116,9 @@ void Tee::draw(std::shared_ptr<GLProgram> p){
     }
     for(unsigned int i = 0; i < cylinderVec.size(); i++){
         cylinderVec.at(i).draw(p);
+    }
+    for(unsigned int i = 0; i<triEdgePlaneVec.size(); i++){
+        triEdgePlaneVec.at(i).draw(p);
     }
 }
 
@@ -319,9 +323,16 @@ vector<HalfPoint> Tee::intersectionPoints(glm::vec3 pos, glm::vec3 dir){
     vector<HalfPoint> ringPoints;
     vector<HalfPoint> cylinderPoints;
     vector<HalfPoint> planePoints;
+    vector<HalfPoint> tpPoints;
     for(auto r:ringVec){
         ringPoints = r.intersectionPoints(pos, dir);
         for(auto p:ringPoints){
+            result.push_back(p);
+        }
+    }
+    for(auto tp:triEdgePlaneVec){
+        tpPoints = tp.intersectionPoints(pos, dir);
+        for(auto p:tpPoints){
             result.push_back(p);
         }
     }
@@ -353,6 +364,9 @@ void Tee::setIdUsing(IdGenerator g){
     }
     for(auto& i:planeVec){
         //i.setId(g.getPlaneId().toLatin1().data());
+    }
+    for(auto& i:triEdgePlaneVec){
+        i.setId(g.getTriEdgePlaneId().toLatin1().data());
     }
 }
 

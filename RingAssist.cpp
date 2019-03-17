@@ -364,8 +364,9 @@ glm::vec3 RingAssist::localNorm(float u, float v){
 vector<EdgePtr> RingAssist::getEdges(){
     float pi = 3.1415926;
     auto uZeroEdge = [](float u, float v)->bool{return u<0? true:false;};
-    auto uAngleEdge = [&](float u, float v)->bool {return u>angle? true:false;};
-    auto vEdge1 = [&](float u, float v)->bool{
+    float aangle = angle;
+    auto uAngleEdge = [aangle](float u, float v)->bool {return u>aangle? true:false;};
+    auto vEdge1 = [pi](float u, float v)->bool{
         while(v<0.5*pi){
             v = v+2*pi;
         }
@@ -374,7 +375,7 @@ vector<EdgePtr> RingAssist::getEdges(){
         }
         return v > 1.5*pi? true:false;
     };
-    auto vEdge2 = [&](float u, float v)->bool{
+    auto vEdge2 = [pi](float u, float v)->bool{
         while(v<0.5*pi){
             v = v+2*pi;
         }

@@ -33,3 +33,9 @@ QString IdGenerator::getCurveId(){
     curveIndex++;
     return id;
 }
+
+QString IdGenerator::getTriEdgePlaneId(){
+    QString id = QString("triEdgePlane_") + QString::number(triEdgePlaneIndex);
+    triEdgePlaneIndex++;
+    return id;
+}
