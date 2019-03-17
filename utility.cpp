@@ -31,6 +31,7 @@ glm::mat4 utility::setPos(glm::mat4& matrix, glm::vec3 pos)
 	matrix[3][0] = pos[0];
 	matrix[3][1] = pos[1];
 	matrix[3][2] = pos[2];
+    matrix[3][3] = 1;
 	return matrix;
 }
 

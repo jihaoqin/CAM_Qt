@@ -14,13 +14,14 @@
 #include <boost/serialization/base_object.hpp>
 #include "IdGenerator.h"
 #include "TriEdgePlane.h"
+#include "IdGenerator.h"
 
 class GLProgram;
 
 class Tee: public DataObject
 {
 public:
-    Tee(float , float , float , float );
+    Tee(float , float , float , float ,IdGenerator&);
     virtual ~Tee();
     virtual void bindGL(QOpenGLContext*) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;

@@ -10,7 +10,9 @@ using EdgePtr = std::shared_ptr<Edge>;
 class TriEdgePlane:public DataObject
 {
 public:
-    TriEdgePlane(float radius, glm::vec3 loc, glm::vec3 uDirection, glm::vec3 normDir);
+    friend class TriEdgePlaneAssist;
+    friend class TriCurveAssist;
+    TriEdgePlane(QString s, float radius, glm::vec3 loc, glm::vec3 uDirection, glm::vec3 normDir);
     TriEdgePlane();
     void initial(float radius, glm::vec3 loc, glm::vec3 uDirection, glm::vec3 normDir);
     virtual void bindGL(QOpenGLContext *) override;

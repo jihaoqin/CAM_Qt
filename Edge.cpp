@@ -7,6 +7,9 @@ Edge::Edge(std::vector<glm::vec3> points):box()
 {
     data(points);
 }
+Edge::Edge(std::function<bool(float, float)> f){
+    setFunc(f);
+}
 
 glm::vec3 Edge::center(){
     return box.center();
@@ -30,6 +33,14 @@ void Edge::data(std::vector<glm::vec3> points){
     box = BoundingBox(vertexVec);
 }
 
+void Edge::setFunc(std::function<bool (float, float)> f){
+    func = f;
+}
+
+bool Edge::isOut(float u, float v){
+    return func(u, v);
+}
+/*
 RingEdge::RingEdge(std::function<bool(float, float)> f){
     func = f;
 }
@@ -37,3 +48,5 @@ RingEdge::RingEdge(std::function<bool(float, float)> f){
 bool RingEdge::isOut(float u, float v){
     return func(u, v);
 }
+
+*/

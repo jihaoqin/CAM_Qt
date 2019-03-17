@@ -24,7 +24,7 @@ QString IdGenerator::getPointId(){
 
 QString IdGenerator::getPlaneId(){
     QString id = QString("plane_") + QString::number(planeIndex);
-    pointIndex++;
+    planeIndex++;
     return id;
 }
 

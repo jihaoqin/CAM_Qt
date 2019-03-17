@@ -72,7 +72,8 @@ SOURCES += \
     CurveController.cpp \
     Edge.cpp \
     TriEdgePlane.cpp \
-    TriEdgePlaneAssist.cpp
+    TriEdgePlaneAssist.cpp \
+    TriCurveAssist.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -125,7 +126,8 @@ HEADERS += \
     CurveController.h \
     Edge.h \
     TriEdgePlane.h \
-    TriEdgePlaneAssist.h
+    TriEdgePlaneAssist.h \
+    TriCurveAssist.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt
@@ -145,7 +147,7 @@ DISTFILES += \
 
 
 # BOOST lib configuration
-DEFINES += ROOM
+DEFINES += LAB
 if(contains(DEFINES, ROOM)){
         BOOST_ROOT = F:\boost_1_69_0
 }else{

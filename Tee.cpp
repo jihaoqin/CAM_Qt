@@ -3,7 +3,8 @@
 #include "config.h"
 #include "HalfPoint.h"
 using namespace std;
-Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR):modelMat(glm::mat4(1.0)), color(Color::RED),
+Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdGenerator& g)
+    :modelMat(glm::mat4(1.0)), color(Color::RED),
         lengthMain(_lengthMain), lengthBranch(_lengthBranch), pipeR(_pipeR), sideR(_sideR)
 
 {
@@ -12,9 +13,9 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR):mod
     Mesh up = generateCircle(glm::vec3(0, lengthBranch, 0), glm::vec3(0, 1, 0), pipeR);
     Mesh left = generateCircle(glm::vec3(-1.0*lengthMain/2, 0, 0), glm::vec3(-1, 0, 0),pipeR);
     Mesh right = generateCircle(glm::vec3(1.0*lengthMain/2, 0, 0), glm::vec3(1, 0, 0),pipeR);
-    Ring ringLeft(sideR+pipeR, pipeR, utility::PI/2,
+    Ring ringLeft(g.getRingId(), sideR+pipeR, pipeR, utility::PI/2,
                     glm::vec3(-(pipeR+sideR), pipeR+sideR,0), glm::vec3(0,0,-1), glm::vec3(1,0,0));
-    Ring ringRight(sideR+pipeR, pipeR, utility::PI/2,
+    Ring ringRight(g.getRingId(), sideR+pipeR, pipeR, utility::PI/2,
                     glm::vec3(pipeR+sideR, pipeR+sideR,0), glm::vec3(0,0,1), glm::vec3(-1,0,0));
     ringVec.push_back(ringLeft);
     ringVec.push_back(ringRight);
@@ -25,8 +26,8 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR):mod
     planeVec.push_back(up);
     planeVec.push_back(left);
     planeVec.push_back(right);
-    triEdgePlaneVec.push_back(TriEdgePlane(pipeR+sideR, glm::vec3{0,0,pipeR}, glm::vec3{1,0,0}, glm::vec3{0,0,1}));
-    triEdgePlaneVec.push_back(TriEdgePlane(pipeR+sideR, glm::vec3{0,0,-1*pipeR}, glm::vec3{-1,0,0}, glm::vec3{0,0,-1}));
+    triEdgePlaneVec.push_back(TriEdgePlane(g.getPlaneId(), pipeR+sideR, glm::vec3{0,0,pipeR}, glm::vec3{1,0,0}, glm::vec3{0,0,1}));
+    triEdgePlaneVec.push_back(TriEdgePlane(g.getPlaneId(), pipeR+sideR, glm::vec3{0,0,-1*pipeR}, glm::vec3{-1,0,0}, glm::vec3{0,0,-1}));
     //包围盒
     vector<BoundingBox> boxVec;
     for (auto mesh:planeVec){

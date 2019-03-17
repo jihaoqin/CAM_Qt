@@ -42,7 +42,7 @@ BoundingBox Controller::updateBoundingBox(){
 }
 
 void Controller::addTee(float mainLength, float branchLength, float R, float sideR){
-    std::shared_ptr<Tee> t = std::make_shared<Tee>(mainLength, branchLength, R, sideR);
+    std::shared_ptr<Tee> t = std::make_shared<Tee>(mainLength, branchLength, R, sideR, data->idGenerator);
     QOpenGLContext* c = widget->getGLContext();
     t->bindGL(c);
     data->addTee(t);

@@ -5,8 +5,9 @@
 using namespace utility;
 using namespace std;
 
-Ring::Ring(double R_, double r_, double angle_, glm::vec3 anchor_, glm::vec3 zdir_, glm::vec3 xdir_)
+Ring::Ring(QString s,double R_, double r_, double angle_, glm::vec3 anchor_, glm::vec3 zdir_, glm::vec3 xdir_)
     :R(R_), r(r_), angle(angle_), anchor(anchor_), zdir(zdir_), xdir(xdir_), m(),edges(){
+    setId(s.toLatin1().data());
     zdir = glm::normalize(zdir_);
     xdir = glm::normalize(xdir_);
     vector<Vertex> edge = generateEdge();

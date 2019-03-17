@@ -1,4 +1,5 @@
 #include "TriEdgePlane.h"
+#include "TriEdgePlaneAssist.h"
 #include "utility.h"
 #include "Tee.h"
 
@@ -7,7 +8,7 @@ TriEdgePlane::TriEdgePlane(){
 
 }
 
-TriEdgePlane::TriEdgePlane(float radius, glm::vec3 loc, glm::vec3 uDirection, glm::vec3 normDir)
+TriEdgePlane::TriEdgePlane(QString s, float radius, glm::vec3 loc, glm::vec3 uDirection, glm::vec3 normDir)
     :R(radius), anchor(loc), uDir(glm::normalize(uDirection)), norm(glm::normalize(normDir)),edges()
 {
     initialMesh();
@@ -94,8 +95,7 @@ void TriEdgePlane::initial(float radius, glm::vec3 loc, glm::vec3 uDirection, gl
 
 std::vector<HalfPoint> TriEdgePlane::intersectionPoints(glm::vec3 worldPos, glm::vec3 worldDir){
     TriEdgePlaneAssist assist(*this);
-
-    auto points = assist.intersectionPoints(worldPos, worldDir);
+    auto points = assist.intersectionPoitns(worldPos, worldDir);
     vector<HalfPoint> result;
     std::string s(getId());
     for(auto i:points){
