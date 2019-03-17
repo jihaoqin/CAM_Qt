@@ -71,7 +71,8 @@ SOURCES += \
     RingCurve.cpp \
     CurveController.cpp \
     Edge.cpp \
-    TriEdgePlane.cpp
+    TriEdgePlane.cpp \
+    TriEdgePlaneAssist.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -123,7 +124,8 @@ HEADERS += \
     RingCurve.h \
     CurveController.h \
     Edge.h \
-    TriEdgePlane.h
+    TriEdgePlane.h \
+    TriEdgePlaneAssist.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt

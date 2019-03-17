@@ -1,0 +1,29 @@
+#ifndef TRIEDGEPLANEASSIST_H
+#define TRIEDGEPLANEASSIST_H
+#include "TriEdgePlane.h"
+#include "CPPara.h"
+#include "PosDir.h"
+
+class TriEdgePlaneAssist
+{
+public:
+    TriEdgePlaneAssist(TriEdgePlane&);
+    vector<glm::vec3> intersectionPoitns(glm::vec3 worldPos, glm::vec3 worldDir);
+    glm::vec3 worldDir(CPPara);
+    glm::vec3 localNorm(float u, float v);
+    vector<float> paraWithLocalPoint(glm::vec3);
+    bool isSamePoint(float theta, float alpha, glm::vec3 pos);
+    bool inParaSpace(float theta, float alpha);
+    PosDir localProject(glm::vec3 pos, glm::vec3 dir);
+    PosDir worldProject(glm::vec3 pos, glm::vec3 dir);
+    PosDir CPParaToLocal(CPPara p);
+    CPPara local3DProjectToPara(glm::vec3 pos, glm::vec3 dir);
+    vector<float> local3DProjectToUV(glm::vec3 pos);
+    glm::vec3 local3DToWorld(glm::vec3 local, const char*);
+    glm::vec3 world3DToLocal(glm::vec3 world, const char*);
+    glm::vec3 paraToLocal3D(float theta, float alpha);
+    glm::vec3 localTangentDir(float theta, float alpha, double uWeight, double vWeight);
+    vector<EdgePtr> getEdges();
+};
+
+#endif // TRIEDGEPLANEASSIST_H
