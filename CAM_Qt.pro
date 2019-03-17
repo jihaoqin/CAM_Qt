@@ -141,7 +141,7 @@ DISTFILES += \
 
 
 # BOOST lib configuration
-DEFINES += LAB
+DEFINES += ROOM
 if(contains(DEFINES, ROOM)){
         BOOST_ROOT = F:\boost_1_69_0
 }else{
