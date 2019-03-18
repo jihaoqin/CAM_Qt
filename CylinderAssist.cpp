@@ -1,6 +1,9 @@
 #include "CylinderAssist.h"
 #include "utility.h"
+#include <complex>
+#include <cmath>
 using namespace utility;
+using std::complex;
 CylinderAssist::CylinderAssist(Cylinder& c):anchor(c.anchor),zDir(c.zDir), xDir(c.xDir),
     length(c.length), angle(c.angle), R(c.R), id(c.getId())
 {
@@ -148,4 +151,68 @@ vector<EdgePtr> CylinderAssist::getEdges(){
     EdgePtr e4 = std::make_shared<Edge>(edge4);
     e1->Id(id+"_edge4");
     return vector<EdgePtr>{e1, e2, e3, e4};
+}
+
+
+vector<glm::vec3> CylinderAssist::intersectionPoints(glm::vec3 worldPos, glm::vec3 worldDir){
+    auto localPos = world3DToLocal(worldPos, "pos");
+    auto localDir = world3DToLocal(worldDir, "dir");
+    float dx = localDir.x;
+    float dy = localDir.y;
+    float px = localPos.x;
+    float py = localPos.y;
+    std::complex<float> A = dx*dx+dy*dy;
+    std::complex<float> B = 2*(px*dx + py*dy);
+    std::complex<float> C = px*px + py*py - R*R;
+    if(A.real() == 0){
+        return vector<glm::vec3>();
+    }
+    complex<float> x1 = (-1.0f*B - sqrt(B*B - 4.0f*A*C))/(2.0f*A);
+    complex<float> x2 = (-1.0f*B + sqrt(B*B - 4.0f*A*C))/(2.0f*A);
+    vector<float> xs;
+    if(abs(x1.imag()) < 1e-2){
+        xs.push_back(x1.real());
+    }
+    if(abs(x2.imag()) < 1e-2){
+        xs.push_back(x2.real());
+    }
+    glm::mat4 invT = glm::inverse(T);
+    vector<glm::vec3> points;
+    for(auto i:xs){
+        glm::vec3 p = worldPos + i*worldDir;
+        auto localPos = world3DToLocal(p, "pos");
+        float r = sqrt(localPos.x*localPos.x + localPos.y*localPos.y);
+        if(abs(r-R) < 1e-2){
+            vector<float> uv = local3DToUV(localPos);
+            if(isInPara(uv)){
+                points.push_back(p);
+            }
+            else{}
+        }
+        else{}
+    }
+    return points;
+}
+
+bool CylinderAssist::isInPara(vector<float> uv){
+    float pi = asin(1)*2;
+    float u = uv.at(0);
+    float v = uv.at(1);
+    if(0<=v && v<=length){
+        while(u<0){
+            u = u+2*pi;
+        }
+        while(u>2*pi){
+            u = u-2*pi;
+        }
+        if(u<=angle){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        return false;
+    }
 }

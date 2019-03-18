@@ -29,6 +29,7 @@ public:
     BoundingBox boundingBox();
     void setIdUsing(IdGenerator);
     Ring* getRing(QString);
+    TriEdgePlane* getTriPlane(QString);
 private:
     Mesh generateLeftRing();
     Mesh generateRightRing();

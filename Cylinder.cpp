@@ -56,3 +56,15 @@ BoundingBox Cylinder::boundingBox(){
 Cylinder::~Cylinder(){
 
 }
+
+vector<HalfPoint> Cylinder::intersectionPoints(glm::vec3 worldPos, glm::vec3 worldDir){
+    CylinderAssist rC(*this);
+
+    auto points = rC.intersectionPoints(worldPos, worldDir);
+    vector<HalfPoint> result;
+    std::string s(getId());
+    for(auto i:points){
+        result.push_back(HalfPoint{i, getId()});
+    }
+    return result;
+}

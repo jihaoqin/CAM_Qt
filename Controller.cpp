@@ -12,6 +12,8 @@
 #include "RingCurveAssist.h"
 #include "Curve.h"
 #include "RingCurve.h"
+#include "TriEdgePlaneCurve.h"
+#include "TriEdgePlane.h"
 
 using namespace  std;
 Controller::Controller()
@@ -288,6 +290,12 @@ QString Controller::addCurve(QString pId, float uAng){
         data->addCurve(curve);
         mainWindow->updateAction();
         return id;
+    }
+    else if(meshId.contains("plane")){
+        TriEdgePlane* tri = teePtr->getTriPlane(meshId);
+        assert(tri);
+        QString id = data->idGenerator.getCurveId();
+        auto curve = std::make_shared<TriEdgePlaneCurve>(pointPtr, uAng, 0.1, id.toLatin1().data(),  tri);
     }
 }
 

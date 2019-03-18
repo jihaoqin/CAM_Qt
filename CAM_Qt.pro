@@ -75,7 +75,8 @@ SOURCES += \
     TriEdgePlaneAssist.cpp \
     TriCurveAssist.cpp \
     CylinderAssist.cpp \
-    CyCurveAssist.cpp
+    CyCurveAssist.cpp \
+    TriEdgePlaneCurve.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -131,7 +132,8 @@ HEADERS += \
     TriEdgePlaneAssist.h \
     TriCurveAssist.h \
     CylinderAssist.h \
-    CyCurveAssist.h
+    CyCurveAssist.h \
+    TriEdgePlaneCurve.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt

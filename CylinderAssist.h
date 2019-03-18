@@ -9,6 +9,8 @@ class CylinderAssist
 {
 public:
     CylinderAssist(Cylinder&);
+    vector<glm::vec3> intersectionPoints(glm::vec3 worldPos, glm::vec3 worldDir);
+    bool isInPara(vector<float>);
     vector<float> local3DProjectToUV(glm::vec3 pos);
     vector<float> local3DToUV(glm::vec3 pos);
     glm::vec3 local3DToWorld(glm::vec3 local, const char*);
