@@ -8,7 +8,7 @@ TriCurveAssist::TriCurveAssist(TriEdgePlane& plane)
 }
 
 
-std::vector<PosDir> TriCurveAssist::genCurve(glm::vec3 pos, glm::vec3 dir, float coe){
+std::pair<vector<PosDir>, vector<EdgePtr>> TriCurveAssist::genCurve(glm::vec3 pos, glm::vec3 dir, float coe){
     glm::vec3 localPos = assist.world3DToLocal(pos, "pos");
     glm::vec3 localDir = assist.world3DToLocal(dir, "dir");
     CPPara para = assist.local3DProjectToPara(localPos, localDir);
@@ -21,7 +21,25 @@ std::vector<PosDir> TriCurveAssist::genCurve(glm::vec3 pos, glm::vec3 dir, float
         glm::vec3 worldDir = assist.local3DToWorld(p.dir, "dir");
         pds.push_back(PosDir{worldPos, worldDir});
     }
-    return pds;
+    return std::pair<vector<PosDir>, vector<EdgePtr>>{pds, result.second};
+}
+
+std::pair<vector<PosDir>, vector<EdgePtr>> TriCurveAssist::genCurve(glm::vec3 pos, float uAng, float coe){
+    glm::vec3 localPos = assist.world3DToLocal(pos, "pos");
+    vector<float> uv = assist.local3DProjectToUV(localPos);
+    float u = uv.at(0);
+    float v = uv.at(1);
+    CPPara para{u, v, uAng};
+    auto result = genCurve(para);
+    auto paras = result.first;
+    vector<PosDir> pds;
+    for(auto i:paras){
+        auto p = assist.CPParaToLocal(i);
+        glm::vec3 worldPos = assist.local3DToWorld(p.pos, "pos");
+        glm::vec3 worldDir = assist.local3DToWorld(p.dir, "dir");
+        pds.push_back(PosDir{worldPos, worldDir});
+    }
+    return std::pair<vector<PosDir>, vector<EdgePtr>>{pds, result.second};
 }
 
  std::pair<std::vector<CPPara>, vector<EdgePtr>> TriCurveAssist::genCurve(CPPara p){

@@ -108,7 +108,7 @@ vector<float> RingCurveAssist::evalNextRunge(float x, vector<float> y0, float h)
 }
 
 
-std::vector<PosDir> RingCurveAssist::genCurve(glm::vec3 pos, glm::vec3 dir, float coe){
+  pair<std::vector<PosDir>, vector<EdgePtr>> RingCurveAssist::genCurve(glm::vec3 pos, glm::vec3 dir, float coe){
     lambda = coe;
     glm::vec3 localPos = assist.world3DToLocal(pos, "pos");
     glm::vec3 localDir = assist.world3DToLocal(dir, "dir");
@@ -121,10 +121,9 @@ std::vector<PosDir> RingCurveAssist::genCurve(glm::vec3 pos, glm::vec3 dir, floa
         auto worldDir = assist.local3DToWorld(localPd.dir, "dir");
         pdVec.push_back(PosDir{worldPos, worldDir});
     }
-    return pdVec;
+    return  pair<std::vector<PosDir>, vector<EdgePtr>>{pdVec, paras.second};
 }
-
-std::vector<PosDir> RingCurveAssist::genCurve(glm::vec3 pos, float uAng, float coe){
+  pair<std::vector<PosDir>, vector<EdgePtr>> RingCurveAssist::genCurve(glm::vec3 pos, float uAng, float coe){
     //pos = glm::vec3{11.66718, 14.389130, -0.95986};
     //pos = glm::vec3{10.0826, 12.8678,-6.27725}; uAng = 80.0*3.1415926/180;
     lambda = coe;
@@ -139,5 +138,5 @@ std::vector<PosDir> RingCurveAssist::genCurve(glm::vec3 pos, float uAng, float c
         auto worldDir = assist.local3DToWorld(localPd.dir, "dir");
         pdVec.push_back(PosDir{worldPos, worldDir});
     }
-    return pdVec;
+    return  pair<std::vector<PosDir>, vector<EdgePtr>>{pdVec, paras.second};
 }

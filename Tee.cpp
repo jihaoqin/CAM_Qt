@@ -8,6 +8,7 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdG
         lengthMain(_lengthMain), lengthBranch(_lengthBranch), pipeR(_pipeR), sideR(_sideR)
 
 {
+    float pi = asin(1)*2;
     setId("tee");
     //setVisiable(false);
     Mesh up = generateCircle(glm::vec3(0, lengthBranch, 0), glm::vec3(0, 1, 0), pipeR);
@@ -19,10 +20,18 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdG
                     glm::vec3(pipeR+sideR, pipeR+sideR,0), glm::vec3(0,0,1), glm::vec3(-1,0,0));
     ringVec.push_back(ringLeft);
     ringVec.push_back(ringRight);
-    Cylinder branch(glm::vec3(0, pipeR + sideR, 0), glm::vec3(0, lengthBranch, 0), pipeR);
-    Cylinder mainPipe(glm::vec3(-lengthMain/2, 0, 0), glm::vec3(lengthMain/2, 0, 0), pipeR);
+    Cylinder branch(g.getCylinderId(), glm::vec3(0, pipeR + sideR, 0),
+                    glm::vec3(0, lengthBranch, 0), pipeR, 2*pi, glm::vec3{0,0,1});
+    Cylinder mainPipeLeft(g.getCylinderId(), glm::vec3(-1*(pipeR+sideR), 0, 0),
+                      glm::vec3(lengthMain/-2, 0, 0), pipeR, 2*pi, glm::vec3{0,0,1});
+    Cylinder pipeHalf(g.getCylinderId(), glm::vec3(-1*(pipeR+sideR),0,0),
+                      glm::vec3{pipeR+sideR, 0, 0}, pipeR, pi, glm::vec3{0,0,1});
+    Cylinder mainPipeRight(g.getCylinderId(), glm::vec3(pipeR+sideR, 0, 0),
+                      glm::vec3(lengthMain/2, 0, 0), pipeR, 2*pi, glm::vec3{0,0,1});
     cylinderVec.push_back(branch);
-    cylinderVec.push_back(mainPipe);
+    cylinderVec.push_back(mainPipeLeft);
+    cylinderVec.push_back(pipeHalf);
+    cylinderVec.push_back(mainPipeRight);
     planeVec.push_back(up);
     planeVec.push_back(left);
     planeVec.push_back(right);

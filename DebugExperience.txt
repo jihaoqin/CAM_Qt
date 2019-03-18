@@ -37,7 +37,13 @@ testPoint = glm::vec3(19.777084350585938, 3.0391998291015625, 10);
 2019/03/15
 [x]滑线系数可变
 [x]在move的过程中，点的meshId并没有改变
-[x]Plane的构建
-[x]PlanCurve的构建
-[x]Cylinder的构建
-[x]CylinderCurve的构建
+
+
+用Edge去改写Ring里的判断代码，似得返回PosDir和边界
+
+2019/03/16
+在cpp文件的第一行提示语法错误：缺少“;”。是因为在.h 文件的类定义的最后一行忘了加";"，在被include 后，就在cpp 中报错了
+
+2019/03/18
+[X]检查Ring, TriEdgePlane, Cylinder中的edge初始化
+[X]检查三个Assist中Edge的命名存在否

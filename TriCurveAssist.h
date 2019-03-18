@@ -9,8 +9,8 @@ class TriCurveAssist
 {
 public:
     TriCurveAssist(TriEdgePlane&);
-    std::vector<PosDir> genCurve(glm::vec3 pos, glm::vec3 dir, float coe);
-    std::vector<PosDir> genCurve(glm::vec3 pos, float uAng, float coe);
+    std::pair<vector<PosDir>, vector<EdgePtr>> genCurve(glm::vec3 pos, glm::vec3 dir, float coe);
+    std::pair<vector<PosDir>, vector<EdgePtr>> genCurve(glm::vec3 pos, float uAng, float coe);
 private:
     std::pair<vector<CPPara>, vector<EdgePtr>> genCurve(CPPara);
     float R;

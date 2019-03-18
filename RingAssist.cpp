@@ -388,13 +388,13 @@ vector<EdgePtr> RingAssist::getEdges(){
     };
 
     auto e1 = std::make_shared<Edge>(uZeroEdge);
-    e1->Id(id+"_edge_1");
+    e1->Id(id+"_edge1");
     auto e2 = std::make_shared<Edge>(uAngleEdge);
-    e2->Id(id+"_edge_2");
+    e2->Id(id+"_edge2");
     auto e3 = std::make_shared<Edge>(vEdge1);
-    e3->Id(id+"_edge_3");
+    e3->Id(id+"_edge3");
     auto e4 = std::make_shared<Edge>(vEdge2);
-    e4->Id(id+"_edge_4");
+    e4->Id(id+"_edge4");
     vector<EdgePtr> edges;
     edges.push_back(e1);
     edges.push_back(e2);

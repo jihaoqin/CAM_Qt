@@ -12,8 +12,8 @@ class RingCurveAssist
 {
 public:
     RingCurveAssist(Ring& ring);
-    std::vector<PosDir> genCurve(glm::vec3 pos, glm::vec3 dir, float coe);
-    std::vector<PosDir> genCurve(glm::vec3 pos, float uAng, float coe);
+    pair<std::vector<PosDir>, vector<EdgePtr>> genCurve(glm::vec3 pos, glm::vec3 dir, float coe);
+    pair<std::vector<PosDir>, vector<EdgePtr>> genCurve(glm::vec3 pos, float uAng, float coe);
 private:
     vector<float> ringDiff(float s, vector<float> y0);
     typedef vector<float> Ys;

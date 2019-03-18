@@ -11,6 +11,8 @@ TriEdgePlane::TriEdgePlane(){
 TriEdgePlane::TriEdgePlane(QString s, float radius, glm::vec3 loc, glm::vec3 uDirection, glm::vec3 normDir)
     :R(radius), anchor(loc), uDir(glm::normalize(uDirection)), norm(glm::normalize(normDir)),edges()
 {
+    TriEdgePlaneAssist assist(*this);
+    edges = assist.getEdges();
     initialMesh();
 }
 

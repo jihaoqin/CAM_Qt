@@ -15,6 +15,7 @@ public:
     bool isSamePoint(float u, float v, glm::vec3 pos);
     bool inParaSpace(float u, float v);
     PosDir localProject(glm::vec3 pos, glm::vec3 dir);
+    vector<float> local3DToUV(glm::vec3 pos);
     PosDir worldProject(glm::vec3 pos, glm::vec3 dir);
     PosDir CPParaToLocal(CPPara p);
     CPPara local3DProjectToPara(glm::vec3 pos, glm::vec3 dir);

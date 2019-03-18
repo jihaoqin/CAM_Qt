@@ -99,4 +99,5 @@ std::pair<vector<PosDir>, vector<EdgePtr>> TCurve::genCurve(PosDir pd, QString m
     }
     return std::pair<vector<PosDir>, vector<EdgePtr>>{pds, edges};
     */
+    return std::pair<vector<PosDir>, vector<EdgePtr>>();
 }
