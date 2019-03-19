@@ -410,13 +410,14 @@ Cylinder* Tee::getCylinder(QString id){
     return nullptr;
 }
 
-void Tee::edgeTopo(){
+std::map<QString, QString> Tee::edgeTopo(){
     vector<EdgePtr> edges;
     for(auto &i:pipeHalfVec){
         for(auto &ii:i.getEdges()) {
             edges.push_back(ii);
         }
     }
+
     for(auto &i:ringVec){
         for(auto &ii:i.getEdges()) {
             edges.push_back(ii);
@@ -425,6 +426,7 @@ void Tee::edgeTopo(){
     for(auto &i:triEdgePlaneVec){
         for(auto &ii:i.getEdges()) {
             edges.push_back(ii);
+            utility::print(ii->center());
         }
     }
     std::map<QString, QString> topo;
@@ -441,4 +443,12 @@ void Tee::edgeTopo(){
             }
         }
     }
+}
+
+QString Tee::topoValue(QString key){
+    auto topo = edgeTopo();
+    if(topo.find(key) == topo.end()){
+        assert(0);
+    }
+    return topo[key];
 }

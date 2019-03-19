@@ -160,8 +160,7 @@ vector<EdgePtr> CylinderAssist::getEdges(){
     for(int i =0; i<10; i++){
         float u = 0;
         float v = length/9*i;
-        glm::vec3 localPos = paraToWorld({u, v, 1}).pos;
-        ps1.push_back(local3DToWorld(localPos, "pos"));
+        ps1.push_back(paraToWorld({u, v, 1}).pos);
     }
     e1->data(ps1);
 
@@ -171,8 +170,7 @@ vector<EdgePtr> CylinderAssist::getEdges(){
     for(int i =0; i<10; i++){
         float u = angle;
         float v = length/9*i;
-        glm::vec3 localPos = paraToWorld({u, v, 1}).pos;
-        ps2.push_back(local3DToWorld(localPos, "pos"));
+        ps2.push_back(paraToWorld({u, v, 1}).pos);
     }
     e2->data(ps2);
 
@@ -182,8 +180,7 @@ vector<EdgePtr> CylinderAssist::getEdges(){
     for(int i =0; i<10; i++){
         float u = angle/9*i;
         float v = 0;
-        glm::vec3 localPos = paraToWorld({u, v, 1}).pos;
-        ps3.push_back(local3DToWorld(localPos, "pos"));
+        ps3.push_back(paraToWorld({u, v, 1}).pos);
     }
     e3->data(ps3);
 
@@ -193,11 +190,9 @@ vector<EdgePtr> CylinderAssist::getEdges(){
     for(int i =0; i<10; i++){
         float u = angle/9*i;
         float v = length;
-        glm::vec3 localPos = paraToWorld({u, v, 1}).pos;
-        ps4.push_back(local3DToWorld(localPos, "pos"));
+        ps4.push_back(paraToWorld({u, v, 1}).pos);
     }
     e4->data(ps4);
-    glm::vec3 b = e1->center();
     return vector<EdgePtr>{e1, e2, e3, e4};
 }
 

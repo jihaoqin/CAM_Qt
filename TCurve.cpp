@@ -39,8 +39,9 @@ std::pair<vector<PosDir>, vector<EdgePtr>> TCurve::genCurve(PosDir pd, float coe
     PosDir side2 = middle.first.back();
     EdgePtr edge2 = middle.second.back();
 
+    QString val1 = tee->topoValue(edge1->Id());
     /*
-    if(!edge1.isBoundary()){
+    if(!val1.isEmpty()){
         mesh1 = edge1, meshId;
         nextMesh = edge1, mesh1;
         if(nextMesh != meshId){

@@ -196,8 +196,9 @@ vector<EdgePtr> TriEdgePlaneAssist::getEdges(){
     auto e3 = std::make_shared<Edge>(line);
     e3->Id(id+"_edge3");
     vector<glm::vec3> ps3;
-    ps3.push_back({-1*R, 0, 0});
-    ps3.push_back({R, 0, 0});
+    local3DToWorld({-1*R, 0, 0},"pos");
+    ps3.push_back(local3DToWorld({-1*R, 0, 0},"pos"));
+    ps3.push_back(local3DToWorld({R, 0, 0},"pos"));
     e3->data(ps3);
     return vector<EdgePtr>{e1, e2, e3};
 }
