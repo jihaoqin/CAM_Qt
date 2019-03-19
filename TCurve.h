@@ -16,9 +16,10 @@ class TCurve:public Curve
 {
 public:
     TCurve(PointPtr, float, float , const char*, TeePtr);
+    void updateSelf() override;
 private:
-    std::pair<vector<PosDir>, vector<EdgePtr>> genCurve(PosDir pd, QString meshId);
-    PointPtr designP;
+    std::pair<vector<PosDir>, vector<EdgePtr>> genCurve(PosDir pd, float coe, QString meshId);
+    PointPtr point;
     TeePtr tee;
     float uAng;
     float lambda;

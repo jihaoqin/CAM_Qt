@@ -22,7 +22,9 @@ public:
     void data(std::vector<glm::vec3>);
     void setFunc(std::function<bool (float, float)> f);
     virtual bool isOut(float u, float v);
+    bool isBoundary();
 private:
+    bool boundary;
     BoundingBox box;
     QString id;
     std::function<bool (float, float)> func;

@@ -29,6 +29,7 @@ private:
     double R;
     double r;
     double angle;//弧度制
+    glm::mat4 T;
     glm::vec3 anchor;
     glm::vec3 zdir;
     glm::vec3 xdir;

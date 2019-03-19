@@ -1,15 +1,15 @@
-#ifndef RINGCURVE_H
-#define RINGCURVE_H
+#ifndef CYLINDERCURVE_H
+#define CYLINDERCURVE_H
 #include "Curve.h"
-#include "RingCurveAssist.h"
+#include "CyCurveAssist.h"
 
 class Point;
-class Ring;
 using PointPtr = std::shared_ptr<Point>;
-class RingCurve:public Curve
+
+class CylinderCurve:public Curve
 {
 public:
-    RingCurve(PointPtr, float angle, float coe, const char* , Ring*);
+    CylinderCurve(PointPtr, float uAng, float coe, const char* c, Cylinder*);
     void setWindingAngle(float angle) override;
 protected:
     void updateSelf() override;
@@ -17,9 +17,7 @@ private:
     PointPtr point;
     float uAng;
     float lambda;
-    RingCurveAssist assist;
-
-
+    CyCurveAssist assist;
 };
 
-#endif // RINGCURVE_H
+#endif // CYLINDERCURVE_H

@@ -171,10 +171,34 @@ vector<EdgePtr> TriEdgePlaneAssist::getEdges(){
     };
     auto e1 = std::make_shared<Edge>(arc1);
     e1->Id(id+"_edge1");
+    vector<glm::vec3> ps1;
+    for(int i =0; i<10; i++){
+        float theta = pi+0.5*pi/9*i;
+        float u = R*cos(theta) + R;
+        float v = R*sin(theta) + R;
+        glm::vec3 localPos = paraToLocal3D(u, v);
+        ps1.push_back(local3DToWorld(localPos, "pos"));
+    }
+    e1->data(ps1);
+
     auto e2 = std::make_shared<Edge>(arc2);
     e2->Id(id+"_edge2");
+    vector<glm::vec3> ps2;
+    for(int i =0; i<10; i++){
+        float theta = -0.5*pi/9*i;
+        float u = R*cos(theta) - R;
+        float v = R*sin(theta) + R;
+        glm::vec3 localPos = paraToLocal3D(u, v);
+        ps2.push_back(local3DToWorld(localPos, "pos"));
+    }
+    e2->data(ps2);
+
     auto e3 = std::make_shared<Edge>(line);
     e3->Id(id+"_edge3");
+    vector<glm::vec3> ps3;
+    ps3.push_back({-1*R, 0, 0});
+    ps3.push_back({R, 0, 0});
+    e3->data(ps3);
     return vector<EdgePtr>{e1, e2, e3};
 }
 
@@ -200,4 +224,10 @@ PosDir TriEdgePlaneAssist::CPParaToLocal(CPPara p){
 vector<float> TriEdgePlaneAssist::local3DToUV(glm::vec3 pos){
     assert(abs(pos.z)<0.1);
     return vector<float>{pos.x, pos.y};
+}
+
+
+glm::vec3 TriEdgePlaneAssist::localTangentDir(float u, float v, double uWeight, double vWeight){
+    glm::vec3 dir = glm::normalize(glm::vec3{uWeight, vWeight, 0});
+    return dir;
 }

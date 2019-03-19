@@ -24,6 +24,7 @@ public:
     virtual void draw(std::shared_ptr<GLProgram>) override;
     BoundingBox boundingBox();
     vector<HalfPoint> intersectionPoints(glm::vec3 begin, glm::vec3 dir);
+    vector<EdgePtr> getEdges();
 private:
     vector<Vertex> generateEdge();
     vector<EdgePtr> edges;

@@ -19,11 +19,11 @@ vector<float> CylinderAssist::local3DProjectToUV(glm::vec3 pos){
     float u = uv.at(0);
     float v = uv.at(1);
     float un,vn;
-    while(v<0){
-        v=v+2*pi;
+    while(u<0){
+        u=u+2*pi;
     }
-    while(v>2*pi){
-        v=v-2*pi;
+    while(u>2*pi){
+        u=u-2*pi;
     }
 
     if(v<=0){
@@ -119,7 +119,7 @@ PosDir CylinderAssist::paraToWorld(CPPara a){
     float u = a.u;
     float v = a.v;
     float uAng = a.uAng;
-    glm::vec3 pos{R*cos(u), R*sin(v), v};
+    glm::vec3 pos{R*cos(u), R*sin(u), v};
     glm::vec3 dir = localDir(u, v, cos(uAng), sin(uAng));
     glm::vec3 worldPos = local3DToWorld(pos, "pos");
     glm::vec3 worldDir = local3DToWorld(dir, "dir");
@@ -128,11 +128,23 @@ PosDir CylinderAssist::paraToWorld(CPPara a){
 
 vector<EdgePtr> CylinderAssist::getEdges(){
     float pi = asin(1)*2;
-    auto edge1 = [pi](float u, float v)->bool{
+    float aangle = angle;
+    auto edge1 = [pi, aangle](float u, float v)->bool{
+        while(u>pi+0.5*aangle){
+            u = u-2*pi;
+        }
+        while(u<0.5*aangle-pi){
+            u = u+2*pi;
+        }
         return u<0? true:false;
     };
-    float aangle = angle;
     auto edge2 = [pi, aangle](float u, float v)->bool{
+        while(u>pi+0.5*aangle){
+            u = u-2*pi;
+        }
+        while(u<0.5*aangle-pi){
+            u = u+2*pi;
+        }
         return u>aangle? true:false;
     };
     auto edge3 = [](float u, float v)->bool{
@@ -144,12 +156,48 @@ vector<EdgePtr> CylinderAssist::getEdges(){
     };
     EdgePtr e1 = std::make_shared<Edge>(edge1);
     e1->Id(id+"_edge1");
+    vector<glm::vec3> ps1;
+    for(int i =0; i<10; i++){
+        float u = 0;
+        float v = length/9*i;
+        glm::vec3 localPos = paraToWorld({u, v, 1}).pos;
+        ps1.push_back(local3DToWorld(localPos, "pos"));
+    }
+    e1->data(ps1);
+
     EdgePtr e2 = std::make_shared<Edge>(edge2);
-    e1->Id(id+"_edge2");
+    e2->Id(id+"_edge2");
+    vector<glm::vec3> ps2;
+    for(int i =0; i<10; i++){
+        float u = angle;
+        float v = length/9*i;
+        glm::vec3 localPos = paraToWorld({u, v, 1}).pos;
+        ps2.push_back(local3DToWorld(localPos, "pos"));
+    }
+    e2->data(ps2);
+
     EdgePtr e3 = std::make_shared<Edge>(edge3);
-    e1->Id(id+"_edge3");
+    e3->Id(id+"_edge3");
+    vector<glm::vec3> ps3;
+    for(int i =0; i<10; i++){
+        float u = angle/9*i;
+        float v = 0;
+        glm::vec3 localPos = paraToWorld({u, v, 1}).pos;
+        ps3.push_back(local3DToWorld(localPos, "pos"));
+    }
+    e3->data(ps3);
+
     EdgePtr e4 = std::make_shared<Edge>(edge4);
-    e1->Id(id+"_edge4");
+    e4->Id(id+"_edge4");
+    vector<glm::vec3> ps4;
+    for(int i =0; i<10; i++){
+        float u = angle/9*i;
+        float v = length;
+        glm::vec3 localPos = paraToWorld({u, v, 1}).pos;
+        ps4.push_back(local3DToWorld(localPos, "pos"));
+    }
+    e4->data(ps4);
+    glm::vec3 b = e1->center();
     return vector<EdgePtr>{e1, e2, e3, e4};
 }
 

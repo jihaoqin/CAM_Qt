@@ -38,6 +38,7 @@ pair<vector<CPPara>, EdgePtr> CyCurveAssist::rungeKutta(CPPara p, QString s, flo
     paras.push_back(p);
     while(1){
         CPPara next = evalNext(s_last, p_last, coe, h);
+        qDebug()<<"v = "<<next.v;
         for(auto e:edges){
             if(e->isOut(next.u, next.v)){
                 side = e;
@@ -69,9 +70,9 @@ vector<float> CyCurveAssist::ringDiff(float s, vector<float> y0, float coe){
     float u = y0.at(0);
     float v = y0.at(1);
     float uAng = y0.at(2);
-    float un = -1*coe*pow(cos(uAng),2)/R;
-    float vn = cos(uAng)/R;
-    float uAngn = sin(uAng);
+    float uAngn = -1*coe*pow(cos(uAng),2)/R;
+    float un = cos(uAng)/R;
+    float vn = sin(uAng);
     return vector<float>{un, vn, uAngn};
 }
 

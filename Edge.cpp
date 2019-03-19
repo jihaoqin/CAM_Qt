@@ -1,13 +1,15 @@
 #include "Edge.h"
 
-Edge::Edge(){
+Edge::Edge():boundary(true)
+{
 
 }
-Edge::Edge(std::vector<glm::vec3> points):box()
+Edge::Edge(std::vector<glm::vec3> points):box(),boundary(true)
 {
     data(points);
 }
-Edge::Edge(std::function<bool(float, float)> f){
+Edge::Edge(std::function<bool(float, float)> f):boundary(true)
+{
     setFunc(f);
 }
 
@@ -40,13 +42,7 @@ void Edge::setFunc(std::function<bool (float, float)> f){
 bool Edge::isOut(float u, float v){
     return func(u, v);
 }
-/*
-RingEdge::RingEdge(std::function<bool(float, float)> f){
-    func = f;
-}
 
-bool RingEdge::isOut(float u, float v){
-    return func(u, v);
+bool Edge::isBoundary(){
+    return boundary;
 }
-
-*/

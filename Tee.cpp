@@ -2,6 +2,7 @@
 #include <algorithm>
 #include "config.h"
 #include "HalfPoint.h"
+#include "map"
 using namespace std;
 Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdGenerator& g)
     :modelMat(glm::mat4(1.0)), color(Color::RED),
@@ -32,6 +33,7 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdG
     cylinderVec.push_back(mainPipeLeft);
     cylinderVec.push_back(pipeHalf);
     cylinderVec.push_back(mainPipeRight);
+    pipeHalfVec.push_back(pipeHalf);
     planeVec.push_back(up);
     planeVec.push_back(left);
     planeVec.push_back(right);
@@ -49,6 +51,7 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdG
         boxVec.push_back(c.boundingBox());
     }
     box = BoundingBox::OrBox(boxVec);
+    edgeTopo();
 }
 
 Mesh Tee::generateLeftRing(){
@@ -396,4 +399,46 @@ TriEdgePlane* Tee::getTriPlane(QString id){
         }
     }
     return nullptr;
+}
+
+Cylinder* Tee::getCylinder(QString id){
+    for(auto &i:cylinderVec){
+        if(id == QString(i.getId())){
+            return &i;
+        }
+    }
+    return nullptr;
+}
+
+void Tee::edgeTopo(){
+    vector<EdgePtr> edges;
+    for(auto &i:pipeHalfVec){
+        for(auto &ii:i.getEdges()) {
+            edges.push_back(ii);
+        }
+    }
+    for(auto &i:ringVec){
+        for(auto &ii:i.getEdges()) {
+            edges.push_back(ii);
+        }
+    }
+    for(auto &i:triEdgePlaneVec){
+        for(auto &ii:i.getEdges()) {
+            edges.push_back(ii);
+        }
+    }
+    std::map<QString, QString> topo;
+    for(auto& i:edges){
+        topo[i->Id()] = QString("");
+    }
+    for(auto& i:edges){
+        for(auto &ii:edges){
+            if(glm::length(i->center() - ii->center()) < 1){
+                if(i->Id() != ii->Id()){
+                    topo[i->Id()] = ii->Id();
+                    topo[ii->Id()] = i->Id();
+                }
+            }
+        }
+    }
 }

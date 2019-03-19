@@ -11,7 +11,7 @@ class TriEdgePlaneCurve:public Curve
 {
 public:
     TriEdgePlaneCurve(PointPtr, float uAng_, float coe, const char* , TriEdgePlane*);
-    void setWindingAngle(float angle);
+    void setWindingAngle(float angle) override;
 protected:
     void updateSelf() override;
 private:

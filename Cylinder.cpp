@@ -68,3 +68,7 @@ vector<HalfPoint> Cylinder::intersectionPoints(glm::vec3 worldPos, glm::vec3 wor
     }
     return result;
 }
+
+vector<EdgePtr> Cylinder::getEdges(){
+    return edges;
+}

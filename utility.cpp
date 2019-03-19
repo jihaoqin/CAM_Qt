@@ -70,7 +70,7 @@ bool utility::isZero(double num){
 }
 
 void utility::print(glm::vec3 v){
-    std::cout<<"["<<v.x<<", "<<v.y<<", "<<v.z<<"]\n";
+    qDebug()<<"["<<v.x<<", "<<v.y<<", "<<v.z<<"]\n";
 }
 
 std::string utility::matLog(glm::mat4 m){
@@ -143,6 +143,7 @@ glm::mat4 utility::setXDir(glm::mat4& matrix, glm::vec3 pos){
     matrix[0][0] = pos[0];
     matrix[0][1] = pos[1];
     matrix[0][2] = pos[2];
+    matrix[0][3] = 0;
     return matrix;
 }
 
@@ -150,6 +151,7 @@ glm::mat4 utility::setYDir(glm::mat4& matrix, glm::vec3 pos){
     matrix[1][0] = pos[0];
     matrix[1][1] = pos[1];
     matrix[1][2] = pos[2];
+    matrix[1][3] = 0;
     return matrix;
 }
 
@@ -157,6 +159,7 @@ glm::mat4 utility::setZDir(glm::mat4& matrix, glm::vec3 pos){
     matrix[2][0] = pos[0];
     matrix[2][1] = pos[1];
     matrix[2][2] = pos[2];
+    matrix[2][3] = 0;
     return matrix;
 }
 

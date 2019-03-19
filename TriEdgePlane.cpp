@@ -11,6 +11,7 @@ TriEdgePlane::TriEdgePlane(){
 TriEdgePlane::TriEdgePlane(QString s, float radius, glm::vec3 loc, glm::vec3 uDirection, glm::vec3 normDir)
     :R(radius), anchor(loc), uDir(glm::normalize(uDirection)), norm(glm::normalize(normDir)),edges()
 {
+    setId(s.toLatin1().data());
     TriEdgePlaneAssist assist(*this);
     edges = assist.getEdges();
     initialMesh();
@@ -104,4 +105,8 @@ std::vector<HalfPoint> TriEdgePlane::intersectionPoints(glm::vec3 worldPos, glm:
         result.push_back(HalfPoint{i, getId()});
     }
     return result;
+}
+
+vector<EdgePtr> TriEdgePlane::getEdges(){
+    return edges;
 }

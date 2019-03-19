@@ -1,6 +1,6 @@
 #include "IdGenerator.h"
 
-IdGenerator::IdGenerator():cylinderIndex(0),ringIndex(0),pointIndex(0),planeIndex(0),curveIndex(0)
+IdGenerator::IdGenerator():cylinderIndex(0),ringIndex(0),pointIndex(0),planeIndex(0),curveIndex(0), triEdgePlaneIndex(0)
 {
 }
 

@@ -52,12 +52,14 @@ std::pair<vector<PosDir>, vector<EdgePtr>> TriCurveAssist::genCurve(glm::vec3 po
     float v_last = v;
     vector<CPPara> para1{CPPara{u, v, uAng}};
     EdgePtr edge1;
-    while(true){
+    bool flag1 = true;
+    while(flag1){
         float u_temp = u_last+ds*cos(uAng);
         float v_temp = v_last+ds*sin(uAng);
         for(auto e:edges){
             if(e->isOut(u_temp,v_temp)){
                 edge1 = e;
+                flag1 = false;
                 break;
             }
             else{
@@ -72,12 +74,14 @@ std::pair<vector<PosDir>, vector<EdgePtr>> TriCurveAssist::genCurve(glm::vec3 po
     EdgePtr edge2;
     u_last = u;
     v_last = v;
-    while(true){
+    bool flag2 = true;
+    while(flag2){
         float u_temp = u_last+ds*cos(uAng+pi);
         float v_temp = v_last+ds*sin(uAng+pi);
         for(auto e:edges){
             if(e->isOut(u_temp,v_temp)){
                 edge2 = e;
+                flag2 = false;
                 break;
             }
             else{
@@ -91,7 +95,7 @@ std::pair<vector<PosDir>, vector<EdgePtr>> TriCurveAssist::genCurve(glm::vec3 po
     for(auto i=para1.rbegin(); i!= para1.rend(); i++){
         paras.push_back(*i);
     }
-    for(auto i = para2.begin(); i!=para1.end(); i++){
+    for(auto i = para2.begin(); i!=para2.end(); i++){
         paras.push_back(*i);
     }
 

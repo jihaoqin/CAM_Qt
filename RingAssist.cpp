@@ -13,6 +13,7 @@ RingAssist::RingAssist(Ring& ring)
     zdir = ring.zdir;
     xdir = ring.xdir;
     id = ring.getId();
+    T = utility::createMat(anchor,zdir,glm::cross(zdir, xdir));
 }
 
 vector<glm::vec3> RingAssist::intersectionPoints(glm::vec3 worldPos, glm::vec3 worldDir){
@@ -362,10 +363,24 @@ glm::vec3 RingAssist::localNorm(float u, float v){
 }
 
 vector<EdgePtr> RingAssist::getEdges(){
-    float pi = 3.1415926;
-    auto uZeroEdge = [](float u, float v)->bool{return u<0? true:false;};
+    float pi = asin(1)*2;
     float aangle = angle;
-    auto uAngleEdge = [aangle](float u, float v)->bool {
+    auto uZeroEdge = [pi, aangle](float u, float v)->bool{
+        while(u>pi+0.5*aangle){
+            u = u - 2*pi;
+        }
+        while(u<0.5*aangle - pi){
+            u = u + 2*pi;
+        }
+        return u<0? true:false;
+    };
+    auto uAngleEdge = [pi, aangle](float u, float v)->bool {
+        while(u>pi+0.5*aangle){
+            u = u - 2*pi;
+        }
+        while(u<0.5*aangle - pi){
+            u = u + 2*pi;
+        }
         return u> aangle? true:false;
     };
     auto vEdge1 = [pi](float u, float v)->bool{
@@ -389,12 +404,47 @@ vector<EdgePtr> RingAssist::getEdges(){
 
     auto e1 = std::make_shared<Edge>(uZeroEdge);
     e1->Id(id+"_edge1");
+    vector<glm::vec3> ps1;
+    for(int i =0; i<10; i++){
+        float u = 0;
+        float v = pi/2+pi/9*i;
+        glm::vec3 localPos = paraToLocal3D(u, v);
+        ps1.push_back(local3DToWorld(localPos, "pos"));
+    }
+    e1->data(ps1);
+
     auto e2 = std::make_shared<Edge>(uAngleEdge);
     e2->Id(id+"_edge2");
+    vector<glm::vec3> ps2;
+    for(int i =0; i<10; i++){
+        float u = angle;
+        float v = pi/2+pi/9*i;
+        glm::vec3 localPos = paraToLocal3D(u, v);
+        ps2.push_back(local3DToWorld(localPos, "pos"));
+    }
+    e2->data(ps2);
+
     auto e3 = std::make_shared<Edge>(vEdge1);
     e3->Id(id+"_edge3");
+    vector<glm::vec3> ps3;
+    for(int i =0; i<10; i++){
+        float u = angle/9*i;
+        float v = 1.5*pi;
+        glm::vec3 localPos = paraToLocal3D(u, v);
+        ps3.push_back(local3DToWorld(localPos, "pos"));
+    }
+    e3->data(ps3);
+
     auto e4 = std::make_shared<Edge>(vEdge2);
     e4->Id(id+"_edge4");
+    vector<glm::vec3> ps4;
+    for(int i =0; i<10; i++){
+        float u = angle/9*i;
+        float v = 0.5*pi;
+        glm::vec3 localPos = paraToLocal3D(u, v);
+        ps4.push_back(local3DToWorld(localPos, "pos"));
+    }
+    e4->data(ps4);
     vector<EdgePtr> edges;
     edges.push_back(e1);
     edges.push_back(e2);

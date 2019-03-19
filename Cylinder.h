@@ -21,6 +21,7 @@ public:
     virtual void draw(std::shared_ptr<GLProgram>) override;
     vector<HalfPoint> intersectionPoints(glm::vec3 worldPos, glm::vec3 worldDir);
     BoundingBox boundingBox();
+    vector<EdgePtr> getEdges();
 private:
     Mesh& generateCyliner();
     glm::vec3 anchor;

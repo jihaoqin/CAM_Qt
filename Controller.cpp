@@ -14,6 +14,8 @@
 #include "RingCurve.h"
 #include "TriEdgePlaneCurve.h"
 #include "TriEdgePlane.h"
+#include "Cylinder.h"
+#include "CylinderCurve.h"
 
 using namespace  std;
 Controller::Controller()
@@ -291,11 +293,32 @@ QString Controller::addCurve(QString pId, float uAng){
         mainWindow->updateAction();
         return id;
     }
-    else if(meshId.contains("plane")){
+    else if(meshId.contains("Plane")){
         TriEdgePlane* tri = teePtr->getTriPlane(meshId);
         assert(tri);
         QString id = data->idGenerator.getCurveId();
         auto curve = std::make_shared<TriEdgePlaneCurve>(pointPtr, uAng, 0.1, id.toLatin1().data(),  tri);
+        pointPtr->addChild(curve);
+        QOpenGLContext* gl = widget->getGLContext();
+        curve->bindGL(gl);
+        data->addCurve(curve);
+        mainWindow->updateAction();
+        return id;
+    }
+    else if(meshId.contains("cylinder")){
+        Cylinder* cy = teePtr->getCylinder(meshId);
+        assert(cy);
+        QString id = data->idGenerator.getCurveId();
+        auto curve = std::make_shared<CylinderCurve>(pointPtr, uAng, 0.1, id.toLatin1().data(), cy);
+        pointPtr->addChild(curve);
+        QOpenGLContext* gl = widget->getGLContext();
+        curve->bindGL(gl);
+        data->addCurve(curve);
+        mainWindow->updateAction();
+        return id;
+    }
+    else{
+        return QString();
     }
 }
 
@@ -307,8 +330,5 @@ void Controller::updateCurve(QString id, float angle){
         return;
     }
     auto curve = std::dynamic_pointer_cast<Curve>(ptr);
-    if(curve->type == Curve::Type::general){
-        auto ringcurve = std::dynamic_pointer_cast<RingCurve>(curve);
-        ringcurve->setWindingAngle(angle);
-    }
+    curve->setWindingAngle(angle);
 }

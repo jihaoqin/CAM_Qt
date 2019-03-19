@@ -3,6 +3,7 @@
 #include "TriEdgePlane.h"
 #include "CPPara.h"
 #include "PosDir.h"
+#include <glm/glm.hpp>
 
 class TriEdgePlaneAssist
 {

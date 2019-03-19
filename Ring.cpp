@@ -75,3 +75,7 @@ vector<HalfPoint> Ring::intersectionPoints(glm::vec3 worldPos, glm::vec3 worldDi
     }
     return result;
 }
+
+vector<EdgePtr> Ring::getEdges(){
+    return edges;
+}

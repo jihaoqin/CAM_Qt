@@ -30,7 +30,9 @@ public:
     void setIdUsing(IdGenerator);
     Ring* getRing(QString);
     TriEdgePlane* getTriPlane(QString);
+    Cylinder* getCylinder(QString);
 private:
+    void edgeTopo();
     Mesh generateLeftRing();
     Mesh generateRightRing();
     Mesh generateMainPipe();
@@ -43,6 +45,7 @@ private:
     Mesh generateRevolution(glm::vec3 anchor, glm::vec3 dir, std::vector<Vertex> v, float angle);
     std::vector<Mesh> planeVec;
     std::vector<Ring> ringVec;
+    vector<Cylinder> pipeHalfVec;
     std::vector<Cylinder> cylinderVec;
     std::vector<TriEdgePlane> triEdgePlaneVec;
     glm::mat4 modelMat;
@@ -72,16 +75,6 @@ private:
         planeVec.push_back(right);
         planeVec.push_back(front);
         planeVec.push_back(back);
-        Ring ringLeft(sideR+pipeR, pipeR, utility::PI/2,
-                    glm::vec3(-(pipeR+sideR), pipeR+sideR,0), glm::vec3(0,0,-1), glm::vec3(1,0,0));
-        Ring ringRight(sideR+pipeR, pipeR, utility::PI/2,
-                    glm::vec3(pipeR+sideR, pipeR+sideR,0), glm::vec3(0,0,1), glm::vec3(-1,0,0));
-        ringVec.push_back(ringLeft);
-        ringVec.push_back(ringRight);
-        Cylinder branch(glm::vec3(0, pipeR + sideR, 0), glm::vec3(0, lengthBranch, 0), pipeR);
-        Cylinder mainPipe(glm::vec3(-lengthMain/2, 0, 0), glm::vec3(lengthMain/2, 0, 0), pipeR);
-        cylinderVec.push_back(branch);
-        cylinderVec.push_back(mainPipe);
     }
     BOOST_SERIALIZATION_SPLIT_MEMBER()
 };

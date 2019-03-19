@@ -19,6 +19,7 @@ public:
     virtual void draw(std::shared_ptr<GLProgram>) override;
     BoundingBox boundingBox();
     std::vector<HalfPoint> intersectionPoints(glm::vec3 begin, glm::vec3 dir);
+    vector<EdgePtr> getEdges();
 private:
     void initialMesh();
     float R;
