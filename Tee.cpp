@@ -443,6 +443,7 @@ std::map<QString, QString> Tee::edgeTopo(){
             }
         }
     }
+    return topo;
 }
 
 QString Tee::topoValue(QString key){

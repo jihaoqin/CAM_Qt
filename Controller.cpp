@@ -16,6 +16,7 @@
 #include "TriEdgePlane.h"
 #include "Cylinder.h"
 #include "CylinderCurve.h"
+#include "TCurve.h"
 
 using namespace  std;
 Controller::Controller()
@@ -282,9 +283,20 @@ QString Controller::addCurve(QString pId, float uAng){
     auto teeFa = data->root->findObjectId("tee");
     auto teePtr = std::dynamic_pointer_cast<Tee>(teeFa);
     QString meshId(pointPtr->meshId());
+
+
+    QString id = data->idGenerator.getCurveId();
+    auto curve = std::make_shared<TCurve>(pointPtr, uAng, 0.1, id.toLatin1().data(), teePtr);
+    pointPtr->addChild(curve);
+    QOpenGLContext* gl = widget->getGLContext();
+    curve->bindGL(gl);
+    data->addCurve(curve);
+    mainWindow->updateAction();
+    return id;
+
+    /*
     if(meshId.contains("ring")){
         Ring* r = teePtr->getRing(meshId);
-        QString id = data->idGenerator.getCurveId();
         auto curve = std::make_shared<RingCurve>(pointPtr,uAng,0.1,id.toLatin1().data(), r);
         pointPtr->addChild(curve);
         QOpenGLContext* gl = widget->getGLContext();
@@ -320,6 +332,7 @@ QString Controller::addCurve(QString pId, float uAng){
     else{
         return QString();
     }
+    */
 }
 
 void Controller::updateCurve(QString id, float angle){

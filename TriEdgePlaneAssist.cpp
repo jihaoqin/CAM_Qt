@@ -74,13 +74,13 @@ glm::vec3 TriEdgePlaneAssist::local3DToWorld(glm::vec3 local, const char* c){
 vector<float> TriEdgePlaneAssist::local3DProjectToUV(glm::vec3 pos){
     float u = pos.x;
     float v = pos.y;
-    if(abs(u) > R+1e-1){
+    if(abs(u) > R+5e-1){
         assert(0);
     }
-    if(v < -1*1e-1){
+    if(v < -1*5e-1){
         assert(0);
     }
-    if(v > R + 1e-1){
+    if(v > R + 5e-1){
         assert(0);
     }
 

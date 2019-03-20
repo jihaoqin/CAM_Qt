@@ -9,10 +9,11 @@
 #include "CyCurveAssist.h"
 #include "TriCurveAssist.h"
 
+using namespace std;
 TCurve::TCurve(PointPtr p, float a, float coe, const char*c , TeePtr t)
     :Curve(c), point(p), uAng(a), lambda(coe), tee(t)
 {
-
+    updateSelf();
 }
 
 std::pair<vector<PosDir>, vector<EdgePtr>> TCurve::genCurve(PosDir pd, float coe, QString meshId){
@@ -27,7 +28,7 @@ std::pair<vector<PosDir>, vector<EdgePtr>> TCurve::genCurve(PosDir pd, float coe
         CyCurveAssist assist(*(tee->getCylinder(meshId)));
         middle = assist.genCurve(pd.pos, pd.dir, coe);
     }
-    else if(meshId.contains("triEdgePlane")){
+    else if(meshId.contains("plane")){
         TriCurveAssist assist(*(tee->getTriPlane(meshId)));
         middle = assist.genCurve(pd.pos, pd.dir, coe);
     }
@@ -40,79 +41,80 @@ std::pair<vector<PosDir>, vector<EdgePtr>> TCurve::genCurve(PosDir pd, float coe
     EdgePtr edge2 = middle.second.back();
 
     QString val1 = tee->topoValue(edge1->Id());
-    /*
+    QString val2 = tee->topoValue(edge2->Id());
     if(!val1.isEmpty()){
-        mesh1 = edge1, meshId;
-        nextMesh = edge1, mesh1;
-        if(nextMesh != meshId){
-            front = genCurve(side1, mesh1);
-        }
-        else
-        {
-            front =
-        }
+        int i = val1.indexOf("_");
+        QString nextMesh = val1.left(i);
+        front = genCurve(side1, coe, nextMesh);
     }
     else{
-        front =
+        front = pair<vector<PosDir>, vector<EdgePtr>>();
     }
-    if(!edge2.isBoundaray){
-        mesh2 = edge2, meshId;
-        nextMesh = edge2, mesh2;
-        if(nextMesh != meshId){
-            back = genCurve(side1, mesh1);
-        }
+    if(!val2.isEmpty()){
+        int i = val2.indexOf("_");
+        QString nextMesh = val2.left(i);
+        back = genCurve(side2, coe, nextMesh);
     }
     else{
-        back =
+        back = pair<vector<PosDir>, vector<EdgePtr>>();
     }
     vector<PosDir> pds;
     vector<EdgePtr> edges;
-    EdgePtr frontEdge1 = front.second.first();
-    EdgePtr frontEdge2 = front.second.back();
-    if(frontEdge1.id == edge1.id){
-        for(auto i = front.first.rbegin(); i!=front.first.rend(); i++){
-            pds.push_back(*i);
-        }
-        edges.push_back(frontEdge2);
-        edges.push_back(frontEdge1);
-    }
-    else if(frontEdge2.id == edge1.id){
-        for(auto i = front.first.begin(); i!= front.first.end(); i++){
-            pds.push_back(*i);
-        }
-        edges.push_back(frontEdge1);
-        edges.push_back(frontEdge2);
+    if(front.first.size() == 0){
+        edges.push_back(nullptr);
+        edges.push_back(nullptr);
     }
     else{
-        assert(0);
+        EdgePtr frontEdge1 = front.second.front();
+        EdgePtr frontEdge2 = front.second.back();
+        if(tee->topoValue(frontEdge1->Id()) == edge1->Id()){
+            for(auto i = front.first.rbegin(); i!=front.first.rend(); i++){
+                pds.push_back(*i);
+            }
+            edges.push_back(frontEdge2);
+            edges.push_back(frontEdge1);
+        }
+        else if(tee->topoValue(frontEdge2->Id()) == edge1->Id()){
+            for(auto i = front.first.begin(); i!= front.first.end(); i++){
+                pds.push_back(*i);
+            }
+            edges.push_back(frontEdge1);
+            edges.push_back(frontEdge2);
+        }
+        else{
+            assert(0);
+        }
     }
-
-    for(auot i:middle.first){
+    for(auto i:middle.first){
         pds.push_back(i);
     }
     edges.at(1) = middle.second.back();
 
 
-    EdgePtr backEdge1 = back.second.first();
-    EdgePtr backEdge2 = back.second.back();
-    if(backEdge1.id == edge2.id){
-        for(auto i = back.first.begin(); i!=back.first.end(); i++){
-            pds.push_back(*i);
-        }
-        edges.at(1) = backEdge2;
-    }
-    else if(backEdge2.id == edge2.id){
-        for(auto i = back.first.rbegin(); i!= back.first.rend(); i++){
-            pds.push_back(*i);
-        }
-        edges.at(1) = backEdge1;
+    if(back.first.size()== 0){
+        // do nothing
     }
     else{
-        assert(0);
+        EdgePtr backEdge1 = back.second.front();
+        EdgePtr backEdge2 = back.second.back();
+        if(tee->topoValue(backEdge1->Id()) == edge2->Id()){
+            for(auto i = back.first.begin(); i!=back.first.end(); i++){
+                pds.push_back(*i);
+            }
+            edges.at(1) = backEdge2;
+        }
+        else if(tee->topoValue(backEdge2->Id()) == edge2->Id()){
+            for(auto i = back.first.rbegin(); i!= back.first.rend(); i++){
+                pds.push_back(*i);
+            }
+            edges.at(1) = backEdge1;
+        }
+        else{
+            assert(0);
+        }
+
     }
     return std::pair<vector<PosDir>, vector<EdgePtr>>{pds, edges};
-    */
-    return std::pair<vector<PosDir>, vector<EdgePtr>>();
 }
 
 
@@ -155,4 +157,9 @@ void TCurve::updateSelf(){
         points.push_back(i.pos);
     }
     data(points);
+}
+
+void TCurve::setWindingAngle(float angle){
+    uAng = angle;
+    update();
 }

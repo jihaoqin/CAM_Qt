@@ -18,6 +18,7 @@ public:
     TCurve(PointPtr, float, float , const char*, TeePtr);
     void updateSelf() override;
 private:
+    void setWindingAngle(float angle) override;
     std::pair<vector<PosDir>, vector<EdgePtr>> genCurve(PosDir pd, float coe, QString meshId);
     PointPtr point;
     TeePtr tee;

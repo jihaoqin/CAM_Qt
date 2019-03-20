@@ -5,37 +5,37 @@ IdGenerator::IdGenerator():cylinderIndex(0),ringIndex(0),pointIndex(0),planeInde
 }
 
 QString IdGenerator::getCylinderId(){
-    QString id = QString("cylinder_") + QString::number(cylinderIndex);
+    QString id = QString("cylinder") + QString::number(cylinderIndex);
     cylinderIndex++;
     return id;
 }
 
 QString IdGenerator::getRingId(){
-    QString id = QString("ring_") + QString::number(ringIndex);
+    QString id = QString("ring") + QString::number(ringIndex);
     ringIndex++;
     return id;
 }
 
 QString IdGenerator::getPointId(){
-    QString id = QString("point_") + QString::number(pointIndex);
+    QString id = QString("point") + QString::number(pointIndex);
     pointIndex++;
     return id;
 }
 
 QString IdGenerator::getPlaneId(){
-    QString id = QString("plane_") + QString::number(planeIndex);
+    QString id = QString("plane") + QString::number(planeIndex);
     planeIndex++;
     return id;
 }
 
 QString IdGenerator::getCurveId(){
-    QString id = QString("curve_") + QString::number(curveIndex);
+    QString id = QString("curve") + QString::number(curveIndex);
     curveIndex++;
     return id;
 }
 
 QString IdGenerator::getTriEdgePlaneId(){
-    QString id = QString("triEdgePlane_") + QString::number(triEdgePlaneIndex);
+    QString id = QString("triEdgePlane") + QString::number(triEdgePlaneIndex);
     triEdgePlaneIndex++;
     return id;
 }
