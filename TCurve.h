@@ -19,7 +19,9 @@ public:
     void updateSelf() override;
 private:
     void setWindingAngle(float angle) override;
-    std::pair<vector<PosDir>, vector<EdgePtr>> genCurve(PosDir pd, float coe, QString meshId);
+    std::pair<vector<PosDir>, vector<EdgePtr>> genCurve(PosDir pd, float coe, QString meshId, QString lastMesh);
+    bool sameEdge(EdgePtr, EdgePtr);
+    std::map<QString, QString> topo;
     PointPtr point;
     TeePtr tee;
     float uAng;

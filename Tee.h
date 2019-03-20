@@ -32,8 +32,8 @@ public:
     TriEdgePlane* getTriPlane(QString);
     Cylinder* getCylinder(QString);
     QString topoValue(QString);
-private:
     std::map<QString, QString> edgeTopo();
+private:
     Mesh generateLeftRing();
     Mesh generateRightRing();
     Mesh generateMainPipe();

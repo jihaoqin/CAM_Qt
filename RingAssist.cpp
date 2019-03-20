@@ -193,12 +193,12 @@ glm::vec3 RingAssist::paraToLocal3D(float theta, float alpha){
 glm::vec3 RingAssist::localTangentDir(float theta, float alpha, double uWeight, double vWeight){
     glm::vec3 uDir;
     glm::vec3 vDir;
-    uDir.x = -1*r*sin(alpha)*cos(theta);
-    uDir.y = -1*r*sin(alpha)*sin(theta);
-    uDir.z = r*cos(alpha);
-    vDir.x = -1*(R+r*cos(alpha))*sin(theta);
-    vDir.y = (R+r*cos(alpha))*cos(theta);
-    vDir.z = 0;
+    vDir.x = -1*r*sin(alpha)*cos(theta);
+    vDir.y = -1*r*sin(alpha)*sin(theta);
+    vDir.z = r*cos(alpha);
+    uDir.x = -1*(R+r*cos(alpha))*sin(theta);
+    uDir.y = (R+r*cos(alpha))*cos(theta);
+    uDir.z = 0;
     uDir = glm::normalize(uDir);
     vDir = glm::normalize(vDir);
     glm::vec3 dir = (float)uWeight*uDir + (float)vWeight*vDir;

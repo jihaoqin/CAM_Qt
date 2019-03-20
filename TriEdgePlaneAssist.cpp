@@ -7,11 +7,11 @@ using namespace utility;
 TriEdgePlaneAssist::TriEdgePlaneAssist(TriEdgePlane& tri)
     :R(tri.R), uDir(tri.uDir), anchor(tri.anchor), norm(tri.norm), id(tri.getId())
 {
-    glm::normalize(uDir);
+    uDir = glm::normalize(uDir);
     glm::vec3 yDir = glm::cross(norm, uDir);
-    glm::normalize(yDir);
+    yDir = glm::normalize(yDir);
     norm = glm::cross(uDir, yDir);
-    glm::normalize(norm);
+    norm = glm::normalize(norm);
 
     utility::setPos(T, anchor);
     setXDir(T, uDir);
@@ -20,7 +20,7 @@ TriEdgePlaneAssist::TriEdgePlaneAssist(TriEdgePlane& tri)
 }
 
 vector<glm::vec3> TriEdgePlaneAssist::intersectionPoitns(glm::vec3 worldPos, glm::vec3 worldDir){
-    glm::normalize(worldDir);
+    worldDir = glm::normalize(worldDir);
     if(abs(glm::dot(worldDir, norm)) < 1e-2){
         return vector<glm::vec3>();
     }
@@ -94,6 +94,9 @@ vector<float> TriEdgePlaneAssist::local3DProjectToUV(glm::vec3 pos){
                 u = 0;
                 v = R;
             }
+            else if(v < 0){
+                v = 0;
+            }
             else{
                 float x = u+R;
                 float y = v-R;
@@ -113,6 +116,10 @@ vector<float> TriEdgePlaneAssist::local3DProjectToUV(glm::vec3 pos){
             if(v > R){
                 u = 0;
                 v = R;
+            }
+            else if(v < 0){
+                u = u;
+                v = 0;
             }
             else{
                 float x = u-R;

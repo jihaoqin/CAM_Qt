@@ -102,7 +102,7 @@ CPPara CylinderAssist::local3DProjectToPara(glm::vec3 pos, glm::vec3 dir){
     glm::vec3 uTan = localDir(u, v, 1, 0);
     glm::vec3 vTan = localDir(u, v, 0, 1);
     glm::vec3 c = glm::cross(uTan, vTan);
-    glm::normalize(c);
+    c = glm::normalize(c);
     glm::vec3 part = dir - glm::dot(dir,c)*c;
     float uAng = atan2(glm::dot(vTan, part), glm::dot(uTan, part));
     return CPPara{u, v, uAng};
@@ -110,7 +110,7 @@ CPPara CylinderAssist::local3DProjectToPara(glm::vec3 pos, glm::vec3 dir){
 
 glm::vec3 CylinderAssist::localDir(float u, float v, float uW, float vW){
     glm::vec3 uTan{-1*R*sin(u), R*cos(u), 0};
-    glm::normalize(uTan);
+    uTan = glm::normalize(uTan);
     glm::vec3 vTan{0,0,1};
     return glm::normalize(uW*uTan + vW*vTan);
 }

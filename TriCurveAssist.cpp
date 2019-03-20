@@ -12,6 +12,7 @@ std::pair<vector<PosDir>, vector<EdgePtr>> TriCurveAssist::genCurve(glm::vec3 po
     glm::vec3 localPos = assist.world3DToLocal(pos, "pos");
     glm::vec3 localDir = assist.world3DToLocal(dir, "dir");
     CPPara para = assist.local3DProjectToPara(localPos, localDir);
+    //para = CPPara{-12.934589f, 0.0f, 2.242562f};
     auto result = genCurve(para);
     auto paras = result.first;
     vector<PosDir> pds;
@@ -47,7 +48,7 @@ std::pair<vector<PosDir>, vector<EdgePtr>> TriCurveAssist::genCurve(glm::vec3 po
     float u = p.u;
     float v = p.v;
     float uAng = p.uAng;
-    float ds = R/10.0;
+    float ds = 0.1;
     float u_last = u;
     float v_last = v;
     vector<CPPara> para1{CPPara{u, v, uAng}};
@@ -62,11 +63,11 @@ std::pair<vector<PosDir>, vector<EdgePtr>> TriCurveAssist::genCurve(glm::vec3 po
                 flag1 = false;
                 break;
             }
-            else{
-                para1.push_back(CPPara{u_temp, v_temp, uAng});
-                u_last = u_temp;
-                v_last = v_temp;
-            }
+        }
+        if(flag1 == true){
+            para1.push_back(CPPara{u_temp, v_temp, uAng});
+            u_last = u_temp;
+            v_last = v_temp;
         }
     }
 
@@ -84,11 +85,11 @@ std::pair<vector<PosDir>, vector<EdgePtr>> TriCurveAssist::genCurve(glm::vec3 po
                 flag2 = false;
                 break;
             }
-            else{
-                para1.push_back(CPPara{u_temp, v_temp, uAng});
-                u_last = u_temp;
-                v_last = v_temp;
-            }
+        }
+        if(flag2 == true){
+            para2.push_back(CPPara{u_temp, v_temp, uAng});
+            u_last = u_temp;
+            v_last = v_temp;
         }
     }
     vector<CPPara> paras;
