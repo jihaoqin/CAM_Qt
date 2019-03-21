@@ -115,6 +115,7 @@ bool GLWidget::eventFilter(QObject *watched, QEvent *event){
         if(event->type() == QEvent::MouseButtonPress){
             QMouseEvent* mouseEvent = dynamic_cast<QMouseEvent*>(event);
             //construct a line
+            qDebug()<<"press:"<<mouseEvent->pos();
             if(mouseEvent->buttons() == Qt::LeftButton){
                 processIntersectionWhenPress(mouseEvent);
                 return true;
@@ -138,6 +139,7 @@ bool GLWidget::eventFilter(QObject *watched, QEvent *event){
             //只按下了左键
             else if(mouseEvent->buttons() == Qt::LeftButton){
                 //移动点
+                qDebug()<<"press:"<<mouseEvent->pos();
                 processMoveWhenMove(mouseEvent);
                 return true;
             }
@@ -178,7 +180,7 @@ void GLWidget::processMoveWhenMove(QMouseEvent *event){
     glm::vec3 nearPoint = get3DPoint(nearScreen);
     glm::vec3 farPoint = get3DPoint(farScreen);
     glm::vec3 dir = glm::normalize(farPoint-nearPoint);
-    ctrl->processMoveWhenMove(nearPoint, farPoint);
+    ctrl->processMoveWhenMove(nearPoint, dir);
 }
 
 glm::vec3 GLWidget::get3DPoint(glm::vec3 p2){

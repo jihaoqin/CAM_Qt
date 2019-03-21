@@ -374,11 +374,22 @@ vector<EdgePtr> RingAssist::getEdges(){
         }
         return u<0? true:false;
     };
-    auto ex1 = [](CPPara p)->CPPara{
-        float u = p.u;
-        float v = p.v;
-        float uAng = p.uAng;
-        return CPPara{0, tan(uAng)*(-1*u)+v, uAng};
+    auto ex1 = [pi,aangle](CPPara p1, CPPara p2)->CPPara{
+        while(p1.u>pi+0.5*aangle){
+            p1.u = p1.u - 2*pi;
+        }
+        while(p1.u<0.5*aangle - pi){
+            p1.u = p1.u + 2*pi;
+        }
+        while(p2.u>pi+0.5*aangle){
+            p2.u = p2.u - 2*pi;
+        }
+        while(p2.u<0.5*aangle - pi){
+            p2.u = p2.u + 2*pi;
+        }
+        float lam = (0-p1.u)/(p2.u-p1.u);
+        //(1-lam)*p1.u+lam*p2.u
+        return CPPara{0, (1-lam)*p1.v+lam*p2.v, (1-lam)*p1.uAng+lam*p2.uAng};
     };
     auto uAngleEdge = [pi, aangle](float u, float v)->bool {
         while(u>pi+0.5*aangle){
@@ -389,17 +400,22 @@ vector<EdgePtr> RingAssist::getEdges(){
         }
         return u> aangle? true:false;
     };
-    auto ex2 = [pi, aangle](CPPara p)->CPPara{
-        float u = p.u;
-        float v = p.v;
-        float uAng = p.uAng;
-        while(u>pi+0.5*aangle){
-            u = u - 2*pi;
+    auto ex2 = [pi, aangle](CPPara p1, CPPara p2)->CPPara{
+        while(p1.u>pi+0.5*aangle){
+            p1.u = p1.u - 2*pi;
         }
-        while(u<0.5*aangle - pi){
-            u = u + 2*pi;
+        while(p1.u<0.5*aangle - pi){
+            p1.u = p1.u + 2*pi;
         }
-        return CPPara{aangle, tan(uAng)*(aangle-1*u)+v, uAng};
+        while(p2.u>pi+0.5*aangle){
+            p2.u = p2.u - 2*pi;
+        }
+        while(p2.u<0.5*aangle - pi){
+            p2.u = p2.u + 2*pi;
+        }
+        float lam = (aangle-p1.u)/(p2.u-p1.u);
+        //(1-lam)*p1.u+lam*p2.u
+        return CPPara{aangle, (1-lam)*p1.v+lam*p2.v, (1-lam)*p1.uAng+lam*p2.uAng};
     };
     auto vEdge1 = [pi](float u, float v)->bool{
         while(v<0){
@@ -410,17 +426,28 @@ vector<EdgePtr> RingAssist::getEdges(){
         }
         return v > 1.5*pi? true:false;
     };
-    auto ex3 = [pi, aangle](CPPara p)->CPPara{
-        float u = p.u;
-        float v = p.v;
-        float uAng = p.uAng;
-        while(v<0){
-            v = v+2*pi;
+    auto ex3 = [pi, aangle](CPPara p1, CPPara p2)->CPPara{
+        while(p1.v<0){
+            p1.v = p1.v+2*pi;
         }
-        while(v>2*pi){
-            v= v- 2*pi;
+        while(p1.v>2*pi){
+            p1.v= p1.v- 2*pi;
         }
-        return CPPara{(1.5f*pi-v)*atan(uAng)+u, 1.5f*pi, uAng};
+        while(p2.v<0){
+            p2.v = p2.v+2*pi;
+        }
+        while(p2.v>2*pi){
+            p2.v= p2.v- 2*pi;
+        }
+        float lam = (1.5f*pi - p1.v)/(p2.v - p1.v);
+        CPPara p3{(1-lam)*p1.u+lam*p2.u, 1.5f*pi, (1-lam)*p1.uAng+lam*p2.uAng};
+        while(p3.v<-1*pi){
+            p3.v = p3.v+2*pi;
+        }
+        while(p3.v>pi){
+            p3.v= p3.v- 2*pi;
+        }
+        return p3;
     };
     auto vEdge2 = [pi](float u, float v)->bool{
         while(v<0){
@@ -431,17 +458,28 @@ vector<EdgePtr> RingAssist::getEdges(){
         }
         return v < 0.5*pi? true:false;
     };
-    auto ex4 = [pi, aangle](CPPara p)->CPPara{
-        float u = p.u;
-        float v = p.v;
-        float uAng = p.uAng;
-        while(v<0){
-            v = v+2*pi;
+    auto ex4 = [pi, aangle](CPPara p1, CPPara p2)->CPPara{
+        while(p1.v<0){
+            p1.v = p1.v+2*pi;
         }
-        while(v>2*pi){
-            v= v- 2*pi;
+        while(p1.v>2*pi){
+            p1.v= p1.v- 2*pi;
         }
-        return CPPara{(0.5f*pi-v)*atan(uAng)+u, 0.5f*pi, uAng};
+        while(p2.v<0){
+            p2.v = p2.v+2*pi;
+        }
+        while(p2.v>2*pi){
+            p2.v= p2.v- 2*pi;
+        }
+        float lam = (0.5f*pi - p1.v)/(p2.v - p1.v);
+        CPPara p3{(1-lam)*p1.u+lam*p2.u, 0.5f*pi, (1-lam)*p1.uAng+lam*p2.uAng};
+        while(p3.v<-1*pi){
+            p3.v = p3.v+2*pi;
+        }
+        while(p3.v>pi){
+            p3.v= p3.v- 2*pi;
+        }
+        return p3;
     };
 
     auto e1 = std::make_shared<Edge>(uZeroEdge);

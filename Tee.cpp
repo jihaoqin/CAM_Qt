@@ -11,7 +11,6 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdG
 {
     float pi = asin(1)*2;
     setId("tee");
-    //setVisiable(false);
     Mesh up = generateCircle(glm::vec3(0, lengthBranch, 0), glm::vec3(0, 1, 0), pipeR);
     Mesh left = generateCircle(glm::vec3(-1.0*lengthMain/2, 0, 0), glm::vec3(-1, 0, 0),pipeR);
     Mesh right = generateCircle(glm::vec3(1.0*lengthMain/2, 0, 0), glm::vec3(1, 0, 0),pipeR);
@@ -426,7 +425,6 @@ std::map<QString, QString> Tee::edgeTopo(){
     for(auto &i:triEdgePlaneVec){
         for(auto &ii:i.getEdges()) {
             edges.push_back(ii);
-            utility::print(ii->center());
         }
     }
     std::map<QString, QString> topo;

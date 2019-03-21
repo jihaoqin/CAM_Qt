@@ -13,12 +13,10 @@ TabBackground::TabBackground(QWidget* parent):QWidget(parent), center(nullptr),l
 
 void TabBackground::mouseMoveEvent(QMouseEvent *event){
     event->ignore();
-    qDebug()<< "back move";
 }
 
 void TabBackground::mousePressEvent(QMouseEvent *event){
     event->ignore();
-    qDebug()<< "back press";
 }
 
 void TabBackground::setWidget(QWidget *w){

@@ -19,7 +19,6 @@ void StrechLabel::leaveEvent(QEvent *event){
 }
 
 void StrechLabel::mouseMoveEvent(QMouseEvent *event){
-    qDebug()<<"move";
     if(event->buttons()&Qt::LeftButton){
         QPoint nowPos = event->globalPos();
         int deltaX = nowPos.x() - lastPos.x();

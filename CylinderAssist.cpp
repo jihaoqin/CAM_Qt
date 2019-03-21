@@ -12,7 +12,6 @@ CylinderAssist::CylinderAssist(Cylinder& c):anchor(c.anchor),zDir(c.zDir), xDir(
     setYDir(T,glm::cross(zDir, xDir));
     setZDir(T, zDir);
 }
-
 vector<float> CylinderAssist::local3DProjectToUV(glm::vec3 pos){
     float pi = asin(1)*2;
     vector<float> uv = local3DToUV(pos);
@@ -151,6 +150,22 @@ vector<EdgePtr> CylinderAssist::getEdges(){
         }
         return u<0? true:false;
     };
+    auto ex1 = [pi, aangle](CPPara p1, CPPara p2)->CPPara{
+        while(p1.u>pi+0.5*aangle){
+            p1.u = p1.u-2*pi;
+        }
+        while(p1.u<0.5*aangle-pi){
+            p1.u = p1.u+2*pi;
+        }
+        while(p2.u>pi+0.5*aangle){
+            p2.u = p2.u-2*pi;
+        }
+        while(p2.u<0.5*aangle-pi){
+            p2.u = p2.u+2*pi;
+        }
+        float lam = (0 - p1.u)/(p2.u - p1.u);
+        return CPPara{0, (1-lam)*p1.v+lam*p2.v,(1-lam)*p1.uAng+lam*p2.uAng};
+    };
     auto edge2 = [pi, aangle](float u, float v)->bool{
         while(u>pi+0.5*aangle){
             u = u-2*pi;
@@ -160,15 +175,40 @@ vector<EdgePtr> CylinderAssist::getEdges(){
         }
         return u>aangle? true:false;
     };
+    auto ex2 = [pi, aangle](CPPara p1, CPPara p2)->CPPara{
+        while(p1.u>pi+0.5*aangle){
+            p1.u = p1.u-2*pi;
+        }
+        while(p1.u<0.5*aangle-pi){
+            p1.u = p1.u+2*pi;
+        }
+        while(p2.u>pi+0.5*aangle){
+            p2.u = p2.u-2*pi;
+        }
+        while(p2.u<0.5*aangle-pi){
+            p2.u = p2.u+2*pi;
+        }
+        float lam = (aangle - p1.u)/(p2.u - p1.u);
+        return CPPara{aangle, (1-lam)*p1.v+lam*p2.v,(1-lam)*p1.uAng+lam*p2.uAng};
+    };
     auto edge3 = [](float u, float v)->bool{
         return v<0? true:false;
+    };
+    auto ex3 = [pi, aangle](CPPara p1, CPPara p2)->CPPara{
+        float lam = (0 - p1.v)/(p2.v - p1.v);
+        return CPPara{(1-lam)*p1.u+lam*p2.u, 0, (1-lam)*p1.uAng+lam*p2.uAng};
     };
     float l = length;
     auto edge4 = [l](float u, float v)->bool{
         return v>l? true:false;
     };
+    auto ex4 = [l, pi, aangle](CPPara p1, CPPara p2)->CPPara{
+        float lam = (l - p1.v)/(p2.v - p1.v);
+        return CPPara{(1-lam)*p1.u+lam*p2.u, l, (1-lam)*p1.uAng+lam*p2.uAng};
+    };
     EdgePtr e1 = std::make_shared<Edge>(edge1);
     e1->Id(id+"_edge1");
+    e1->setExtend(ex1);
     vector<glm::vec3> ps1;
     for(int i =0; i<10; i++){
         float u = 0;
@@ -179,6 +219,7 @@ vector<EdgePtr> CylinderAssist::getEdges(){
 
     EdgePtr e2 = std::make_shared<Edge>(edge2);
     e2->Id(id+"_edge2");
+    e2->setExtend(ex2);
     vector<glm::vec3> ps2;
     for(int i =0; i<10; i++){
         float u = angle;
@@ -189,6 +230,7 @@ vector<EdgePtr> CylinderAssist::getEdges(){
 
     EdgePtr e3 = std::make_shared<Edge>(edge3);
     e3->Id(id+"_edge3");
+    e3->setExtend(ex3);
     vector<glm::vec3> ps3;
     for(int i =0; i<10; i++){
         float u = angle/9*i;
@@ -199,6 +241,7 @@ vector<EdgePtr> CylinderAssist::getEdges(){
 
     EdgePtr e4 = std::make_shared<Edge>(edge4);
     e4->Id(id+"_edge4");
+    e4->setExtend(ex4);
     vector<glm::vec3> ps4;
     for(int i =0; i<10; i++){
         float u = angle/9*i;

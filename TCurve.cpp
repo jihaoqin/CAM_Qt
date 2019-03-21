@@ -125,6 +125,7 @@ void TCurve::updateSelf(){
     QString id(point->meshId());
     glm::vec3 worldPos = point->getPos();
     //worldPos = glm::vec3{-15.088, 5.69978, 8.7286};
+    //worldPos = glm::vec3{-12.724838256835938, 8.74078369140625, 7.5171};
     glm::vec3 worldDir;
     if(id.contains("ring")){
         Ring* r = tee->getRing(id);

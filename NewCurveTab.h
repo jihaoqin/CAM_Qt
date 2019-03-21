@@ -40,6 +40,7 @@ private:
     QPushButton* ok;
     QPushButton* cancle;
 
+
     GuiConnector* connector;
 
     bool focusOnPoint;

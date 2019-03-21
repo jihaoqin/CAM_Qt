@@ -1,7 +1,6 @@
 [x]滑线系数可变
-[X]edge添加extend功能
-[X]在查看TriEdgePlane的genCurve为什么会有折线段
-
+[x]滑动时总是偏移
+[x]名字设置有问题，triEdgePlane的名字有的是“triEdgeplane0”，有的是“plane0”，tee的setIDUsing也有问题。
 
 2019/02/20
 GLMemory的析构函数中的core指针变成了野指针。
@@ -62,3 +61,9 @@ testPoint = glm::vec3(19.777084350585938, 3.0391998291015625, 10);
 2019/03/20
 [checked]在move的过程中，点的meshId并没有改变
 [checked]在Tee中构造Edge的拓扑关系
+[checked]在查看TriEdgePlane的genCurve为什么会有折线段
+其实折线段的是Ring上的东西，因为Ring的步长太长了，看起来有折线。
+[checked]edge添加extend功能
+	[checked] RingEdge
+	[X] TriEdge
+	[checked] Cylinder

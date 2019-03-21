@@ -38,11 +38,12 @@ pair<vector<CPPara>, EdgePtr> CyCurveAssist::rungeKutta(CPPara p, QString s, flo
     paras.push_back(p);
     while(1){
         CPPara next = evalNext(s_last, p_last, coe, h);
-        qDebug()<<"v = "<<next.v;
+        //qDebug()<<"v = "<<next.v;
         for(auto e:edges){
             if(e->isOut(next.u, next.v)){
-                side = e;
-                return pair<vector<CPPara>, EdgePtr>{paras, side};
+                CPPara m = e->extend(paras.back(), next);
+                paras.push_back(m);
+                return pair<vector<CPPara>, EdgePtr>{paras, e};
             }
         }
         paras.push_back(next);

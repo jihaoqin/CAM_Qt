@@ -47,10 +47,10 @@ bool Edge::isBoundary(){
     return boundary;
 }
 
-void Edge::setExtend(std::function<CPPara (CPPara)> f){
+void Edge::setExtend(std::function<CPPara (CPPara, CPPara)> f){
     e = f;
 }
 
-CPPara Edge::extend(CPPara p){
-    return e(p);
+CPPara Edge::extend(CPPara p1, CPPara p2){
+    return e(p1, p2);
 }
