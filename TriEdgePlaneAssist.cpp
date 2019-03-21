@@ -74,6 +74,7 @@ glm::vec3 TriEdgePlaneAssist::local3DToWorld(glm::vec3 local, const char* c){
 vector<float> TriEdgePlaneAssist::local3DProjectToUV(glm::vec3 pos){
     float u = pos.x;
     float v = pos.y;
+    /*
     if(abs(u) > R+5e-1){
         assert(0);
     }
@@ -83,6 +84,7 @@ vector<float> TriEdgePlaneAssist::local3DProjectToUV(glm::vec3 pos){
     if(v > R + 5e-1){
         assert(0);
     }
+    */
 
     if(u < 0){
         if(u < -1*R){
@@ -101,8 +103,8 @@ vector<float> TriEdgePlaneAssist::local3DProjectToUV(glm::vec3 pos){
                 float x = u+R;
                 float y = v-R;
                 if(sqrt(x*x + y*y) < R){
-                    u = (R+0.1)*cos(atan2(y,x))-R;
-                    v = (R+0.1)*sin(atan2(y,x))+R;
+                    u = R*cos(atan2(y,x))-R;
+                    v = R*sin(atan2(y,x))+R;
                 }
             }
         }
@@ -125,8 +127,8 @@ vector<float> TriEdgePlaneAssist::local3DProjectToUV(glm::vec3 pos){
                 float x = u-R;
                 float y = v-R;
                 if(sqrt(x*x + y*y) < R){
-                    u = (R+0.1)*cos(atan2(y,x))+R;
-                    v = (R+0.1)*sin(atan2(y,x))+R;
+                    u = (R)*cos(atan2(y,x))+R;
+                    v = (R)*sin(atan2(y,x))+R;
                 }
             }
         }

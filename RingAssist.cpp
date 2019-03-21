@@ -52,7 +52,7 @@ vector<glm::vec3> RingAssist::intersectionPoints(glm::vec3 worldPos, glm::vec3 w
             float alpha = para.at(1);
             if(inParaSpace(theta, alpha)){
                 glm::vec3 norm = localNorm(theta, alpha);
-                if(glm::dot(norm, dir) > 0){
+                if(glm::dot(norm, dir) < 0){
                     sol.push_back(i);
                 }
             }
@@ -374,6 +374,12 @@ vector<EdgePtr> RingAssist::getEdges(){
         }
         return u<0? true:false;
     };
+    auto ex1 = [](CPPara p)->CPPara{
+        float u = p.u;
+        float v = p.v;
+        float uAng = p.uAng;
+        return CPPara{0, tan(uAng)*(-1*u)+v, uAng};
+    };
     auto uAngleEdge = [pi, aangle](float u, float v)->bool {
         while(u>pi+0.5*aangle){
             u = u - 2*pi;
@@ -383,8 +389,20 @@ vector<EdgePtr> RingAssist::getEdges(){
         }
         return u> aangle? true:false;
     };
+    auto ex2 = [pi, aangle](CPPara p)->CPPara{
+        float u = p.u;
+        float v = p.v;
+        float uAng = p.uAng;
+        while(u>pi+0.5*aangle){
+            u = u - 2*pi;
+        }
+        while(u<0.5*aangle - pi){
+            u = u + 2*pi;
+        }
+        return CPPara{aangle, tan(uAng)*(aangle-1*u)+v, uAng};
+    };
     auto vEdge1 = [pi](float u, float v)->bool{
-        while(v<0.5*pi){
+        while(v<0){
             v = v+2*pi;
         }
         while(v>2*pi){
@@ -392,8 +410,20 @@ vector<EdgePtr> RingAssist::getEdges(){
         }
         return v > 1.5*pi? true:false;
     };
+    auto ex3 = [pi, aangle](CPPara p)->CPPara{
+        float u = p.u;
+        float v = p.v;
+        float uAng = p.uAng;
+        while(v<0){
+            v = v+2*pi;
+        }
+        while(v>2*pi){
+            v= v- 2*pi;
+        }
+        return CPPara{(1.5f*pi-v)*atan(uAng)+u, 1.5f*pi, uAng};
+    };
     auto vEdge2 = [pi](float u, float v)->bool{
-        while(v<0.5*pi){
+        while(v<0){
             v = v+2*pi;
         }
         while(v>2*pi){
@@ -401,9 +431,22 @@ vector<EdgePtr> RingAssist::getEdges(){
         }
         return v < 0.5*pi? true:false;
     };
+    auto ex4 = [pi, aangle](CPPara p)->CPPara{
+        float u = p.u;
+        float v = p.v;
+        float uAng = p.uAng;
+        while(v<0){
+            v = v+2*pi;
+        }
+        while(v>2*pi){
+            v= v- 2*pi;
+        }
+        return CPPara{(0.5f*pi-v)*atan(uAng)+u, 0.5f*pi, uAng};
+    };
 
     auto e1 = std::make_shared<Edge>(uZeroEdge);
     e1->Id(id+"_edge1");
+    e1->setExtend(ex1);
     vector<glm::vec3> ps1;
     for(int i =0; i<10; i++){
         float u = 0;
@@ -415,6 +458,7 @@ vector<EdgePtr> RingAssist::getEdges(){
 
     auto e2 = std::make_shared<Edge>(uAngleEdge);
     e2->Id(id+"_edge2");
+    e2->setExtend(ex2);
     vector<glm::vec3> ps2;
     for(int i =0; i<10; i++){
         float u = angle;
@@ -426,6 +470,7 @@ vector<EdgePtr> RingAssist::getEdges(){
 
     auto e3 = std::make_shared<Edge>(vEdge1);
     e3->Id(id+"_edge3");
+    e3->setExtend(ex3);
     vector<glm::vec3> ps3;
     for(int i =0; i<10; i++){
         float u = angle/9*i;
@@ -437,6 +482,7 @@ vector<EdgePtr> RingAssist::getEdges(){
 
     auto e4 = std::make_shared<Edge>(vEdge2);
     e4->Id(id+"_edge4");
+    e4->setExtend(ex4);
     vector<glm::vec3> ps4;
     for(int i =0; i<10; i++){
         float u = angle/9*i;

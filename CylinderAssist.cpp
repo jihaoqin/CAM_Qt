@@ -18,49 +18,62 @@ vector<float> CylinderAssist::local3DProjectToUV(glm::vec3 pos){
     vector<float> uv = local3DToUV(pos);
     float u = uv.at(0);
     float v = uv.at(1);
-    float un,vn;
-    while(u<0){
+    while(u<(-1*pi+0.5*angle)){
         u=u+2*pi;
     }
-    while(u>2*pi){
+    while(u>(pi+0.5*angle)){
         u=u-2*pi;
     }
 
     if(v<=0){
-        if(u<=angle){
-            un = u;
-            vn = 0;
+        if(u <= 0){
+            u = 0;
+            v = 0;
         }
-        else {
-            un = angle;
+        else if(u>0 && u<angle){
+            u = u;
+            v = 0;
+        }
+        else{
+            u = angle;
             v = 0;
         }
     }
-    else if(0<v || v<length){
-        if(u<=angle){
-            un = u;
-            vn = v;
+    else if(0<v && v<length){
+        if(u<=0){
+            u = 0;
+            v = v;
+        }
+        else if(u>0 && u<angle){
+            u = u; v =v;
         }
         else{
-            un = angle;
-            vn = v;
+            u = angle;
+            v = v;
         }
     }
     else{
-        if(u<=angle){
-            un = u;
-            vn = length;
+        if(u<=0){
+            u = 0;
+            v = length;
+        }
+        else if(u>0 && u<angle){
+            u = u;
+            v = length;
         }
         else{
-            un = angle;
-            vn = length;
+            u = angle;
+            v = length;
         }
     }
 
-    while(un > pi){
-        un = un -2*pi;
+    while(u > pi){
+        u = u -2*pi;
     }
-    return vector<float>{un, vn};
+    while(u < -1*pi){
+        u = u +2*pi;
+    }
+    return vector<float>{u, v};
 }
 
 

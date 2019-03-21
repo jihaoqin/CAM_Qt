@@ -1,3 +1,8 @@
+[x]滑线系数可变
+[X]edge添加extend功能
+[X]在查看TriEdgePlane的genCurve为什么会有折线段
+
+
 2019/02/20
 GLMemory的析构函数中的core指针变成了野指针。
 原因：在关掉MainWindow后，GLWidget的析构函数比Mesh的析构函数早执行，造成了属于GLWidget的core指针变成了野指针，所以在Mesh的析构函数中调用core->glDelete...时，提示access violation.
@@ -35,8 +40,7 @@ Ring,cylinder的西沟函数
 testPoint = glm::vec3(19.777084350585938, 3.0391998291015625, 10);
 
 2019/03/15
-[x]滑线系数可变
-[x]在move的过程中，点的meshId并没有改变
+
 
 
 用Edge去改写Ring里的判断代码，似得返回PosDir和边界
@@ -45,5 +49,16 @@ testPoint = glm::vec3(19.777084350585938, 3.0391998291015625, 10);
 在cpp文件的第一行提示语法错误：缺少“;”。是因为在.h 文件的类定义的最后一行忘了加";"，在被include 后，就在cpp 中报错了
 
 2019/03/18
-[X]检查Ring, TriEdgePlane, Cylinder中的edge初始化
-[X]检查三个Assist中Edge的命名存在否
+[checked]检查Ring, TriEdgePlane, Cylinder中的edge初始化
+[checked]检查三个Assist中Edge的命名存在否
+[checked]检查三个CurveAssist中的genCurve的返回值是否为vector<vector<PosDir>, vector<EdgePtr>>
+[checked]在Cylinder中添加intersectionPoint
+
+2019/03/19
+[checked]构造TriEdgePlanCurve
+[checked]构造CylinderCurve
+[chekced]为各个Edge添加BoundBOX
+
+2019/03/20
+[checked]在move的过程中，点的meshId并没有改变
+[checked]在Tee中构造Edge的拓扑关系

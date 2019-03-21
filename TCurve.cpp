@@ -75,7 +75,6 @@ std::pair<vector<PosDir>, vector<EdgePtr>> TCurve::genCurve(PosDir pd, float coe
     vector<EdgePtr> edges;
     EdgePtr frontEdge1 = front.second.front();
     EdgePtr frontEdge2 = front.second.back();
-    //if(tee->topoValue(frontEdge1->Id()) == edge1->Id()){
     if(sameEdge(frontEdge1, edge1)){
         for(auto i = front.first.rbegin(); i!=front.first.rend(); i++){
             pds.push_back(*i);
@@ -83,7 +82,6 @@ std::pair<vector<PosDir>, vector<EdgePtr>> TCurve::genCurve(PosDir pd, float coe
         edges.push_back(frontEdge2);
         edges.push_back(frontEdge1);
     }
-    //else if(tee->topoValue(frontEdge2->Id()) == edge1->Id()){
     else if(sameEdge(frontEdge2, edge1)){
         for(auto i = front.first.begin(); i!= front.first.end(); i++){
             pds.push_back(*i);
@@ -102,14 +100,12 @@ std::pair<vector<PosDir>, vector<EdgePtr>> TCurve::genCurve(PosDir pd, float coe
 
     EdgePtr backEdge1 = back.second.front();
     EdgePtr backEdge2 = back.second.back();
-    //if(tee->topoValue(backEdge1->Id()) == edge2->Id()){
     if(sameEdge(backEdge1, edge2)){
         for(auto i = back.first.begin(); i!=back.first.end(); i++){
             pds.push_back(*i);
         }
         edges.at(1) = backEdge2;
     }
-    //else if(tee->topoValue(backEdge2->Id()) == edge2->Id()){
     else if(sameEdge(backEdge2,edge2)){
         for(auto i = back.first.rbegin(); i!= back.first.rend(); i++){
             pds.push_back(*i);
@@ -128,8 +124,8 @@ void TCurve::updateSelf(){
     assert(point);
     QString id(point->meshId());
     glm::vec3 worldPos = point->getPos();
+    //worldPos = glm::vec3{-15.088, 5.69978, 8.7286};
     glm::vec3 worldDir;
-    //worldPos = glm::vec3{-0.875, -2.107, 9.7754};
     if(id.contains("ring")){
         Ring* r = tee->getRing(id);
         RingAssist ra(*r);

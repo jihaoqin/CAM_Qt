@@ -81,6 +81,8 @@ pair<vector<CPPara>, EdgePtr> RingCurveAssist::rungeKutta(vector<float> xspan, Y
         float uAng = y_temp.at(2);
         for(auto e:edges){
             if(e->isOut(u, v)){
+                CPPara last = e->extend(para.back());
+                para.push_back(last);
                 result = {para, e};
                 return result;
             }

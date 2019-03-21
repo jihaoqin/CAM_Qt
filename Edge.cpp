@@ -46,3 +46,11 @@ bool Edge::isOut(float u, float v){
 bool Edge::isBoundary(){
     return boundary;
 }
+
+void Edge::setExtend(std::function<CPPara (CPPara)> f){
+    e = f;
+}
+
+CPPara Edge::extend(CPPara p){
+    return e(p);
+}

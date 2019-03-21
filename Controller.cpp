@@ -260,6 +260,7 @@ void Controller::processMoveWhenMove(glm::vec3 begin, glm::vec3 dir){
                 }
                 glm::vec3 pos = pointVec.at(0).pos;
                 pointPtr->setPos(pos);
+                pointPtr->meshId(pointVec.at(0).meshName.c_str());
                 GLWidget * gl = mainWindow->connector->getGLWidget();
                 glm::vec2 p2d = gl->spatialTo2D(pos);
                 glm::vec4 viewport = gl->getGLViewport();

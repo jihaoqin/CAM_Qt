@@ -349,7 +349,7 @@ vector<HalfPoint> Tee::intersectionPoints(glm::vec3 pos, glm::vec3 dir){
             result.push_back(p);
         }
     }
-    for(auto c:cylinderVec){
+    for(auto c:pipeHalfVec){
         cylinderPoints = c.intersectionPoints(pos, dir);
         for(auto p:cylinderPoints){
             result.push_back(p);
