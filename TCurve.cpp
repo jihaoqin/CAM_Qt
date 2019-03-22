@@ -20,7 +20,6 @@ TCurve::TCurve(PointPtr p, float a, float coe, const char*c , TeePtr t)
 }
 
 std::pair<vector<PosDir>, vector<EdgePtr>> TCurve::genCurve(PosDir pd, float coe, QString meshId, QString lastMesh){
-    std::pair<vector<PosDir>,vector<EdgePtr>> front;
     std::pair<vector<PosDir>,vector<EdgePtr>> middle;
     std::pair<vector<PosDir>,vector<EdgePtr>> back;
     if(meshId.contains("ring")){
@@ -38,83 +37,30 @@ std::pair<vector<PosDir>, vector<EdgePtr>> TCurve::genCurve(PosDir pd, float coe
     else{
         assert(0);
     }
-    PosDir side1 = middle.first.front();
-    EdgePtr edge1 = middle.second.front();
     PosDir side2 = middle.first.back();
     EdgePtr edge2 = middle.second.back();
 
-    QString val1 = tee->topoValue(edge1->Id());
     QString val2 = tee->topoValue(edge2->Id());
-    if(!val1.isEmpty()){
-        int i = val1.indexOf("_");
-        QString nextMesh = val1.left(i);
-        if(nextMesh != lastMesh){
-            front = genCurve(side1, coe, nextMesh, meshId);
-        }
-        else{
-            front = pair<vector<PosDir>, vector<EdgePtr>>(PosDirVec{side1, side1}, EdgePtrVec{edge1, edge1});
-        }
-    }
-    else{
-        front = pair<vector<PosDir>, vector<EdgePtr>>(PosDirVec{side1, side1}, EdgePtrVec{edge1, edge1});
-    }
     if(!val2.isEmpty()){
         int i = val2.indexOf("_");
         QString nextMesh = val2.left(i);
-        if(nextMesh != lastMesh){
-            back = genCurve(side2, coe, nextMesh, meshId);
-        }
-        else{
-            back = pair<vector<PosDir>, vector<EdgePtr>>(PosDirVec{side2, side2}, EdgePtrVec{edge2, edge2});
-        }
+        back = genCurve(side2, coe, nextMesh, meshId);
     }
     else{
         back = pair<vector<PosDir>, vector<EdgePtr>>(PosDirVec{side2, side2}, EdgePtrVec{edge2, edge2});
     }
     vector<PosDir> pds;
     vector<EdgePtr> edges;
-    EdgePtr frontEdge1 = front.second.front();
-    EdgePtr frontEdge2 = front.second.back();
-    if(sameEdge(frontEdge1, edge1)){
-        for(auto i = front.first.rbegin(); i!=front.first.rend(); i++){
-            pds.push_back(*i);
-        }
-        edges.push_back(frontEdge2);
-        edges.push_back(frontEdge1);
-    }
-    else if(sameEdge(frontEdge2, edge1)){
-        for(auto i = front.first.begin(); i!= front.first.end(); i++){
-            pds.push_back(*i);
-        }
-        edges.push_back(frontEdge1);
-        edges.push_back(frontEdge2);
-    }
-    else{
-        assert(0);
-    }
+
     for(auto i:middle.first){
         pds.push_back(i);
     }
-    edges.at(1) = middle.second.back();
+    edges.push_back(middle.second.front());
 
-
-    EdgePtr backEdge1 = back.second.front();
-    EdgePtr backEdge2 = back.second.back();
-    if(sameEdge(backEdge1, edge2)){
-        for(auto i = back.first.begin(); i!=back.first.end(); i++){
-            pds.push_back(*i);
-        }
-        edges.at(1) = backEdge2;
+    for(auto i:back.first){
+        pds.push_back(i);
     }
-    else if(sameEdge(backEdge2,edge2)){
-        for(auto i = back.first.rbegin(); i!= back.first.rend(); i++){
-            pds.push_back(*i);
-        }
-        edges.at(1) = backEdge1;
-    }
-    else{
-        assert(0);
-    }
+    edges.push_back(back.second.back());
 
     return std::pair<vector<PosDir>, vector<EdgePtr>>{pds, edges};
 }
@@ -126,6 +72,7 @@ void TCurve::updateSelf(){
     glm::vec3 worldPos = point->getPos();
     //worldPos = glm::vec3{-15.088, 5.69978, 8.7286};
     //worldPos = glm::vec3{-12.724838256835938, 8.74078369140625, 7.5171};
+    //worldPos = glm::vec3{17.648086547851562, 9.5017, 3.8203};
     glm::vec3 worldDir;
     if(id.contains("ring")){
         Ring* r = tee->getRing(id);
@@ -157,7 +104,12 @@ void TCurve::updateSelf(){
     PosDir pd{worldPos, worldDir};
     auto posDirs = genCurve(pd, lambda, id, QString(""));
     std::vector<glm::vec3> points;
-    for(auto i:posDirs.first){
+    for(auto i = posDirs.first.rbegin(); i!=posDirs.first.rend(); i++){
+        points.push_back(i->pos);
+    }
+    PosDir pd2{worldPos, -1.0f*worldDir};
+    auto posDir2 = genCurve(pd2, lambda, id, QString(""));
+    for(auto i:posDir2.first){
         points.push_back(i.pos);
     }
     data(points);

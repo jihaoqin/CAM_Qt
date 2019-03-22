@@ -11,17 +11,12 @@ CyCurveAssist::CyCurveAssist(Cylinder& c):assist(c), anchor(c.anchor) ,zDir(c.zD
 pair<vector<CPPara>, vector<EdgePtr>> CyCurveAssist::genCurve(CPPara p, float coe){
     lambda = coe;
     auto pair1 = rungeKutta(p,"plus",coe);
-    auto pair2 = rungeKutta(p,"minus",coe);
     vector<EdgePtr> e;
+    e.push_back(nullptr);
     e.push_back(pair1.second);
-    e.push_back(pair2.second);
     vector<CPPara> paras;
     auto &para1 = pair1.first;
-    for(auto i = para1.rbegin(); i!=para1.rend(); i++){
-        paras.push_back(*i);
-    }
-    auto &para2 = pair2.first;
-    for(auto i = para2.begin(); i!=para2.end(); i++){
+    for(auto i = para1.begin(); i!=para1.end(); i++){
         paras.push_back(*i);
     }
     return pair<vector<CPPara>, vector<EdgePtr>>{paras, e};

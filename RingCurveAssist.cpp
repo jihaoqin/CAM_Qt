@@ -47,15 +47,10 @@ pair<vector<CPPara>, vector<EdgePtr>> RingCurveAssist::genCurve(CPPara p, float 
     float length = (R+r)*1000;
     vector<float> xspan1{0, length};
     auto paras1 = rungeKutta(xspan1, y0);
-    vector<float> xspan2{0, -1*length};
-    auto paras2 = rungeKutta(xspan2, y0);
-    for(auto i = paras1.first.rbegin(); i!=paras1.first.rend(); i++){
+    for(auto i = paras1.first.begin(); i!=paras1.first.end(); i++){
         paras.push_back(*i);
     }
-    for(auto i : paras2.first){
-        paras.push_back(i);
-    }
-    vector<EdgePtr> edges{paras1.second, paras2.second};
+    vector<EdgePtr> edges{nullptr, paras1.second};
     pair<vector<CPPara>, vector<EdgePtr>> result{paras, edges};
     return result;
 }
@@ -69,8 +64,9 @@ pair<vector<CPPara>, EdgePtr> RingCurveAssist::rungeKutta(vector<float> xspan, Y
     vector<CPPara> para;
     para.push_back(CPPara{y0.at(0), y0.at(1), y0.at(2)});
     float spanL = xspan.at(1)-xspan.at(0);
-    int sign = spanL>0? 1:-1;
-    float h = sign*R/30.0;
+    //int sign = spanL>0? 1:-1;
+    //float h = sign*R/30.0;
+    float h = R/30;
     //float h = sign*0.1;
     float x_last = x_begin;
     Ys y_last = Ys{y0.at(0), y0.at(1), y0.at(2)};
