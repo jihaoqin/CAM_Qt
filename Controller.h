@@ -15,7 +15,7 @@ class Camera2;
 class Controller
 {
 public:
-    friend class CurveController;
+    friend class NewCurveController;
     Controller();
     void bindMainWindow(MainWindow* m);
     BoundingBox updateBoundingBox();
@@ -44,7 +44,7 @@ public:
     void setPointPickState(QString, bool);
     void processMoveWhenMove(glm::vec3, glm::vec3);
     std::vector<HalfPoint> intersectionPointInTee(glm::vec3, glm::vec3);
-    void updateCurve(QString, float);
+    void updateCurve(QString, float, float);
 private:
     std::shared_ptr<Data> data;
     GLWidget* widget;

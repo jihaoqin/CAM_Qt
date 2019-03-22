@@ -155,7 +155,7 @@ void TCurve::updateSelf(){
         assert(0);
     }
     PosDir pd{worldPos, worldDir};
-    auto posDirs = genCurve(pd, 0.1, id, QString(""));
+    auto posDirs = genCurve(pd, lambda, id, QString(""));
     std::vector<glm::vec3> points;
     for(auto i:posDirs.first){
         points.push_back(i.pos);
@@ -165,6 +165,12 @@ void TCurve::updateSelf(){
 
 void TCurve::setWindingAngle(float angle){
     uAng = angle;
+    update();
+}
+
+void TCurve::setWindingPara(float angle, float coe){
+    uAng = angle;
+    lambda = coe;
     update();
 }
 

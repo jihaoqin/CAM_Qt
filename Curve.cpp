@@ -81,3 +81,7 @@ void Curve::initial(std::vector<glm::vec3> points){
     }
     box = BoundingBox(vertexVec);
 }
+
+void Curve::setWindingPara(float angle, float coe){
+    assert(0);
+}

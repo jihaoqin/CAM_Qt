@@ -66,6 +66,14 @@ GLWidget* GuiConnector::getGLWidget(){
 }
 
 
-void GuiConnector::updateCurve(QString id, float angle){
-    mainWindow->ctrl->updateCurve(id, angle);
+void GuiConnector::updateCurve(QString id, float angle, float coe){
+    mainWindow->ctrl->updateCurve(id, angle, coe);
+}
+
+Controller* GuiConnector::getCtrl(){
+    return mainWindow->ctrl;
+}
+
+void GuiConnector::updateAction(){
+    mainWindow->updateAction();
 }

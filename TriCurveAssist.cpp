@@ -9,11 +9,12 @@ TriCurveAssist::TriCurveAssist(TriEdgePlane& plane)
 
 
 std::pair<vector<PosDir>, vector<EdgePtr>> TriCurveAssist::genCurve(glm::vec3 pos, glm::vec3 dir, float coe){
+    lambda = coe;
     glm::vec3 localPos = assist.world3DToLocal(pos, "pos");
     glm::vec3 localDir = assist.world3DToLocal(dir, "dir");
     CPPara para = assist.local3DProjectToPara(localPos, localDir);
     //para = CPPara{-12.934589f, 0.0f, 2.242562f};
-    auto result = genCurve(para);
+    auto result = genCurve(para, lambda);
     auto paras = result.first;
     vector<PosDir> pds;
     for(auto i:paras){
@@ -26,12 +27,13 @@ std::pair<vector<PosDir>, vector<EdgePtr>> TriCurveAssist::genCurve(glm::vec3 po
 }
 
 std::pair<vector<PosDir>, vector<EdgePtr>> TriCurveAssist::genCurve(glm::vec3 pos, float uAng, float coe){
+    lambda = coe;
     glm::vec3 localPos = assist.world3DToLocal(pos, "pos");
     vector<float> uv = assist.local3DProjectToUV(localPos);
     float u = uv.at(0);
     float v = uv.at(1);
     CPPara para{u, v, uAng};
-    auto result = genCurve(para);
+    auto result = genCurve(para, lambda);
     auto paras = result.first;
     vector<PosDir> pds;
     for(auto i:paras){
@@ -43,7 +45,8 @@ std::pair<vector<PosDir>, vector<EdgePtr>> TriCurveAssist::genCurve(glm::vec3 po
     return std::pair<vector<PosDir>, vector<EdgePtr>>{pds, result.second};
 }
 
- std::pair<std::vector<CPPara>, vector<EdgePtr>> TriCurveAssist::genCurve(CPPara p){
+ std::pair<std::vector<CPPara>, vector<EdgePtr>> TriCurveAssist::genCurve(CPPara p, float coe){
+     lambda = coe;
     float pi = asin(1)*2;
     float u = p.u;
     float v = p.v;

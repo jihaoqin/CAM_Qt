@@ -22,6 +22,7 @@ private:
     pair<vector<CPPara>, EdgePtr> rungeKutta(CPPara p, QString s, float coe);
     CPPara evalNext(float s, CPPara p, float coe, float h);
     vector<float> ringDiff(float s, vector<float> y0, float coe);
+    float lambda;
     glm::vec3 anchor;
     glm::vec3 zDir;
     glm::vec3 xDir;

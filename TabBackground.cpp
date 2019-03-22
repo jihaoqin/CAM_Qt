@@ -20,16 +20,15 @@ void TabBackground::mousePressEvent(QMouseEvent *event){
 }
 
 void TabBackground::setWidget(QWidget *w){
-    if(center){
+    if(w){
         layout->removeWidget(center);
-        delete center;
-        center = nullptr;
+        center = w;
+        layout->addWidget(center);
     }
     else{
-        //do nothing
+        layout->removeWidget(center);
+        center = nullptr;
     }
-    center = w;
-    layout->addWidget(center);
 }
 
 bool TabBackground::isSet(){

@@ -9,6 +9,7 @@ CyCurveAssist::CyCurveAssist(Cylinder& c):assist(c), anchor(c.anchor) ,zDir(c.zD
 
 
 pair<vector<CPPara>, vector<EdgePtr>> CyCurveAssist::genCurve(CPPara p, float coe){
+    lambda = coe;
     auto pair1 = rungeKutta(p,"plus",coe);
     auto pair2 = rungeKutta(p,"minus",coe);
     vector<EdgePtr> e;
@@ -78,6 +79,7 @@ vector<float> CyCurveAssist::ringDiff(float s, vector<float> y0, float coe){
 }
 
 pair<vector<PosDir>, vector<EdgePtr>> CyCurveAssist::genCurve(glm::vec3 pos, glm::vec3 dir, float coe){
+    lambda = coe;
     glm::vec3 localPos = assist.world3DToLocal(pos, "pos");
     glm::vec3 localDir = assist.world3DToLocal(dir, "dir");
     CPPara para = assist.local3DProjectToPara(localPos, localDir);
@@ -91,6 +93,7 @@ pair<vector<PosDir>, vector<EdgePtr>> CyCurveAssist::genCurve(glm::vec3 pos, glm
 }
 
 pair<vector<PosDir>, vector<EdgePtr>> CyCurveAssist::genCurve(glm::vec3 pos, float uAng, float coe){
+    lambda = coe;
     glm::vec3 localPos = assist.world3DToLocal(pos, "pos");
     CPPara para = assist.local3DProjectToPara(localPos, glm::vec3{0,0,1});
     para.uAng = uAng;

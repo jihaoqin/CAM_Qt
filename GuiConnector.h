@@ -6,6 +6,7 @@ class MainWindow;
 class GLProgram;
 class NewCurveTab;
 class GLWidget;
+class Controller;
 
 class GuiConnector
 {
@@ -13,13 +14,15 @@ public:
     GuiConnector();
     void setRoot(MainWindow*);
     void setGLWidgetClickable(bool);
-    void updateCurve(QString, float);
+    void updateCurve(QString, float, float);
+    void updateAction();
     NewCurveTab* getNewCurveTabWidget();
     std::shared_ptr<GLProgram> getMeshProgram();
     std::shared_ptr<GLProgram> getPointProgram();
     QString getPointText();
     void setPointText(QString);
     GLWidget* getGLWidget();
+    Controller* getCtrl();
 
 private:
     MainWindow* mainWindow;

@@ -19,6 +19,7 @@ public:
     void data(std::vector<glm::vec3>);
     virtual void bindGL(QOpenGLContext*) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;
+    virtual void setWindingPara(float angle, float coe);
     virtual void setWindingAngle(float angle) = 0;
     Type type;
 private:

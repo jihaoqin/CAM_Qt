@@ -336,7 +336,7 @@ QString Controller::addCurve(QString pId, float uAng){
     */
 }
 
-void Controller::updateCurve(QString id, float angle){
+void Controller::updateCurve(QString id, float angle, float coe){
     DataObjectPtr ptr = data->root->findObjectId(id.toLatin1().data());
     assert(ptr);
     QString ptrId = QString(ptr->getId());
@@ -344,5 +344,5 @@ void Controller::updateCurve(QString id, float angle){
         return;
     }
     auto curve = std::dynamic_pointer_cast<Curve>(ptr);
-    curve->setWindingAngle(angle);
+    curve->setWindingPara(angle, coe);
 }

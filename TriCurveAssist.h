@@ -12,8 +12,9 @@ public:
     std::pair<vector<PosDir>, vector<EdgePtr>> genCurve(glm::vec3 pos, glm::vec3 dir, float coe);
     std::pair<vector<PosDir>, vector<EdgePtr>> genCurve(glm::vec3 pos, float uAng, float coe);
 private:
-    std::pair<vector<CPPara>, vector<EdgePtr>> genCurve(CPPara);
+    std::pair<vector<CPPara>, vector<EdgePtr>> genCurve(CPPara, float);
     float R;
+    float lambda;
     glm::vec3 uDir;
     glm::vec3 anchor;
     glm::vec3 norm;

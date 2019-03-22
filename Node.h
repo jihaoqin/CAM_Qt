@@ -29,6 +29,7 @@ public:
     Node* fatherPtr();
     std::vector<NodePtr> childrenPtrVec();
     void deleteChild(NodePtr child);
+    void deleteChild(const char* c);
     void addChild(NodePtr child);
     DataObjectPtr getData();
     const char* Id();

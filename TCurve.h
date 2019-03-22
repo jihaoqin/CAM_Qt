@@ -17,8 +17,9 @@ class TCurve:public Curve
 public:
     TCurve(PointPtr, float, float , const char*, TeePtr);
     void updateSelf() override;
-private:
     void setWindingAngle(float angle) override;
+    void setWindingPara(float angle, float coe) override;
+private:
     std::pair<vector<PosDir>, vector<EdgePtr>> genCurve(PosDir pd, float coe, QString meshId, QString lastMesh);
     bool sameEdge(EdgePtr, EdgePtr);
     std::map<QString, QString> topo;

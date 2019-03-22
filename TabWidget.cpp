@@ -24,6 +24,7 @@ void TabWidget::showNewCurveTab(){
     NewCurveTab* newCurve = new NewCurveTab(this);
     newCurve->setConnector(connector);
     operation->setWidget(newCurve);
+    newCurve->setTabBack(operation);
     setCurrentIndex(1);
 }
 

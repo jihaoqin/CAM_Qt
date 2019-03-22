@@ -20,6 +20,7 @@ class Data
 {
 public:
     friend class Controller;
+    friend class NewCurveController;
 public:
     Data();
     void addTee(std::shared_ptr<Tee>);

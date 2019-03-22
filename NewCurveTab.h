@@ -8,23 +8,28 @@ class QGroupBox;
 class QPushButton;
 class GuiConnector;
 class QSpinBox;
+class QDoubleSpinBox;
+class TabBackground;
 
 class NewCurveTab:public QWidget
 {
     Q_OBJECT
 
 public:
+    friend class GuiConnector;
     NewCurveTab(QWidget* parent = nullptr);
     virtual ~NewCurveTab();
     void setConnector(GuiConnector*);
+    void setTabBack(TabBackground*);
     QString getPointText();
     void setPointText(QString);
     void setCurveId(QString);
     int getWindingAngle();
     bool isPointTextFocused();
-    friend class GuiConnector;
 public slots:
-    void updateCurve(int);
+    void updateCurve();
+    void okPressed();
+    void canclePressed();
 protected:
     virtual bool eventFilter(QObject* target, QEvent* event) override;
 private:
@@ -36,12 +41,15 @@ private:
     QLabel* dirLabel;
     QSpinBox* dirSpinBox;
     QSlider* dirSlider;
+    QLabel* lamLabel;
+    QDoubleSpinBox* lamSpinBox;
 
     QPushButton* ok;
     QPushButton* cancle;
 
 
     GuiConnector* connector;
+    TabBackground* back;
 
     bool focusOnPoint;
     QString curveId;

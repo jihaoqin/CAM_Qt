@@ -17,7 +17,7 @@ public:
 private:
     vector<float> ringDiff(float s, vector<float> y0);
     typedef vector<float> Ys;
-    pair<vector<CPPara>, vector<EdgePtr>> genCurve(CPPara);
+    pair<vector<CPPara>, vector<EdgePtr>> genCurve(CPPara, float);
     pair<vector<CPPara>, EdgePtr> rungeKutta(vector<float> xspan, Ys y0);
     void initial(Ring&);
     vector<float> evalNextRunge(float x, vector<float> y0, float h);

@@ -41,6 +41,10 @@ void Node::deleteChild(NodePtr child){
     }
 }
 
+void Node::deleteChild(const char* c){
+
+}
+
 void Node::addChild(NodePtr child){
     child->setFather(this);
     children.push_back(child);

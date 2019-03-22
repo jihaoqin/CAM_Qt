@@ -34,7 +34,7 @@ void RingCurveAssist::initial(Ring &ring){
 
 
 
-pair<vector<CPPara>, vector<EdgePtr>> RingCurveAssist::genCurve(CPPara p){
+pair<vector<CPPara>, vector<EdgePtr>> RingCurveAssist::genCurve(CPPara p, float coe){
     vector<CPPara> paras;
     float u = p.u;
     float v = p.v;
@@ -116,7 +116,7 @@ vector<float> RingCurveAssist::evalNextRunge(float x, vector<float> y0, float h)
     glm::vec3 localPos = assist.world3DToLocal(pos, "pos");
     glm::vec3 localDir = assist.world3DToLocal(dir, "dir");
     CPPara p1 = assist.local3DProjectToPara(localPos, localDir);
-    auto paras = genCurve(p1);
+    auto paras = genCurve(p1, coe);
     vector<PosDir> pdVec;
     for(auto i:paras.first){
         auto localPd = assist.CPParaToLocal(i);
@@ -133,7 +133,7 @@ vector<float> RingCurveAssist::evalNextRunge(float x, vector<float> y0, float h)
     glm::vec3 localPos = assist.world3DToLocal(pos, "pos");
     auto uv = assist.local3DProjectToUV(localPos);
     CPPara para{uv.at(0), uv.at(1), uAng};
-    auto paras = genCurve(para);
+    auto paras = genCurve(para, coe);
     vector<PosDir> pdVec;
     for(auto i:paras.first){
         auto localPd = assist.CPParaToLocal(i);
