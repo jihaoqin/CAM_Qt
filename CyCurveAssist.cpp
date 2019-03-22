@@ -24,7 +24,7 @@ pair<vector<CPPara>, vector<EdgePtr>> CyCurveAssist::genCurve(CPPara p, float co
 
 pair<vector<CPPara>, EdgePtr> CyCurveAssist::rungeKutta(CPPara p, QString s, float coe){
     int sign = s.contains("plus")? 1:-1;
-    float h = sign*length/100.0;
+    float h = sign*0.1;
     float s_last;
     CPPara p_last;
     p_last = p;

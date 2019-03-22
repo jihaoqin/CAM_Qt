@@ -10,7 +10,7 @@
 
 class Edge;
 using EdgePtr = std::shared_ptr<Edge>;
-
+using EdgePtrVec = std::vector<EdgePtr>;
 class Edge
 {
 public:

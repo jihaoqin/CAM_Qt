@@ -64,10 +64,7 @@ pair<vector<CPPara>, EdgePtr> RingCurveAssist::rungeKutta(vector<float> xspan, Y
     vector<CPPara> para;
     para.push_back(CPPara{y0.at(0), y0.at(1), y0.at(2)});
     float spanL = xspan.at(1)-xspan.at(0);
-    //int sign = spanL>0? 1:-1;
-    //float h = sign*R/30.0;
-    float h = R/30;
-    //float h = sign*0.1;
+    float h = 0.1;
     float x_last = x_begin;
     Ys y_last = Ys{y0.at(0), y0.at(1), y0.at(2)};
     while(true){
@@ -123,8 +120,6 @@ vector<float> RingCurveAssist::evalNextRunge(float x, vector<float> y0, float h)
     return  pair<std::vector<PosDir>, vector<EdgePtr>>{pdVec, paras.second};
 }
   pair<std::vector<PosDir>, vector<EdgePtr>> RingCurveAssist::genCurve(glm::vec3 pos, float uAng, float coe){
-    //pos = glm::vec3{11.66718, 14.389130, -0.95986};
-    //pos = glm::vec3{10.0826, 12.8678,-6.27725}; uAng = 80.0*3.1415926/180;
     lambda = coe;
     glm::vec3 localPos = assist.world3DToLocal(pos, "pos");
     auto uv = assist.local3DProjectToUV(localPos);

@@ -30,4 +30,5 @@ private:
     std::string meshName;
 };
 
+using PointPtr = std::shared_ptr<Point>;
 #endif // POINT_H
