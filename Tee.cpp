@@ -451,3 +451,46 @@ QString Tee::topoValue(QString key){
     }
     return topo[key];
 }
+
+QString Tee::allTopoValue(QString key){
+    auto topo = allEdgeTopo();
+    if(topo.find(key) == topo.end()){
+        assert(0);
+    }
+    return topo[key];
+}
+
+std::map<QString, QString> Tee::allEdgeTopo(){
+    vector<EdgePtr> edges;
+    for(auto &i:cylinderVec){
+        for(auto &ii:i.getEdges()) {
+            edges.push_back(ii);
+        }
+    }
+
+    for(auto &i:ringVec){
+        for(auto &ii:i.getEdges()) {
+            edges.push_back(ii);
+        }
+    }
+    for(auto &i:triEdgePlaneVec){
+        for(auto &ii:i.getEdges()) {
+            edges.push_back(ii);
+        }
+    }
+    std::map<QString, QString> topo;
+    for(auto& i:edges){
+        topo[i->Id()] = QString("");
+    }
+    for(auto& i:edges){
+        for(auto &ii:edges){
+            if(glm::length(i->center() - ii->center()) < 1){
+                if(i->Id() != ii->Id()){
+                    topo[i->Id()] = ii->Id();
+                    topo[ii->Id()] = i->Id();
+                }
+            }
+        }
+    }
+    return topo;
+}

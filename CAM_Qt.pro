@@ -79,7 +79,8 @@ SOURCES += \
     TriEdgePlaneCurve.cpp \
     CylinderCurve.cpp \
     NewCurveController.cpp \
-    TCurveAssist.cpp
+    TCurveAssist.cpp \
+    TeeCurveAssist.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -139,7 +140,8 @@ HEADERS += \
     TriEdgePlaneCurve.h \
     CylinderCurve.h \
     NewCurveController.h \
-    TCurveAssist.h
+    TCurveAssist.h \
+    TeeCurveAssist.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt
@@ -159,7 +161,7 @@ DISTFILES += \
 
 
 # BOOST lib configuration
-DEFINES += LAB
+DEFINES += ROOM
 if(contains(DEFINES, ROOM)){
         BOOST_ROOT = F:\boost_1_69_0
 }else{

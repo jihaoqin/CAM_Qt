@@ -6,23 +6,23 @@
 #include "PosDir.h"
 #include "CPPara.h"
 #include <utility>
+#include "Edge.h"
 using std::pair;
-
+using std::tuple;
 class RingCurveAssist
 {
 public:
     RingCurveAssist(Ring& ring);
     pair<std::vector<PosDir>, vector<EdgePtr>> genCurve(glm::vec3 pos, glm::vec3 dir, float coe);
+    tuple<PosDirVec,EdgePtrVec, float> genCurve(glm::vec3 pos, glm::vec3 dir, float coe, float length);
     pair<std::vector<PosDir>, vector<EdgePtr>> genCurve(glm::vec3 pos, float uAng, float coe);
 private:
-    vector<float> ringDiff(float s, vector<float> y0);
-    typedef vector<float> Ys;
+    vector<float> ringDiff(float s, vector<float> y0, float coe);
     pair<vector<CPPara>, vector<EdgePtr>> genCurve(CPPara, float);
-    pair<vector<CPPara>, EdgePtr> rungeKutta(vector<float> xspan, Ys y0);
+    tuple<vector<CPPara>, EdgePtr, float> rungeKutta(vector<float> xspan, CPPara y0, float lam);
     void initial(Ring&);
-    vector<float> evalNextRunge(float x, vector<float> y0, float h);
+    vector<float> evalNextRunge(float x, CPPara p0, float h, float coe);
 
-    double lambda;
     RingAssist assist;
     double R;
     double r;
