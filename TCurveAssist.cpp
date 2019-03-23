@@ -115,16 +115,3 @@ bool TCurveAssist::sameEdge(EdgePtr p1, EdgePtr p2){
         return false;
     }
 }
-
-PosDir TCurveAssist::genCurve(PosDir pd, QString meshId, float length){
-    auto pdTuple = genCurve(pd, 0, meshId);
-    auto pds = get<0>(pdTuple);
-    float sum = 0;
-    unsigned int i =0;
-    unsigned int num = pds.size();
-    while(sum < length && i<num - 1){
-        float l = glm::length(pds.at(i).pos - pds.at(i+1).pos);
-        sum = sum + l;
-    }
-    return pds.at(i+1);
-}

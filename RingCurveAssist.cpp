@@ -63,7 +63,7 @@ tuple<vector<CPPara>, EdgePtr, float> RingCurveAssist::rungeKutta(vector<float> 
     vector<CPPara> para;
     para.push_back(p0);
     float spanL = xspan.at(1)-xspan.at(0);
-    unsigned int sign = spanL>0?1:-1;
+    int sign = spanL>0?1:-1;
     float h = sign*0.1;
     float x_last = xspan.at(0);
     CPPara y_last{p0.u, p0.v, p0.uAng};
@@ -142,16 +142,23 @@ tuple<std::vector<PosDir>, vector<EdgePtr>, float> RingCurveAssist::genCurve(glm
 
 
   float RingCurveAssist::length3D(CPPara p1, CPPara p2){
+      float pi = asin(1)*2;
       float du = p2.u - p1.u;
       float dv = p2.v - p1.v;
+      while(dv>pi){
+          dv = dv -2*pi;
+      }
+      while(dv<-1*pi){
+          dv = dv+2*pi;
+      }
       float E1 = pow(R+r*cos(p1.v), 2);
       float F1 = 0;
       float G1 = pow(r, 2);
       float E2 = pow(R+r*cos(p2.v), 2);
       float F2 = 0;
       float G2 = pow(r, 2);
-      float ds1 = sqrt(E1*du*du + F1*du*dv + G1*du*dv);
-      float ds2 = sqrt(E2*du*du + F2*du*dv + G2*du*dv);
-      float ds = (ds1+ds2)/2;
-      return ds;
+      float ds1 = sqrt(E1*du*du + F1*du*dv + G1*dv*dv);
+      float ds2 = sqrt(E2*du*du + F2*du*dv + G2*dv*dv);
+      //float ds = (ds1+ds2)/2;
+      return ds1;
   }

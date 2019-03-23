@@ -20,18 +20,27 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdG
                     glm::vec3(pipeR+sideR, pipeR+sideR,0), glm::vec3(0,0,1), glm::vec3(-1,0,0));
     ringVec.push_back(ringLeft);
     ringVec.push_back(ringRight);
-    Cylinder branch(g.getCylinderId(), glm::vec3(0, pipeR + sideR, 0),
-                    glm::vec3(0, lengthBranch, 0), pipeR, 2*pi, glm::vec3{0,0,1});
-    Cylinder mainPipeLeft(g.getCylinderId(), glm::vec3(-1*(pipeR+sideR), 0, 0),
-                      glm::vec3(lengthMain/-2, 0, 0), pipeR, 2*pi, glm::vec3{0,0,1});
+    Cylinder branch1(g.getCylinderId(), glm::vec3(0, pipeR + sideR, 0),
+                    glm::vec3(0, lengthBranch, 0), pipeR, pi, glm::vec3{0,0,1});
+    Cylinder branch2(g.getCylinderId(), glm::vec3(0, pipeR + sideR, 0),
+                    glm::vec3(0, lengthBranch, 0), pipeR, pi, glm::vec3{0,0,-1});
+    Cylinder mainPipeLeft1(g.getCylinderId(), glm::vec3(-1*(pipeR+sideR), 0, 0),
+                      glm::vec3(lengthMain/-2, 0, 0), pipeR, pi, glm::vec3{0,0,1});
+    Cylinder mainPipeLeft2(g.getCylinderId(), glm::vec3(-1*(pipeR+sideR), 0, 0),
+                      glm::vec3(lengthMain/-2, 0, 0), pipeR, pi, glm::vec3{0,0,-1});
     Cylinder pipeHalf(g.getCylinderId(), glm::vec3(-1*(pipeR+sideR),0,0),
                       glm::vec3{pipeR+sideR, 0, 0}, pipeR, pi, glm::vec3{0,0,1});
-    Cylinder mainPipeRight(g.getCylinderId(), glm::vec3(pipeR+sideR, 0, 0),
-                      glm::vec3(lengthMain/2, 0, 0), pipeR, 2*pi, glm::vec3{0,0,1});
-    cylinderVec.push_back(branch);
-    cylinderVec.push_back(mainPipeLeft);
+    Cylinder mainPipeRight1(g.getCylinderId(), glm::vec3(pipeR+sideR, 0, 0),
+                      glm::vec3(lengthMain/2, 0, 0), pipeR, pi, glm::vec3{0,0,1});
+    Cylinder mainPipeRight2(g.getCylinderId(), glm::vec3(pipeR+sideR, 0, 0),
+                      glm::vec3(lengthMain/2, 0, 0), pipeR, pi, glm::vec3{0,0,-1});
+    cylinderVec.push_back(branch1);
+    cylinderVec.push_back(branch2);
+    cylinderVec.push_back(mainPipeLeft1);
+    cylinderVec.push_back(mainPipeLeft2);
     cylinderVec.push_back(pipeHalf);
-    cylinderVec.push_back(mainPipeRight);
+    cylinderVec.push_back(mainPipeRight1);
+    cylinderVec.push_back(mainPipeRight2);
     pipeHalfVec.push_back(pipeHalf);
     planeVec.push_back(up);
     planeVec.push_back(left);

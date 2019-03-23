@@ -10,12 +10,14 @@ class Tee;
 using TeePtr = std::shared_ptr<Tee>;
 using std::tuple;
 using QStringVec = std::vector<QString>;
+using Pos = glm::vec3;
 
 class TeeCurveAssist
 {
 public:
     TeeCurveAssist(TeePtr);
-    tuple<PosDirVec, QStringVec, EdgePtrVec> genCurve(PosDir p, float coe, QString meshId, float length);
+    tuple<PosDirVec, QStringVec, EdgePtrVec, float> genCurve(PosDir p, float coe, QString meshId, float length);
+    tuple<PosDirVec, QStringVec, EdgePtrVec, float> genCurve(Pos p, float uAng, float coe, QString meshId, float length);
 private:
     TeePtr tee;
 };

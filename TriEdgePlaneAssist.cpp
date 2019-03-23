@@ -169,8 +169,10 @@ vector<EdgePtr> TriEdgePlaneAssist::getEdges(){
         float A = pow(p2.u - p1.u, 2) + pow(p2.v - p1.v,2);
         float B = 2*p1.u*(p2.u - p1.u) + 2*p1.v*(p2.v - p1.v);
         float C = pow(p1.u, 2) + pow(p1.v, 2) - R*R;
-        float lam = (-B-sqrt(B*B-4*A*C))/(2*A);
-        assert(lam<=1&&lam>=-1e-3);
+        float lam1 = (-B-sqrt(B*B-4*A*C))/(2*A);
+        float lam2 = (-B+sqrt(B*B-4*A*C))/(2*A);
+        float lam = abs(lam1)<abs(lam2)? lam1:lam2;
+        assert(lam<=1&&abs(lam)>=-1e-3);
         return CPPara{(1-lam)*p1.u+lam*p2.u + R, (1-lam)*p1.v+lam*p2.v + R, p1.uAng};
     };
     auto arc2 = [r, pi](float u, float v)->bool{
@@ -192,8 +194,10 @@ vector<EdgePtr> TriEdgePlaneAssist::getEdges(){
         float A = pow(p2.u - p1.u, 2) + pow(p2.v - p1.v,2);
         float B = 2*p1.u*(p2.u - p1.u) + 2*p1.v*(p2.v - p1.v);
         float C = pow(p1.u, 2) + pow(p1.v, 2) - r*r;
-        float lam = (-B-sqrt(B*B-4*A*C))/(2*A);
-        assert(lam<=1&&lam>=-1e-3);
+        float lam1 = (-B-sqrt(B*B-4*A*C))/(2*A);
+        float lam2 = (-B+sqrt(B*B-4*A*C))/(2*A);
+        float lam = abs(lam1)<abs(lam2)? lam1:lam2;
+        assert(lam<=1&&abs(lam)>=-1e-3);
         return CPPara{(1-lam)*p1.u+lam*p2.u - r, (1-lam)*p1.v+lam*p2.v + r, p1.uAng};
     };
     auto line = [](float u, float v)->bool{
