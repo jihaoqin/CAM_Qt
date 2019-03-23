@@ -25,12 +25,14 @@ void TCurve::updateSelf(){
     QString id(point->meshId());
     glm::vec3 worldPos = point->getPos();
     auto posDir1 = assist.genCurve(worldPos, uAng, lambda, id);
+    PosDirVec pd1 = get<0>(posDir1);
     std::vector<glm::vec3> points;
-    for(auto i = posDir1.first.rbegin(); i!=posDir1.first.rend(); i++){
+    for(auto i = pd1.rbegin(); i!=pd1.rend(); i++){
         points.push_back(i->pos);
     }
     auto posDir2 = assist.genCurve(worldPos, uAng+pi, lambda, id);
-    for(auto i:posDir2.first){
+    PosDirVec pd2 = get<0>(posDir2);
+    for(auto i:pd2){
         points.push_back(i.pos);
     }
     data(points);

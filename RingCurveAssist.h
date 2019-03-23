@@ -13,15 +13,15 @@ class RingCurveAssist
 {
 public:
     RingCurveAssist(Ring& ring);
-    pair<std::vector<PosDir>, vector<EdgePtr>> genCurve(glm::vec3 pos, glm::vec3 dir, float coe);
-    tuple<PosDirVec,EdgePtrVec, float> genCurve(glm::vec3 pos, glm::vec3 dir, float coe, float length);
-    pair<std::vector<PosDir>, vector<EdgePtr>> genCurve(glm::vec3 pos, float uAng, float coe);
+    tuple<std::vector<PosDir>, vector<EdgePtr>, float> genCurve(glm::vec3 pos, glm::vec3 dir, float coe, float length = 1e4);
+    tuple<std::vector<PosDir>, vector<EdgePtr>, float> genCurve(glm::vec3 pos, float uAng, float coe, float length = 1e6);
 private:
+    float length3D(CPPara, CPPara);
     vector<float> ringDiff(float s, vector<float> y0, float coe);
-    pair<vector<CPPara>, vector<EdgePtr>> genCurve(CPPara, float);
+    tuple<vector<CPPara>, vector<EdgePtr>, float> genCurve(CPPara, float, float length);
     tuple<vector<CPPara>, EdgePtr, float> rungeKutta(vector<float> xspan, CPPara y0, float lam);
     void initial(Ring&);
-    vector<float> evalNextRunge(float x, CPPara p0, float h, float coe);
+    CPPara evalNextRunge(float x, CPPara p0, float h, float coe);
 
     RingAssist assist;
     double R;

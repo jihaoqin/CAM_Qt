@@ -49,7 +49,7 @@ std::tuple<PosDirVec, QStringVec, EdgePtrVec> TCurveAssist::genCurve(Pos p, floa
 }
 
 std::tuple<PosDirVec, QStringVec, EdgePtrVec> TCurveAssist::genCurve(PosDir pd, float coe, QString meshId){
-    std::pair<vector<PosDir>,vector<EdgePtr>> middle;
+    tuple<vector<PosDir>,vector<EdgePtr>, float> middle;
     if(meshId.contains("ring")){
         RingCurveAssist assist(*(tee->getRing(meshId)));
         middle = assist.genCurve(pd.pos, pd.dir, coe);
@@ -65,8 +65,10 @@ std::tuple<PosDirVec, QStringVec, EdgePtrVec> TCurveAssist::genCurve(PosDir pd, 
     else{
         assert(0);
     }
-    PosDir side2 = middle.first.back();
-    EdgePtr edge2 = middle.second.back();
+    PosDirVec& middlePds = get<0>(middle);
+    EdgePtrVec& middleEdges = get<1>(middle);
+    PosDir side2 = middlePds.back();
+    EdgePtr edge2 = middleEdges.back();
 
     QString val2 = tee->topoValue(edge2->Id());
     QString nextMesh;
@@ -85,11 +87,11 @@ std::tuple<PosDirVec, QStringVec, EdgePtrVec> TCurveAssist::genCurve(PosDir pd, 
     vector<EdgePtr> edges;
     QStringVec strs;
 
-    for(auto &i:middle.first){
+    for(auto &i:middlePds){
         pds.push_back(i);
         strs.push_back(meshId);
     }
-    edges.push_back(middle.second.front());
+    edges.push_back(middleEdges.front());
 
     PosDirVec &pd2 = get<0>(backTuple);
     QStringVec &str2 = get<1>(backTuple);

@@ -19,7 +19,7 @@ void RingCurve::updateSelf(){
     glm::vec3 pos = point->getPos();
     auto posDirs = assist.genCurve(pos, uAng, lambda);
     std::vector<glm::vec3> points;
-    for(auto i:posDirs.first){
+    for(auto i:std::get<0>(posDirs)){
         points.push_back(i.pos);
     }
     data(points);

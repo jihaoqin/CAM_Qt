@@ -10,13 +10,13 @@ TriEdgePlaneCurve::TriEdgePlaneCurve(PointPtr p, float uAng_, float coe, const c
 void TriEdgePlaneCurve::updateSelf(){
     assert(point);
     QString id(point->meshId());
-    if(!id.contains("triEdgePlane")){
+    if(!id.contains("plane")){
         assert(0);
     }
     glm::vec3 pos = point->getPos();
     auto posDirs = assist.genCurve(pos, uAng, lambda);
     std::vector<glm::vec3> points;
-    for(auto i:posDirs.first){
+    for(auto i:std::get<0>(posDirs)){
         points.push_back(i.pos);
     }
     data(points);

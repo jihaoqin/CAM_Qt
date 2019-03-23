@@ -1,5 +1,6 @@
 #include "CyCurveAssist.h"
 #include "numpy.h"
+using namespace std;
 
 CyCurveAssist::CyCurveAssist(Cylinder& c):assist(c), anchor(c.anchor) ,zDir(c.zDir), xDir(c.xDir),
     length(c.length), R(c.R), angle(c.angle), edges(c.edges)
@@ -8,22 +9,22 @@ CyCurveAssist::CyCurveAssist(Cylinder& c):assist(c), anchor(c.anchor) ,zDir(c.zD
 }
 
 
-pair<vector<CPPara>, vector<EdgePtr>> CyCurveAssist::genCurve(CPPara p, float coe){
+tuple<vector<CPPara>, vector<EdgePtr>, float> CyCurveAssist::genCurve(CPPara p, float coe, float l){
     lambda = coe;
-    auto pair1 = rungeKutta(p,"plus",coe);
+    auto tuple1 = rungeKutta(l, p,coe);
     vector<EdgePtr> e;
     e.push_back(nullptr);
-    e.push_back(pair1.second);
+    e.push_back(get<1>(tuple1));
     vector<CPPara> paras;
-    auto &para1 = pair1.first;
+    auto &para1 = get<0>(tuple1);
     for(auto i = para1.begin(); i!=para1.end(); i++){
         paras.push_back(*i);
     }
-    return pair<vector<CPPara>, vector<EdgePtr>>{paras, e};
+    return tuple<CPParaVec, EdgePtrVec, float>{paras, e, get<2>(tuple1)};
 }
 
-pair<vector<CPPara>, EdgePtr> CyCurveAssist::rungeKutta(CPPara p, QString s, float coe){
-    int sign = s.contains("plus")? 1:-1;
+tuple<CPParaVec, EdgePtr, float> CyCurveAssist::rungeKutta(float sSpan, CPPara p,  float coe){
+    int sign = sSpan>0? 1:-1;
     float h = sign*0.1;
     float s_last;
     CPPara p_last;
@@ -32,20 +33,28 @@ pair<vector<CPPara>, EdgePtr> CyCurveAssist::rungeKutta(CPPara p, QString s, flo
     EdgePtr side;
     vector<CPPara> paras;
     paras.push_back(p);
-    while(1){
+    float l = 0;
+    float allLength = abs(sSpan);
+    while(l<allLength){
         CPPara next = evalNext(s_last, p_last, coe, h);
-        //qDebug()<<"v = "<<next.v;
         for(auto e:edges){
             if(e->isOut(next.u, next.v)){
                 CPPara m = e->extend(paras.back(), next);
+                float lastL = length3D(paras.back(), next);
+                l = l + lastL;
                 paras.push_back(m);
-                return pair<vector<CPPara>, EdgePtr>{paras, e};
+                return tuple<vector<CPPara>, EdgePtr, float>{paras, e, sign*(allLength - l)};
             }
+        }
+        l = l + abs(h);
+        if(allLength - l < abs(h)){
+            h = sign*(allLength - l);
         }
         paras.push_back(next);
         s_last = s_last + h;
         p_last = next;
     }
+    return tuple<CPParaVec, EdgePtr, float>{paras, nullptr, 0};
 }
 
 CPPara CyCurveAssist::evalNext(float x, CPPara p, float coe, float h){
@@ -73,30 +82,36 @@ vector<float> CyCurveAssist::ringDiff(float s, vector<float> y0, float coe){
     return vector<float>{un, vn, uAngn};
 }
 
-pair<vector<PosDir>, vector<EdgePtr>> CyCurveAssist::genCurve(glm::vec3 pos, glm::vec3 dir, float coe){
+tuple<vector<PosDir>, vector<EdgePtr>, float> CyCurveAssist::genCurve(glm::vec3 pos, glm::vec3 dir, float coe, float l){
     lambda = coe;
     glm::vec3 localPos = assist.world3DToLocal(pos, "pos");
     glm::vec3 localDir = assist.world3DToLocal(dir, "dir");
     CPPara para = assist.local3DProjectToPara(localPos, localDir);
-    auto p = genCurve(para, coe);
-    auto paras = p.first;
+    auto p = genCurve(para, coe, l);
+    auto paras = get<0>(p);
     vector<PosDir> pds;
     for(auto i:paras){
         pds.push_back(assist.paraToWorld(i));
     }
-    return pair<vector<PosDir>, vector<EdgePtr>>{pds, p.second};
+    return tuple<vector<PosDir>, vector<EdgePtr>, float>{pds, get<1>(p), get<2>(p)};
 }
 
-pair<vector<PosDir>, vector<EdgePtr>> CyCurveAssist::genCurve(glm::vec3 pos, float uAng, float coe){
+tuple<vector<PosDir>, vector<EdgePtr>, float> CyCurveAssist::genCurve(glm::vec3 pos, float uAng, float coe, float l){
     lambda = coe;
     glm::vec3 localPos = assist.world3DToLocal(pos, "pos");
     CPPara para = assist.local3DProjectToPara(localPos, glm::vec3{0,0,1});
     para.uAng = uAng;
-    auto p = genCurve(para, coe);
-    auto paras = p.first;
+    auto p = genCurve(para, coe, l);
+    auto paras = get<0>(p);
     vector<PosDir> pds;
     for(auto i:paras){
         pds.push_back(assist.paraToWorld(i));
     }
-    return pair<vector<PosDir>, vector<EdgePtr>>{pds, p.second};
+    return tuple<vector<PosDir>, vector<EdgePtr>, float>{pds, get<1>(p), get<2>(p)};
+}
+
+float CyCurveAssist::length3D(CPPara p1, CPPara p2){
+    float du = p2.u - p1.u;
+    float dv = p2.v - p2.v;
+    return sqrt(pow(R*du, 2) + pow(dv, 2));
 }

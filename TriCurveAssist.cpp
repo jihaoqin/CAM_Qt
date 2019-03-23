@@ -1,6 +1,7 @@
 #include "TriCurveAssist.h"
 #include "Edge.h"
 
+using namespace std;
 TriCurveAssist::TriCurveAssist(TriEdgePlane& plane)
     :assist(plane), R(plane.R), uDir(plane.uDir), anchor(plane.anchor), norm(plane.norm), edges(plane.edges)
 {
@@ -8,14 +9,12 @@ TriCurveAssist::TriCurveAssist(TriEdgePlane& plane)
 }
 
 
-std::pair<vector<PosDir>, vector<EdgePtr>> TriCurveAssist::genCurve(glm::vec3 pos, glm::vec3 dir, float coe){
-    lambda = coe;
+tuple<PosDirVec, EdgePtrVec, float> TriCurveAssist::genCurve(glm::vec3 pos, glm::vec3 dir, float coe, float length){
     glm::vec3 localPos = assist.world3DToLocal(pos, "pos");
     glm::vec3 localDir = assist.world3DToLocal(dir, "dir");
     CPPara para = assist.local3DProjectToPara(localPos, localDir);
-    //para = CPPara{-12.934589f, 0.0f, 2.242562f};
-    auto result = genCurve(para, lambda);
-    auto paras = result.first;
+    auto result = genCurve(para, coe, length);
+    auto paras = get<0>(result);
     vector<PosDir> pds;
     for(auto i:paras){
         auto p = assist.CPParaToLocal(i);
@@ -23,18 +22,17 @@ std::pair<vector<PosDir>, vector<EdgePtr>> TriCurveAssist::genCurve(glm::vec3 po
         glm::vec3 worldDir = assist.local3DToWorld(p.dir, "dir");
         pds.push_back(PosDir{worldPos, worldDir});
     }
-    return std::pair<vector<PosDir>, vector<EdgePtr>>{pds, result.second};
+    return tuple<PosDirVec, EdgePtrVec, float>{pds, get<1>(result), get<2>(result)};
 }
 
-std::pair<vector<PosDir>, vector<EdgePtr>> TriCurveAssist::genCurve(glm::vec3 pos, float uAng, float coe){
-    lambda = coe;
+tuple<PosDirVec, EdgePtrVec, float> TriCurveAssist::genCurve(glm::vec3 pos, float uAng, float coe, float length){
     glm::vec3 localPos = assist.world3DToLocal(pos, "pos");
     vector<float> uv = assist.local3DProjectToUV(localPos);
     float u = uv.at(0);
     float v = uv.at(1);
     CPPara para{u, v, uAng};
-    auto result = genCurve(para, lambda);
-    auto paras = result.first;
+    auto result = genCurve(para, coe, length);
+    auto paras = get<0>(result);
     vector<PosDir> pds;
     for(auto i:paras){
         auto p = assist.CPParaToLocal(i);
@@ -42,43 +40,48 @@ std::pair<vector<PosDir>, vector<EdgePtr>> TriCurveAssist::genCurve(glm::vec3 po
         glm::vec3 worldDir = assist.local3DToWorld(p.dir, "dir");
         pds.push_back(PosDir{worldPos, worldDir});
     }
-    return std::pair<vector<PosDir>, vector<EdgePtr>>{pds, result.second};
+    return tuple<PosDirVec, EdgePtrVec, float>{pds, get<1>(result), get<2>(result)};
 }
 
- std::pair<std::vector<CPPara>, vector<EdgePtr>> TriCurveAssist::genCurve(CPPara p, float coe){
-     lambda = coe;
+tuple<CPParaVec, EdgePtrVec, float> TriCurveAssist::genCurve(CPPara p, float coe, float length){
     float pi = asin(1)*2;
-    float u = p.u;
-    float v = p.v;
     float uAng = p.uAng;
-    float ds = 0.1;
-    float u_last = u;
-    float v_last = v;
-    vector<CPPara> para1{CPPara{u, v, uAng}};
+    int sign = length>0?1:-1;
+    float ds = sign*0.1;
+    float u_last = p.u;
+    float v_last = p.v;
+    vector<CPPara> paras{p};
     EdgePtr edge1;
-    bool flag1 = true;
-    while(flag1){
+    float l = 0;
+    float allLength = abs(length);
+    while(l < allLength){
         float u_temp = u_last+ds*cos(uAng);
         float v_temp = v_last+ds*sin(uAng);
         for(auto e:edges){
             if(e->isOut(u_temp,v_temp)){
+                CPPara p_temp{u_temp, v_temp, uAng};
+                CPPara p_last{u_last, v_last, uAng};
+                CPPara next = e->extend(p_last, p_temp);
+                paras.push_back(next);
+                float lastL = length3D(p_last, p_temp);
+                l = l + lastL;
                 edge1 = e;
-                flag1 = false;
-                break;
+                return tuple<CPParaVec, EdgePtrVec, float>{paras, {nullptr, edge1}, sign*(allLength-l)};
             }
         }
-        if(flag1 == true){
-            para1.push_back(CPPara{u_temp, v_temp, uAng});
-            u_last = u_temp;
-            v_last = v_temp;
+        l = l + abs(ds);
+        if(allLength - l < abs(ds)){
+            ds = sign*(allLength - l);
         }
+        paras.push_back(CPPara{u_temp, v_temp, uAng});
+        u_last = u_temp;
+        v_last = v_temp;
     }
 
-    vector<CPPara> paras;
-    for(auto i=para1.begin(); i!= para1.end(); i++){
-        paras.push_back(*i);
-    }
     vector<EdgePtr> eptr{nullptr, edge1};
-    std::pair<vector<CPPara>, vector<EdgePtr>> result{paras, eptr};
-    return result;
+    return tuple<CPParaVec, EdgePtrVec, float>{paras, eptr, 0};
+}
+
+float TriCurveAssist::length3D(CPPara p1, CPPara p2){
+    return sqrt(pow(p2.u - p1.u, 2)+pow(p2.v - p1.v, 2));
 }

@@ -162,6 +162,17 @@ vector<EdgePtr> TriEdgePlaneAssist::getEdges(){
         }
         return false;
     };
+    auto ex1 = [r, pi](CPPara p1, CPPara p2)->CPPara{
+        float R = r;
+        p1 = CPPara{p1.u-R, p1.v-R, p1.uAng};
+        p2 = CPPara{p2.u-R, p2.v-R, p2.uAng};
+        float A = pow(p2.u - p1.u, 2) + pow(p2.v - p1.v,2);
+        float B = 2*p1.u*(p2.u - p1.u) + 2*p1.v*(p2.v - p1.v);
+        float C = pow(p1.u, 2) + pow(p1.v, 2) - R*R;
+        float lam = (-B-sqrt(B*B-4*A*C))/(2*A);
+        assert(lam<=1&&lam>=-1e-3);
+        return CPPara{(1-lam)*p1.u+lam*p2.u + R, (1-lam)*p1.v+lam*p2.v + R, p1.uAng};
+    };
     auto arc2 = [r, pi](float u, float v)->bool{
         float x = u+r;
         float y = v-r;
@@ -175,11 +186,26 @@ vector<EdgePtr> TriEdgePlaneAssist::getEdges(){
         }
         return false;
     };
+    auto ex2 = [r, pi](CPPara p1, CPPara p2)->CPPara{
+        p1 = CPPara{p1.u+r, p1.v-r, p1.uAng};
+        p2 = CPPara{p2.u+r, p2.v-r, p2.uAng};
+        float A = pow(p2.u - p1.u, 2) + pow(p2.v - p1.v,2);
+        float B = 2*p1.u*(p2.u - p1.u) + 2*p1.v*(p2.v - p1.v);
+        float C = pow(p1.u, 2) + pow(p1.v, 2) - r*r;
+        float lam = (-B-sqrt(B*B-4*A*C))/(2*A);
+        assert(lam<=1&&lam>=-1e-3);
+        return CPPara{(1-lam)*p1.u+lam*p2.u - r, (1-lam)*p1.v+lam*p2.v + r, p1.uAng};
+    };
     auto line = [](float u, float v)->bool{
         return v<=0? true:false;
     };
+    auto ex3 = [](CPPara p1, CPPara p2)->CPPara{
+        float lam = (0 - p1.v)/(p2.v - p1.v);
+        return CPPara{(1-lam)*p1.u+lam*p2.u, (1-lam)*p1.v+lam*p2.v, p1.uAng};
+    };
     auto e1 = std::make_shared<Edge>(arc1);
     e1->Id(id+"_edge1");
+    e1->setExtend(ex1);
     vector<glm::vec3> ps1;
     for(int i =0; i<10; i++){
         float theta = pi+0.5*pi/9*i;
@@ -192,6 +218,7 @@ vector<EdgePtr> TriEdgePlaneAssist::getEdges(){
 
     auto e2 = std::make_shared<Edge>(arc2);
     e2->Id(id+"_edge2");
+    e2->setExtend(ex2);
     vector<glm::vec3> ps2;
     for(int i =0; i<10; i++){
         float theta = -0.5*pi/9*i;
@@ -204,6 +231,7 @@ vector<EdgePtr> TriEdgePlaneAssist::getEdges(){
 
     auto e3 = std::make_shared<Edge>(line);
     e3->Id(id+"_edge3");
+    e3->setExtend(ex3);
     vector<glm::vec3> ps3;
     local3DToWorld({-1*R, 0, 0},"pos");
     ps3.push_back(local3DToWorld({-1*R, 0, 0},"pos"));

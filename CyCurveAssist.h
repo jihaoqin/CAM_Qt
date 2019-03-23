@@ -10,16 +10,18 @@
 #include <vector>
 
 using std::pair;
+using std::tuple;
 using std::vector;
 class CyCurveAssist
 {
 public:
     CyCurveAssist(Cylinder&);
-    pair<vector<PosDir>, vector<EdgePtr>> genCurve(glm::vec3 pos, glm::vec3 dir, float coe);
-    pair<vector<PosDir>, vector<EdgePtr>> genCurve(glm::vec3 pos, float uAng, float coe);
+    tuple<vector<PosDir>, vector<EdgePtr>, float> genCurve(glm::vec3 pos, glm::vec3 dir, float coe, float l = 1e6);
+    tuple<vector<PosDir>, vector<EdgePtr>, float> genCurve(glm::vec3 pos, float uAng, float coe, float l = 1e6);
+    float length3D(CPPara, CPPara);
 private:
-    pair<vector<CPPara>, vector<EdgePtr>> genCurve(CPPara p, float coe);
-    pair<vector<CPPara>, EdgePtr> rungeKutta(CPPara p, QString s, float coe);
+    tuple<vector<CPPara>, vector<EdgePtr>, float> genCurve(CPPara p, float coe, float l);
+    tuple<CPParaVec, EdgePtr, float> rungeKutta(float sSpan, CPPara p, float coe);
     CPPara evalNext(float s, CPPara p, float coe, float h);
     vector<float> ringDiff(float s, vector<float> y0, float coe);
     float lambda;

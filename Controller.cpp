@@ -294,9 +294,10 @@ QString Controller::addCurve(QString pId, float uAng){
     data->addCurve(curve);
     mainWindow->updateAction();
     return id;
-
     /*
+
     if(meshId.contains("ring")){
+        QString id = data->idGenerator.getCurveId();
         Ring* r = teePtr->getRing(meshId);
         auto curve = std::make_shared<RingCurve>(pointPtr,uAng,0.1,id.toLatin1().data(), r);
         pointPtr->addChild(curve);
@@ -306,7 +307,7 @@ QString Controller::addCurve(QString pId, float uAng){
         mainWindow->updateAction();
         return id;
     }
-    else if(meshId.contains("Plane")){
+    else if(meshId.contains("plane")){
         TriEdgePlane* tri = teePtr->getTriPlane(meshId);
         assert(tri);
         QString id = data->idGenerator.getCurveId();

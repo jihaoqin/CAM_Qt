@@ -17,7 +17,7 @@ void CylinderCurve::updateSelf(){
     //pos = glm::vec3{1.09647, -7.01166, 7.130417};
     auto posDirs = assist.genCurve(pos, uAng, lambda);
     std::vector<glm::vec3> points;
-    for(auto i:posDirs.first){
+    for(auto i:std::get<0>(posDirs)){
         points.push_back(i.pos);
     }
     data(points);
