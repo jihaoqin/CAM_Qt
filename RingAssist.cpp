@@ -536,3 +536,13 @@ vector<EdgePtr> RingAssist::getEdges(){
     edges.push_back(e4);
     return edges;
 }
+
+Dir RingAssist::outNorm(Pos p){
+    Pos local = world3DToLocal(p, "pos");
+    auto uv = local3DProjectToUV(local);
+    auto uTan = localTangentDir(uv.at(0), uv.at(1), 1, 0);
+    auto vTan = localTangentDir(uv.at(0), uv.at(1), 0, 1);
+    auto norm = glm::cross(uTan, vTan);
+    assert(abs(glm::length(norm) - 1) < 1e-2);
+    return local3DToWorld(norm, "dir");
+}

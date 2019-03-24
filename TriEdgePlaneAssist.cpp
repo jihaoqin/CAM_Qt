@@ -273,3 +273,13 @@ glm::vec3 TriEdgePlaneAssist::localTangentDir(float u, float v, double uWeight, 
     glm::vec3 dir = glm::normalize(glm::vec3{uWeight, vWeight, 0});
     return dir;
 }
+
+Dir TriEdgePlaneAssist::outNorm(Pos p){
+    Pos local = world3DToLocal(p, "pos");
+    auto uv = local3DToUV(local);
+    Dir uTan = localTangentDir(uv.at(0), uv.at(1), 1, 0);
+    Dir vTan = localTangentDir(uv.at(0), uv.at(1), 0, 1);
+    Dir norm = glm::cross(uTan, vTan);
+    assert(abs(glm::length(norm) - 1) < 1e-2);
+    return local3DToWorld(norm, "dir");
+}

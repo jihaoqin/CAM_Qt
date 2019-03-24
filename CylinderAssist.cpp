@@ -315,3 +315,13 @@ bool CylinderAssist::isInPara(vector<float> uv){
         return false;
     }
 }
+
+Pos CylinderAssist::outNorm(Pos p){
+    Pos local = world3DToLocal(p, "pos");
+    auto uv = local3DProjectToUV(local);
+    Dir uTan = localDir(uv.at(0), uv.at(1), 1, 0);
+    Dir vTan = localDir(uv.at(0), uv.at(1), 0, 1);
+    Dir norm = glm::cross(uTan, vTan);
+    assert(abs(glm::length(norm) - 1) < 1e-2);
+    return local3DToWorld(norm, "dir");
+}

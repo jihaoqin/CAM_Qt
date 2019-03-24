@@ -1,6 +1,8 @@
 #include "IdGenerator.h"
 
-IdGenerator::IdGenerator():cylinderIndex(0),ringIndex(0),pointIndex(0),planeIndex(0),curveIndex(0), triEdgePlaneIndex(0)
+IdGenerator::IdGenerator()
+    :cylinderIndex(0),ringIndex(0),pointIndex(0),planeIndex(0),curveIndex(0), triEdgePlaneIndex(0)
+    ,bandIndex(0)
 {
 }
 
@@ -37,5 +39,11 @@ QString IdGenerator::getCurveId(){
 QString IdGenerator::getTriEdgePlaneId(){
     QString id = QString("triEdgePlane") + QString::number(triEdgePlaneIndex);
     triEdgePlaneIndex++;
+    return id;
+}
+
+QString IdGenerator::getBandId(){
+    QString id = QString("band")+QString::number(bandIndex);
+    bandIndex++;
     return id;
 }

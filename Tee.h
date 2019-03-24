@@ -16,6 +16,9 @@
 #include "TriEdgePlane.h"
 #include "IdGenerator.h"
 
+using Dir = glm::vec3;
+using Pos = glm::vec3;
+
 class GLProgram;
 
 class Tee: public DataObject
@@ -35,6 +38,7 @@ public:
     QString allTopoValue(QString);
     std::map<QString, QString> edgeTopo();
     std::map<QString, QString> allEdgeTopo();
+    Dir outNorm(Pos p, QString meshId);
 
 private:
     Mesh generateLeftRing();

@@ -18,6 +18,7 @@
 #include "CylinderCurve.h"
 #include "TCurve.h"
 #include "TeeCurve.h"
+#include "TBandOnPoint.h"
 
 using namespace  std;
 Controller::Controller()
@@ -288,11 +289,15 @@ QString Controller::addCurve(QString pId, float uAng){
 
 
     QString id = data->idGenerator.getCurveId();
-    //auto curve = std::make_shared<TCurve>(pointPtr, uAng, 0.1, id.toLatin1().data(), teePtr);
-    auto curve = std::make_shared<TeeCurve>(pointPtr, uAng, 0.1, id.toLatin1().data(), teePtr);
+    auto curve = std::make_shared<TCurve>(pointPtr, uAng, 0.1, id.toLatin1().data(), teePtr);
+    //auto curve = std::make_shared<TeeCurve>(pointPtr, uAng, 0.1, id.toLatin1().data(), teePtr);
     pointPtr->addChild(curve);
+    QString bandId = data->idGenerator.getBandId();
+    auto band = std::make_shared<TBandOnPoint>(pointPtr, 1, curve, bandId, teePtr);
     QOpenGLContext* gl = widget->getGLContext();
     curve->bindGL(gl);
+    band->bindGL(gl);
+    data->addBand(band);
     data->addCurve(curve);
     mainWindow->updateAction();
     return id;

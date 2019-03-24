@@ -19,6 +19,7 @@ public:
     glm::vec3 localDir(float u, float v, float uWeight, float vWeight);
     PosDir paraToWorld(CPPara);
     vector<EdgePtr> getEdges();
+    Pos outNorm(Pos);
 private:
     glm::vec3 anchor;
     glm::vec3 zDir;

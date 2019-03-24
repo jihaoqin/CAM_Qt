@@ -5,6 +5,7 @@
 #include "Point.h"
 #include "Node.h"
 #include "Curve.h"
+#include "Band.h"
 using std::shared_ptr;
 using std::make_shared;
 Data::Data():box(), /*tee(nullptr),*/ state(), idGenerator(), root(nullptr)
@@ -28,6 +29,19 @@ void Data::addTee(std::shared_ptr<Tee> t){
 
 void Data::addPoint(shared_ptr<Point> p){
     root->addChild(make_shared<Node>(p));
+    updateBoundingBox();
+    state.setEmpty(false);
+    state.setChanged(true);
+}
+
+void Data::addCurve(std::shared_ptr<Curve> curve){
+    root->addChild(make_shared<Node>(curve));
+    updateBoundingBox();
+    state.setEmpty(false);
+    state.setChanged(true);
+}
+void Data::addBand(std::shared_ptr<Band> b){
+    root->addChild(make_shared<Node>(b));
     updateBoundingBox();
     state.setEmpty(false);
     state.setChanged(true);
@@ -91,9 +105,3 @@ bool Data::getChanged(){
     return state.getChanged();
 }
 
-void Data::addCurve(std::shared_ptr<Curve> curve){
-    root->addChild(make_shared<Node>(curve));
-    updateBoundingBox();
-    state.setEmpty(false);
-    state.setChanged(true);
-}

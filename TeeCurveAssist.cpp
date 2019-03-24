@@ -11,7 +11,6 @@ TeeCurveAssist::TeeCurveAssist(TeePtr t):tee(t)
 }
 
 tuple<PosDirVec, QStringVec, EdgePtrVec, float> TeeCurveAssist::genCurve(PosDir pd, float coe, QString meshId, float length){
-    //pd = PosDir{{12.8863, 12.910217, 0.930542},{0.495468, -0.3946958, -0.773774}};
     tuple<PosDirVec,EdgePtrVec, float> middle;
     if(meshId.contains("ring")){
         RingCurveAssist assist(*(tee->getRing(meshId)));
@@ -41,7 +40,7 @@ tuple<PosDirVec, QStringVec, EdgePtrVec, float> TeeCurveAssist::genCurve(PosDir 
     else {
         bool flag1 = length>0? true:false;
         bool flag2 = leftLength>0? true:false;
-        assert(flag1 == flag2);
+        //assert(flag1 == flag2);
         QString topo = tee->allTopoValue(edges.at(1)->Id());
         if(topo.isEmpty()){
             QStringVec strs;

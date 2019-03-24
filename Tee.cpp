@@ -3,12 +3,17 @@
 #include "config.h"
 #include "HalfPoint.h"
 #include "map"
+#include "RingAssist.h"
+#include "CylinderAssist.h"
+#include "TriEdgePlaneAssist.h"
+
 using namespace std;
 Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdGenerator& g)
-    :modelMat(glm::mat4(1.0)), color(Color::RED),
+    :modelMat(glm::mat4(0.50)), color(Color::RED),
         lengthMain(_lengthMain), lengthBranch(_lengthBranch), pipeR(_pipeR), sideR(_sideR)
 
 {
+    modelMat[3][3] = 1;
     float pi = asin(1)*2;
     setId("tee");
     Mesh up = generateCircle(glm::vec3(0, lengthBranch, 0), glm::vec3(0, 1, 0), pipeR);
@@ -47,6 +52,9 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdG
     planeVec.push_back(right);
     triEdgePlaneVec.push_back(TriEdgePlane(g.getPlaneId(), pipeR+sideR, glm::vec3{0,0,pipeR}, glm::vec3{1,0,0}, glm::vec3{0,0,1}));
     triEdgePlaneVec.push_back(TriEdgePlane(g.getPlaneId(), pipeR+sideR, glm::vec3{0,0,-1*pipeR}, glm::vec3{-1,0,0}, glm::vec3{0,0,-1}));
+    for(auto &i:triEdgePlaneVec){
+        i.setVisiable(false);
+    }
     //包围盒
     vector<BoundingBox> boxVec;
     for (auto mesh:planeVec){
@@ -141,6 +149,7 @@ void Tee::draw(std::shared_ptr<GLProgram> p){
     for(unsigned int i = 0; i<triEdgePlaneVec.size(); i++){
         triEdgePlaneVec.at(i).draw(p);
     }
+    p->setMat4("model", glm::mat4(1.0f));
 }
 
 Mesh Tee::generateRevolution(glm::vec3 anchor, glm::vec3 dir, std::vector<Vertex> edge, float angle){
@@ -502,4 +511,25 @@ std::map<QString, QString> Tee::allEdgeTopo(){
         }
     }
     return topo;
+}
+
+Dir Tee::outNorm(Pos p, QString meshId){
+    if(meshId.contains("ring")){
+        Ring* r = getRing(meshId);
+        RingAssist ass(*r);
+        return ass.outNorm(p);
+    }
+    else if(meshId.contains("cylinder")){
+        Cylinder* cy = getCylinder(meshId);
+        CylinderAssist ass(*cy);
+        return ass.outNorm(p);
+    }
+    else if(meshId.contains("plane")){
+        TriEdgePlane* tri =  getTriPlane(meshId);
+        TriEdgePlaneAssist ass(*tri);
+        return ass.outNorm(p);
+    }
+    else{
+        assert(0);
+    }
 }

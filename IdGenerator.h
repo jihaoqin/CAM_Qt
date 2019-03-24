@@ -15,6 +15,7 @@ public:
     QString getPlaneId();
     QString getCurveId();
     QString getTriEdgePlaneId();
+    QString getBandId();
 private:
     unsigned int cylinderIndex;
     unsigned int ringIndex;
@@ -22,6 +23,7 @@ private:
     unsigned int planeIndex;
     unsigned int curveIndex;
     unsigned int triEdgePlaneIndex;
+    unsigned int bandIndex;
 
     //serialization
     friend class boost::serialization::access;

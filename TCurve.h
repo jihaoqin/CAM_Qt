@@ -21,6 +21,8 @@ public:
     void updateSelf() override;
     void setWindingAngle(float angle) override;
     void setWindingPara(float angle, float coe) override;
+    float slip();
+    float windAngle();
 private:
     PointPtr point;
     TeePtr tee;

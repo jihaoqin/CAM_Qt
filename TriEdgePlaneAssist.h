@@ -26,6 +26,7 @@ public:
     glm::vec3 paraToLocal3D(float u, float v);
     glm::vec3 localTangentDir(float u, float v, double uWeight, double vWeight);
     vector<EdgePtr> getEdges();
+    Dir outNorm(Pos);
 
 private:
     float R;

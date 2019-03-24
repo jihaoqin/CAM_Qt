@@ -49,3 +49,11 @@ void TCurve::setWindingPara(float angle, float coe){
     update();
 }
 
+
+float TCurve::slip(){
+    return lambda;
+}
+
+float TCurve::windAngle(){
+    return uAng;
+}
