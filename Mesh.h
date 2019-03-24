@@ -23,6 +23,8 @@ public:
     virtual void draw() override;
     BoundingBox boundingBox();
 protected:
+    void bufferData();
+    bool binded;
 	std::vector<Vertex> vertexVec;
     BoundingBox box;
 };

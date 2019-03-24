@@ -12,13 +12,15 @@ Curve::Curve(const char* c):color(Color::BLACK),type(Type::general)
 }
 
 void Curve::bindGL(QOpenGLContext *c){
-    core = c->versionFunctions<QOpenGLFunctions_4_3_Core>();
-    core->glGenVertexArrays(1, &VAO);
-    core->glBindVertexArray(VAO);
-    core->glGenBuffers(1,&VBO);
-    core->glGenBuffers(1, &EBO);
-    binded = true;
-    bufferData();
+    if(binded == false){
+        core = c->versionFunctions<QOpenGLFunctions_4_3_Core>();
+        core->glGenVertexArrays(1, &VAO);
+        core->glBindVertexArray(VAO);
+        core->glGenBuffers(1,&VBO);
+        core->glGenBuffers(1, &EBO);
+        binded = true;
+        bufferData();
+    }
 }
 
 void Curve::bufferData(){
@@ -55,7 +57,6 @@ void Curve::draw(std::shared_ptr<GLProgram> program){
     core->glBindVertexArray(VAO);
     core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
     core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    //core->glDrawElements(GL_TRIANGLES, indexVec.size(), GL_UNSIGNED_INT, 0);
     core->glDrawArrays(GL_LINE_STRIP, 0, vertexVec.size());
     core->glDepthMask(GL_TRUE);
 }
@@ -83,5 +84,9 @@ void Curve::initial(std::vector<glm::vec3> points){
 }
 
 void Curve::setWindingPara(float angle, float coe){
+    assert(0);
+}
+
+void Curve::setWindingAngle(float angle){
     assert(0);
 }

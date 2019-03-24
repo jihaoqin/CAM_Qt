@@ -81,7 +81,9 @@ SOURCES += \
     NewCurveController.cpp \
     TCurveAssist.cpp \
     TeeCurveAssist.cpp \
-    TeeCurve.cpp
+    TeeCurve.cpp \
+    TBandOnPoint.cpp \
+    Band.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -143,7 +145,9 @@ HEADERS += \
     NewCurveController.h \
     TCurveAssist.h \
     TeeCurveAssist.h \
-    TeeCurve.h
+    TeeCurve.h \
+    TBandOnPoint.h \
+    Band.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt

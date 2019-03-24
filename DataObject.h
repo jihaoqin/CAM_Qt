@@ -11,6 +11,7 @@
 #include "boundingbox.h"
 class DataObject;
 using DataObjectPtr = std::shared_ptr<DataObject>;
+using DataObjectWptr = std::weak_ptr<DataObject>;
 class DataObject
 {
 public:
@@ -29,6 +30,7 @@ protected:
     virtual void update();
     virtual void updateSelf();
     std::vector<DataObjectPtr> child;
+    std::vector<DataObjectWptr> father;
     bool binded;
     bool visiable;
     BoundingBox box;

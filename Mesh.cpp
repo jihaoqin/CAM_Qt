@@ -2,11 +2,11 @@
 #include <iostream>
 #include <QOpenGLFunctions_4_3_Core>
 #include "GLProgram.h"
-Mesh::Mesh(){
+Mesh::Mesh():binded(false){
 
 }
 
-Mesh::Mesh(vector<Vertex> vertexs, vector<unsigned int> indexs):GLMemory()
+Mesh::Mesh(vector<Vertex> vertexs, vector<unsigned int> indexs):GLMemory(),binded(false)
 {
 	this->vertexVec = vertexs;
 	this->indexVec = indexs;
@@ -25,13 +25,41 @@ void Mesh::print() {
 }
 
 void Mesh::bindGL(QOpenGLContext *c){
-    core = c->versionFunctions<QOpenGLFunctions_4_3_Core>();
-    core->glGenVertexArrays(1, &VAO);
+    if(binded == false){
+        core = c->versionFunctions<QOpenGLFunctions_4_3_Core>();
+        core->glGenVertexArrays(1, &VAO);
+        core->glGenBuffers(1,&VBO);
+        core->glGenBuffers(1, &EBO);
+        bufferData();
+        binded = true;
+    }
+}
+
+void Mesh::draw(){
+    if(binded == true){
+        core->glBindVertexArray(VAO);
+        core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        core->glDrawElements(GL_TRIANGLES, indexVec.size(), GL_UNSIGNED_INT, 0);
+    }
+}
+
+BoundingBox Mesh::boundingBox(){
+    return box;
+}
+
+void Mesh::setData(vector<Vertex> v, vector<unsigned int> ind){
+    vertexVec = v;
+    indexVec = ind;
+    if(binded == true){
+        bufferData();
+    }
+}
+
+void Mesh::bufferData(){
     core->glBindVertexArray(VAO);
-    core->glGenBuffers(1,&VBO);
     core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
     core->glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*vertexVec.size(), &(vertexVec[0]), GL_STATIC_DRAW);
-    core->glGenBuffers(1, &EBO);
     core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     core->glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*indexVec.size(), &(indexVec[0]), GL_STATIC_DRAW);
 
@@ -41,15 +69,4 @@ void Mesh::bindGL(QOpenGLContext *c){
     core->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(3*sizeof(float)));
     core->glEnableVertexAttribArray(2);
     core->glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(6*sizeof(float)));
-}
-
-void Mesh::draw(){
-	core->glBindVertexArray(VAO);
-    core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    core->glDrawElements(GL_TRIANGLES, indexVec.size(), GL_UNSIGNED_INT, 0);
-}
-
-BoundingBox Mesh::boundingBox(){
-    return box;
 }

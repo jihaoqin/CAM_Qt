@@ -8,9 +8,11 @@
 #include <utility>
 class Point;
 class Tee;
+class TCurve;
 using PointPtr = std::shared_ptr<Point>;
 using TeePtr = std::shared_ptr<Tee>;
 using std::vector;
+using TCurvePtr = std::shared_ptr<TCurve>;
 
 class TCurve:public Curve
 {

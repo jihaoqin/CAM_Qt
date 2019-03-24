@@ -20,7 +20,7 @@ public:
     virtual void bindGL(QOpenGLContext*) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;
     virtual void setWindingPara(float angle, float coe);
-    virtual void setWindingAngle(float angle) = 0;
+    virtual void setWindingAngle(float angle);
     Type type;
 private:
     void bufferData();
