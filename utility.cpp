@@ -242,3 +242,45 @@ double utility::length(glm::vec2 v){
     float y = v[1];
     return sqrt(x*x + y*y);
 }
+
+vector<unsigned int> utility::filterInterval(vector<glm::vec3> p, float h){
+    vector<unsigned int> index;
+    index.push_back(0);
+    int lastInd = 0;
+    for(int i = 0; i< p.size(); i++){
+        if(glm::length(p.at(i) - p.at(lastInd))>h){
+            index.push_back(i);
+            lastInd = i;
+        }
+    }
+    if(lastInd == p.size()-1){
+        return index;
+    }
+    else{
+        index.push_back(p.size()-1);
+        return index;
+    }
+}
+
+vector<Pos> utility::filterNum(vector<Pos> ps, int num){
+    vector<Pos> fewPos;
+    vector<int> index;
+    int middleNum = num-2;
+    index.push_back(0);
+    for(int i = 1; i<=middleNum; i++){
+        index.push_back((ps.size()-2)*1.0*i/(middleNum+1));
+    }
+    index.push_back(ps.size()-1);
+    for(auto i:index){
+        fewPos.push_back(ps.at(i));
+    }
+    return fewPos;
+}
+
+vector<Pos> utility::filterNum(vector<PosDir> pds, int num){
+    vector<Pos> densePos;
+    for(auto& i:pds){
+        densePos.push_back(i.pos);
+    }
+    return filterNum(densePos, num);
+}

@@ -62,6 +62,7 @@ private:
     float sideR;
     float lengthMain;
     float lengthBranch;
+    QOpenGLFunctions_4_3_Core *core;
 
     friend class boost::serialization::access;
     template<typename Archive>

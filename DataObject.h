@@ -12,6 +12,7 @@
 class DataObject;
 using DataObjectPtr = std::shared_ptr<DataObject>;
 using DataObjectWptr = std::weak_ptr<DataObject>;
+using QStringVec = std::vector<QString>;
 class DataObject
 {
 public:
@@ -25,6 +26,7 @@ public:
     void setVisiable(bool);
     BoundingBox boundingBox();
     void addChild(DataObjectPtr);
+    QStringVec childId();
 protected:
     virtual void updateChild();
     virtual void update();

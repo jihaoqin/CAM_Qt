@@ -21,10 +21,12 @@ public:
 	void print();
     virtual void bindGL(QOpenGLContext*) override;
     virtual void draw() override;
+    void setVisiable(bool);
     BoundingBox boundingBox();
 protected:
     void bufferData();
     bool binded;
+    bool visiable;
 	std::vector<Vertex> vertexVec;
     BoundingBox box;
 };

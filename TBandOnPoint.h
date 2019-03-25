@@ -5,6 +5,9 @@
 #include "TCurve.h"
 #include "Mesh.h"
 
+class TeeCurve;
+using TeeCurvePtr = std::shared_ptr<TeeCurve>;
+
 class TBandOnPoint:public Band
 {
 public:
@@ -12,6 +15,7 @@ public:
     virtual void bindGL(QOpenGLContext* c) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;
     BoundingBox boundingBox();
+    void setColor(Color) override;
 
 protected:
     virtual void updateSelf() override;
@@ -21,6 +25,9 @@ private:
     float width;
     TCurvePtr tcurve;
     Mesh mesh;
+    vector<CurvePtr> curves;
+    Color color;
+    QOpenGLFunctions_4_3_Core *core;
 };
 
 #endif // TBANDONPOINT_H

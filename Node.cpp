@@ -42,7 +42,13 @@ void Node::deleteChild(NodePtr child){
 }
 
 void Node::deleteChild(const char* c){
-
+    for(int i = 0; i<children.size(); i++){
+        NodePtr nodeI = children.at(i);
+        if(nodeI != nullptr && nodeI->Id() == QString(c)){
+            children.at(i) = nullptr;
+            children.erase(children.begin()+i);
+        }
+    }
 }
 
 void Node::addChild(NodePtr child){

@@ -24,7 +24,7 @@ void Curve::bindGL(QOpenGLContext *c){
 }
 
 void Curve::bufferData(){
-    if(binded == false){
+    if(binded == false ){
         return;
     }
     core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -41,16 +41,15 @@ void Curve::bufferData(){
 }
 
 void Curve::draw(std::shared_ptr<GLProgram> program){
-    if(binded == false){
+    if(binded == false || visiable == false){
         assert(binded == true);
         return;
     }
-    core->glDepthMask(GL_FALSE);
+    //core->glDepthMask(GL_FALSE);
     core->glEnable(GL_POLYGON_OFFSET_FILL);
     core->glPolygonOffset(1.0f, 1.0f);
     core->glEnable(GL_LINE_SMOOTH);
-    core->glEnable(GL_BLEND);
-    core->glEnable(GL_LINE_SMOOTH);
+    //core->glEnable(GL_BLEND);
     core->glHint(GL_LINE_SMOOTH_HINT, GL_FASTEST);
     program->setMat4("model", glm::mat4(1.0));
     program->setVec3("material.color", color.rgb);
@@ -58,7 +57,7 @@ void Curve::draw(std::shared_ptr<GLProgram> program){
     core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
     core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     core->glDrawArrays(GL_LINE_STRIP, 0, vertexVec.size());
-    core->glDepthMask(GL_TRUE);
+    //core->glDepthMask(GL_TRUE);
 }
 
 void Curve::data(std::vector<glm::vec3> points){
@@ -89,4 +88,8 @@ void Curve::setWindingPara(float angle, float coe){
 
 void Curve::setWindingAngle(float angle){
     assert(0);
+}
+
+void Curve::setColor(Color c){
+    color = c;
 }

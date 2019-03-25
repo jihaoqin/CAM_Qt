@@ -1,10 +1,44 @@
 #include "TeeCurve.h"
 #include "TeeCurveAssist.h"
+#include "CylinderAssist.h"
+#include "RingAssist.h"
+#include "TriEdgePlaneAssist.h"
+#include "Tee.h"
 using namespace std;
 
 TeeCurve::TeeCurve(PointPtr p, float a, float coe, const char* c, TeePtr t)
     :Curve(c), tee(t), point(p), lambda(coe), uAng(a)
 {
+    updateSelf();
+}
+TeeCurve::TeeCurve(PointPtr p, Dir d, float coe, const char* c, TeePtr t)
+    :Curve(c), tee(t), point(p), lambda(coe)
+{
+    QString meshId = p->meshId();
+    if(meshId.contains("ring")){
+        RingAssist rAss(*(tee->getRing(meshId)));
+        Pos localPos = rAss.world3DToLocal(p->getPos(),"pos");
+        Dir localDir = rAss.world3DToLocal(d, "dir");
+        CPPara para = rAss.local3DProjectToPara(localPos, localDir);
+        uAng = para.uAng;
+    }
+    else if(meshId.contains("cylinder")){
+        CylinderAssist cyAss(*(tee->getCylinder(meshId)));
+        Pos localPos = cyAss.world3DToLocal(p->getPos(), "pos");
+        Dir localDir = cyAss.world3DToLocal(d, "dir");
+        CPPara para = cyAss.local3DProjectToPara(localPos, localDir);
+        uAng = para.uAng;
+    }
+    else if(meshId.contains("plane")){
+        TriEdgePlaneAssist trAss(*(tee->getTriPlane(meshId)));
+        Pos localPos = trAss.world3DToLocal(p->getPos(), "pos");
+        Dir localDir = trAss.world3DToLocal(d, "dir");
+        CPPara para = trAss.local3DProjectToPara(localPos, localDir);
+        uAng = para.uAng;
+    }
+    else{
+        assert(0);
+    }
     updateSelf();
 }
 

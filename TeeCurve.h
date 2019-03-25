@@ -9,7 +9,8 @@ using TeePtr = std::shared_ptr<Tee>;
 class TeeCurve:public Curve
 {
 public:
-    TeeCurve(PointPtr, float, float , const char*, TeePtr);
+    TeeCurve(PointPtr p, float a, float coe, const char* c, TeePtr t);
+    TeeCurve(PointPtr p, Dir d, float coe, const char* c, TeePtr t);
     void updateSelf() override;
     void setWindingAngle(float angle) override;
     void setWindingPara(float angle, float coe) override;
@@ -19,5 +20,6 @@ private:
     float uAng;
     float lambda;
 };
+using TeeCurvePtr = std::shared_ptr<TeeCurve>;
 
 #endif // TEECURVE_H

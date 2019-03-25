@@ -4,3 +4,7 @@ Band::Band()
 {
 
 }
+
+void Band::setColor(Color){
+
+}

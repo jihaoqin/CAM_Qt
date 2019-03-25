@@ -21,6 +21,7 @@ public:
     virtual void draw(std::shared_ptr<GLProgram>) override;
     virtual void setWindingPara(float angle, float coe);
     virtual void setWindingAngle(float angle);
+    void setColor(Color);
     Type type;
 private:
     void bufferData();
@@ -32,4 +33,5 @@ private:
     Color color;
 };
 
+using CurvePtr = std::shared_ptr<Curve>;
 #endif // CURVE_H

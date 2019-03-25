@@ -15,6 +15,7 @@ class TCurveAssist
 {
 public:
     TCurveAssist(TeePtr t);
+    std::tuple<PosDirVec, QStringVec, EdgePtrVec> genDoubleCurve(Pos pd, float uAng, float coe, QString meshId);
     std::tuple<PosDirVec, QStringVec, EdgePtrVec> genCurve(Pos pd, float uAng, float coe, QString meshId);
     std::tuple<PosDirVec, QStringVec, EdgePtrVec> genCurve(PosDir pd, float coe, QString meshId);
     bool sameEdge(EdgePtr, EdgePtr);

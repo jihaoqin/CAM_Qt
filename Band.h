@@ -14,7 +14,10 @@ class Band:public DataObject
 {
 public:
     Band();
+    virtual void setColor(Color);
 private:
 };
+
+using BandPtr = std::shared_ptr<Band>;
 
 #endif // BAND_H

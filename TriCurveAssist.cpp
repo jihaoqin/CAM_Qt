@@ -63,7 +63,7 @@ tuple<CPParaVec, EdgePtrVec, float> TriCurveAssist::genCurve(CPPara p, float coe
                 CPPara p_last{u_last, v_last, uAng};
                 CPPara next = e->extend(p_last, p_temp);
                 paras.push_back(next);
-                float lastL = length3D(p_last, p_temp);
+                float lastL = length3D(p_last, next);
                 l = l + lastL;
                 edge1 = e;
                 return tuple<CPParaVec, EdgePtrVec, float>{paras, {nullptr, edge1}, sign*(allLength-l)};

@@ -294,6 +294,8 @@ QString Controller::addCurve(QString pId, float uAng){
     pointPtr->addChild(curve);
     QString bandId = data->idGenerator.getBandId();
     auto band = std::make_shared<TBandOnPoint>(pointPtr, 1, curve, bandId, teePtr);
+    pointPtr->addChild(band);
+    curve->addChild(band);
     QOpenGLContext* gl = widget->getGLContext();
     curve->bindGL(gl);
     band->bindGL(gl);

@@ -6,6 +6,7 @@
 #include "Mesh.h"
 #include <complex>
 #include <vector>
+#include "PosDir.h"
 
 namespace utility {
 const float PI = 3.1415926;
@@ -35,4 +36,7 @@ glm::vec3 lineRotateVector(glm::vec3 line, glm::vec3 vec, float alpha);
 Vertex lineRotateVertex(glm::vec3 anchor, glm::vec3 dir, Vertex p, float alpha);
 bool isParallel(glm::vec3 vec1, glm::vec3 vec2);
 Mesh generateRevolution(glm::vec3 anchor, glm::vec3 dir, std::vector<Vertex> edge, float angle);
+vector<unsigned int> filterInterval(vector<glm::vec3>, float h);
+vector<Pos> filterNum(vector<Pos>, int num);
+vector<Pos> filterNum(vector<PosDir>, int num);
 }

@@ -115,3 +115,30 @@ bool TCurveAssist::sameEdge(EdgePtr p1, EdgePtr p2){
         return false;
     }
 }
+
+
+std::tuple<PosDirVec, QStringVec, EdgePtrVec> TCurveAssist::genDoubleCurve(Pos pd, float uAng, float coe, QString meshId){
+    float pi = asin(1)*2;
+    auto forwardTuple = genCurve(pd, uAng, coe, meshId);
+    auto backTuple = genCurve(pd, uAng+pi, coe, meshId);
+    PosDirVec pds;
+    QStringVec strs;
+    EdgePtrVec edges;
+    auto& backPd = get<0>(backTuple);
+    auto& backStr = get<1>(backTuple);
+    for(int i = backPd.size()-1; i > -1; i--){
+        pds.push_back({backPd.at(i).pos, -1.0f*backPd.at(i).dir});
+        strs.push_back(backStr.at(i));
+    }
+    auto& forwardPd = get<0>(forwardTuple);
+    auto& forwardStr = get<1>(forwardTuple);
+    for(int i = 0; i < forwardPd.size(); i++){
+        pds.push_back(forwardPd.at(i));
+        strs.push_back(forwardStr.at(i));
+    }
+    auto& backEdge = get<2>(backTuple);
+    auto& forwardEdge = get<2>(forwardTuple);
+    edges.push_back(backEdge.at(1));
+    edges.push_back(forwardEdge.at(1));
+    return tuple<PosDirVec, QStringVec, EdgePtrVec>{pds, strs, edges};
+}

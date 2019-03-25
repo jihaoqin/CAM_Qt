@@ -9,7 +9,7 @@
 
 using namespace std;
 Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdGenerator& g)
-    :modelMat(glm::mat4(0.50)), color(Color::RED),
+    :modelMat(glm::mat4(0.99)), color(Color::RED),
         lengthMain(_lengthMain), lengthBranch(_lengthBranch), pipeR(_pipeR), sideR(_sideR)
 
 {
@@ -52,9 +52,6 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdG
     planeVec.push_back(right);
     triEdgePlaneVec.push_back(TriEdgePlane(g.getPlaneId(), pipeR+sideR, glm::vec3{0,0,pipeR}, glm::vec3{1,0,0}, glm::vec3{0,0,1}));
     triEdgePlaneVec.push_back(TriEdgePlane(g.getPlaneId(), pipeR+sideR, glm::vec3{0,0,-1*pipeR}, glm::vec3{-1,0,0}, glm::vec3{0,0,-1}));
-    for(auto &i:triEdgePlaneVec){
-        i.setVisiable(false);
-    }
     //包围盒
     vector<BoundingBox> boxVec;
     for (auto mesh:planeVec){
@@ -116,6 +113,7 @@ void Tee::bindGL(QOpenGLContext * c){
         qDebug()<<"Tee has been binded.\n";
         return;
     }
+    core = c->versionFunctions<QOpenGLFunctions_4_3_Core>();
     for(unsigned int i = 0; i < planeVec.size(); i++){
        planeVec.at(i).bindGL(c);
     }
@@ -132,11 +130,12 @@ void Tee::bindGL(QOpenGLContext * c){
 }
 
 void Tee::draw(std::shared_ptr<GLProgram> p){
-    p->setMat4("model", modelMat);
-    p->setVec3("material.color", color.rgb);
-    if(visiable == false){
+    if(binded == false || visiable == false){
         return;
     }
+    p->setMat4("model", modelMat);
+    p->setVec3("material.color", color.rgb);
+    core->glDepthMask(GL_TRUE);
     for(unsigned int i = 0; i < planeVec.size(); i++){
        planeVec.at(i).draw();
     }

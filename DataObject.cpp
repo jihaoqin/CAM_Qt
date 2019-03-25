@@ -39,6 +39,7 @@ void DataObject::addChild(DataObjectPtr d){
 }
 
 void DataObject::updateSelf(){
+    assert(0);
 }
 
 void DataObject::update(){
@@ -50,4 +51,14 @@ void DataObject::updateChild(){
     for(auto& i:child){
         i->update();
     }
+}
+
+QStringVec DataObject::childId(){
+    QStringVec strVec;
+    for(auto& i:child){
+        if(i){
+            strVec.push_back(i->getId());
+        }
+    }
+    return strVec;
 }

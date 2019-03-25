@@ -36,6 +36,7 @@ void RingCurveAssist::initial(Ring &ring){
 
 
 tuple<vector<CPPara>, vector<EdgePtr>, float> RingCurveAssist::genCurve(CPPara p, float coe, float length){
+    length = length;
     vector<CPPara> paras;
     float u = p.u;
     float v = p.v;
@@ -80,7 +81,7 @@ tuple<vector<CPPara>, EdgePtr, float> RingCurveAssist::rungeKutta(vector<float> 
                 return result;
             }
         }
-        length = length + abs(h);
+        length = length + abs(3.5/3*h);
         if(allLength - length < abs(h)){
             h = sign*(allLength - length);
         }

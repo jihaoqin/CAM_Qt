@@ -10,6 +10,7 @@ CyCurveAssist::CyCurveAssist(Cylinder& c):assist(c), anchor(c.anchor) ,zDir(c.zD
 
 
 tuple<vector<CPPara>, vector<EdgePtr>, float> CyCurveAssist::genCurve(CPPara p, float coe, float l){
+    l=l;
     lambda = coe;
     auto tuple1 = rungeKutta(l, p,coe);
     vector<EdgePtr> e;
@@ -46,7 +47,7 @@ tuple<CPParaVec, EdgePtr, float> CyCurveAssist::rungeKutta(float sSpan, CPPara p
                 return tuple<vector<CPPara>, EdgePtr, float>{paras, e, sign*(allLength - l)};
             }
         }
-        l = l + abs(h);
+        l = l + abs(3.5/3*h);
         if(allLength - l < abs(h)){
             h = sign*(allLength - l);
         }
