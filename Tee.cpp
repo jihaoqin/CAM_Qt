@@ -6,11 +6,13 @@
 #include "RingAssist.h"
 #include "CylinderAssist.h"
 #include "TriEdgePlaneAssist.h"
+#include <utility>
 
 using namespace std;
 Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdGenerator& g)
     :modelMat(glm::mat4(0.99)), color(Color::RED),
         lengthMain(_lengthMain), lengthBranch(_lengthBranch), pipeR(_pipeR), sideR(_sideR)
+      , symMap()
 
 {
     modelMat[3][3] = 1;
@@ -23,8 +25,6 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdG
                     glm::vec3(-(pipeR+sideR), pipeR+sideR,0), glm::vec3(0,0,-1), glm::vec3(1,0,0));
     Ring ringRight(g.getRingId(), sideR+pipeR, pipeR, utility::PI/2,
                     glm::vec3(pipeR+sideR, pipeR+sideR,0), glm::vec3(0,0,1), glm::vec3(-1,0,0));
-    ringVec.push_back(ringLeft);
-    ringVec.push_back(ringRight);
     Cylinder branch1(g.getCylinderId(), glm::vec3(0, pipeR + sideR, 0),
                     glm::vec3(0, lengthBranch, 0), pipeR, pi, glm::vec3{0,0,1});
     Cylinder branch2(g.getCylinderId(), glm::vec3(0, pipeR + sideR, 0),
@@ -39,19 +39,36 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdG
                       glm::vec3(lengthMain/2, 0, 0), pipeR, pi, glm::vec3{0,0,1});
     Cylinder mainPipeRight2(g.getCylinderId(), glm::vec3(pipeR+sideR, 0, 0),
                       glm::vec3(lengthMain/2, 0, 0), pipeR, pi, glm::vec3{0,0,-1});
+    TriEdgePlane plane1(g.getPlaneId(), pipeR+sideR, glm::vec3{0,0,pipeR}, glm::vec3{1,0,0}, glm::vec3{0,0,1});
+    TriEdgePlane plane2(g.getPlaneId(), pipeR+sideR, glm::vec3{0,0,-1*pipeR}, glm::vec3{-1,0,0}, glm::vec3{0,0,-1});
+
+    ringVec.push_back(ringLeft);
+    ringVec.push_back(ringRight);
+    symMap[pair<QString,QString>(QString(ringLeft.getId()), QString("x"))] = QString(ringRight.getId());
+    symMap[pair<QString,QString>(QString(ringLeft.getId()), QString("z"))] = QString(ringLeft.getId());
+    symMap[pair<QString,QString>(QString(ringRight.getId()), QString("x"))] = QString(ringLeft.getId());
+    symMap[pair<QString,QString>(QString(ringRight.getId()), QString("z"))] = QString(ringRight.getId());
+
     cylinderVec.push_back(branch1);
     cylinderVec.push_back(branch2);
     cylinderVec.push_back(mainPipeLeft1);
     cylinderVec.push_back(mainPipeLeft2);
     cylinderVec.push_back(pipeHalf);
+    symMap[pair<QString,QString>(QString(pipeHalf.getId()), QString("x"))] = QString(pipeHalf.getId());
+    symMap[pair<QString,QString>(QString(pipeHalf.getId()), QString("z"))] = QString(pipeHalf.getId());
     cylinderVec.push_back(mainPipeRight1);
     cylinderVec.push_back(mainPipeRight2);
     pipeHalfVec.push_back(pipeHalf);
     planeVec.push_back(up);
     planeVec.push_back(left);
     planeVec.push_back(right);
-    triEdgePlaneVec.push_back(TriEdgePlane(g.getPlaneId(), pipeR+sideR, glm::vec3{0,0,pipeR}, glm::vec3{1,0,0}, glm::vec3{0,0,1}));
-    triEdgePlaneVec.push_back(TriEdgePlane(g.getPlaneId(), pipeR+sideR, glm::vec3{0,0,-1*pipeR}, glm::vec3{-1,0,0}, glm::vec3{0,0,-1}));
+    triEdgePlaneVec.push_back(plane1);
+    triEdgePlaneVec.push_back(plane2);
+    symMap[pair<QString,QString>(QString(plane1.getId()), QString("x"))] = QString(plane1.getId());
+    symMap[pair<QString,QString>(QString(plane1.getId()), QString("z"))] = QString(plane2.getId());
+    symMap[pair<QString,QString>(QString(plane2.getId()), QString("x"))] = QString(plane2.getId());
+    symMap[pair<QString,QString>(QString(plane2.getId()), QString("z"))] = QString(plane1.getId());
+
     //包围盒
     vector<BoundingBox> boxVec;
     for (auto mesh:planeVec){
@@ -531,4 +548,21 @@ Dir Tee::outNorm(Pos p, QString meshId){
     else{
         assert(0);
     }
+}
+
+QString Tee::symmmetryMesh(QString meshId , QString flag){
+    QString sMesh = meshId;
+    for(int i = 0;i < flag.size(); i++){
+        QString s = flag.at(i);
+        if(s.contains("x", Qt::CaseInsensitive)){
+            sMesh = symMap.at(pair<QString, QString>(sMesh, "x"));
+        }
+        else if(s.contains("z", Qt::CaseInsensitive)){
+            sMesh = symMap.at(pair<QString, QString>(sMesh, "z"));
+        }
+        else{
+            assert(0);
+        }
+    }
+    return sMesh;
 }

@@ -6,6 +6,7 @@
 #include "Node.h"
 #include "Curve.h"
 #include "Band.h"
+
 using std::shared_ptr;
 using std::make_shared;
 Data::Data():box(), /*tee(nullptr),*/ state(), idGenerator(), root(nullptr)

@@ -69,7 +69,6 @@ using Dir = glm::vec3;
              v.coordinate = glm::vec2{0,0};
              vertexVec.push_back(v);
          }
-         qDebug()<<leftPos.size()+rightPos.size();
      }
      unsigned int num = 2*sideNum - 1;
      vector<unsigned int> indexVec;

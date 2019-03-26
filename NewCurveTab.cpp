@@ -137,7 +137,7 @@ void NewCurveTab::updateCurve(){
 }
 
 void NewCurveTab::okPressed(){
-    NewCurveController* c = new NewCurveController(connector->getCtrl(), getPointText(), curveId);
+    NewCurveController* c = new NewCurveController(this, connector->getCtrl(), getPointText(), curveId);
     connector->setGLWidgetClickable(false);
     c->okPressed();
     back->setWidget(nullptr);
@@ -145,7 +145,7 @@ void NewCurveTab::okPressed(){
     close();
 }
 void NewCurveTab::canclePressed(){
-    NewCurveController* c = new NewCurveController(connector->getCtrl(), getPointText(), curveId);
+    NewCurveController* c = new NewCurveController(this, connector->getCtrl(), getPointText(), curveId);
     connector->setGLWidgetClickable(false);
     c->canclePressed();
     back->setWidget(nullptr);
@@ -156,4 +156,8 @@ void NewCurveTab::canclePressed(){
 void NewCurveTab::setTabBack(TabBackground *t){
     assert(t);
     back = t;
+}
+
+float NewCurveTab::getSlip(){
+    return lamSpinBox->value();
 }

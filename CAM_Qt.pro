@@ -83,7 +83,8 @@ SOURCES += \
     TeeCurveAssist.cpp \
     TeeCurve.cpp \
     TBandOnPoint.cpp \
-    Band.cpp
+    Band.cpp \
+    PointSym.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -147,7 +148,8 @@ HEADERS += \
     TeeCurveAssist.h \
     TeeCurve.h \
     TBandOnPoint.h \
-    Band.h
+    Band.h \
+    PointSym.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt

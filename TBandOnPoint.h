@@ -30,4 +30,5 @@ private:
     QOpenGLFunctions_4_3_Core *core;
 };
 
+using TBandOnPointPtr = std::shared_ptr<TBandOnPoint>;
 #endif // TBANDONPOINT_H

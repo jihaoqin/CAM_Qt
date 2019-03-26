@@ -11,7 +11,10 @@ class GLWidget;
 class MainWindow;
 class Data;
 class Point;
+class PointSym;
 class Camera2;
+class Tee;
+using TeePtr = std::shared_ptr<Tee>;
 class Controller
 {
 public:

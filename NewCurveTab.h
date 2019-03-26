@@ -17,6 +17,7 @@ class NewCurveTab:public QWidget
 
 public:
     friend class GuiConnector;
+    friend class NewCurveController;
     NewCurveTab(QWidget* parent = nullptr);
     virtual ~NewCurveTab();
     void setConnector(GuiConnector*);
@@ -25,6 +26,7 @@ public:
     void setPointText(QString);
     void setCurveId(QString);
     int getWindingAngle();
+    float getSlip();
     bool isPointTextFocused();
 public slots:
     void updateCurve();

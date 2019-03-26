@@ -39,8 +39,6 @@ public:
     bool getEmpty();
 private:
     std::shared_ptr<Camera2> camera;
-    //std::shared_ptr<Tee> tee;
-    //std::shared_ptr<Point> point;
     std::shared_ptr<Node> root;
     BoundingBox box;
     DataState state;

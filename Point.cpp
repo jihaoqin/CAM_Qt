@@ -1,6 +1,6 @@
 #include "Point.h"
 
-Point::Point(glm::vec3 p, const char* c):color(Color::GREEN), picked(false)
+Point::Point(glm::vec3 p, const char* c):color(Color::BLUE), picked(false)
 {
     setId(c);
     pos = p;

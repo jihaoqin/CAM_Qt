@@ -19,7 +19,7 @@
 #include "TCurve.h"
 #include "TeeCurve.h"
 #include "TBandOnPoint.h"
-
+#include "PointSym.h"
 using namespace  std;
 Controller::Controller()
 {
@@ -68,6 +68,7 @@ std::shared_ptr<Point> Controller::addPoint(HalfPoint p){
     mainWindow->updateAction();
     return point;
 }
+
 
 bool Controller::hasTee(){
     return data->hasTee();
@@ -286,14 +287,11 @@ QString Controller::addCurve(QString pId, float uAng){
     auto teeFa = data->root->findObjectId("tee");
     auto teePtr = std::dynamic_pointer_cast<Tee>(teeFa);
     QString meshId(pointPtr->meshId());
-
-
     QString id = data->idGenerator.getCurveId();
-    auto curve = std::make_shared<TCurve>(pointPtr, uAng, 0.1, id.toLatin1().data(), teePtr);
-    //auto curve = std::make_shared<TeeCurve>(pointPtr, uAng, 0.1, id.toLatin1().data(), teePtr);
+    auto curve = std::make_shared<TCurve>(pointPtr, uAng, 0, id.toLatin1().data(), teePtr);
     pointPtr->addChild(curve);
     QString bandId = data->idGenerator.getBandId();
-    auto band = std::make_shared<TBandOnPoint>(pointPtr, 1, curve, bandId, teePtr);
+    auto band = std::make_shared<TBandOnPoint>(pointPtr, 2, curve, bandId, teePtr);
     pointPtr->addChild(band);
     curve->addChild(band);
     QOpenGLContext* gl = widget->getGLContext();
@@ -303,9 +301,7 @@ QString Controller::addCurve(QString pId, float uAng){
     data->addCurve(curve);
     mainWindow->updateAction();
     return id;
-
     /*
-
     if(meshId.contains("ring")){
         QString id = data->idGenerator.getCurveId();
         Ring* r = teePtr->getRing(meshId);

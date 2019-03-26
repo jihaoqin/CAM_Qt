@@ -13,22 +13,24 @@ public:
     virtual ~Point();
     void bindGL(QOpenGLContext*) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;
-    glm::vec3 getPos();
+    virtual glm::vec3 getPos();
     void setPos(glm::vec3);
     bool picked;
     const char* meshId();
     void meshId(const char*);
-private:
-    void updateBoundingBox();
+protected:
     void updateSelf() override;
     glm::vec3 pos;
+    std::string meshName;
+private:
+    void updateBoundingBox();
     std::vector<Vertex> vertexVec;
     std::vector<unsigned int> indexVec;
     QOpenGLFunctions_4_3_Core *core;
     unsigned int VAO,VBO,EBO;
     Color color;
-    std::string meshName;
 };
 
 using PointPtr = std::shared_ptr<Point>;
+using PointWptr = std::weak_ptr<Point>;
 #endif // POINT_H

@@ -39,6 +39,7 @@ public:
     std::map<QString, QString> edgeTopo();
     std::map<QString, QString> allEdgeTopo();
     Dir outNorm(Pos p, QString meshId);
+    QString symmmetryMesh(QString , QString);
 
 private:
     Mesh generateLeftRing();
@@ -62,6 +63,7 @@ private:
     float sideR;
     float lengthMain;
     float lengthBranch;
+    std::map<std::pair<QString, QString>, QString> symMap;
     QOpenGLFunctions_4_3_Core *core;
 
     friend class boost::serialization::access;
