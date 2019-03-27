@@ -23,6 +23,7 @@ private:
     QPushButton* button;
     QPushButton* delButton;
     GuiConnector* connector;
+    QString lastPicked;
 };
 
 #endif // OBJTREEWIDGET_H

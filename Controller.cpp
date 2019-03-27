@@ -357,3 +357,18 @@ void Controller::updateCurve(QString id, float angle, float coe){
 void Controller::deleteBand(QString id){
     data->deleteBand(id);
 }
+
+void Controller::setColor(QStringVec ids, Color c){
+    for(auto s:ids){
+        auto obj = data->root->findObjectId(s.toLatin1().data());
+        if(obj){
+            if(s.contains("band")){
+                auto band = std::dynamic_pointer_cast<Band>(obj);
+                band->setColor(c);
+            }
+            else{
+                assert(0);
+            }
+        }
+    }
+}

@@ -7,6 +7,7 @@
 #include <memory>
 #include "DataObject.h"
 #include "HalfPoint.h"
+#include "Color.h"
 class GLWidget;
 class MainWindow;
 class Data;
@@ -27,6 +28,7 @@ public:
     void bindData(std::shared_ptr<Data>);
     void bindGLWidget(GLWidget*);
     void addTee(float ,float ,float ,float);
+    void setColor(QStringVec, Color);
     QString addCurve(QString pId, float uAng);
     void deleteBand(QString id);
     std::shared_ptr<Point> addPoint(HalfPoint);

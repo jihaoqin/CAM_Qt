@@ -3,8 +3,9 @@
 #include "Controller.h"
 #include "Data.h"
 #include <QPushButton>
+#include "Color.h"
 
-ObjTreeWidget::ObjTreeWidget(QWidget* parent):QWidget(parent), button(nullptr)
+ObjTreeWidget::ObjTreeWidget(QWidget* parent):QWidget(parent), button(nullptr), lastPicked()
 {
     view = new QTreeView();
     model = new ObjModel();
@@ -38,6 +39,13 @@ void ObjTreeWidget::updateModel(){
 }
 
 void ObjTreeWidget::clearSelection(){
+    auto selection = view->currentIndex();
+    if(selection.row() == -1){
+        return;
+    }
+    auto itemData = view->model()->itemData(selection);
+    QStringVec bandId{itemData.values().at(0).toString()};
+    connector->getCtrl()->setColor(bandId, Color::YELLOW);
     view->setCurrentIndex(QModelIndex());
 }
 
@@ -52,5 +60,13 @@ void ObjTreeWidget::deleteSelected(){
 }
 
 void ObjTreeWidget::displayInFront(){
-
+    connector->getCtrl()->setColor(QStringVec{lastPicked}, Color::YELLOW);
+    auto selection = view->currentIndex();
+    if(selection.row() == -1){
+        return;
+    }
+    auto itemData = view->model()->itemData(selection);
+    QStringVec bandId{itemData.values().at(0).toString()};
+    connector->getCtrl()->setColor(bandId, Color::GREEN);
+    lastPicked = bandId.at(0);
 }

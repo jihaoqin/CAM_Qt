@@ -1,7 +1,7 @@
 #ifndef NEWCURVECONTROLLER_H
 #define NEWCURVECONTROLLER_H
 #include <QString>
-
+#include <memory>
 class Controller;
 class Data;
 class NewCurveTab;

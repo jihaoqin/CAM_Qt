@@ -53,6 +53,7 @@
 
 #include <QList>
 #include <QVariant>
+#include <memory>
 
 //! [0]
 class TreeItem

@@ -1,8 +1,7 @@
 [x]滑线系数可变
 [x]名字设置有问题，triEdgePlane的名字有的是“triEdgeplane0”，有的是“plane0”，tee的setIDUsing也有问题。
 [x]纱路的存储
-[x]取消data里的Node，改用vector<DataObjectPtr>管理，树的显示根据vector去生成
-[x]point和curve对于band来说更新了两次
+
 
 
 2019/02/20
@@ -88,4 +87,5 @@ testPoint = glm::vec3(19.777084350585938, 3.0391998291015625, 10);
 
 2019/03/26
 [checked] 生成对称的带
-[x]tree显示data里的Band。可删除，可变绿。
+[checked]tree显示data里的Band。可删除，可变绿。
+[checked]point和curve对于band来说更新了两次
