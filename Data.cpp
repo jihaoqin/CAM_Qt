@@ -6,10 +6,10 @@
 #include "Node.h"
 #include "Curve.h"
 #include "Band.h"
-
+#include "GuiConnector.h"
 using std::shared_ptr;
 using std::make_shared;
-Data::Data():box(), /*tee(nullptr),*/ state(), idGenerator(), root(nullptr)
+Data::Data():box(), state(), idGenerator(), root(nullptr), connector(nullptr)
 {
     camera = std::make_shared<Camera2>(BoundingBox());
 }
@@ -43,6 +43,38 @@ void Data::addCurve(std::shared_ptr<Curve> curve){
 }
 void Data::addBand(std::shared_ptr<Band> b){
     root->addChild(make_shared<Node>(b));
+    connector->updateModel();
+    updateBoundingBox();
+    state.setEmpty(false);
+    state.setChanged(true);
+}
+
+void Data::deleteBand(QString id){
+    if(!id.contains("band")){
+        return ;
+    }
+    DataObjectPtr obj = root->findObjectId(id.toLatin1().data());
+    if(obj == nullptr){
+        return ;
+    }
+    QStringVec fatherIds = obj->fatherId();
+    QStringVec allIds;
+    for(auto id:fatherIds){
+        allIds.push_back(id);
+    }
+    for(auto i:fatherIds){
+        DataObjectPtr obj = root->findObjectId(i.toLatin1().data());
+        if(obj != nullptr){
+            QStringVec childIds = obj->childId();
+            for(auto id:childIds){
+                allIds.push_back(id);
+            }
+        }
+    }
+    for(auto id:allIds){
+        root->deleteChild(id.toLatin1().data());
+    }
+    connector->updateModel();
     updateBoundingBox();
     state.setEmpty(false);
     state.setChanged(true);
@@ -106,3 +138,11 @@ bool Data::getChanged(){
     return state.getChanged();
 }
 
+
+void Data::bindConnector(GuiConnector *c){
+    connector = c;
+}
+
+std::shared_ptr<Node> Data::getNodeRoot(){
+    return root;
+}

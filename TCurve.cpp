@@ -16,6 +16,7 @@ using EdgePtrVec = vector<EdgePtr>;
 TCurve::TCurve(PointPtr p, float a, float coe, const char*c , TeePtr t)
     :Curve(c), point(p), uAng(a), lambda(coe), tee(t)
 {
+    father.push_back(weak_ptr<Point>(point));
     updateSelf();
 }
 

@@ -84,7 +84,10 @@ SOURCES += \
     TeeCurve.cpp \
     TBandOnPoint.cpp \
     Band.cpp \
-    PointSym.cpp
+    PointSym.cpp \
+    ObjTreeWidget.cpp \
+    ObjModel.cpp \
+    TreeItem.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -149,7 +152,10 @@ HEADERS += \
     TeeCurve.h \
     TBandOnPoint.h \
     Band.h \
-    PointSym.h
+    PointSym.h \
+    ObjTreeWidget.h \
+    ObjModel.h \
+    TreeItem.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt

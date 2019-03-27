@@ -9,6 +9,7 @@ using namespace std;
 TeeCurve::TeeCurve(PointPtr p, float a, float coe, const char* c, TeePtr t)
     :Curve(c), tee(t), point(p), lambda(coe), uAng(a)
 {
+    father.push_back(weak_ptr<Point>(point));
     updateSelf();
 }
 TeeCurve::TeeCurve(PointPtr p, Dir d, float coe, const char* c, TeePtr t)

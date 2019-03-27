@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
     Controller ctrl;
     ctrl.bindData(data);
     MainWindow w(&ctrl);
+    data->bindConnector(w.connector);
     w.show();
     ctrl.addTee(100, 100, 10, 10);
     return a.exec();

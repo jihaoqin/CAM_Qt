@@ -353,3 +353,7 @@ void Controller::updateCurve(QString id, float angle, float coe){
     auto curve = std::dynamic_pointer_cast<Curve>(ptr);
     curve->setWindingPara(angle, coe);
 }
+
+void Controller::deleteBand(QString id){
+    data->deleteBand(id);
+}

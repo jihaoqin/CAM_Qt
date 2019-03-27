@@ -19,6 +19,7 @@ class Controller
 {
 public:
     friend class NewCurveController;
+    friend class GuiConnector;
     Controller();
     void bindMainWindow(MainWindow* m);
     BoundingBox updateBoundingBox();
@@ -27,6 +28,7 @@ public:
     void bindGLWidget(GLWidget*);
     void addTee(float ,float ,float ,float);
     QString addCurve(QString pId, float uAng);
+    void deleteBand(QString id);
     std::shared_ptr<Point> addPoint(HalfPoint);
     void draw();
     void drawDataObject(std::shared_ptr<DataObject>);

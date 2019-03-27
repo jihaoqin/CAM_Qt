@@ -27,6 +27,7 @@ public:
     BoundingBox boundingBox();
     void addChild(DataObjectPtr);
     QStringVec childId();
+    QStringVec fatherId();
 protected:
     virtual void updateChild();
     virtual void update();

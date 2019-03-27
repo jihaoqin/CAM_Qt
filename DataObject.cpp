@@ -57,6 +57,25 @@ QStringVec DataObject::childId(){
     QStringVec strVec;
     for(auto& i:child){
         if(i){
+            QStringVec childIds = i->childId();
+            for(auto id:childIds){
+                strVec.push_back(id);
+            }
+            strVec.push_back(i->getId());
+        }
+    }
+    return strVec;
+}
+
+QStringVec DataObject::fatherId(){
+    QStringVec strVec;
+    for(auto& f:father){
+        auto i = f.lock();
+        if(i){
+            QStringVec fatherIds = i->fatherId();
+            for(auto id:fatherIds){
+                strVec.push_back(id);
+            }
             strVec.push_back(i->getId());
         }
     }

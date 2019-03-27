@@ -4,6 +4,7 @@
 PointSym::PointSym(PointPtr p, QString s, QString flag, TeePtr t):Point(p->getPos(), s.toLatin1().data())
     ,point(p), symFlag(flag), tee(t)
 {
+    father.push_back(point);
     updateSelf();
 }
 

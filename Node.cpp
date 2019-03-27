@@ -47,6 +47,7 @@ void Node::deleteChild(const char* c){
         if(nodeI != nullptr && nodeI->Id() == QString(c)){
             children.at(i) = nullptr;
             children.erase(children.begin()+i);
+            i--;
         }
     }
 }

@@ -7,6 +7,7 @@ class GLProgram;
 class NewCurveTab;
 class GLWidget;
 class Controller;
+class Data;
 
 class GuiConnector
 {
@@ -23,7 +24,8 @@ public:
     void setPointText(QString);
     GLWidget* getGLWidget();
     Controller* getCtrl();
-
+    std::shared_ptr<Data> getData();
+    void updateModel();
 private:
     MainWindow* mainWindow;
 };

@@ -7,6 +7,7 @@
 #include "GLProgram.h"
 #include <memory>
 #include "CurveController.h"
+#include "ObjTreeWidget.h"
 
 GuiConnector::GuiConnector()
     :mainWindow(nullptr)
@@ -76,4 +77,12 @@ Controller* GuiConnector::getCtrl(){
 
 void GuiConnector::updateAction(){
     mainWindow->updateAction();
+}
+
+void GuiConnector::updateModel(){
+    mainWindow->widget->tabWidget->tree->updateModel();
+}
+
+std::shared_ptr<Data> GuiConnector::getData(){
+    return getCtrl()->data;
 }

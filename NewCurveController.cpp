@@ -45,6 +45,9 @@ void NewCurveController::hide(QString id){
 }
 
 void NewCurveController::canclePressed(){
+    if(pointId.isEmpty()){
+        return ;
+    }
     DataObjectPtr node = data->root->findObjectId(pointId.toLatin1().data());
     vector<QString> child = node->childId();
     for(auto& s:child){
@@ -67,8 +70,8 @@ void NewCurveController::addSymmetry(PointPtr p, QString flag){
     QString bandxId = data->idGenerator.getBandId();
     TBandOnPointPtr bandx = std::make_shared<TBandOnPoint>(px, 2, curvex, bandxId, tee);
     bandx->setColor(Color::YELLOW);
+    p->addChild(px);
     px->addChild(curvex);
-    px->addChild(bandx);
     curvex->addChild(bandx);
     data->addPoint(px);
     data->addCurve(curvex);

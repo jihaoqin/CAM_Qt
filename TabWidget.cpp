@@ -4,19 +4,18 @@
 #include <QLabel>
 #include "NewCurveTab.h"
 #include "GuiConnector.h"
+#include "ObjTreeWidget.h"
 
 TabWidget::TabWidget(QWidget* parent)
-    :QTabWidget(parent),first(nullptr)
+    :QTabWidget(parent),tree(nullptr)
 {
     setMouseTracking(true);
     setStyleSheet("background-color:rgb(255,255,255)");
-    //setMinimumWidth(200);
-    first = new TabBackground(this);
-    first->setMouseTracking(true);
-    addTab(first, "first");
-
+    tree = new ObjTreeWidget(this);
+    tree->setMouseTracking(true);
+    addTab(tree, "Tree");
     operation = new TabBackground(this);
-    addTab(operation, "op");
+    addTab(operation, "Op");
 
 }
 
@@ -35,6 +34,6 @@ bool TabWidget::isOperating(){
 
 void TabWidget::setConnector(GuiConnector *c){
     connector = c;
-    first->setConnector(c);
+    tree->setConnector(c);
     operation->setConnector(c);
 }

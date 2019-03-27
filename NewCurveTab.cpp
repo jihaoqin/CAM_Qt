@@ -59,6 +59,7 @@ NewCurveTab::NewCurveTab(QWidget* parent):QWidget(parent),focusOnPoint(true),cur
     dirBox->setLayout(layout_2);
 
     ok = new QPushButton("Ok", this);
+    ok->setEnabled(false);
     cancle = new QPushButton("Cancle",this);
     connect(ok, &QPushButton::clicked, this, &NewCurveTab::okPressed);
     connect(cancle, &QPushButton::clicked, this, &NewCurveTab::canclePressed);
@@ -113,6 +114,7 @@ QString NewCurveTab::getPointText(){
 
 void NewCurveTab::setPointText(QString id){
     pointText->setText(id);
+    ok->setEnabled(true);
 }
 
 void NewCurveTab::setCurveId(QString name){

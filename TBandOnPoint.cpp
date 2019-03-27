@@ -11,6 +11,7 @@ using Dir = glm::vec3;
  TBandOnPoint::TBandOnPoint(PointPtr p,  float w, TCurvePtr tc, QString name, TeePtr t)
      :tee(t), point(p),  tcurve(tc), width(abs(w)), color(Color::GREEN)
 {
+     father.push_back(weak_ptr<Curve>(tcurve));
      setId(name.toLatin1().data());
      CurvePtr c1 = std::make_shared<Curve>("");
      c1->setColor(Color::BLACK);
