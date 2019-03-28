@@ -1,7 +1,7 @@
 #include "DataObject.h"
 #include <QOpenGLFunctions_4_3_Core>
 #include <QDebug>
-DataObject::DataObject():binded(false), visiable(true),box()
+DataObject::DataObject():binded(false), visiable(true),box(),type()
 {
 
 }

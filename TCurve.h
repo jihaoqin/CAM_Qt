@@ -6,6 +6,9 @@
 #include <vector>
 #include <memory>
 #include <utility>
+#include "rapidjson/prettywriter.h"
+#include "Point.h"
+
 class Point;
 class Tee;
 class TCurve;
@@ -23,6 +26,7 @@ public:
     void setWindingPara(float angle, float coe) override;
     float slip();
     float windAngle();
+    virtual void serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const override;
 private:
     PointPtr point;
     TeePtr tee;

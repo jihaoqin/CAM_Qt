@@ -1,13 +1,15 @@
 #include "Curve.h"
 
-Curve::Curve(std::vector<glm::vec3> points, const char* c):color(Color::BLACK),type(Type::general)
+Curve::Curve(std::vector<glm::vec3> points, const char* c):color(Color::BLACK)
 {
+    type = "Curve";
     setId(c);
     initial(points);
     box = BoundingBox(vertexVec);
 }
-Curve::Curve(const char* c):color(Color::BLACK),type(Type::general)
+Curve::Curve(const char* c):color(Color::BLACK)
 {
+    type = "Curve";
     setId(c);
 }
 

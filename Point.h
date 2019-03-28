@@ -5,6 +5,9 @@
 #include "vertex.h"
 #include <vector>
 #include "Color.h"
+#include "rapidjson/prettywriter.h"
+
+using namespace rapidjson;
 
 class Point:public DataObject
 {
@@ -18,6 +21,8 @@ public:
     bool picked;
     const char* meshId();
     void meshId(const char*);
+
+    virtual void serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const override;
 protected:
     void updateSelf() override;
     glm::vec3 pos;

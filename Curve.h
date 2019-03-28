@@ -9,11 +9,6 @@
 class Curve : public DataObject
 {
 public:
-    enum class Type{
-        ringCurve,
-        tCurve,
-        general
-    };
     Curve(std::vector<glm::vec3>, const char*);
     Curve(const char*);
     void data(std::vector<glm::vec3>);
@@ -22,7 +17,6 @@ public:
     virtual void setWindingPara(float angle, float coe);
     virtual void setWindingAngle(float angle);
     void setColor(Color);
-    Type type;
 private:
     void bufferData();
     void initial(std::vector<glm::vec3>);

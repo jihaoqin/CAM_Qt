@@ -2,6 +2,7 @@
 
 Point::Point(glm::vec3 p, const char* c):color(Color::BLUE), picked(false)
 {
+    type = "Point";
     setId(c);
     pos = p;
     Vertex v;
@@ -93,4 +94,20 @@ const char* Point::meshId(){
 }
 void Point::meshId(const char* s){
     meshName = std::string(s);
+}
+
+void Point::serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const
+{
+    writer.StartObject();
+    writer.String("type");
+    writer.String("Point");
+    writer.String("pos");
+    writer.StartArray();
+    writer.Double(pos.x);
+    writer.Double(pos.y);
+    writer.Double(pos.z);
+    writer.EndArray();
+    writer.String("meshId");
+    writer.String(meshName.c_str(), meshName.size());
+    writer.EndObject();
 }

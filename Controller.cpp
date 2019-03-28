@@ -20,7 +20,12 @@
 #include "TeeCurve.h"
 #include "TBandOnPoint.h"
 #include "PointSym.h"
+#include <fstream>
+#include <iostream>
+#include "rapidjson/document.h"
+#include "rapidjson/filereadstream.h"
 using namespace  std;
+using namespace  rapidjson;
 Controller::Controller()
 {
 
@@ -371,4 +376,76 @@ void Controller::setColor(QStringVec ids, Color c){
             }
         }
     }
+}
+
+void Controller::saveBand(QString path){
+    auto root = data->root;
+    auto children = root->childrenPtrVec();
+    StringBuffer sb;
+    PrettyWriter<StringBuffer> writer(sb);
+    writer.StartArray();
+    for(auto c:children){
+        QString id = c->Id();
+        if(id.contains("band")){
+            BandPtr b = std::dynamic_pointer_cast<Band>(c->getData());
+            b->serialize(writer);
+        }
+    }
+    writer.EndArray();
+    std::ofstream outFile;
+    outFile.open(path.toLatin1().data());
+    outFile<<sb.GetString();
+    outFile.close();
+}
+
+void Controller::openBand(QString path){
+    std::ifstream inFile;
+    string line;
+    string allLine;
+    inFile.open(path.toLatin1().data());
+    while(getline(inFile, line)){
+        allLine.append(line+"\n");
+    }
+    Document doc;
+    doc.Parse<0>(allLine.c_str());
+    if(doc.HasParseError()){
+        return ;
+    }
+    for(unsigned int i = 0; i < doc.Size(); i++){
+        const Value& obj = doc[i];
+        if(obj["type"] == "TBandOnPoint"){
+            shared_ptr<TBandOnPoint> band;
+            shared_ptr<Curve> curvePtr;
+            shared_ptr<Point> pointPtr;
+            float width = obj["width"].GetDouble();
+            const Value& curve = obj["curve"];
+            TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
+            if(curve["type"] == "TCurve"){
+                float uAng = curve["uAng"].GetDouble();
+                float slip = curve["slip"].GetDouble();
+                const Value& point = curve["point"];
+                const Value& p = point["pos"];
+                Pos pos{p[0].GetDouble(), p[1].GetDouble(), p[2].GetDouble()};
+                QString meshId = QString(point["meshId"].GetString());
+                pointPtr = make_shared<Point>(pos, data->idGenerator.getPlaneId().toLatin1().data());
+                pointPtr->meshId(meshId.toLatin1().data());
+                curvePtr = make_shared<TCurve>(pointPtr, uAng, slip, data->idGenerator.getCurveId().toLatin1().data(), tee);
+                shared_ptr<TCurve> tPtr = dynamic_pointer_cast<TCurve>(curvePtr);
+                band = make_shared<TBandOnPoint>(pointPtr, width, tPtr, data->idGenerator.getBandId(), tee);
+                pointPtr->setVisiable(false);
+                curvePtr->setVisiable(false);
+                band->setColor(Color::YELLOW);
+                data->addPoint(pointPtr);
+                data->addCurve(curvePtr);
+                data->addBand(band);
+                auto context = widget->getGLContext();
+                pointPtr->bindGL(context);
+                curvePtr->bindGL(context);
+                band->bindGL(context);
+                pointPtr->addChild(curvePtr);
+                curvePtr->addChild(band);
+            }
+        }
+    }
+    inFile.close();
 }

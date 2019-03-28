@@ -16,6 +16,7 @@ using EdgePtrVec = vector<EdgePtr>;
 TCurve::TCurve(PointPtr p, float a, float coe, const char*c , TeePtr t)
     :Curve(c), point(p), uAng(a), lambda(coe), tee(t)
 {
+    type = "TCurve";
     father.push_back(weak_ptr<Point>(point));
     updateSelf();
 }
@@ -57,4 +58,18 @@ float TCurve::slip(){
 
 float TCurve::windAngle(){
     return uAng;
+}
+
+void TCurve::serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const
+{
+    writer.StartObject();
+    writer.String("type");
+    writer.String("TCurve");
+    writer.String("uAng");
+    writer.Double(uAng);
+    writer.String("slip");
+    writer.Double(lambda);
+    writer.String("point");
+    point->serialize(writer);
+    writer.EndObject();
 }

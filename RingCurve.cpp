@@ -6,7 +6,7 @@
 RingCurve::RingCurve(PointPtr p, float angle, float coe, const char* c, Ring* ring)
     :Curve(c), point(p), uAng(angle), lambda(coe), assist(*ring)
 {
-    type = Type::general;
+    type = "RingCurve";
     updateSelf();
 }
 

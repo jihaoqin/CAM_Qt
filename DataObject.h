@@ -6,9 +6,8 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/archive/text_oarchive.hpp>
 #include "boundingbox.h"
+#include "rapidjson/prettywriter.h"
 class DataObject;
 using DataObjectPtr = std::shared_ptr<DataObject>;
 using DataObjectWptr = std::weak_ptr<DataObject>;
@@ -28,6 +27,8 @@ public:
     void addChild(DataObjectPtr);
     QStringVec childId();
     QStringVec fatherId();
+    virtual void serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const{
+    }
 protected:
     virtual void updateChild();
     virtual void update();
@@ -37,13 +38,9 @@ protected:
     bool binded;
     bool visiable;
     BoundingBox box;
+    std::string type;
 private:
     std::string id;
-    friend class boost::serialization::access;
-    template<typename Archive>
-    void serialize(Archive& ar, const unsigned int version){
-        ar & binded &id &visiable;
-    }
 };
 
 #endif // OPENGLBINDER_H

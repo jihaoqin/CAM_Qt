@@ -16,7 +16,7 @@ public:
     virtual void draw(std::shared_ptr<GLProgram>) override;
     BoundingBox boundingBox();
     void setColor(Color) override;
-
+    void serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const override;
 protected:
     virtual void updateSelf() override;
 private:

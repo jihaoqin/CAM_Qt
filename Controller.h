@@ -52,6 +52,8 @@ public:
     void processMoveWhenMove(glm::vec3, glm::vec3);
     std::vector<HalfPoint> intersectionPointInTee(glm::vec3, glm::vec3);
     void updateCurve(QString, float, float);
+    void saveBand(QString path);
+    void openBand(QString path);
 private:
     std::shared_ptr<Data> data;
     GLWidget* widget;

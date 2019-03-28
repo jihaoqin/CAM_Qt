@@ -11,6 +11,7 @@
 #include <QHBoxLayout>
 #include "CentralWidget.h"
 #include "GuiConnector.h"
+#include <QFileDialog>
 
 MainWindow::MainWindow(Controller* c, QWidget *parent)
     : QMainWindow(parent), ctrl(nullptr), widget(nullptr), teeNewDialog(nullptr), connector(nullptr)
@@ -53,14 +54,21 @@ void MainWindow::configureMenuBar(){
     QMenuBar* menubar = menuBar();
     fileMenu = new QMenu("File",this);
     menubar->addMenu(fileMenu);
-    QAction* actionNew = fileMenu->addAction("New");
-    QAction* actionOpen = fileMenu->addAction("Open");
-    QAction* actionSave = fileMenu->addAction("Save");
+    actionNew = fileMenu->addAction("New");
+    actionOpen = fileMenu->addAction("Open");
+    actionSave = fileMenu->addAction("Save");
+
+    bandMenu = new QMenu("Band", this);
+    menubar->addMenu(bandMenu);
+    bandSave = bandMenu->addAction("Save");
+    bandOpen = bandMenu->addAction("Open");
 
     //update the status of actions below "File" menu
     connect(fileMenu, &QMenu::aboutToShow, this, &MainWindow::updateAction);
-    //configure New operation
     connect(actionNew, &QAction::triggered, this, &MainWindow::saveOrNot);
+    connect(bandMenu, &QMenu::aboutToShow, this, &MainWindow::updateAction);
+    connect(bandSave, &QAction::triggered, this, &MainWindow::saveBand);
+    connect(bandOpen, &QAction::triggered, this, &MainWindow::openBand);
 }
 void MainWindow::saveOrNot(){
     if(ctrl->hasTee()){
@@ -174,6 +182,22 @@ void MainWindow::updateAction(){
             }
         }
     }
+
+    {
+        bool hasT = ctrl->hasTee();
+        if(hasT){
+            bandSave->setEnabled(true);
+            bandOpen->setEnabled(true);
+        }
+        else{
+            bandSave->setEnabled(false);
+            bandOpen->setEnabled(false);
+        }
+        if(true == opFlag){
+            bandSave->setEnabled(false);
+            bandOpen->setEnabled(false);
+        }
+    }
 }
 
 void MainWindow::configureToolBar(){
@@ -188,4 +212,24 @@ void MainWindow::configureToolBar(){
 void MainWindow::showNewCurveTab(){
     widget->showNewCurveTab();
     updateAction();
+}
+
+void MainWindow::saveBand(){
+    QString fileName = QFileDialog::getSaveFileName(this, "Save Curve","","*.curve");
+    if(fileName.isEmpty()){
+        return ;
+    }
+    else{
+        ctrl->saveBand(fileName);
+    }
+}
+
+void MainWindow::openBand(){
+    QString fileName = QFileDialog::getOpenFileName(this, "Open Curve","","*.curve");
+    if(fileName.isEmpty()){
+        return ;
+    }
+    else{
+        ctrl->openBand(fileName);
+    }
 }

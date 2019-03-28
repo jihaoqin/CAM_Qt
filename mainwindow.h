@@ -21,6 +21,8 @@ public slots:
     void updateAction();
 private slots:
     void showNewCurveTab();
+    void saveBand();
+    void openBand();
 private:
     void configureStatusBar();
     void configureMenuBar();
@@ -29,6 +31,12 @@ private:
     CentralWidget* widget;
     TeeParameterDialog *teeNewDialog;
     QMenu* fileMenu;
+        QAction* actionNew;
+        QAction* actionOpen;
+        QAction* actionSave;
+    QMenu* bandMenu;
+        QAction* bandSave;
+        QAction* bandOpen;
     QToolBar* toolBar;
 };
 

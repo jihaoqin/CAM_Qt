@@ -11,6 +11,7 @@ using Dir = glm::vec3;
  TBandOnPoint::TBandOnPoint(PointPtr p,  float w, TCurvePtr tc, QString name, TeePtr t)
      :tee(t), point(p),  tcurve(tc), width(abs(w)), color(Color::GREEN)
 {
+     type = "TBandOnPoint";
      father.push_back(weak_ptr<Curve>(tcurve));
      setId(name.toLatin1().data());
      CurvePtr c1 = std::make_shared<Curve>("");
@@ -129,4 +130,15 @@ using Dir = glm::vec3;
 
  void TBandOnPoint::setColor(Color c){
      color = c;
+ }
+
+ void TBandOnPoint::serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const{
+     writer.StartObject();
+     writer.String("type");
+     writer.String("TBandOnPoint");
+     writer.String("width");
+     writer.Double(width);
+     writer.String("curve");
+     tcurve->serialize(writer);
+     writer.EndObject();
  }
