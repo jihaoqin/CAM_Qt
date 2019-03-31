@@ -284,7 +284,10 @@ vector<glm::vec3> CylinderAssist::intersectionPoints(glm::vec3 worldPos, glm::ve
         if(abs(r-R) < 1e-2){
             vector<float> uv = local3DToUV(localPos);
             if(isInPara(uv)){
-                points.push_back(p);
+                glm::vec3 norm = outNorm(p);
+                if(glm::dot(norm, worldDir) < 0){
+                    points.push_back(p);
+                }
             }
             else{}
         }

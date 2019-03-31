@@ -203,10 +203,19 @@ void MainWindow::updateAction(){
 void MainWindow::configureToolBar(){
     toolBar = addToolBar("newCurve");
     toolBar->setIconSize(QSize(40,40));
-    QAction* newCurve = new QAction(QIcon(":/icons/newCurve"),"newCurve");
+    newCurve = new QAction(QIcon(":/icons/newCurve"),"newCurve");
     newCurve->setEnabled(false);
     toolBar->addAction(newCurve);
     connect(newCurve, &QAction::triggered, this, &MainWindow::showNewCurveTab);
+    leftCurve = new QAction(QIcon(":/icons/leftCurve"), "leftCurve");
+    toolBar->addAction(leftCurve);
+    leftCurve->setEnabled(true);
+    upCurve = new QAction(QIcon(":/icons/upCurve"), "upCurve");
+    toolBar->addAction(upCurve);
+    upCurve->setEnabled(false);
+    rightCurve = new QAction(QIcon(":/icons/rightCurve"), "rightCurve");
+    toolBar->addAction(rightCurve);
+    rightCurve->setEnabled(false);
 }
 
 void MainWindow::showNewCurveTab(){

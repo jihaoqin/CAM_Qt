@@ -4,5 +4,9 @@
     </qresource>
     <qresource prefix="/icons">
         <file alias="newCurve">pic/newCurve.png</file>
+        <file alias="leftCurve">pic/leftCurve.png</file>
+        <file alias="rightCurve">pic/rightCurve.png</file>
+        <file alias="upCurve">pic/upCurve.png</file>
     </qresource>
+    <qresource prefix="/"/>
 </RCC>

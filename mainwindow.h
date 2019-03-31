@@ -37,6 +37,11 @@ private:
     QMenu* bandMenu;
         QAction* bandSave;
         QAction* bandOpen;
+    //ToolBar
+        QAction *newCurve;
+        QAction *leftCurve;
+        QAction *rightCurve;
+        QAction *upCurve;
     QToolBar* toolBar;
 };
 
