@@ -284,3 +284,103 @@ vector<Pos> utility::filterNum(vector<PosDir> pds, int num){
     }
     return filterNum(densePos, num);
 }
+
+glm::vec3 utility::multiply(glm::mat4 T, glm::vec3 v, QString flag){
+    if(flag.contains("pos")){
+        glm::vec4 p{v,1};
+        Pos result = glm::vec3{T*p};
+        return result;
+    }
+    else{
+        glm::vec4 p{v,0};
+        Pos result = glm::vec3{T*p};
+        return result;
+    }
+}
+
+bool utility::isIn(float x, float x1, float x2){
+    if(x2<x1){
+        float temp = x1;
+        x1 = x2;
+        x2 = temp;
+    }
+    if(x >= x1 && x <= x2){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+vector<float> utility::sameInterval(float x1, float x3, float h){
+    auto f = [](float x1, float x3)->bool{
+        if (x1>x3){
+            return true;
+        }
+        else{
+            return false;
+        }
+    };
+    assert(h!=0);
+    if(x1>x3){
+        h = -1*abs(h);
+    }
+    else{
+        h = abs(h);
+    }
+    vector<float> x2s;
+    float x = x1;
+    while(f(x1, x3) == f(x, x3)){
+        x2s.push_back(x);
+        x = x+h;
+    }
+    x2s.push_back(x3);
+    return x2s;
+}
+
+bool utility::hasCycle(BandEndPtrVec bandEnds){
+    EndPtrVec appeared;
+    for(auto bandEnd:bandEnds){
+        for(auto end:bandEnd->ends){
+            if(hasEnd(appeared, end->endId)){
+                continue;//已经检查过
+            }
+            bool flag = true;
+            EndPtr e = end;
+            while(flag){
+                if(e->nextEndId.isEmpty()){
+                    flag = false;//通过检查
+                }
+                else if(hasEnd(appeared, e->nextEndId)){
+                    return true;//有环
+                }
+                else{
+                    appeared.push_back(e);
+                    e = getNextEnd(bandEnds, e->nextEndId);
+                }
+            }
+            appeared.push_back(end);
+        }
+    }
+    return false;
+}
+
+EndPtr utility::getNextEnd(BandEndPtrVec bandEnds, QString id){
+    for(auto bandEnd:bandEnds){
+        for(auto end:bandEnd->ends){
+            if(end->endId == id){
+                return end;
+            }
+        }
+    }
+    return nullptr;
+}
+
+bool utility::hasEnd(EndPtrVec ends, QString id){
+    for(auto e:ends){
+        if(e->endId == id){
+            return true;
+        }
+    }
+    return false;
+}

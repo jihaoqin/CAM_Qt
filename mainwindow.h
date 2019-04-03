@@ -23,6 +23,7 @@ private slots:
     void showNewCurveTab();
     void saveBand();
     void openBand();
+    void genLeftCurve();
 private:
     void configureStatusBar();
     void configureMenuBar();

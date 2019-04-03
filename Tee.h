@@ -24,11 +24,13 @@ class GLProgram;
 class Tee: public DataObject
 {
 public:
+    friend class LeftCylinderAssist;
     Tee(float , float , float , float ,IdGenerator&);
     virtual ~Tee();
     virtual void bindGL(QOpenGLContext*) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;
     vector<HalfPoint> intersectionPoints(glm::vec3 pos, glm::vec3 dir);
+    QStringVec getLeftCylinderId();
     BoundingBox boundingBox();
     void setIdUsing(IdGenerator);
     Ring* getRing(QString);
@@ -57,6 +59,7 @@ private:
     vector<Cylinder> pipeHalfVec;
     std::vector<Cylinder> cylinderVec;
     std::vector<TriEdgePlane> triEdgePlaneVec;
+    std::vector<QString> leftCylinderId;
     glm::mat4 modelMat;
     Color color;
     float pipeR;

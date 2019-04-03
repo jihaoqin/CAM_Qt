@@ -210,6 +210,7 @@ void MainWindow::configureToolBar(){
     leftCurve = new QAction(QIcon(":/icons/leftCurve"), "leftCurve");
     toolBar->addAction(leftCurve);
     leftCurve->setEnabled(true);
+    connect(leftCurve, &QAction::triggered, this, &MainWindow::genLeftCurve);
     upCurve = new QAction(QIcon(":/icons/upCurve"), "upCurve");
     toolBar->addAction(upCurve);
     upCurve->setEnabled(false);
@@ -241,4 +242,8 @@ void MainWindow::openBand(){
     else{
         ctrl->openBand(fileName);
     }
+}
+
+void MainWindow::genLeftCurve(){
+    ctrl->genLeftCurve();
 }

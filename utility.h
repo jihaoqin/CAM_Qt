@@ -7,6 +7,7 @@
 #include <complex>
 #include <vector>
 #include "PosDir.h"
+#include "Band.h"
 
 namespace utility {
 const float PI = 3.1415926;
@@ -26,6 +27,8 @@ glm::mat4 setXDir(glm::mat4& matrix, glm::vec3 pos);
 glm::mat4 setYDir(glm::mat4& matrix, glm::vec3 pos);
 glm::mat4 setZDir(glm::mat4& matrix, glm::vec3 pos);
 glm::mat3 RInMatrix(glm::mat4 matrix);
+glm::vec3 multiply(glm::mat4, glm::vec3, QString);
+bool isIn(float x, float x1, float x2);
 double length(glm::vec3 v);
 double length(glm::vec2 v);
 bool isZero(double);
@@ -37,6 +40,10 @@ Vertex lineRotateVertex(glm::vec3 anchor, glm::vec3 dir, Vertex p, float alpha);
 bool isParallel(glm::vec3 vec1, glm::vec3 vec2);
 Mesh generateRevolution(glm::vec3 anchor, glm::vec3 dir, std::vector<Vertex> edge, float angle);
 vector<unsigned int> filterInterval(vector<glm::vec3>, float h);
+vector<float> sameInterval(float x1, float x3, float h);
 vector<Pos> filterNum(vector<Pos>, int num);
 vector<Pos> filterNum(vector<PosDir>, int num);
+bool hasCycle(BandEndPtrVec);
+bool hasEnd(EndPtrVec, QString);
+EndPtr getNextEnd(BandEndPtrVec, QString);
 }

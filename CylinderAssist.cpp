@@ -328,3 +328,26 @@ Pos CylinderAssist::outNorm(Pos p){
     assert(abs(glm::length(norm) - 1) < 1e-2);
     return local3DToWorld(norm, "dir");
 }
+
+bool CylinderAssist::isOnSurface(Pos world){
+    float pi = asin(1)*2;
+    Pos local = world3DToLocal(world, "pos");
+    float v = local.z;
+    float u = atan2(local.y, local.x);
+    while(u>2*pi){
+        u = u-2*pi;
+    }
+    while(u<0){
+        u = u +2*pi;
+    }
+    if(v>=-1e-2 && v<=length+1e-2){
+        if(u>=-1e-2 && u<= angle+1e-2){
+            return true;
+        }
+    }
+    return false;
+}
+
+QString CylinderAssist::cylinderId(){
+    return id;
+}

@@ -87,7 +87,9 @@ SOURCES += \
     PointSym.cpp \
     ObjTreeWidget.cpp \
     ObjModel.cpp \
-    TreeItem.cpp
+    TreeItem.cpp \
+    LeftCylinderAssist.cpp \
+    GeneralBand.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -155,7 +157,9 @@ HEADERS += \
     PointSym.h \
     ObjTreeWidget.h \
     ObjModel.h \
-    TreeItem.h
+    TreeItem.h \
+    LeftCylinderAssist.h \
+    GeneralBand.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt

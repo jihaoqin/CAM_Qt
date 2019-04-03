@@ -24,6 +24,9 @@
 #include <iostream>
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
+#include "LeftCylinderAssist.h"
+#include "Band.h"
+#include "GeneralBand.h"
 using namespace  std;
 using namespace  rapidjson;
 Controller::Controller()
@@ -448,4 +451,44 @@ void Controller::openBand(QString path){
         }
     }
     inFile.close();
+}
+
+void Controller::genLeftCurve(){
+    TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
+    LeftCylinderAssist leftAssist(tee, tee->getLeftCylinderId());
+    auto root = data->root;
+    auto children = root->childrenPtrVec();
+    PosDirVec beginSide;
+    PosDirVec endSide;
+    QStringVec beginMesh;
+    QStringVec endMesh;
+    vector<EndPtr> endVec;
+    for(auto c:children){
+        QString id = c->Id();
+        if(id.contains("band")&& !id.contains("left")){
+            BandPtr b = std::dynamic_pointer_cast<Band>(c->getData());
+            BandEndPtr backend = b->bandEnd();
+            bool flag1 = leftAssist.isPosIn(backend->frontPos());
+            if(flag1){
+                endVec.push_back(backend->frontEnd());
+            }
+            bool flag2 = leftAssist.isPosIn(backend->backPos());
+            if(flag2){
+                endVec.push_back(backend->backEnd());
+            }
+        }
+    }
+    for(auto& e:endVec){
+        auto tuple1 = leftAssist.genCurve(e);
+        auto& pds = get<0>(tuple1);
+        auto& strs = get<1>(tuple1);
+        GeneralBandPtr band = make_shared<GeneralBand>(pds, strs, data->idGenerator.getBandId(), tee);
+        QOpenGLContext* gl = widget->getGLContext();
+        band->setCouple(e);
+        band->bindGL(gl);
+        data->addBand(band);
+    }
+    //找环
+    到这里
+
 }

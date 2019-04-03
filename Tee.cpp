@@ -33,6 +33,8 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdG
                       glm::vec3(lengthMain/-2, 0, 0), pipeR, pi, glm::vec3{0,0,1});
     Cylinder mainPipeLeft2(g.getCylinderId(), glm::vec3(-1*(pipeR+sideR), 0, 0),
                       glm::vec3(lengthMain/-2, 0, 0), pipeR, pi, glm::vec3{0,0,-1});
+    leftCylinderId.push_back(mainPipeLeft1.getId());
+    leftCylinderId.push_back(mainPipeLeft2.getId());
     Cylinder pipeHalf(g.getCylinderId(), glm::vec3(-1*(pipeR+sideR),0,0),
                       glm::vec3{pipeR+sideR, 0, 0}, pipeR, pi, glm::vec3{0,0,1});
     Cylinder mainPipeRight1(g.getCylinderId(), glm::vec3(pipeR+sideR, 0, 0),
@@ -565,4 +567,8 @@ QString Tee::symmmetryMesh(QString meshId , QString flag){
         }
     }
     return sMesh;
+}
+
+QStringVec  Tee::getLeftCylinderId(){
+    return leftCylinderId;
 }

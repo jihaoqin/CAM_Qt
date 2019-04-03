@@ -11,6 +11,7 @@ public:
     CylinderAssist(Cylinder&);
     vector<glm::vec3> intersectionPoints(glm::vec3 worldPos, glm::vec3 worldDir);
     bool isInPara(vector<float>);
+    bool isOnSurface(Pos);
     vector<float> local3DProjectToUV(glm::vec3 pos);
     vector<float> local3DToUV(glm::vec3 pos);
     glm::vec3 local3DToWorld(glm::vec3 local, const char*);
@@ -20,6 +21,7 @@ public:
     PosDir paraToWorld(CPPara);
     vector<EdgePtr> getEdges();
     Pos outNorm(Pos);
+    QString cylinderId();
 private:
     glm::vec3 anchor;
     glm::vec3 zDir;

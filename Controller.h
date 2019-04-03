@@ -35,6 +35,7 @@ public:
     void draw();
     void drawDataObject(std::shared_ptr<DataObject>);
     bool hasTee();
+    void genLeftCurve();
     void setViewPortRatio(int w, int h);
     void processTranslation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort);
     void processRotation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort);
