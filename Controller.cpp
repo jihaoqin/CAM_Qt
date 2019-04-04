@@ -479,6 +479,9 @@ void Controller::genLeftCurve(){
         }
     }
     for(auto& e:endVec){
+        if(!e->nextEndId.isEmpty()){
+            continue;
+        }
         auto tuple1 = leftAssist.genCurve(e);
         auto& pds = get<0>(tuple1);
         auto& strs = get<1>(tuple1);
@@ -489,6 +492,40 @@ void Controller::genLeftCurve(){
         data->addBand(band);
     }
     //找环
-    到这里
+    EndPtrVec couplingEndVec;
+    for(auto c:children){
+        DataObjectPtr objPtr = c->getData();
+        if(QString(objPtr->getId()).contains("band")){
+            BandPtr band = dynamic_pointer_cast<Band>(objPtr);
+            BandEndPtr bandEnd = band->bandEnd();
+            for(auto end:bandEnd->ends){
+                if(leftAssist.isReturn(end)){
+                    couplingEndVec.push_back(end);
+                }
+            }
+        }
+    }
+    for(auto e:couplingEndVec){
+        auto dirEndVec = leftAssist.filterDir(e, couplingEndVec);
+        auto cycleEndVec = leftAssist.filterCycle(e, dirEndVec, allEnds());
+        auto nearEnd = leftAssist.nearEnd(e, cycleEndVec);
+        auto curve = leftAssist.genCircleCurve(e, nearEnd);
+    }
+}
 
+EndPtrVec Controller::allEnds(){
+    EndPtrVec all;
+    TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
+    auto root = data->root;
+    auto children = root->childrenPtrVec();
+    for(auto c:children){
+        QString id = c->Id();
+        if(id.contains("band")){
+            BandPtr b = std::dynamic_pointer_cast<Band>(c->getData());
+            BandEndPtr backend = b->bandEnd();
+            all.push_back(backend->frontEnd());
+            all.push_back(backend->backEnd());
+        }
+    }
+    return all;
 }

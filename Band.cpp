@@ -66,3 +66,8 @@ End::End(PosDir p, QString next, QString now){
     nextEndId = next;
     endId = now;
 }
+
+bool End::setCouple(EndPtr& e){
+    nextEndId = e->endId;
+    e->nextEndId = endId;
+}

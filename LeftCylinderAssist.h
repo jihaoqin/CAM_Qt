@@ -24,6 +24,7 @@ public:
     LeftCylinderAssist(TeePtr, QStringVec halfCylinder);
     std::tuple<PosDirVec, QStringVec> genCurve(EndPtr);
     bool isPosIn(Pos);
+    bool isReturn(EndPtr);
     void findCoupleEnd(int ind, std::vector<BandEnd>);
     int findBand(QString, std::vector<BandEnd>);
     CPPara worldToCPPara(PosDir world);
@@ -32,14 +33,16 @@ public:
     std::vector<Sol> getSol(CPPara p1, CPPara p2, float absLam);
     std::vector<float> getDus(CPPara p1, float a2, CPPara p3, float r, float absLam);
     PosDir paraToWorld(CPPara);
+    EndPtrVec filterDir(EndPtr, EndPtrVec);
+    EndPtrVec filterCycle(EndPtr, EndPtrVec, const EndPtrVec);
+    EndPtr nearEnd(EndPtr, EndPtrVec);
 private:
     float lnn(float);
     bool isBad(glm::mat2);
     TeePtr tee;
     glm::mat4 T;
     std::vector<Cylinder*> cylinders;
-    float m_xLeft;
-    float m_xRight;
+    float m_length;
     float r;
 };
 

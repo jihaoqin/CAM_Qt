@@ -16,6 +16,7 @@ public:
     End(PosDir, QString, QString);
     QString bandId();
     bool isClose(EndPtr&);
+    bool setCouple(EndPtr&);
     PosDir pd;
     QString nextEndId;
     QString endId;

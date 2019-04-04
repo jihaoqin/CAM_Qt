@@ -22,6 +22,7 @@ public:
     vector<EdgePtr> getEdges();
     Pos outNorm(Pos);
     QString cylinderId();
+    float getLength();
 private:
     glm::vec3 anchor;
     glm::vec3 zDir;

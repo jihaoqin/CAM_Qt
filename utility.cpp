@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include "find_polynomial_roots_jenkins_traub.h"
+#include <memory>
 glm::mat4 utility::createMat(glm::vec3 pos, glm::vec3 zDir, glm::vec3 upDir)
 {
 	zDir = glm::normalize(zDir);
@@ -338,29 +339,27 @@ vector<float> utility::sameInterval(float x1, float x3, float h){
     return x2s;
 }
 
-bool utility::hasCycle(BandEndPtrVec bandEnds){
+bool utility::hasCycle(EndPtrVec ends){
     EndPtrVec appeared;
-    for(auto bandEnd:bandEnds){
-        for(auto end:bandEnd->ends){
-            if(hasEnd(appeared, end->endId)){
-                continue;//已经检查过
-            }
-            bool flag = true;
-            EndPtr e = end;
-            while(flag){
-                if(e->nextEndId.isEmpty()){
-                    flag = false;//通过检查
-                }
-                else if(hasEnd(appeared, e->nextEndId)){
-                    return true;//有环
-                }
-                else{
-                    appeared.push_back(e);
-                    e = getNextEnd(bandEnds, e->nextEndId);
-                }
-            }
-            appeared.push_back(end);
+    for(auto end:ends){
+        if(hasEnd(appeared, end->endId)){
+            continue;//已经检查过
         }
+        bool flag = true;
+        EndPtr e = end;
+        while(flag){
+            if(e->nextEndId.isEmpty()){
+                flag = false;//通过检查
+            }
+            else if(hasEnd(appeared, e->nextEndId)){
+                return true;//有环
+            }
+            else{
+                appeared.push_back(e);
+                e = findEnd(e->nextEndId, ends);
+            }
+        }
+        appeared.push_back(end);
     }
     return false;
 }
@@ -383,4 +382,27 @@ bool utility::hasEnd(EndPtrVec ends, QString id){
         }
     }
     return false;
+}
+
+EndPtrVec utility::valueCopyEndPtrVec(const EndPtrVec listEnds){
+    EndPtrVec newEnds;
+    for(auto e:listEnds){
+        EndPtr temp = std::make_shared<End>(*e);
+        newEnds.push_back(temp);
+    }
+    return newEnds;
+}
+
+EndPtr utility::valueCopyEndPtr(const EndPtr end){
+    EndPtr newEnd = std::make_shared<End>(*end);
+    return newEnd;
+}
+
+EndPtr utility::findEnd(const QString mainEnd, const EndPtrVec listEnds){
+    for(auto end:listEnds){
+        if(mainEnd == end->endId){
+            return end;
+        }
+    }
+    return nullptr;
 }

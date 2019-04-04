@@ -351,3 +351,7 @@ bool CylinderAssist::isOnSurface(Pos world){
 QString CylinderAssist::cylinderId(){
     return id;
 }
+
+float CylinderAssist::getLength(){
+    return length;
+}

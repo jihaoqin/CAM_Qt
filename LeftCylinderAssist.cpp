@@ -5,17 +5,20 @@
 #include <algorithm>
 #include "Cylinder.h"
 #include "CyCurveAssist.h"
+#include "CylinderAssist.h"
+#include <algorithm>
 LeftCylinderAssist::LeftCylinderAssist(TeePtr t, QStringVec halfCylinder):tee(t)
 {
     utility::setPos(T, Pos{(t->pipeR+t->sideR)*-1, 0, 0});
     utility::setXDir(T, Dir{0,0,1});
     utility::setYDir(T, Dir{0,1,0});
     utility::setZDir(T, Dir{-1, 0, 0});
-    m_xLeft = t->lengthMain/-2;
-    m_xRight = (t->pipeR+t->sideR)*-1;
     r = t->pipeR;
     for(auto s:halfCylinder){
+        Cylinder* c =tee->getCylinder(s);
+        CylinderAssist assist(*c);
         cylinders.push_back(tee->getCylinder(s));
+        m_length = assist.getLength();
     }
 }
 
@@ -87,12 +90,16 @@ PosDir LeftCylinderAssist::paraToWorld(CPPara a){
 }
 
 bool LeftCylinderAssist::isPosIn(Pos p){
-    if(abs(p.x - m_xRight)<1e-1){
-        return true;
+    auto cyStrs = tee->getLeftCylinderId();
+    vector<Cylinder*> cyVec;
+    for (auto s:cyStrs){
+        auto cy = tee->getCylinder(s);
+        CylinderAssist assist(*cy);
+        if(assist.isOnSurface(p)){
+            return true;
+        }
     }
-    else{
-        return false;
-    }
+    return false;
 }
 
 void LeftCylinderAssist::findCoupleEnd(int ind, std::vector<BandEnd> endVec){
@@ -314,4 +321,83 @@ std::vector<float> LeftCylinderAssist::getDus(CPPara p1, float a2, CPPara p3, fl
         }
         return dus;
     }
+}
+
+bool LeftCylinderAssist::isReturn(EndPtr e){
+    float pi = asin(1)*2;
+    if(!isPosIn(e->pd.pos)){
+        return false;
+    }
+    CPPara para = worldToCPPara(e->pd);
+    if(abs(para.v - m_length)<1e-2){
+        if(abs(para.uAng)<1e-2 || abs(para.uAng-pi)<1e-2){
+            return true;
+        }
+    }
+    return false;
+}
+
+EndPtrVec LeftCylinderAssist::filterDir(EndPtr mainEnd, EndPtrVec endVec){
+    float pi = asin(1)*2;
+    EndPtrVec dirEndVec;
+    for(auto& end:endVec){
+        auto mainUAng = worldToCPPara(mainEnd->pd).uAng;
+        auto listUAng = worldToCPPara(end->pd).uAng;
+        while(mainUAng > 1.5*pi){
+            mainUAng -= 2*pi;
+        }
+        while(listUAng > 1.5*pi){
+            listUAng -= 2*pi;
+        }
+        if(abs(mainUAng - listUAng)<1e-2){
+            dirEndVec.push_back(end);
+        }
+    }
+    return dirEndVec;
+}
+
+EndPtrVec LeftCylinderAssist::filterCycle(EndPtr mainEnd, EndPtrVec listEnds, const EndPtrVec allEnds){
+    EndPtrVec cycleEnds;
+    for(auto& end:listEnds){
+        auto checkEnds = utility::valueCopyEndPtrVec(allEnds);
+        auto copyMainEnd = utility::findEnd(mainEnd->endId, checkEnds);
+        auto copyEnd = utility::findEnd(end->endId, checkEnds);
+        copyMainEnd->setCouple(copyEnd);
+        if(!utility::hasCycle(checkEnds)){
+            cycleEnds.push_back(end);
+        }
+    }
+    return cycleEnds;
+}
+
+EndPtr LeftCylinderAssist::nearEnd(EndPtr mainEnd, EndPtrVec listEnds){
+    float pi = asin(1)*2;
+    vector<float> dis;
+    for(auto end:listEnds){
+        CPPara p1 = worldToCPPara(mainEnd->pd);
+        CPPara p2 = worldToCPPara(end->pd);
+        float rotateUAng = p1.uAng;
+        while(rotateUAng > 1.5*pi){
+            rotateUAng -= 2*pi;
+        }
+        float angle;
+        if(abs(rotateUAng) < 1e-2){
+            angle = p2.u - p1.u;
+            while(angle<0){
+                angle += 2*pi;
+            }
+        }
+        else if(abs(rotateUAng - pi)< 1e-2){
+            angle = p2.u - p1.u;
+            while(angle>0){
+                angle -= 2*pi;
+            }
+        }
+        else{
+            assert(0);
+        }
+        dis.push_back(abs(angle));
+    }
+    int ind = std::min_element(dis.begin(), dis.end()) - dis.begin();
+    return listEnds.at(ind);
 }
