@@ -340,26 +340,24 @@ vector<float> utility::sameInterval(float x1, float x3, float h){
 }
 
 bool utility::hasCycle(EndPtrVec ends){
-    EndPtrVec appeared;
     for(auto end:ends){
-        if(hasEnd(appeared, end->endId)){
-            continue;//已经检查过
-        }
+        EndPtrVec appeared;
         bool flag = true;
         EndPtr e = end;
         while(flag){
-            if(e->nextEndId.isEmpty()){
+            auto otherEnd = theOtherEnd(e, ends);
+            if(otherEnd->nextEndId.isEmpty()){
                 flag = false;//通过检查
             }
-            else if(hasEnd(appeared, e->nextEndId)){
+            else if(hasEnd(appeared, otherEnd->nextEndId)){
                 return true;//有环
             }
             else{
                 appeared.push_back(e);
-                e = findEnd(e->nextEndId, ends);
+                appeared.push_back(otherEnd);
+                e = findEnd(otherEnd->nextEndId, ends);
             }
         }
-        appeared.push_back(end);
     }
     return false;
 }
@@ -402,6 +400,15 @@ EndPtr utility::findEnd(const QString mainEnd, const EndPtrVec listEnds){
     for(auto end:listEnds){
         if(mainEnd == end->endId){
             return end;
+        }
+    }
+    return nullptr;
+}
+
+EndPtr utility::theOtherEnd(const EndPtr mainEnd, const EndPtrVec listEnds){
+    for(auto e:listEnds){
+        if(e->bandId() == mainEnd->bandId() && e->endId != mainEnd->endId){
+            return e;
         }
     }
     return nullptr;

@@ -67,7 +67,11 @@ End::End(PosDir p, QString next, QString now){
     endId = now;
 }
 
-bool End::setCouple(EndPtr& e){
+void End::setCouple(EndPtr& e){
     nextEndId = e->endId;
     e->nextEndId = endId;
+}
+
+bool End::isCoupled(){
+    return nextEndId.isEmpty()?false:true;
 }

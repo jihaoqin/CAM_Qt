@@ -23,6 +23,8 @@ class LeftCylinderAssist
 public:
     LeftCylinderAssist(TeePtr, QStringVec halfCylinder);
     std::tuple<PosDirVec, QStringVec> genCurve(EndPtr);
+    std::tuple<PosDirVec, QStringVec> genCircleCurve(EndPtr, EndPtr);
+    float endToEndAngle(EndPtr, EndPtr);
     bool isPosIn(Pos);
     bool isReturn(EndPtr);
     void findCoupleEnd(int ind, std::vector<BandEnd>);

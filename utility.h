@@ -49,4 +49,5 @@ EndPtr getNextEnd(BandEndPtrVec, QString);
 EndPtrVec valueCopyEndPtrVec(const EndPtrVec);
 EndPtr valueCopyEndPtr(const EndPtr);
 EndPtr findEnd(const QString, const EndPtrVec);
+EndPtr theOtherEnd(const EndPtr, const EndPtrVec);
 }

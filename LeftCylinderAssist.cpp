@@ -329,10 +329,14 @@ bool LeftCylinderAssist::isReturn(EndPtr e){
         return false;
     }
     CPPara para = worldToCPPara(e->pd);
-    if(abs(para.v - m_length)<1e-2){
-        if(abs(para.uAng)<1e-2 || abs(para.uAng-pi)<1e-2){
-            return true;
-        }
+    while(para.uAng > 1.5*pi){
+        para.uAng -= 2*pi;
+    }
+    while(para.uAng < -0.5*pi){
+        para.uAng += 2*pi;
+    }
+    if(abs(para.uAng)<1e-2 || abs(para.uAng-pi)<1e-2){
+        return true;
     }
     return false;
 }
@@ -341,15 +345,18 @@ EndPtrVec LeftCylinderAssist::filterDir(EndPtr mainEnd, EndPtrVec endVec){
     float pi = asin(1)*2;
     EndPtrVec dirEndVec;
     for(auto& end:endVec){
+        if(mainEnd->endId == end->endId){
+            continue;
+        }
         auto mainUAng = worldToCPPara(mainEnd->pd).uAng;
         auto listUAng = worldToCPPara(end->pd).uAng;
-        while(mainUAng > 1.5*pi){
-            mainUAng -= 2*pi;
+        while(mainUAng < -0.5*pi){
+            mainUAng += 2*pi;
         }
-        while(listUAng > 1.5*pi){
-            listUAng -= 2*pi;
+        while(listUAng < -0.5*pi){
+            listUAng += 2*pi;
         }
-        if(abs(mainUAng - listUAng)<1e-2){
+        if(abs(abs(mainUAng - listUAng) - pi)<1e-2){
             dirEndVec.push_back(end);
         }
     }
@@ -359,6 +366,9 @@ EndPtrVec LeftCylinderAssist::filterDir(EndPtr mainEnd, EndPtrVec endVec){
 EndPtrVec LeftCylinderAssist::filterCycle(EndPtr mainEnd, EndPtrVec listEnds, const EndPtrVec allEnds){
     EndPtrVec cycleEnds;
     for(auto& end:listEnds){
+        if(end->endId == mainEnd->endId){
+            continue;
+        }
         auto checkEnds = utility::valueCopyEndPtrVec(allEnds);
         auto copyMainEnd = utility::findEnd(mainEnd->endId, checkEnds);
         auto copyEnd = utility::findEnd(end->endId, checkEnds);
@@ -374,30 +384,63 @@ EndPtr LeftCylinderAssist::nearEnd(EndPtr mainEnd, EndPtrVec listEnds){
     float pi = asin(1)*2;
     vector<float> dis;
     for(auto end:listEnds){
-        CPPara p1 = worldToCPPara(mainEnd->pd);
-        CPPara p2 = worldToCPPara(end->pd);
-        float rotateUAng = p1.uAng;
-        while(rotateUAng > 1.5*pi){
-            rotateUAng -= 2*pi;
-        }
-        float angle;
-        if(abs(rotateUAng) < 1e-2){
-            angle = p2.u - p1.u;
-            while(angle<0){
-                angle += 2*pi;
-            }
-        }
-        else if(abs(rotateUAng - pi)< 1e-2){
-            angle = p2.u - p1.u;
-            while(angle>0){
-                angle -= 2*pi;
-            }
-        }
-        else{
-            assert(0);
-        }
+        float angle = endToEndAngle(mainEnd, end);
         dis.push_back(abs(angle));
     }
     int ind = std::min_element(dis.begin(), dis.end()) - dis.begin();
     return listEnds.at(ind);
+}
+
+std::tuple<PosDirVec, QStringVec> LeftCylinderAssist::genCircleCurve(EndPtr beginPoint, EndPtr endPoint){
+    float angle = endToEndAngle(beginPoint, endPoint);
+    CPPara para = worldToCPPara(beginPoint->pd);
+    PosDirVec pds;
+    QStringVec strVec;
+    CylinderAssist assist_1(*cylinders.at(0));
+    CylinderAssist assist_2(*cylinders.at(1));
+    int num = abs(angle)/0.2;
+    num = num>5? num:5;
+    for(int i = 0; i < num; i++){
+        float u = para.u+angle*i/num;
+        CPPara paraI {u, para.v, para.uAng};
+        auto pd = paraToWorld(paraI);
+        pds.push_back(pd);
+        if(assist_1.isOnSurface(pd.pos)){
+            strVec.push_back(assist_1.cylinderId());
+        }
+        else if(assist_2.isOnSurface(pd.pos)){
+            strVec.push_back(assist_2.cylinderId());
+        }
+        else{
+            assert(0);
+        }
+    }
+    return std::tuple<PosDirVec, QStringVec>{pds, strVec};
+}
+
+float LeftCylinderAssist::endToEndAngle(EndPtr e1, EndPtr e2){
+    float pi = asin(1)*2;
+    CPPara p1 = worldToCPPara(e1->pd);
+    CPPara p2 = worldToCPPara(e2->pd);
+    float rotateUAng = p1.uAng;
+    while(rotateUAng < -0.5*pi){
+        rotateUAng += 2*pi;
+    }
+    float angle;
+    if(abs(rotateUAng) < 1e-2){
+        angle = p2.u - p1.u;
+        while(angle<0){
+            angle += 2*pi;
+        }
+    }
+    else if(abs(rotateUAng - pi)< 1e-2){
+        angle = p2.u - p1.u;
+        while(angle>0){
+            angle -= 2*pi;
+        }
+    }
+    else{
+        assert(0);
+    }
+    return angle;
 }

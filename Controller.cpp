@@ -493,6 +493,7 @@ void Controller::genLeftCurve(){
     }
     //找环
     EndPtrVec couplingEndVec;
+    children = data->root->childrenPtrVec();
     for(auto c:children){
         DataObjectPtr objPtr = c->getData();
         if(QString(objPtr->getId()).contains("band")){
@@ -506,10 +507,21 @@ void Controller::genLeftCurve(){
         }
     }
     for(auto e:couplingEndVec){
+        if(e->isCoupled()){
+            continue;
+        }
         auto dirEndVec = leftAssist.filterDir(e, couplingEndVec);
         auto cycleEndVec = leftAssist.filterCycle(e, dirEndVec, allEnds());
         auto nearEnd = leftAssist.nearEnd(e, cycleEndVec);
-        auto curve = leftAssist.genCircleCurve(e, nearEnd);
+        auto tuple1 = leftAssist.genCircleCurve(e, nearEnd);
+        auto& pds = get<0>(tuple1);
+        auto& strs = get<1>(tuple1);
+        auto band = make_shared<GeneralBand>(pds, strs, data->idGenerator.getBandId(), tee);
+        QOpenGLContext* gl = widget->getGLContext();
+        band->setCouple(e);
+        band->setCouple(nearEnd);
+        band->bindGL(gl);
+        data->addBand(band);
     }
 }
 
