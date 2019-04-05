@@ -43,7 +43,7 @@ vector<unsigned int> filterInterval(vector<glm::vec3>, float h);
 vector<float> sameInterval(float x1, float x3, float h);
 vector<Pos> filterNum(vector<Pos>, int num);
 vector<Pos> filterNum(vector<PosDir>, int num);
-bool hasCycle(EndPtrVec);
+bool hasCycle(std::set<End>);
 bool hasEnd(EndPtrVec, QString);
 EndPtr getNextEnd(BandEndPtrVec, QString);
 EndPtrVec valueCopyEndPtrVec(const EndPtrVec);

@@ -341,11 +341,7 @@ vector<float> utility::sameInterval(float x1, float x3, float h){
     return x2s;
 }
 
-bool utility::hasCycle(EndPtrVec ends){
-    std::set<End> allEnds;
-    for(auto e:ends){
-        allEnds.insert(*e);
-    }
+bool utility::hasCycle(set<End> allEnds){
     std::set<End> notSee = allEnds;
     std::set<End> passed;
     

@@ -7,6 +7,7 @@
 #include "CyCurveAssist.h"
 #include "CylinderAssist.h"
 #include <algorithm>
+using namespace std;
 LeftCylinderAssist::LeftCylinderAssist(TeePtr t, QStringVec halfCylinder):tee(t)
 {
     utility::setPos(T, Pos{(t->pipeR+t->sideR)*-1, 0, 0});
@@ -369,11 +370,32 @@ EndPtrVec LeftCylinderAssist::filterCycle(EndPtr mainEnd, EndPtrVec listEnds, co
         if(end->endId == mainEnd->endId){
             continue;
         }
-        auto checkEnds = utility::valueCopyEndPtrVec(allEnds);
-        auto copyMainEnd = utility::findEnd(mainEnd->endId, checkEnds);
-        auto copyEnd = utility::findEnd(end->endId, checkEnds);
+        auto copyAllEnds = utility::valueCopyEndPtrVec(allEnds);
+        auto copyMainEnd = utility::findEnd(mainEnd->endId, copyAllEnds);
+        auto copyEnd = utility::findEnd(end->endId, copyAllEnds);
         copyMainEnd->setCouple(copyEnd);
-        传入的不应该是所有的checkEnds是应该是和copyMainEnd有关的Ends
+        //传入的不应该是所有的checkEnds是应该是和copyMainEnd有关的Ends
+        std::set<End> allCheckEnds;
+        for(auto& e:copyAllEnds){
+            allCheckEnds.insert(*e);
+        }
+        std::set<End> checkEnds;
+        End e = *mainEnd;
+        checkEnds.insert(e);
+        e = utility::theOtherEnd(e, allCheckEnds);
+        while(true){
+            if(e.nextEndId.isEmpty()){
+                checkEnds.insert(e);
+                break;
+            }
+            else{
+                End nextEnd = utility::getEnd(e.nextEndId, allCheckEnds);
+                End otherEnd = utility::theOtherEnd(nextEnd, allCheckEnds);
+                checkEnds.insert(e);
+                checkEnds.insert(nextEnd);
+                e = otherEnd;
+            }
+        }
         if(!utility::hasCycle(checkEnds)){
             cycleEnds.push_back(end);
         }
