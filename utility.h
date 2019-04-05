@@ -8,7 +8,7 @@
 #include <vector>
 #include "PosDir.h"
 #include "Band.h"
-
+#include <set>
 namespace utility {
 const float PI = 3.1415926;
 struct Root{
@@ -50,4 +50,8 @@ EndPtrVec valueCopyEndPtrVec(const EndPtrVec);
 EndPtr valueCopyEndPtr(const EndPtr);
 EndPtr findEnd(const QString, const EndPtrVec);
 EndPtr theOtherEnd(const EndPtr, const EndPtrVec);
+End genFakeEnd(QString fakeId);
+End theOtherEnd(End, std::set<End>);
+End getEnd(QString, std::set<End>);
+bool isLinked(EndPtr, EndPtr, const EndPtrVec);
 }

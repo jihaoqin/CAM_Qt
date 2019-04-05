@@ -37,6 +37,7 @@ public:
     PosDir paraToWorld(CPPara);
     EndPtrVec filterDir(EndPtr, EndPtrVec);
     EndPtrVec filterCycle(EndPtr, EndPtrVec, const EndPtrVec);
+    EndPtrVec filterInnerFirst(EndPtrVec, const EndPtrVec);
     EndPtr nearEnd(EndPtr, EndPtrVec);
 private:
     float lnn(float);

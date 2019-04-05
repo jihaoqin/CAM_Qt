@@ -14,7 +14,9 @@ using EndPtr = std::shared_ptr<End>;
 class End{
 public:
     End(PosDir, QString, QString);
+    bool operator<(const End& right) const;
     QString bandId();
+    QString theOtherId();
     bool isClose(EndPtr&);
     void setCouple(EndPtr&);
     bool isCoupled();

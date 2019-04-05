@@ -3,6 +3,8 @@
 #include <sstream>
 #include "find_polynomial_roots_jenkins_traub.h"
 #include <memory>
+#include <set>
+using namespace std;
 glm::mat4 utility::createMat(glm::vec3 pos, glm::vec3 zDir, glm::vec3 upDir)
 {
 	zDir = glm::normalize(zDir);
@@ -340,23 +342,46 @@ vector<float> utility::sameInterval(float x1, float x3, float h){
 }
 
 bool utility::hasCycle(EndPtrVec ends){
-    for(auto end:ends){
-        EndPtrVec appeared;
-        bool flag = true;
-        EndPtr e = end;
-        while(flag){
-            auto otherEnd = theOtherEnd(e, ends);
-            if(otherEnd->nextEndId.isEmpty()){
-                flag = false;//通过检查
+    std::set<End> allEnds;
+    for(auto e:ends){
+        allEnds.insert(*e);
+    }
+    std::set<End> notSee = allEnds;
+    std::set<End> passed;
+    
+    while(notSee.begin() != notSee.end()){
+    	End e = *notSee.begin();
+        End otherE = theOtherEnd(e, notSee);
+        vector<End> endVec{e, otherE};
+        for(auto e:endVec){
+            while(true){
+                auto eIter = passed.find(e);
+                if(eIter != passed.end()){
+                    return true;
+                }
+                else{
+                    if(e.nextEndId.isEmpty()){
+                        passed.insert(e);
+                        notSee.erase(e);
+                        break;
+                    }
+                    else{
+                        End nextEnd = getEnd(e.nextEndId, allEnds);
+                        auto nextEndIter = passed.find(nextEnd);
+                        if(nextEndIter != passed.end()){
+                            return true;
+                        }
+                        else{
+                            passed.insert(e);
+                            passed.insert(nextEnd);
+                            notSee.erase(e);
+                            notSee.erase(nextEnd);
+                            e = theOtherEnd(nextEnd, allEnds);
+                        }
+                    }
+                }
             }
-            else if(hasEnd(appeared, otherEnd->nextEndId)){
-                return true;//有环
-            }
-            else{
-                appeared.push_back(e);
-                appeared.push_back(otherEnd);
-                e = findEnd(otherEnd->nextEndId, ends);
-            }
+
         }
     }
     return false;
@@ -412,4 +437,46 @@ EndPtr utility::theOtherEnd(const EndPtr mainEnd, const EndPtrVec listEnds){
         }
     }
     return nullptr;
+}
+
+End utility::genFakeEnd(QString fakeId){
+    End e {PosDir{Pos{0,0,0}, Dir{0,0,0}},"", fakeId};
+    return e;
+}
+
+End utility::theOtherEnd(End e, std::set<End> ends){
+    QString id = e.theOtherId();
+    return getEnd(id, ends);
+}
+
+End utility::getEnd(QString id, std::set<End> ends){
+    End e = genFakeEnd(id);
+    auto ite = ends.find(e);
+    assert(ite != ends.end());
+    return *ite;
+}
+
+bool utility::isLinked(EndPtr p1, EndPtr p2, const EndPtrVec allEnds){
+    std::set<End> ends;
+    for (auto e:allEnds){
+        ends.insert(*e);
+    }
+    std::set<End> appeared;
+    std::vector<End> endVec{*p1, theOtherEnd(*p1, ends)};
+    for(auto end:endVec){
+        while(true){
+            if(end.nextEndId.isEmpty()){
+                appeared.insert(end);
+                break;
+            }
+            else{
+                End nextEnd = getEnd(end.nextEndId, ends);
+                appeared.insert(end);
+                appeared.insert(nextEnd);
+                end = theOtherEnd(nextEnd, ends);
+            }
+        }
+    }
+    End end2 = *p2;
+    return appeared.find(end2) == appeared.end()?false:true;
 }

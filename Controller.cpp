@@ -512,7 +512,8 @@ void Controller::genLeftCurve(){
         }
         auto dirEndVec = leftAssist.filterDir(e, couplingEndVec);
         auto cycleEndVec = leftAssist.filterCycle(e, dirEndVec, allEnds());
-        auto nearEnd = leftAssist.nearEnd(e, cycleEndVec);
+        auto innerFirstEndVec = leftAssist.filterInnerFirst(cycleEndVec, allEnds());
+        auto nearEnd = leftAssist.nearEnd(e, innerFirstEndVec);
         auto tuple1 = leftAssist.genCircleCurve(e, nearEnd);
         auto& pds = get<0>(tuple1);
         auto& strs = get<1>(tuple1);

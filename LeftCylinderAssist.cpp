@@ -373,6 +373,7 @@ EndPtrVec LeftCylinderAssist::filterCycle(EndPtr mainEnd, EndPtrVec listEnds, co
         auto copyMainEnd = utility::findEnd(mainEnd->endId, checkEnds);
         auto copyEnd = utility::findEnd(end->endId, checkEnds);
         copyMainEnd->setCouple(copyEnd);
+        传入的不应该是所有的checkEnds是应该是和copyMainEnd有关的Ends
         if(!utility::hasCycle(checkEnds)){
             cycleEnds.push_back(end);
         }
@@ -400,7 +401,7 @@ std::tuple<PosDirVec, QStringVec> LeftCylinderAssist::genCircleCurve(EndPtr begi
     CylinderAssist assist_2(*cylinders.at(1));
     int num = abs(angle)/0.2;
     num = num>5? num:5;
-    for(int i = 0; i < num; i++){
+    for(int i = 0; i < num+1; i++){
         float u = para.u+angle*i/num;
         CPPara paraI {u, para.v, para.uAng};
         auto pd = paraToWorld(paraI);
@@ -443,4 +444,49 @@ float LeftCylinderAssist::endToEndAngle(EndPtr e1, EndPtr e2){
         assert(0);
     }
     return angle;
+}
+
+EndPtrVec LeftCylinderAssist::filterInnerFirst(EndPtrVec listEnds, const EndPtrVec allEnds){
+    EndPtrVec innerEnds;
+    for (auto ee:listEnds){
+        EndPtr lastEnd = nullptr;
+        EndPtr e = nullptr;
+        for(auto& end:allEnds){
+            if(ee->theOtherId() == end->endId){
+                e = end;
+                break;
+            }
+        }
+        while(true){
+            if(e->nextEndId.isEmpty()){
+                break;
+            }
+            else{
+                EndPtr nextEnd = nullptr;
+                for(auto& end:allEnds){
+                    if(end->endId == e->nextEndId){
+                        nextEnd = end;
+                        break;
+                    }
+                }
+                EndPtr nextOtherEnd = nullptr;
+                QString nextOtherId = nextEnd->theOtherId();
+                for(auto& end:allEnds){
+                    if(end->endId == nextOtherId){
+                        nextOtherEnd = end;
+                        break;
+                    }
+                }
+                e = nextOtherEnd;
+                lastEnd = e;
+            }
+        }
+        if(lastEnd!=nullptr && isReturn(lastEnd)){
+            innerEnds.push_back(e);
+        }
+    }
+    if(innerEnds.size() == 0){
+        innerEnds = listEnds;
+    }
+    return innerEnds;
 }

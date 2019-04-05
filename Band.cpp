@@ -75,3 +75,19 @@ void End::setCouple(EndPtr& e){
 bool End::isCoupled(){
     return nextEndId.isEmpty()?false:true;
 }
+
+bool End::operator<(const End& right) const{
+    return endId<right.endId;
+}
+    
+QString End::theOtherId(){
+    if(endId.contains("front")){
+        return bandId()+".back";
+    }
+    else if(endId.contains("back")){
+        return bandId()+".front";
+    }
+    else{
+        assert(0);
+    }
+}
