@@ -53,5 +53,6 @@ EndPtr theOtherEnd(const EndPtr, const EndPtrVec);
 End genFakeEnd(QString fakeId);
 End theOtherEnd(End, std::set<End>);
 End getEnd(QString, std::set<End>);
+std::set<End>::iterator getEndIte(QString, std::set<End>);
 bool isLinked(EndPtr, EndPtr, const EndPtrVec);
 }

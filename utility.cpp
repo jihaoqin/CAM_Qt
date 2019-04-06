@@ -476,3 +476,9 @@ bool utility::isLinked(EndPtr p1, EndPtr p2, const EndPtrVec allEnds){
     End end2 = *p2;
     return appeared.find(end2) == appeared.end()?false:true;
 }
+
+std::set<End>::iterator utility::getEndIte(QString id, std::set<End> ends){
+    End e = genFakeEnd(id);
+    set<End>::iterator ite = ends.find(e);
+    return ite;
+}

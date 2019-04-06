@@ -366,19 +366,25 @@ EndPtrVec LeftCylinderAssist::filterDir(EndPtr mainEnd, EndPtrVec endVec){
 
 EndPtrVec LeftCylinderAssist::filterCycle(EndPtr mainEnd, EndPtrVec listEnds, const EndPtrVec allEnds){
     EndPtrVec cycleEnds;
+    auto copyAllEnds = utility::valueCopyEndPtrVec(allEnds);
+    std::set<End> allCheckEnds;
+    for(auto& e:copyAllEnds){
+        allCheckEnds.insert(*e);
+    }
     for(auto& end:listEnds){
         if(end->endId == mainEnd->endId){
             continue;
         }
-        auto copyAllEnds = utility::valueCopyEndPtrVec(allEnds);
-        auto copyMainEnd = utility::findEnd(mainEnd->endId, copyAllEnds);
-        auto copyEnd = utility::findEnd(end->endId, copyAllEnds);
-        copyMainEnd->setCouple(copyEnd);
         //传入的不应该是所有的checkEnds是应该是和copyMainEnd有关的Ends
-        std::set<End> allCheckEnds;
-        for(auto& e:copyAllEnds){
-            allCheckEnds.insert(*e);
-        }
+        allCheckEnds.erase(*mainEnd);
+        allCheckEnds.erase(*end);
+        End newMain = *mainEnd;
+        End newEnd = *end;
+        newMain.setCouple(newEnd);
+        newEnd.setCouple(newMain);
+        allCheckEnds.insert(newMain);
+        allCheckEnds.insert(newEnd);
+
         std::set<End> checkEnds;
         End e = *mainEnd;
         checkEnds.insert(e);
@@ -391,14 +397,28 @@ EndPtrVec LeftCylinderAssist::filterCycle(EndPtr mainEnd, EndPtrVec listEnds, co
             else{
                 End nextEnd = utility::getEnd(e.nextEndId, allCheckEnds);
                 End otherEnd = utility::theOtherEnd(nextEnd, allCheckEnds);
-                checkEnds.insert(e);
-                checkEnds.insert(nextEnd);
+                if(checkEnds.find(e)!=checkEnds.end()){
+                    break;
+                }
+                else{
+                    checkEnds.insert(e);
+                }
+                if(checkEnds.find(nextEnd)!=checkEnds.end()){
+                    break;
+                }
+                else{
+                    checkEnds.insert(nextEnd);
+                }
                 e = otherEnd;
             }
         }
         if(!utility::hasCycle(checkEnds)){
             cycleEnds.push_back(end);
         }
+        allCheckEnds.erase(newMain);
+        allCheckEnds.erase(newEnd);
+        allCheckEnds.insert(*mainEnd);
+        allCheckEnds.insert(*end);
     }
     return cycleEnds;
 }

@@ -72,6 +72,10 @@ void End::setCouple(EndPtr& e){
     e->nextEndId = endId;
 }
 
+void End::setCouple(End& e){
+    nextEndId = e.endId;
+}
+
 bool End::isCoupled(){
     return nextEndId.isEmpty()?false:true;
 }

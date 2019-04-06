@@ -19,6 +19,7 @@ public:
     QString theOtherId();
     bool isClose(EndPtr&);
     void setCouple(EndPtr&);
+    void setCouple(End&);
     bool isCoupled();
     PosDir pd;
     QString nextEndId;
