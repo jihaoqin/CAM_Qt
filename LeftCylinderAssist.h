@@ -26,6 +26,7 @@ public:
     std::tuple<PosDirVec, QStringVec> genCircleCurve(EndPtr, EndPtr);
     float endToEndAngle(EndPtr, EndPtr);
     bool isPosIn(Pos);
+    bool isPosAtStart(Pos);
     bool isReturn(EndPtr);
     void findCoupleEnd(int ind, std::vector<BandEnd>);
     int findBand(QString, std::vector<BandEnd>);

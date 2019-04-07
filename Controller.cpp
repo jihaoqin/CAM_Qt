@@ -391,7 +391,9 @@ void Controller::saveBand(QString path){
         QString id = c->Id();
         if(id.contains("band")){
             BandPtr b = std::dynamic_pointer_cast<Band>(c->getData());
-            b->serialize(writer);
+            if(b->typeStr() == "TBandOnPoint"){
+                b->serialize(writer);
+            }
         }
     }
     writer.EndArray();
@@ -561,11 +563,11 @@ void Controller::genCylinderCurve(QString which){
         if(id.contains("band")){
             BandPtr b = std::dynamic_pointer_cast<Band>(c->getData());
             BandEndPtr backend = b->bandEnd();
-            bool flag1 = leftAssist.isPosIn(backend->frontPos());
+            bool flag1 = leftAssist.isPosAtStart(backend->frontPos());
             if(flag1){
                 endVec.push_back(backend->frontEnd());
             }
-            bool flag2 = leftAssist.isPosIn(backend->backPos());
+            bool flag2 = leftAssist.isPosAtStart(backend->backPos());
             if(flag2){
                 endVec.push_back(backend->backEnd());
             }
@@ -585,41 +587,6 @@ void Controller::genCylinderCurve(QString which){
         data->addBand(band);
     }
     //找环
-    EndPtrVec couplingEndVec;
-    children = data->root->childrenPtrVec();
-    for(auto c:children){
-        DataObjectPtr objPtr = c->getData();
-        if(QString(objPtr->getId()).contains("band")){
-            BandPtr band = dynamic_pointer_cast<Band>(objPtr);
-            BandEndPtr bandEnd = band->bandEnd();
-            for(auto end:bandEnd->ends){
-                if(leftAssist.isReturn(end)){
-                    couplingEndVec.push_back(end);
-                }
-            }
-        }
-    }
-    for(auto e:couplingEndVec){
-        if(e->isCoupled()){
-            continue;
-        }
-        auto dirEndVec = leftAssist.filterDir(e, couplingEndVec);
-        auto cycleEndVec = leftAssist.filterCycle(e, dirEndVec, allEnds());
-        if(cycleEndVec.size() == 0){
-            continue;
-        }
-        auto innerFirstEndVec = leftAssist.filterInnerFirst(cycleEndVec, allEnds());
-        auto nearEnd = leftAssist.nearEnd(e, innerFirstEndVec);
-        auto tuple1 = leftAssist.genCircleCurve(e, nearEnd);
-        auto& pds = get<0>(tuple1);
-        auto& strs = get<1>(tuple1);
-        auto band = make_shared<GeneralBand>(pds, strs, data->idGenerator.getBandId(), tee);
-        QOpenGLContext* gl = widget->getGLContext();
-        band->setCouple(e);
-        band->setCouple(nearEnd);
-        band->bindGL(gl);
-        data->addBand(band);
-    }
 }
 
 void Controller::genUpCurve(){
@@ -630,4 +597,52 @@ void Controller::genUpCurve(){
 void Controller::genRightCurve(){
     TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
     genCylinderCurve("right");
+}
+
+void Controller::closePath(){
+    TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
+    vector<LeftCylinderAssist> assistVec;
+    assistVec.push_back(LeftCylinderAssist(tee, "left"));
+    assistVec.push_back(LeftCylinderAssist(tee, "up"));
+    assistVec.push_back(LeftCylinderAssist(tee, "right"));
+    int unLinkedNum = 0;
+    for(auto& leftAssist:assistVec){
+        EndPtrVec couplingEndVec;
+        auto children = data->root->childrenPtrVec();
+        for(auto c:children){
+            DataObjectPtr objPtr = c->getData();
+            if(QString(objPtr->getId()).contains("band")){
+                BandPtr band = dynamic_pointer_cast<Band>(objPtr);
+                BandEndPtr bandEnd = band->bandEnd();
+                for(auto end:bandEnd->ends){
+                    if(leftAssist.isReturn(end)){
+                        couplingEndVec.push_back(end);
+                    }
+                }
+            }
+        }
+        for(auto e:couplingEndVec){
+            if(e->isCoupled()){
+                continue;
+            }
+            auto dirEndVec = leftAssist.filterDir(e, couplingEndVec);
+            auto cycleEndVec = leftAssist.filterCycle(e, dirEndVec, allEnds());
+            if(cycleEndVec.size() == 0){
+                ++unLinkedNum;
+                continue;
+            }
+            auto innerFirstEndVec = leftAssist.filterInnerFirst(cycleEndVec, allEnds());
+            auto nearEnd = leftAssist.nearEnd(e, innerFirstEndVec);
+            auto tuple1 = leftAssist.genCircleCurve(e, nearEnd);
+            auto& pds = get<0>(tuple1);
+            auto& strs = get<1>(tuple1);
+            auto band = make_shared<GeneralBand>(pds, strs, data->idGenerator.getBandId(), tee);
+            QOpenGLContext* gl = widget->getGLContext();
+            band->setCouple(e);
+            band->setCouple(nearEnd);
+            band->bindGL(gl);
+            data->addBand(band);
+        }
+    }
+    assert(unLinkedNum<2);
 }

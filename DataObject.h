@@ -27,6 +27,7 @@ public:
     void addChild(DataObjectPtr);
     QStringVec childId();
     QStringVec fatherId();
+    QString typeStr();
     virtual void serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const{
     }
 protected:

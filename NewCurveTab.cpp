@@ -39,8 +39,9 @@ NewCurveTab::NewCurveTab(QWidget* parent):QWidget(parent),focusOnPoint(true),cur
     dirSpinBox->setValue(45);
     lamLabel = new QLabel("slippery", this);
     lamSpinBox = new QDoubleSpinBox(this);
+    lamSpinBox->setDecimals(3);
     lamSpinBox->setRange(-0.1, 0.1);
-    lamSpinBox->setSingleStep(0.01);
+    lamSpinBox->setSingleStep(0.005);
     lamSpinBox->setValue(0);
     connect(dirSpinBox, SIGNAL(valueChanged(int)), dirSlider, SLOT(setValue(int)));
     connect(dirSlider, SIGNAL(valueChanged(int)), dirSpinBox, SLOT(setValue(int)));

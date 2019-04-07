@@ -74,6 +74,7 @@ void Data::deleteBand(QString id){
     for(auto id:allIds){
         root->deleteChild(id.toLatin1().data());
     }
+    root->deleteChild(id.toLatin1().data());
     connector->updateModel();
     updateBoundingBox();
     state.setEmpty(false);

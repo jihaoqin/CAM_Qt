@@ -81,3 +81,8 @@ QStringVec DataObject::fatherId(){
     }
     return strVec;
 }
+
+
+QString DataObject::typeStr(){
+    return QString(type.c_str());
+}

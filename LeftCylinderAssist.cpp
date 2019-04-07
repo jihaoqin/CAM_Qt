@@ -112,6 +112,17 @@ bool LeftCylinderAssist::isPosIn(Pos p){
     return false;
 }
 
+bool LeftCylinderAssist::isPosAtStart(Pos p){
+    glm::mat4 invT = glm::inverse(T);
+    glm::vec3 local = utility::multiply(invT, p, "pos");
+    if(abs(local.z) < 1e-1){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
 void LeftCylinderAssist::findCoupleEnd(int ind, std::vector<BandEnd> endVec){
     /*
     auto& endIni = endVec.at(ind);
