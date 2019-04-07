@@ -8,14 +8,26 @@
 #include "CylinderAssist.h"
 #include <algorithm>
 using namespace std;
-LeftCylinderAssist::LeftCylinderAssist(TeePtr t, QStringVec halfCylinder):tee(t)
+LeftCylinderAssist::LeftCylinderAssist(TeePtr t, QString which):tee(t)
 {
-    utility::setPos(T, Pos{(t->pipeR+t->sideR)*-1, 0, 0});
-    utility::setXDir(T, Dir{0,0,1});
-    utility::setYDir(T, Dir{0,1,0});
-    utility::setZDir(T, Dir{-1, 0, 0});
+    QStringVec halfCylinders;
+    if(which.contains("left")){
+        T = t->leftMat4();
+        halfCylinders = t->getLeftCylinderId();
+    }
+    else if(which.contains("up")){
+        T = t->upMat4();
+        halfCylinders = t->getUpCylinderId();
+    }
+    else if(which.contains("right")){
+        T = t->rightMat4();
+        halfCylinders = t->getRightCylinderId();
+    }
+    else{
+        assert(0);
+    }
     r = t->pipeR;
-    for(auto s:halfCylinder){
+    for(auto s:halfCylinders){
         Cylinder* c =tee->getCylinder(s);
         CylinderAssist assist(*c);
         cylinders.push_back(tee->getCylinder(s));
@@ -28,7 +40,7 @@ std::tuple<PosDirVec, QStringVec> LeftCylinderAssist::genCurve(EndPtr e){
     float pi = asin(1)*2;
     CPPara p1 = worldToCPPara(end.pd);
     p1 = normPara(p1, glm::vec2{0,1});
-    float v3 = tee->lengthMain/2 - tee->pipeR - tee->sideR - 1;
+    float v3 = m_length - 1;
     float v1 = p1.v;//v1 = 0;
     float alpha_3 = p1.uAng<(0.5*pi)? 0:pi;
     float lam = (r*(1/cos(p1.uAng) - 1/cos(alpha_3)))/(v3 - v1);
@@ -91,11 +103,8 @@ PosDir LeftCylinderAssist::paraToWorld(CPPara a){
 }
 
 bool LeftCylinderAssist::isPosIn(Pos p){
-    auto cyStrs = tee->getLeftCylinderId();
-    vector<Cylinder*> cyVec;
-    for (auto s:cyStrs){
-        auto cy = tee->getCylinder(s);
-        CylinderAssist assist(*cy);
+    for (auto c:cylinders){
+        CylinderAssist assist(*c);
         if(assist.isOnSurface(p)){
             return true;
         }
@@ -347,6 +356,9 @@ EndPtrVec LeftCylinderAssist::filterDir(EndPtr mainEnd, EndPtrVec endVec){
     EndPtrVec dirEndVec;
     for(auto& end:endVec){
         if(mainEnd->endId == end->endId){
+            continue;
+        }
+        if(end->isCoupled()){
             continue;
         }
         auto mainUAng = worldToCPPara(mainEnd->pd).uAng;

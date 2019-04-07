@@ -31,6 +31,8 @@ public:
     virtual void draw(std::shared_ptr<GLProgram>) override;
     vector<HalfPoint> intersectionPoints(glm::vec3 pos, glm::vec3 dir);
     QStringVec getLeftCylinderId();
+    QStringVec getUpCylinderId();
+    QStringVec getRightCylinderId();
     BoundingBox boundingBox();
     void setIdUsing(IdGenerator);
     Ring* getRing(QString);
@@ -42,6 +44,9 @@ public:
     std::map<QString, QString> allEdgeTopo();
     Dir outNorm(Pos p, QString meshId);
     QString symmmetryMesh(QString , QString);
+    glm::mat4 leftMat4();
+    glm::mat4 upMat4();
+    glm::mat4 rightMat4();
 
 private:
     Mesh generateLeftRing();
@@ -60,6 +65,8 @@ private:
     std::vector<Cylinder> cylinderVec;
     std::vector<TriEdgePlane> triEdgePlaneVec;
     std::vector<QString> leftCylinderId;
+    std::vector<QString> upCylinderId;
+    std::vector<QString> rightCylinderId;
     glm::mat4 modelMat;
     Color color;
     float pipeR;
@@ -69,28 +76,6 @@ private:
     std::map<std::pair<QString, QString>, QString> symMap;
     QOpenGLFunctions_4_3_Core *core;
 
-    friend class boost::serialization::access;
-    template<typename Archive>
-    void save(Archive& ar, const unsigned int version) const {
-        ar & boost::serialization::base_object<DataObject>(*this);
-        ar & modelMat & color & pipeR & sideR & lengthMain & lengthBranch;
-    }
-    template<typename Archive>
-    void load(Archive& ar, const unsigned int version){
-        ar & boost::serialization::base_object<DataObject>(*this);
-        ar & modelMat & color & pipeR & sideR & lengthMain & lengthBranch;
-        Mesh up = generateCircle(glm::vec3(0, lengthBranch, 0), glm::vec3(0, 1, 0), pipeR);
-        Mesh left = generateCircle(glm::vec3(-1.0*lengthMain/2, 0, 0), glm::vec3(-1, 0, 0),pipeR);
-        Mesh right = generateCircle(glm::vec3(1.0*lengthMain/2, 0, 0), glm::vec3(1, 0, 0),pipeR);
-        Mesh front = generateFrontPlane();
-        Mesh back = generateBackPlane();
-        planeVec.push_back(up);
-        planeVec.push_back(left);
-        planeVec.push_back(right);
-        planeVec.push_back(front);
-        planeVec.push_back(back);
-    }
-    BOOST_SERIALIZATION_SPLIT_MEMBER()
 };
 
 #endif // TEE_H

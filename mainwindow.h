@@ -24,6 +24,8 @@ private slots:
     void saveBand();
     void openBand();
     void genLeftCurve();
+    void genUpCurve();
+    void genRightCurve();
 private:
     void configureStatusBar();
     void configureMenuBar();

@@ -21,7 +21,7 @@ using SolVec = std::vector<Sol>;
 class LeftCylinderAssist
 {
 public:
-    LeftCylinderAssist(TeePtr, QStringVec halfCylinder);
+    LeftCylinderAssist(TeePtr, QString which);
     std::tuple<PosDirVec, QStringVec> genCurve(EndPtr);
     std::tuple<PosDirVec, QStringVec> genCircleCurve(EndPtr, EndPtr);
     float endToEndAngle(EndPtr, EndPtr);

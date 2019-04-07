@@ -29,6 +29,8 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdG
                     glm::vec3(0, lengthBranch, 0), pipeR, pi, glm::vec3{0,0,1});
     Cylinder branch2(g.getCylinderId(), glm::vec3(0, pipeR + sideR, 0),
                     glm::vec3(0, lengthBranch, 0), pipeR, pi, glm::vec3{0,0,-1});
+    upCylinderId.push_back(branch1.getId());
+    upCylinderId.push_back(branch2.getId());
     Cylinder mainPipeLeft1(g.getCylinderId(), glm::vec3(-1*(pipeR+sideR), 0, 0),
                       glm::vec3(lengthMain/-2, 0, 0), pipeR, pi, glm::vec3{0,0,1});
     Cylinder mainPipeLeft2(g.getCylinderId(), glm::vec3(-1*(pipeR+sideR), 0, 0),
@@ -41,6 +43,8 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdG
                       glm::vec3(lengthMain/2, 0, 0), pipeR, pi, glm::vec3{0,0,1});
     Cylinder mainPipeRight2(g.getCylinderId(), glm::vec3(pipeR+sideR, 0, 0),
                       glm::vec3(lengthMain/2, 0, 0), pipeR, pi, glm::vec3{0,0,-1});
+    rightCylinderId.push_back(mainPipeRight1.getId());
+    rightCylinderId.push_back(mainPipeRight2.getId());
     TriEdgePlane plane1(g.getPlaneId(), pipeR+sideR, glm::vec3{0,0,pipeR}, glm::vec3{1,0,0}, glm::vec3{0,0,1});
     TriEdgePlane plane2(g.getPlaneId(), pipeR+sideR, glm::vec3{0,0,-1*pipeR}, glm::vec3{-1,0,0}, glm::vec3{0,0,-1});
 
@@ -571,4 +575,39 @@ QString Tee::symmmetryMesh(QString meshId , QString flag){
 
 QStringVec  Tee::getLeftCylinderId(){
     return leftCylinderId;
+}
+
+QStringVec Tee::getUpCylinderId(){
+    return upCylinderId;
+}
+
+QStringVec Tee::getRightCylinderId(){
+    return rightCylinderId;
+}
+
+glm::mat4 Tee::leftMat4(){
+    glm::mat4 T;
+    utility::setPos(T, Pos{(pipeR+sideR)*-1, 0, 0});
+    utility::setXDir(T, Dir{0,0,1});
+    utility::setYDir(T, Dir{0,1,0});
+    utility::setZDir(T, Dir{-1, 0, 0});
+    return T;
+}
+
+glm::mat4 Tee::upMat4(){
+    glm::mat4 T;
+    utility::setPos(T, Pos{0, (pipeR+sideR), 0});
+    utility::setXDir(T, Dir{-1,0,0});
+    utility::setYDir(T, Dir{0,0,1});
+    utility::setZDir(T, Dir{0, 1, 0});
+    return T;
+}
+
+glm::mat4 Tee::rightMat4(){
+    glm::mat4 T;
+    utility::setPos(T, Pos{(pipeR+sideR), 0, 0});
+    utility::setXDir(T, Dir{0,0,-1});
+    utility::setYDir(T, Dir{0,1,0});
+    utility::setZDir(T, Dir{1, 0, 0});
+    return T;
 }

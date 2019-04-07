@@ -182,7 +182,26 @@ void MainWindow::updateAction(){
             }
         }
     }
+    {
+        bool hasT = ctrl->hasTee();
+        if(hasT){
+            leftCurve->setEnabled(true);
+            upCurve->setEnabled(true);
+            rightCurve->setEnabled(true);
+        }
+        else{
+            leftCurve->setEnabled(false);
+            upCurve->setEnabled(false);
+            rightCurve->setEnabled(false);
+        }
+        if(true == opFlag){
+            leftCurve->setEnabled(false);
+            upCurve->setEnabled(false);
+            rightCurve->setEnabled(false);
+        }
+    }
 
+    //menuBand
     {
         bool hasT = ctrl->hasTee();
         if(hasT){
@@ -214,9 +233,11 @@ void MainWindow::configureToolBar(){
     upCurve = new QAction(QIcon(":/icons/upCurve"), "upCurve");
     toolBar->addAction(upCurve);
     upCurve->setEnabled(false);
+    connect(upCurve, &QAction::triggered, this, &MainWindow::genUpCurve);
     rightCurve = new QAction(QIcon(":/icons/rightCurve"), "rightCurve");
     toolBar->addAction(rightCurve);
     rightCurve->setEnabled(false);
+    connect(rightCurve, &QAction::triggered, this, &MainWindow::genRightCurve);
 }
 
 void MainWindow::showNewCurveTab(){
@@ -246,4 +267,12 @@ void MainWindow::openBand(){
 
 void MainWindow::genLeftCurve(){
     ctrl->genLeftCurve();
+}
+
+void MainWindow::genUpCurve(){
+    ctrl->genUpCurve();
+}
+
+void MainWindow::genRightCurve(){
+    ctrl->genRightCurve();
 }

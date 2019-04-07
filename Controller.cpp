@@ -455,6 +455,8 @@ void Controller::openBand(QString path){
 
 void Controller::genLeftCurve(){
     TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
+    genCylinderCurve("left");
+    /*
     LeftCylinderAssist leftAssist(tee, tee->getLeftCylinderId());
     auto root = data->root;
     auto children = root->childrenPtrVec();
@@ -465,7 +467,7 @@ void Controller::genLeftCurve(){
     vector<EndPtr> endVec;
     for(auto c:children){
         QString id = c->Id();
-        if(id.contains("band")&& !id.contains("left")){
+        if(id.contains("band")){
             BandPtr b = std::dynamic_pointer_cast<Band>(c->getData());
             BandEndPtr backend = b->bandEnd();
             bool flag1 = leftAssist.isPosIn(backend->frontPos());
@@ -524,6 +526,7 @@ void Controller::genLeftCurve(){
         band->bindGL(gl);
         data->addBand(band);
     }
+    */
 }
 
 EndPtrVec Controller::allEnds(){
@@ -541,4 +544,90 @@ EndPtrVec Controller::allEnds(){
         }
     }
     return all;
+}
+
+void Controller::genCylinderCurve(QString which){
+    TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
+    LeftCylinderAssist leftAssist(tee, which);
+    auto root = data->root;
+    auto children = root->childrenPtrVec();
+    PosDirVec beginSide;
+    PosDirVec endSide;
+    QStringVec beginMesh;
+    QStringVec endMesh;
+    vector<EndPtr> endVec;
+    for(auto c:children){
+        QString id = c->Id();
+        if(id.contains("band")){
+            BandPtr b = std::dynamic_pointer_cast<Band>(c->getData());
+            BandEndPtr backend = b->bandEnd();
+            bool flag1 = leftAssist.isPosIn(backend->frontPos());
+            if(flag1){
+                endVec.push_back(backend->frontEnd());
+            }
+            bool flag2 = leftAssist.isPosIn(backend->backPos());
+            if(flag2){
+                endVec.push_back(backend->backEnd());
+            }
+        }
+    }
+    for(auto& e:endVec){
+        if(!e->nextEndId.isEmpty()){
+            continue;
+        }
+        auto tuple1 = leftAssist.genCurve(e);
+        auto& pds = get<0>(tuple1);
+        auto& strs = get<1>(tuple1);
+        GeneralBandPtr band = make_shared<GeneralBand>(pds, strs, data->idGenerator.getBandId(), tee);
+        QOpenGLContext* gl = widget->getGLContext();
+        band->setCouple(e);
+        band->bindGL(gl);
+        data->addBand(band);
+    }
+    //找环
+    EndPtrVec couplingEndVec;
+    children = data->root->childrenPtrVec();
+    for(auto c:children){
+        DataObjectPtr objPtr = c->getData();
+        if(QString(objPtr->getId()).contains("band")){
+            BandPtr band = dynamic_pointer_cast<Band>(objPtr);
+            BandEndPtr bandEnd = band->bandEnd();
+            for(auto end:bandEnd->ends){
+                if(leftAssist.isReturn(end)){
+                    couplingEndVec.push_back(end);
+                }
+            }
+        }
+    }
+    for(auto e:couplingEndVec){
+        if(e->isCoupled()){
+            continue;
+        }
+        auto dirEndVec = leftAssist.filterDir(e, couplingEndVec);
+        auto cycleEndVec = leftAssist.filterCycle(e, dirEndVec, allEnds());
+        if(cycleEndVec.size() == 0){
+            continue;
+        }
+        auto innerFirstEndVec = leftAssist.filterInnerFirst(cycleEndVec, allEnds());
+        auto nearEnd = leftAssist.nearEnd(e, innerFirstEndVec);
+        auto tuple1 = leftAssist.genCircleCurve(e, nearEnd);
+        auto& pds = get<0>(tuple1);
+        auto& strs = get<1>(tuple1);
+        auto band = make_shared<GeneralBand>(pds, strs, data->idGenerator.getBandId(), tee);
+        QOpenGLContext* gl = widget->getGLContext();
+        band->setCouple(e);
+        band->setCouple(nearEnd);
+        band->bindGL(gl);
+        data->addBand(band);
+    }
+}
+
+void Controller::genUpCurve(){
+    TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
+    genCylinderCurve("up");
+}
+
+void Controller::genRightCurve(){
+    TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
+    genCylinderCurve("right");
 }
