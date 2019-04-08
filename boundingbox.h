@@ -1,8 +1,6 @@
 #pragma once
 #include <vector>
 #include "vertex.h"
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/archive/text_oarchive.hpp>
 struct peakValue{
     peakValue& OR(peakValue p){
         auto MIN = [](float a, float b)->float {return a < b ? a : b; };
@@ -41,10 +39,5 @@ public:
     Type type;
 private:
     peakValue data;
-    friend class boost::serialization::access;
-    template<typename Archive>
-    void serialize(Archive& ar, const unsigned int version){
-        ar&type&data.xmin&data.xmax&data.ymin&data.ymax&data.zmin&data.zmax;
-    }
 };
 

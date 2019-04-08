@@ -7,20 +7,24 @@
 #include "Curve.h"
 #include "Band.h"
 #include "GuiConnector.h"
+#include <QMutexLocker>
 using std::shared_ptr;
 using std::make_shared;
 Data::Data():box(), state(), idGenerator(), root(nullptr), connector(nullptr)
+  , mtx(QMutex::Recursive)
 {
     camera = std::make_shared<Camera2>(BoundingBox());
 }
 
 
 void Data::updateBoundingBox(){
-   vector<BoundingBox> boxVec;
-   box = root->boudingBoxUnion();
+    QMutexLocker locker(&mtx);
+    vector<BoundingBox> boxVec;
+    box = root->boudingBoxUnion();
 }
 
 void Data::addTee(std::shared_ptr<Tee> t){
+    QMutexLocker locker(&mtx);
     root = std::make_shared<Node>(t);
     updateBoundingBox();
     camera->bindBoundingBox(box);
@@ -29,6 +33,7 @@ void Data::addTee(std::shared_ptr<Tee> t){
 }
 
 void Data::addPoint(shared_ptr<Point> p){
+    QMutexLocker locker(&mtx);
     root->addChild(make_shared<Node>(p));
     updateBoundingBox();
     state.setEmpty(false);
@@ -36,12 +41,14 @@ void Data::addPoint(shared_ptr<Point> p){
 }
 
 void Data::addCurve(std::shared_ptr<Curve> curve){
+    QMutexLocker locker(&mtx);
     root->addChild(make_shared<Node>(curve));
     updateBoundingBox();
     state.setEmpty(false);
     state.setChanged(true);
 }
 void Data::addBand(std::shared_ptr<Band> b){
+    QMutexLocker locker(&mtx);
     root->addChild(make_shared<Node>(b));
     connector->updateModel();
     updateBoundingBox();
@@ -50,6 +57,7 @@ void Data::addBand(std::shared_ptr<Band> b){
 }
 
 void Data::deleteBand(QString id){
+    QMutexLocker locker(&mtx);
     if(!id.contains("band")){
         return ;
     }
@@ -82,6 +90,7 @@ void Data::deleteBand(QString id){
 }
 
 bool Data::hasTee(){
+    QMutexLocker locker(&mtx);
     if(root!= nullptr && root->getData() != nullptr){
         return true;
     }
@@ -91,35 +100,30 @@ bool Data::hasTee(){
 }
 
 void Data::setViewPortRatio(int w, int h){
+    QMutexLocker locker(&mtx);
     camera->viewPortRatio(w, h);
 }
 
 void Data::processTranslation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort){
+    QMutexLocker locker(&mtx);
     camera->processTranslation(mPos, mLastPos, viewPort);
     state.setChanged(true);
 }
 
 void Data::processRotation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort){
+    QMutexLocker locker(&mtx);
     camera->processRotation(mPos, mLastPos, viewPort);
     state.setChanged(true);
 }
 
 void Data::processScroll(double yOffset){
+    QMutexLocker locker(&mtx);
     camera->processScroll(yOffset);
     state.setChanged(true);
 }
 
-void Data::save(QString savePath){
-    std::string s = savePath.toStdString();
-    std::ofstream oStream(s.c_str());
-    boost::archive::text_oarchive oa(oStream);
-    oa << this;
-    oStream.close();
-
-    state.setChanged(false);
-}
-
 void Data::clear(){
+    QMutexLocker locker(&mtx);
     if(state.getEmpty() == false){
         state.setChanged(true);
     }
@@ -132,18 +136,22 @@ void Data::clear(){
 }
 
 bool Data::getEmpty(){
+    QMutexLocker locker(&mtx);
     return state.getEmpty();
 }
 
 bool Data::getChanged(){
+    QMutexLocker locker(&mtx);
     return state.getChanged();
 }
 
 
 void Data::bindConnector(GuiConnector *c){
+    QMutexLocker locker(&mtx);
     connector = c;
 }
 
 std::shared_ptr<Node> Data::getNodeRoot(){
+    QMutexLocker locker(&mtx);
     return root;
 }

@@ -8,6 +8,7 @@ class NewCurveTab;
 class GLWidget;
 class Controller;
 class Data;
+class GenCurveProgressDialog;
 
 class GuiConnector
 {
@@ -17,6 +18,7 @@ public:
     void setGLWidgetClickable(bool);
     void updateCurve(QString, float, float);
     void updateAction();
+    GenCurveProgressDialog* getGenCurveProgressDlg();
     NewCurveTab* getNewCurveTabWidget();
     std::shared_ptr<GLProgram> getMeshProgram();
     std::shared_ptr<GLProgram> getPointProgram();

@@ -90,7 +90,8 @@ SOURCES += \
     TreeItem.cpp \
     LeftCylinderAssist.cpp \
     GeneralBand.cpp \
-    GenCurveProgressWindow.cpp
+    GenCurveProgressDialog.cpp \
+    OpenBandThread.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -161,7 +162,8 @@ HEADERS += \
     TreeItem.h \
     LeftCylinderAssist.h \
     GeneralBand.h \
-    GenCurveProgressWindow.h
+    GenCurveProgressDialog.h \
+    OpenBandThread.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt

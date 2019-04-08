@@ -6,11 +6,10 @@
 #include <memory>
 #include "Camera2.h"
 #include "Tee.h"
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/archive/text_oarchive.hpp>
 #include <QString>
 #include "DataState.h"
 #include "IdGenerator.h"
+#include <QMutex>
 class Cylinder;
 class Ring;
 class Point;
@@ -23,6 +22,7 @@ class Data
 public:
     friend class Controller;
     friend class NewCurveController;
+    friend class OpenBandThread;
 public:
     Data();
     void addTee(std::shared_ptr<Tee>);
@@ -35,13 +35,13 @@ public:
     void processTranslation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort);
     void processRotation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort);
     void processScroll(double yOffset);
-    void save(QString);
     void clear();
     bool getChanged();
     bool getEmpty();
     void bindConnector(GuiConnector*);
     std::shared_ptr<Node> getNodeRoot();
 private:
+    QMutex mtx;
     std::shared_ptr<Camera2> camera;
     std::shared_ptr<Node> root;
     BoundingBox box;
@@ -49,12 +49,5 @@ private:
     IdGenerator idGenerator;
     GuiConnector* connector;
     void updateBoundingBox();
-
-    //serialization
-    friend class boost::serialization::access;
-    template<typename Archive>
-    void serialize(Archive& ar, const unsigned int version){
-        ar& camera & box;
-    }
 
 };

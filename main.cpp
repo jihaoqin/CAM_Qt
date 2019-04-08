@@ -5,7 +5,6 @@
 #include "glwidget.h"
 #include "test_only.h"
 #include <fstream>
-#include <boost/archive/text_oarchive.hpp>
 #include "GuiConnector.h"
 #include "utility.h"
 

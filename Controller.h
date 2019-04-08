@@ -16,16 +16,17 @@ class Point;
 class PointSym;
 class Camera2;
 class Tee;
+class GenCurveProgressDialog;
 using TeePtr = std::shared_ptr<Tee>;
 class Controller
 {
 public:
     friend class NewCurveController;
     friend class GuiConnector;
+    friend class OpenBandThread;
     Controller();
     void bindMainWindow(MainWindow* m);
     BoundingBox updateBoundingBox();
-    void save(QString);
     void bindData(std::shared_ptr<Data>);
     void bindGLWidget(GLWidget*);
     void addTee(float ,float ,float ,float);
@@ -37,11 +38,11 @@ public:
     void draw();
     void drawDataObject(std::shared_ptr<DataObject>);
     bool hasTee();
-    void genLeftCurve();
-    void genUpCurve();
-    void genRightCurve();
+    void genLeftCurve(GenCurveProgressDialog*);
+    void genUpCurve(GenCurveProgressDialog*);
+    void genRightCurve(GenCurveProgressDialog*);
     void closePath();
-    void genCylinderCurve(QString);
+    void genCylinderCurve(QString,GenCurveProgressDialog*);
     void setViewPortRatio(int w, int h);
     void processTranslation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort);
     void processRotation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort);

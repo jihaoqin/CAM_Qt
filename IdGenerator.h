@@ -1,8 +1,6 @@
 #ifndef IDGENERATOR_H
 #define IDGENERATOR_H
 #include <QString>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/archive/text_oarchive.hpp>
 
 
 class IdGenerator
@@ -25,12 +23,6 @@ private:
     unsigned int triEdgePlaneIndex;
     unsigned int bandIndex;
 
-    //serialization
-    friend class boost::serialization::access;
-    template<typename Archive>
-    void serialize(Archive& ar, const unsigned int version){
-        ar& cylinderIndex & ringIndex & pointIndex & planeIndex;
-    }
 };
 
 #endif // IDGENERATOR_H

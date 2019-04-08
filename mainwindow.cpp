@@ -12,6 +12,8 @@
 #include "CentralWidget.h"
 #include "GuiConnector.h"
 #include <QFileDialog>
+#include "GenCurveProgressDialog.h"
+#include "OpenBandThread.h"
 
 MainWindow::MainWindow(Controller* c, QWidget *parent)
     : QMainWindow(parent), ctrl(nullptr), widget(nullptr), teeNewDialog(nullptr), connector(nullptr)
@@ -82,7 +84,7 @@ void MainWindow::saveOrNot(){
                 //do nothing
             }
             else{
-                ctrl->save(savePath);
+                //ctrl->save(savePath);
             }
             ctrl->clearData();
             showTeeParameterDialog();
@@ -261,18 +263,35 @@ void MainWindow::openBand(){
         return ;
     }
     else{
-        ctrl->openBand(fileName);
+        OpenBandThread thread(fileName, connector->getCtrl());
+        GenCurveProgressDialog* dlg = new GenCurveProgressDialog(0, 0, this);
+        connect(&thread,&OpenBandThread::progress, dlg, &GenCurveProgressDialog::setData);
+        connect(&thread, &OpenBandThread::finished, &thread, &OpenBandThread::deleteLater);
+        thread.start();
+        thread.wait();
+        dlg->close();
+        delete dlg;
+        //ctrl->openBand(fileName);
     }
 }
 
 void MainWindow::genLeftCurve(){
-    ctrl->genLeftCurve();
+    GenCurveProgressDialog* dialog = new GenCurveProgressDialog(0, 0, this);
+    ctrl->genLeftCurve(dialog);
+    //dialog->close();
+    //delete dialog;
 }
 
 void MainWindow::genUpCurve(){
-    ctrl->genUpCurve();
+    GenCurveProgressDialog* dialog = new GenCurveProgressDialog(0, 0, this);
+    ctrl->genUpCurve(dialog);
+    dialog->close();
+    delete dialog;
 }
 
 void MainWindow::genRightCurve(){
-    ctrl->genRightCurve();
+    GenCurveProgressDialog* dialog = new GenCurveProgressDialog(0, 0, this);
+    ctrl->genRightCurve(dialog);
+    dialog->close();
+    delete dialog;
 }

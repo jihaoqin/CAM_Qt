@@ -4,8 +4,6 @@
 #include "glm/glm.hpp"
 #include <vector>
 #include "DataObject.h"
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/archive/text_oarchive.hpp>
 #include "utility.h"
 #include "HalfPoint.h"
 
@@ -36,20 +34,6 @@ private:
     glm::vec3 xdir;
     Mesh m;
 
-    //serialization
-    friend class boost::serialization::access;
-    template<typename Archive>
-    void save(Archive& ar, const unsigned int version) const {
-        ar & boost::serialization::base_object<DataObject>(*this);
-        ar & R & r & angle & anchor & zdir & xdir;
-    }
-    template<typename Archive>
-    void load(Archive& ar, const unsigned int version){
-        ar & boost::serialization::base_object<DataObject>(*this);
-        ar & R & r & angle & anchor & zdir & xdir;
-        vector<Vertex> edge = generateEdge();
-        m = utility::generateRevolution(anchor,zdir, edge, angle);
-    }
 };
 
 #endif // RING_H

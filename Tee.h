@@ -8,10 +8,6 @@
 #include "Ring.h"
 #include "Cylinder.h"
 #include "utility.h"
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-#include <boost/serialization/base_object.hpp>
 #include "IdGenerator.h"
 #include "TriEdgePlane.h"
 #include "IdGenerator.h"

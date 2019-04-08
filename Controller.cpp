@@ -27,6 +27,8 @@
 #include "LeftCylinderAssist.h"
 #include "Band.h"
 #include "GeneralBand.h"
+#include "GenCurveProgressDialog.h"
+#include "OpenBandThread.h"
 using namespace  std;
 using namespace  rapidjson;
 Controller::Controller()
@@ -98,9 +100,6 @@ void Controller::processScroll(double yOffset){
     data->processScroll(yOffset);
 }
 
-void Controller::save(QString savePath){
-    data->save(savePath);
-}
 
 void Controller::clearData(){
     data->clear();
@@ -404,6 +403,7 @@ void Controller::saveBand(QString path){
 }
 
 void Controller::openBand(QString path){
+    /*
     std::ifstream inFile;
     string line;
     string allLine;
@@ -453,11 +453,12 @@ void Controller::openBand(QString path){
         }
     }
     inFile.close();
+    */
 }
 
-void Controller::genLeftCurve(){
+void Controller::genLeftCurve(GenCurveProgressDialog* dialog){
     TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
-    genCylinderCurve("left");
+    genCylinderCurve("left", dialog);
     /*
     LeftCylinderAssist leftAssist(tee, tee->getLeftCylinderId());
     auto root = data->root;
@@ -548,7 +549,7 @@ EndPtrVec Controller::allEnds(){
     return all;
 }
 
-void Controller::genCylinderCurve(QString which){
+void Controller::genCylinderCurve(QString which, GenCurveProgressDialog* dialog){
     TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
     LeftCylinderAssist leftAssist(tee, which);
     auto root = data->root;
@@ -563,20 +564,20 @@ void Controller::genCylinderCurve(QString which){
         if(id.contains("band")){
             BandPtr b = std::dynamic_pointer_cast<Band>(c->getData());
             BandEndPtr backend = b->bandEnd();
-            bool flag1 = leftAssist.isPosAtStart(backend->frontPos());
+            bool flag1 = leftAssist.isPosAtStart(backend->frontPos())&&backend->frontEnd()->nextEndId.isEmpty();
             if(flag1){
                 endVec.push_back(backend->frontEnd());
             }
-            bool flag2 = leftAssist.isPosAtStart(backend->backPos());
+            bool flag2 = leftAssist.isPosAtStart(backend->backPos())&&backend->backEnd()->nextEndId.isEmpty();
             if(flag2){
                 endVec.push_back(backend->backEnd());
             }
         }
     }
+    int leftNum = endVec.size();
+    dialog->setData(endVec.size(), leftNum);
+    dialog->show();
     for(auto& e:endVec){
-        if(!e->nextEndId.isEmpty()){
-            continue;
-        }
         auto tuple1 = leftAssist.genCurve(e);
         auto& pds = get<0>(tuple1);
         auto& strs = get<1>(tuple1);
@@ -585,18 +586,19 @@ void Controller::genCylinderCurve(QString which){
         band->setCouple(e);
         band->bindGL(gl);
         data->addBand(band);
+        leftNum -= 1;
+        //dialog->setData(endVec.size(), leftNum);
     }
-    //找环
 }
 
-void Controller::genUpCurve(){
+void Controller::genUpCurve(GenCurveProgressDialog* dialog){
     TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
-    genCylinderCurve("up");
+    genCylinderCurve("up", dialog);
 }
 
-void Controller::genRightCurve(){
+void Controller::genRightCurve(GenCurveProgressDialog* dialog){
     TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
-    genCylinderCurve("right");
+    genCylinderCurve("right", dialog);
 }
 
 void Controller::closePath(){
