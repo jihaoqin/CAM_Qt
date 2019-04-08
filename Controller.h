@@ -62,6 +62,7 @@ public:
     void updateCurve(QString, float, float);
     void saveBand(QString path);
     void openBand(QString path);
+    void allBindGL();
 private:
     std::shared_ptr<Data> data;
     GLWidget* widget;

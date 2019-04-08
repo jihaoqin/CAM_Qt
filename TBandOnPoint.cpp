@@ -118,14 +118,15 @@ using Dir = glm::vec3;
  }
 
  void TBandOnPoint::draw(std::shared_ptr<GLProgram> p){
+    if(binded == false || visiable == false){
+        return;
+    }
     p->setVec3("material.color", color.rgb);
     core->glDepthMask(GL_FALSE);
-     if(visiable == true){
-         mesh.draw();
-         for(auto i:curves){
-             i->draw(p);
-         }
-     }
+    mesh.draw();
+    for(auto i:curves){
+        i->draw(p);
+    }
     core->glDepthMask(GL_TRUE);
  }
 

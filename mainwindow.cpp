@@ -266,12 +266,12 @@ void MainWindow::openBand(){
         OpenBandThread thread(fileName, connector->getCtrl());
         GenCurveProgressDialog* dlg = new GenCurveProgressDialog(0, 0, this);
         connect(&thread,&OpenBandThread::progress, dlg, &GenCurveProgressDialog::setData);
+        connect(&thread,&OpenBandThread::calOver, dlg, &GenCurveProgressDialog::close);
         connect(&thread, &OpenBandThread::finished, &thread, &OpenBandThread::deleteLater);
         thread.start();
+        dlg->exec();
         thread.wait();
-        dlg->close();
-        delete dlg;
-        //ctrl->openBand(fileName);
+        ctrl->allBindGL();
     }
 }
 

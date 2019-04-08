@@ -44,7 +44,7 @@ void Curve::bufferData(){
 
 void Curve::draw(std::shared_ptr<GLProgram> program){
     if(binded == false || visiable == false){
-        assert(binded == true);
+        //assert(binded == true);
         return;
     }
     //core->glDepthMask(GL_FALSE);

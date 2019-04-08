@@ -648,3 +648,13 @@ void Controller::closePath(){
     }
     assert(unLinkedNum<2);
 }
+
+
+void Controller::allBindGL(){
+    auto children = data->root->childrenPtrVec();
+    auto gl = widget->getGLContext();
+    for(auto c:children){
+        auto obj = c->getData();
+        obj->bindGL(gl);
+    }
+}

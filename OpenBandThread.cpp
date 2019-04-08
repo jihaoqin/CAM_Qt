@@ -67,10 +67,10 @@ void OpenBandThread::run(){
                 data->addPoint(pointPtr);
                 data->addCurve(curvePtr);
                 data->addBand(band);
-                auto context = ctrl->widget->getGLContext();
-                pointPtr->bindGL(context);
-                curvePtr->bindGL(context);
-                band->bindGL(context);
+                //auto context = ctrl->widget->getGLContext();
+                //pointPtr->bindGL(context);
+                //curvePtr->bindGL(context);
+                //band->bindGL(context);
                 pointPtr->addChild(curvePtr);
                 curvePtr->addChild(band);
                 --left;
@@ -79,4 +79,5 @@ void OpenBandThread::run(){
         }
     }
     inFile.close();
+    emit(calOver());
 }
