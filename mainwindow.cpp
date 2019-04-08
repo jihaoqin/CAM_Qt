@@ -14,6 +14,9 @@
 #include <QFileDialog>
 #include "GenCurveProgressDialog.h"
 #include "OpenBandThread.h"
+#include "GenGeneralBandThread.h"
+#include "ClosePathDialog.h"
+#include "ClosePathThread.h"
 
 MainWindow::MainWindow(Controller* c, QWidget *parent)
     : QMainWindow(parent), ctrl(nullptr), widget(nullptr), teeNewDialog(nullptr), connector(nullptr)
@@ -190,16 +193,19 @@ void MainWindow::updateAction(){
             leftCurve->setEnabled(true);
             upCurve->setEnabled(true);
             rightCurve->setEnabled(true);
+            loopCurve->setEnabled(true);
         }
         else{
             leftCurve->setEnabled(false);
             upCurve->setEnabled(false);
             rightCurve->setEnabled(false);
+            loopCurve->setEnabled(false);
         }
         if(true == opFlag){
             leftCurve->setEnabled(false);
             upCurve->setEnabled(false);
             rightCurve->setEnabled(false);
+            loopCurve->setEnabled(false);
         }
     }
 
@@ -240,6 +246,10 @@ void MainWindow::configureToolBar(){
     toolBar->addAction(rightCurve);
     rightCurve->setEnabled(false);
     connect(rightCurve, &QAction::triggered, this, &MainWindow::genRightCurve);
+    loopCurve = new QAction(QIcon(":/icons/loop"), "loopCurve");
+    toolBar->addAction(loopCurve);
+    loopCurve->setEnabled(false);
+    connect(loopCurve, &QAction::triggered, this, &MainWindow::loopBand);
 }
 
 void MainWindow::showNewCurveTab(){
@@ -263,35 +273,75 @@ void MainWindow::openBand(){
         return ;
     }
     else{
-        OpenBandThread thread(fileName, connector->getCtrl());
         GenCurveProgressDialog* dlg = new GenCurveProgressDialog(0, 0, this);
-        connect(&thread,&OpenBandThread::progress, dlg, &GenCurveProgressDialog::setData);
-        connect(&thread,&OpenBandThread::calOver, dlg, &GenCurveProgressDialog::close);
-        connect(&thread, &OpenBandThread::finished, &thread, &OpenBandThread::deleteLater);
-        thread.start();
+        OpenBandThread *thread = new OpenBandThread(fileName, connector->getCtrl());
+        connect(thread,&OpenBandThread::progress, dlg, &GenCurveProgressDialog::setData);
+        connect(thread,&OpenBandThread::calOver, this, &MainWindow::updateModel);
+        connect(thread,&OpenBandThread::calOver, dlg, &GenCurveProgressDialog::close);
+        connect(thread,&OpenBandThread::calOver, this, &MainWindow::allBind);
+        connect(thread, &OpenBandThread::finished, thread, &OpenBandThread::deleteLater);
+        thread->start();
         dlg->exec();
-        thread.wait();
-        ctrl->allBindGL();
+        //delete dlg;
     }
 }
 
+void MainWindow::allBind(){
+    ctrl->allBindGL();
+}
+
 void MainWindow::genLeftCurve(){
-    GenCurveProgressDialog* dialog = new GenCurveProgressDialog(0, 0, this);
-    ctrl->genLeftCurve(dialog);
-    //dialog->close();
+    GenCurveProgressDialog* dlg = new GenCurveProgressDialog(0, 0, this);
+    GenGeneralBandThread* thread = new GenGeneralBandThread("left", connector->getCtrl());
+    connect(thread,&GenGeneralBandThread::progress, dlg, &GenCurveProgressDialog::setData);
+    connect(thread,&GenGeneralBandThread::calOver, this, &MainWindow::updateModel);
+    connect(thread,&GenGeneralBandThread::calOver, dlg, &GenCurveProgressDialog::close);
+    connect(thread,&GenGeneralBandThread::calOver, this, &MainWindow::allBind);
+    connect(thread, &OpenBandThread::finished, thread, &OpenBandThread::deleteLater);
+    thread->start();
+    dlg->exec();
     //delete dialog;
 }
 
 void MainWindow::genUpCurve(){
-    GenCurveProgressDialog* dialog = new GenCurveProgressDialog(0, 0, this);
-    ctrl->genUpCurve(dialog);
-    dialog->close();
-    delete dialog;
+    GenCurveProgressDialog* dlg = new GenCurveProgressDialog(0, 0, this);
+    GenGeneralBandThread* thread = new GenGeneralBandThread("up", connector->getCtrl());
+    connect(thread,&GenGeneralBandThread::progress, dlg, &GenCurveProgressDialog::setData);
+    connect(thread,&GenGeneralBandThread::calOver, this, &MainWindow::updateModel);
+    connect(thread,&GenGeneralBandThread::calOver, dlg, &GenCurveProgressDialog::close);
+    connect(thread,&GenGeneralBandThread::calOver, this, &MainWindow::allBind);
+    connect(thread, &OpenBandThread::finished, thread, &OpenBandThread::deleteLater);
+    thread->start();
+    dlg->exec();
+    //delete dialog;
 }
 
 void MainWindow::genRightCurve(){
-    GenCurveProgressDialog* dialog = new GenCurveProgressDialog(0, 0, this);
-    ctrl->genRightCurve(dialog);
-    dialog->close();
-    delete dialog;
+    GenCurveProgressDialog* dlg = new GenCurveProgressDialog(0, 0, this);
+    GenGeneralBandThread* thread = new GenGeneralBandThread("right", connector->getCtrl());
+    connect(thread,&GenGeneralBandThread::progress, dlg, &GenCurveProgressDialog::setData);
+    connect(thread,&GenGeneralBandThread::calOver, this, &MainWindow::updateModel);
+    connect(thread,&GenGeneralBandThread::calOver, dlg, &GenCurveProgressDialog::close);
+    connect(thread,&GenGeneralBandThread::calOver, this, &MainWindow::allBind);
+    connect(thread, &OpenBandThread::finished, thread, &OpenBandThread::deleteLater);
+    thread->start();
+    dlg->exec();
+    //delete dialog;
+}
+
+void MainWindow::updateModel(){
+    connector->updateModel();
+}
+
+void MainWindow::loopBand(){
+    ClosePathDialog* dlg = new ClosePathDialog(this);
+    ClosePathThread* thread = new ClosePathThread(connector->getCtrl());
+    connect(thread, &ClosePathThread::progress, dlg, &ClosePathDialog::setData);
+    connect(thread, &ClosePathThread::calOver, this, &MainWindow::updateModel);
+    connect(thread, &ClosePathThread::calOver, dlg, &ClosePathDialog::close);
+    connect(thread, &ClosePathThread::calOver, this, &MainWindow::allBind);
+    connect(thread, &OpenBandThread::finished, thread, &OpenBandThread::deleteLater);
+    thread->start();
+    dlg->exec();
+    //updateAction()?
 }

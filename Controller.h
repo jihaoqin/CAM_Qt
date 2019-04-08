@@ -24,6 +24,8 @@ public:
     friend class NewCurveController;
     friend class GuiConnector;
     friend class OpenBandThread;
+    friend class GenGeneralBandThread;
+    friend class ClosePathThread;
     Controller();
     void bindMainWindow(MainWindow* m);
     BoundingBox updateBoundingBox();
@@ -38,11 +40,11 @@ public:
     void draw();
     void drawDataObject(std::shared_ptr<DataObject>);
     bool hasTee();
-    void genLeftCurve(GenCurveProgressDialog*);
-    void genUpCurve(GenCurveProgressDialog*);
-    void genRightCurve(GenCurveProgressDialog*);
+    void genLeftCurve();
+    void genUpCurve();
+    void genRightCurve();
     void closePath();
-    void genCylinderCurve(QString,GenCurveProgressDialog*);
+    void genCylinderCurve(QString);
     void setViewPortRatio(int w, int h);
     void processTranslation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort);
     void processRotation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort);

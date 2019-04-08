@@ -30,6 +30,7 @@ void OpenBandThread::run(){
     if(doc.HasParseError()){
         return ;
     }
+    auto& mtx = ctrl->data->mtx;
     std::shared_ptr<Data> data = ctrl->data;
     int sum = 0;
     for(unsigned int i = 0; i < doc.Size(); i++){
@@ -39,7 +40,7 @@ void OpenBandThread::run(){
         }
     }
     int left = sum;
-    emit(progress(sum, left));
+    emit progress(sum, left);
     for(unsigned int i = 0; i < doc.Size(); i++){
         const Value& obj = doc[i];
         if(obj["type"] == "TBandOnPoint"){
@@ -56,6 +57,7 @@ void OpenBandThread::run(){
                 const Value& p = point["pos"];
                 Pos pos{p[0].GetDouble(), p[1].GetDouble(), p[2].GetDouble()};
                 QString meshId = QString(point["meshId"].GetString());
+                mtx.lock();
                 pointPtr = make_shared<Point>(pos, data->idGenerator.getPlaneId().toLatin1().data());
                 pointPtr->meshId(meshId.toLatin1().data());
                 curvePtr = make_shared<TCurve>(pointPtr, uAng, slip, data->idGenerator.getCurveId().toLatin1().data(), tee);
@@ -73,11 +75,12 @@ void OpenBandThread::run(){
                 //band->bindGL(context);
                 pointPtr->addChild(curvePtr);
                 curvePtr->addChild(band);
+                mtx.unlock();
                 --left;
-                emit(progress(sum, left));
+                emit progress(sum, left);
             }
         }
     }
     inFile.close();
-    emit(calOver());
+    emit calOver();
 }

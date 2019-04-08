@@ -23,3 +23,4 @@ void GenCurveProgressDialog::setData(int sum, int left){
     leftLabel->setText(leftStr);
     update();
 }
+

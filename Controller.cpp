@@ -39,6 +39,7 @@ Controller::Controller()
 
 
 void Controller::draw(){
+    QMutexLocker locker(&data->mtx);
     NodePtr root = data->root;
     if(root != nullptr){
         auto drawFunc = [=](DataObjectPtr p)->void{ if(p != nullptr){drawDataObject(p);}};
@@ -306,6 +307,7 @@ QString Controller::addCurve(QString pId, float uAng){
     band->bindGL(gl);
     data->addBand(band);
     data->addCurve(curve);
+    mainWindow->updateModel();
     mainWindow->updateAction();
     return id;
     /*
@@ -456,9 +458,9 @@ void Controller::openBand(QString path){
     */
 }
 
-void Controller::genLeftCurve(GenCurveProgressDialog* dialog){
+void Controller::genLeftCurve(){
     TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
-    genCylinderCurve("left", dialog);
+    genCylinderCurve("left");
     /*
     LeftCylinderAssist leftAssist(tee, tee->getLeftCylinderId());
     auto root = data->root;
@@ -549,7 +551,7 @@ EndPtrVec Controller::allEnds(){
     return all;
 }
 
-void Controller::genCylinderCurve(QString which, GenCurveProgressDialog* dialog){
+void Controller::genCylinderCurve(QString which){
     TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
     LeftCylinderAssist leftAssist(tee, which);
     auto root = data->root;
@@ -574,9 +576,6 @@ void Controller::genCylinderCurve(QString which, GenCurveProgressDialog* dialog)
             }
         }
     }
-    int leftNum = endVec.size();
-    dialog->setData(endVec.size(), leftNum);
-    dialog->show();
     for(auto& e:endVec){
         auto tuple1 = leftAssist.genCurve(e);
         auto& pds = get<0>(tuple1);
@@ -586,19 +585,17 @@ void Controller::genCylinderCurve(QString which, GenCurveProgressDialog* dialog)
         band->setCouple(e);
         band->bindGL(gl);
         data->addBand(band);
-        leftNum -= 1;
-        //dialog->setData(endVec.size(), leftNum);
     }
 }
 
-void Controller::genUpCurve(GenCurveProgressDialog* dialog){
+void Controller::genUpCurve(){
     TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
-    genCylinderCurve("up", dialog);
+    genCylinderCurve("up");
 }
 
-void Controller::genRightCurve(GenCurveProgressDialog* dialog){
+void Controller::genRightCurve(){
     TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
-    genCylinderCurve("right", dialog);
+    genCylinderCurve("right");
 }
 
 void Controller::closePath(){
@@ -608,6 +605,7 @@ void Controller::closePath(){
     assistVec.push_back(LeftCylinderAssist(tee, "up"));
     assistVec.push_back(LeftCylinderAssist(tee, "right"));
     int unLinkedNum = 0;
+    int ind = 0;
     for(auto& leftAssist:assistVec){
         EndPtrVec couplingEndVec;
         auto children = data->root->childrenPtrVec();
@@ -645,6 +643,7 @@ void Controller::closePath(){
             band->bindGL(gl);
             data->addBand(band);
         }
+        ++ind;
     }
     assert(unLinkedNum<2);
 }

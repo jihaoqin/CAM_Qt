@@ -76,6 +76,7 @@ void NewCurveController::addSymmetry(PointPtr p, QString flag){
     data->addPoint(px);
     data->addCurve(curvex);
     data->addBand(bandx);
+    connector->updateModel();
     auto gl = connector->getGLWidget();
     auto context = gl->getGLContext();
     px->bindGL(context);

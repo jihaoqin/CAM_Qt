@@ -19,6 +19,9 @@ public slots:
     void showTeeParameterDialog();
     void saveOrNot();
     void updateAction();
+    void allBind();
+    void updateModel();
+    void loopBand();
 private slots:
     void showNewCurveTab();
     void saveBand();
@@ -45,6 +48,7 @@ private:
         QAction *leftCurve;
         QAction *rightCurve;
         QAction *upCurve;
+        QAction *loopCurve;
     QToolBar* toolBar;
 };
 

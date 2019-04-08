@@ -7,6 +7,7 @@
         <file alias="leftCurve">pic/leftCurve.png</file>
         <file alias="rightCurve">pic/rightCurve.png</file>
         <file alias="upCurve">pic/upCurve.png</file>
+        <file alias="loop">pic/loop.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

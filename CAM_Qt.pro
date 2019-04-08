@@ -91,7 +91,10 @@ SOURCES += \
     LeftCylinderAssist.cpp \
     GeneralBand.cpp \
     GenCurveProgressDialog.cpp \
-    OpenBandThread.cpp
+    OpenBandThread.cpp \
+    GenGeneralBandThread.cpp \
+    ClosePathThread.cpp \
+    ClosePathDialog.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -163,7 +166,10 @@ HEADERS += \
     LeftCylinderAssist.h \
     GeneralBand.h \
     GenCurveProgressDialog.h \
-    OpenBandThread.h
+    OpenBandThread.h \
+    GenGeneralBandThread.h \
+    ClosePathThread.h \
+    ClosePathDialog.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt
@@ -183,7 +189,7 @@ DISTFILES += \
 
 
 # BOOST lib configuration
-DEFINES += ROOM
+DEFINES += LAB
 if(contains(DEFINES, ROOM)){
         BOOST_ROOT = F:\boost_1_69_0
 }else{

@@ -23,6 +23,8 @@ public:
     friend class Controller;
     friend class NewCurveController;
     friend class OpenBandThread;
+    friend class GenGeneralBandThread;
+    friend class ClosePathThread;
 public:
     Data();
     void addTee(std::shared_ptr<Tee>);
@@ -39,6 +41,7 @@ public:
     bool getChanged();
     bool getEmpty();
     void bindConnector(GuiConnector*);
+    QMutex* getMutex();
     std::shared_ptr<Node> getNodeRoot();
 private:
     QMutex mtx;

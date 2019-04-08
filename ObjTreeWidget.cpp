@@ -4,6 +4,7 @@
 #include "Data.h"
 #include <QPushButton>
 #include "Color.h"
+#include <QMutex>
 
 ObjTreeWidget::ObjTreeWidget(QWidget* parent):QWidget(parent), button(nullptr), lastPicked()
 {
@@ -35,6 +36,8 @@ void ObjTreeWidget::setConnector(GuiConnector* c){
 }
 
 void ObjTreeWidget::updateModel(){
+    auto data = connector->getData();
+    QMutexLocker locker(data->getMutex());
     model->bindData(connector->getData()->getNodeRoot());
 }
 
