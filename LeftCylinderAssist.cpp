@@ -385,6 +385,9 @@ EndPtrVec LeftCylinderAssist::filterDir(EndPtr mainEnd, EndPtrVec endVec){
             dirEndVec.push_back(end);
         }
     }
+    if(dirEndVec.size()==0){
+        assert(0);
+    }
     return dirEndVec;
 }
 
@@ -436,30 +439,31 @@ EndPtrVec LeftCylinderAssist::filterCycle(EndPtr mainEnd, EndPtrVec listEnds, co
         allCheckEnds.insert(newEnd);
 
         std::set<End> checkEnds;
-        End e = oldNew.at(*mainEnd);
-        checkEnds.insert(e);
-        e = utility::theOtherEnd(e, allCheckEnds);
-        while(true){
-            if(e.nextEndId.isEmpty()){
-                checkEnds.insert(e);
-                break;
-            }
-            else{
-                End nextEnd = utility::getEnd(e.nextEndId, allCheckEnds);
-                End otherEnd = utility::theOtherEnd(nextEnd, allCheckEnds);
-                if(checkEnds.find(e)!=checkEnds.end()){
-                    break;
-                }
-                else{
+        End e = utility::theOtherEnd(newMain, allCheckEnds);
+        vector<End> twoEnd{newMain, e};
+        for(auto e:twoEnd){
+            while(true){
+                if(e.nextEndId.isEmpty()){
                     checkEnds.insert(e);
-                }
-                if(checkEnds.find(nextEnd)!=checkEnds.end()){
                     break;
                 }
                 else{
-                    checkEnds.insert(nextEnd);
+                    End nextEnd = utility::getEnd(e.nextEndId, allCheckEnds);
+                    End otherEnd = utility::theOtherEnd(nextEnd, allCheckEnds);
+                    if(checkEnds.find(e)!=checkEnds.end()){
+                        break;
+                    }
+                    else{
+                        checkEnds.insert(e);
+                    }
+                    if(checkEnds.find(nextEnd)!=checkEnds.end()){
+                        break;
+                    }
+                    else{
+                        checkEnds.insert(nextEnd);
+                    }
+                    e = otherEnd;
                 }
-                e = otherEnd;
             }
         }
         if(!utility::hasCycle(checkEnds)){
@@ -541,7 +545,6 @@ float LeftCylinderAssist::endToEndAngle(EndPtr e1, EndPtr e2){
 EndPtrVec LeftCylinderAssist::filterInnerFirst(EndPtrVec listEnds, const EndPtrVec allEnds){
     EndPtrVec innerEnds;
     for (auto ee:listEnds){
-        EndPtr lastEnd = nullptr;
         EndPtr e = nullptr;
         for(auto& end:allEnds){
             if(ee->theOtherId() == end->endId){
@@ -570,11 +573,10 @@ EndPtrVec LeftCylinderAssist::filterInnerFirst(EndPtrVec listEnds, const EndPtrV
                     }
                 }
                 e = nextOtherEnd;
-                lastEnd = e;
             }
         }
-        if(lastEnd!=nullptr && isReturn(lastEnd)){
-            innerEnds.push_back(e);
+        if(e!=nullptr && isReturn(e)){
+            innerEnds.push_back(ee);
         }
     }
     if(innerEnds.size() == 0){
