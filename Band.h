@@ -14,6 +14,7 @@ using EndPtr = std::shared_ptr<End>;
 class End{
 public:
     End(PosDir, QString, QString);
+    End();
     bool operator<(const End& right) const;
     QString bandId();
     QString theOtherId();

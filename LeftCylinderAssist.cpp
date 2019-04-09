@@ -6,6 +6,7 @@
 #include "Cylinder.h"
 #include "CyCurveAssist.h"
 #include "CylinderAssist.h"
+#include <map>
 #include <algorithm>
 using namespace std;
 LeftCylinderAssist::LeftCylinderAssist(TeePtr t, QString which):tee(t)
@@ -390,26 +391,52 @@ EndPtrVec LeftCylinderAssist::filterDir(EndPtr mainEnd, EndPtrVec endVec){
 EndPtrVec LeftCylinderAssist::filterCycle(EndPtr mainEnd, EndPtrVec listEnds, const EndPtrVec allEnds){
     EndPtrVec cycleEnds;
     auto copyAllEnds = utility::valueCopyEndPtrVec(allEnds);
-    std::set<End> allCheckEnds;
+    std::set<End> allEndsSet;
     for(auto& e:copyAllEnds){
-        allCheckEnds.insert(*e);
+        allEndsSet.insert(*e);
+    }
+    EndPtrVec interestEndPtrs = listEnds;
+    interestEndPtrs.push_back(mainEnd);
+    std::set<End> allCheckEnds;
+    int bandInd = 0;
+    map<End, End> oldNew;
+    for(auto ePtr:interestEndPtrs){
+        End beginEnd = *ePtr;
+        End e = utility::theOtherEnd(beginEnd, allEndsSet);
+        while(true){
+            QString nextStr = e.nextEndId;
+            if(nextStr.isEmpty()){
+                End beginEndVal = End{beginEnd.pd, QString(""), QString("linkband"+QString::number(bandInd)+".front")};
+                End eVal = End{e.pd, QString(""), QString("linkband"+QString::number(bandInd)+".back")};
+                oldNew[beginEnd] =  beginEndVal;
+                oldNew[e] = eVal;
+                allCheckEnds.insert(beginEndVal);
+                allCheckEnds.insert(eVal);
+                break;
+            }
+            else{
+                End nextE = utility::getEnd(nextStr, allEndsSet);
+                e = utility::theOtherEnd(nextE, allEndsSet);
+            }
+        }
+        ++bandInd;
     }
     for(auto& end:listEnds){
         if(end->endId == mainEnd->endId){
             continue;
         }
         //传入的不应该是所有的checkEnds是应该是和copyMainEnd有关的Ends
-        allCheckEnds.erase(*mainEnd);
-        allCheckEnds.erase(*end);
-        End newMain = *mainEnd;
-        End newEnd = *end;
+        allCheckEnds.erase(oldNew.at(*mainEnd));
+        allCheckEnds.erase(oldNew.at(*end));
+        End newMain = oldNew.at(*mainEnd);
+        End newEnd = oldNew.at(*end);
         newMain.setCouple(newEnd);
         newEnd.setCouple(newMain);
         allCheckEnds.insert(newMain);
         allCheckEnds.insert(newEnd);
 
         std::set<End> checkEnds;
-        End e = *mainEnd;
+        End e = oldNew.at(*mainEnd);
         checkEnds.insert(e);
         e = utility::theOtherEnd(e, allCheckEnds);
         while(true){
@@ -440,8 +467,8 @@ EndPtrVec LeftCylinderAssist::filterCycle(EndPtr mainEnd, EndPtrVec listEnds, co
         }
         allCheckEnds.erase(newMain);
         allCheckEnds.erase(newEnd);
-        allCheckEnds.insert(*mainEnd);
-        allCheckEnds.insert(*end);
+        allCheckEnds.insert(oldNew.at(*mainEnd));
+        allCheckEnds.insert(oldNew.at(*end));
     }
     return cycleEnds;
 }

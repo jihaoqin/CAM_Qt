@@ -95,3 +95,7 @@ QString End::theOtherId(){
         assert(0);
     }
 }
+
+End::End(){
+
+}
