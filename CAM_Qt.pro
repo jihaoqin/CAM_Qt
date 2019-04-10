@@ -94,7 +94,8 @@ SOURCES += \
     OpenBandThread.cpp \
     GenGeneralBandThread.cpp \
     ClosePathThread.cpp \
-    ClosePathDialog.cpp
+    ClosePathDialog.cpp \
+    AnimateController.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -169,7 +170,9 @@ HEADERS += \
     OpenBandThread.h \
     GenGeneralBandThread.h \
     ClosePathThread.h \
-    ClosePathDialog.h
+    ClosePathDialog.h \
+    AnimateController.h \
+    NameDeclare.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt

@@ -89,6 +89,7 @@ void GeneralBand::initial(PosDirVec pds, QStringVec names){
          }
      }
      unsigned int num = 2*sideNum - 1;
+     m_numPerPd = num;
      vector<unsigned int> indexVec;
      for(unsigned int i = 0; i<fewPds.size()-1;i++){
          for(unsigned int j = 0; j < num -1; j++){
@@ -122,4 +123,5 @@ void GeneralBand::initial(PosDirVec pds, QStringVec names){
      c2->data(edgePos_2);
      curves.push_back(c1);
      curves.push_back(c2);
+     m_pds = fewPds;
 }

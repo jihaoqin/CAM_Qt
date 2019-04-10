@@ -4,6 +4,7 @@
 #include "DataObject.h"
 #include "PosDir.h"
 #include "Curve.h"
+#include "NameDeclare.h"
 
 class Tee;
 class End;
@@ -49,8 +50,11 @@ public:
     virtual void setColor(Color);
     BandEndPtr bandEnd();
     void setCouple(EndPtr&);
+    GLIndexPairVec getGLIndexPairVec(EndPtr, float);
 protected:
     BandEndPtr m_end;
+    PosDirVec m_pds;
+    unsigned int m_numPerPd;
 };
 
 using BandPtr = std::shared_ptr<Band>;

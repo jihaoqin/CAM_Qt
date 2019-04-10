@@ -27,7 +27,9 @@ public:
     friend class OpenBandThread;
     friend class GenGeneralBandThread;
     friend class ClosePathThread;
+    friend class AnimateController;
     Controller();
+    std::shared_ptr<Data> getData();
     void bindMainWindow(MainWindow* m);
     BoundingBox updateBoundingBox();
     void bindData(std::shared_ptr<Data>);

@@ -666,3 +666,8 @@ void Controller::allBindGL(){
         obj->bindGL(gl);
     }
 }
+
+
+std::shared_ptr<Data> Controller::getData(){
+    return data;
+}

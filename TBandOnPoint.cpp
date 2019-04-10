@@ -52,6 +52,7 @@ using Dir = glm::vec3;
      width = 2;
      float h = 1;
      float sideNum = (int)(width/2/h) + 1;
+     m_pds = pds;
      for(unsigned int i = 0; i < pds.size(); i++){
          Dir norm = tee->outNorm(pds.at(i).pos, strs.at(i));
          Dir right = glm::cross(pds.at(i).dir, norm);
@@ -79,6 +80,7 @@ using Dir = glm::vec3;
          }
      }
      unsigned int num = 2*sideNum - 1;
+     m_numPerPd = num;
      vector<unsigned int> indexVec;
      for(unsigned int i = 0; i<pds.size()-1;i++){
          for(unsigned int j = 0; j < num -1; j++){

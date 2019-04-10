@@ -99,3 +99,14 @@ QString End::theOtherId(){
 End::End(){
 
 }
+
+GLIndexPairVec Band::getGLIndexPairVec(EndPtr beginEnd, float dis){
+    QString flag;
+    if(beginEnd->endId == m_end->frontEnd()->endId){
+        flag = "normal";
+        GLIndexPair loopPair;
+    }
+    else{
+        flag = "reverse";
+    }
+}
