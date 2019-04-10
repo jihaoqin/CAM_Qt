@@ -9,6 +9,7 @@ public:
     void calculation();
     int getPercent();
     void resetBand();
+    void setPercent(int);
 private:
     void initBandPtrs();
     void initIndexPairVecs();

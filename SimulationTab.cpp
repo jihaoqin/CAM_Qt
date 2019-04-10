@@ -35,6 +35,7 @@ SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* pa
     connect(goonButton, &QPushButton::clicked, this, &SimulationTab::goon);
     connect(pauseButton, &QPushButton::clicked, timer, &QTimer::stop);
     connect(closeButton, &QPushButton::clicked, this, &SimulationTab::closeMyself);
+    connect(progressSlider, &QSlider::valueChanged, this, &SimulationTab::setPercent);
     connect(timer, &QTimer::timeout, this, &SimulationTab::showNext);
 }
 
@@ -60,4 +61,8 @@ void SimulationTab::closeMyself(){
     animateCtrl->resetBand();
     backWidget->setWidget(nullptr);
     close();
+}
+
+void SimulationTab::setPercent(int percent){
+    animateCtrl->setPercent(percent);
 }
