@@ -126,7 +126,7 @@ void ClosePathThread::reorderPath(){
     QMutex* mtx = data->getMutex();
     vector<NodePtr> sortedBandNodePtrs = {getBandNode(end1.bandId())};
     for(int i =0; i<linkedEnds.size(); i++){
-        if(QString(sortedBandNodePtrs.back()->Id()).contains(linkedEnds.at(i).bandId())){
+        if(QString(sortedBandNodePtrs.back()->Id()) == (linkedEnds.at(i).bandId())){
             continue;
         }
         else{

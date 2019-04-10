@@ -5,6 +5,7 @@
 #include "NewCurveTab.h"
 #include "GuiConnector.h"
 #include "ObjTreeWidget.h"
+#include "SimulationTab.h"
 
 TabWidget::TabWidget(QWidget* parent)
     :QTabWidget(parent),tree(nullptr)
@@ -27,6 +28,11 @@ void TabWidget::showNewCurveTab(){
     setCurrentIndex(1);
 }
 
+void TabWidget::showSimulationTab(){
+    SimulationTab* simTab = new SimulationTab(operation, connector, this);
+    operation->setWidget(simTab);
+    setCurrentIndex(1);
+}
 
 bool TabWidget::isOperating(){
     return operation->isSet();

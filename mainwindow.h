@@ -22,6 +22,8 @@ public slots:
     void allBind();
     void updateModel();
     void loopBand();
+    void animationOver();
+    void showSimTab();
 private slots:
     void showNewCurveTab();
     void saveBand();
@@ -49,6 +51,7 @@ private:
         QAction *rightCurve;
         QAction *upCurve;
         QAction *loopCurve;
+        QAction *simAction;
     QToolBar* toolBar;
 };
 

@@ -9,6 +9,7 @@ class GLWidget;
 class Controller;
 class Data;
 class GenCurveProgressDialog;
+class TabWidget;
 
 class GuiConnector
 {
@@ -27,6 +28,7 @@ public:
     GLWidget* getGLWidget();
     Controller* getCtrl();
     std::shared_ptr<Data> getData();
+    TabWidget* getTabWidget();
     void updateModel();
 private:
     MainWindow* mainWindow;

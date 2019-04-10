@@ -11,6 +11,8 @@ Mesh::Mesh(vector<Vertex> vertexs, vector<unsigned int> indexs):GLMemory(),binde
 	this->vertexVec = vertexs;
 	this->indexVec = indexs;
     box = BoundingBox(vertexVec);
+    m_beginIndex = 0;
+    m_size = indexVec.size();
 }
 
 Mesh::~Mesh()
@@ -40,7 +42,7 @@ void Mesh::draw(){
         core->glBindVertexArray(VAO);
         core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
         core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        core->glDrawElements(GL_TRIANGLES, indexVec.size(), GL_UNSIGNED_INT, 0);
+        core->glDrawElements(GL_TRIANGLES, m_size, GL_UNSIGNED_INT, (void*)(m_beginIndex*sizeof(unsigned int)));
         //core->glDrawElements(GL_POINTS, indexVec.size(), GL_UNSIGNED_INT, 0);
     }
 }
@@ -55,6 +57,8 @@ void Mesh::setData(vector<Vertex> v, vector<unsigned int> ind){
     if(binded == true){
         bufferData();
     }
+    m_beginIndex = 0;
+    m_size = indexVec.size();
 }
 
 void Mesh::bufferData(){
@@ -74,4 +78,14 @@ void Mesh::bufferData(){
 
 void Mesh::setVisiable(bool flag){
     visiable = flag;
+}
+
+void Mesh::setShowRange(GLIndexPair p){
+    m_beginIndex = p.first;
+    m_size = p.second;
+}
+
+void Mesh::resetShowRange(){
+    m_beginIndex = 0;
+    m_size = indexVec.size();
 }

@@ -5,6 +5,7 @@
 #include "PosDir.h"
 #include "Curve.h"
 #include "NameDeclare.h"
+#include "Mesh.h"
 
 class Tee;
 class End;
@@ -51,9 +52,13 @@ public:
     BandEndPtr bandEnd();
     void setCouple(EndPtr&);
     GLIndexPairVec getGLIndexPairVec(EndPtr, float);
+    void setShowRange(GLIndexPair);
+    void resetShowRange();
 protected:
     BandEndPtr m_end;
     PosDirVec m_pds;
+    Mesh mesh;
+    vector<CurvePtr> curves;
     unsigned int m_numPerPd;
 };
 

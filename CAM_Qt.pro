@@ -95,7 +95,8 @@ SOURCES += \
     GenGeneralBandThread.cpp \
     ClosePathThread.cpp \
     ClosePathDialog.cpp \
-    AnimateController.cpp
+    AnimateController.cpp \
+    SimulationTab.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -172,7 +173,8 @@ HEADERS += \
     ClosePathThread.h \
     ClosePathDialog.h \
     AnimateController.h \
-    NameDeclare.h
+    NameDeclare.h \
+    SimulationTab.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt

@@ -86,3 +86,7 @@ void GuiConnector::updateModel(){
 std::shared_ptr<Data> GuiConnector::getData(){
     return getCtrl()->data;
 }
+
+TabWidget* GuiConnector::getTabWidget(){
+    return mainWindow->widget->tabWidget;
+}

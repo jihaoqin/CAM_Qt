@@ -6,6 +6,7 @@
 #include "GLMemory.h"
 #include "vertex.h"
 #include "boundingbox.h"
+#include "NameDeclare.h"
 using std::vector;
 struct Texture {
 	unsigned int id;
@@ -22,6 +23,8 @@ public:
     virtual void bindGL(QOpenGLContext*) override;
     virtual void draw() override;
     void setVisiable(bool);
+    void setShowRange(GLIndexPair);
+    void resetShowRange();
     BoundingBox boundingBox();
 protected:
     void bufferData();
@@ -29,4 +32,6 @@ protected:
     bool visiable;
 	std::vector<Vertex> vertexVec;
     BoundingBox box;
+    unsigned int m_beginIndex;
+    unsigned int m_size;
 };

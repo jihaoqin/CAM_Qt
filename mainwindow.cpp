@@ -17,6 +17,8 @@
 #include "GenGeneralBandThread.h"
 #include "ClosePathDialog.h"
 #include "ClosePathThread.h"
+#include "AnimateController.h"
+#include <QTimer>
 
 MainWindow::MainWindow(Controller* c, QWidget *parent)
     : QMainWindow(parent), ctrl(nullptr), widget(nullptr), teeNewDialog(nullptr), connector(nullptr)
@@ -250,6 +252,10 @@ void MainWindow::configureToolBar(){
     toolBar->addAction(loopCurve);
     loopCurve->setEnabled(false);
     connect(loopCurve, &QAction::triggered, this, &MainWindow::loopBand);
+    simAction = new QAction(QIcon(":/icons/sim"),"simulation");
+    toolBar->addAction(simAction);
+    simAction->setEnabled(true);
+    connect(simAction, &QAction::triggered, this, &MainWindow::showSimTab);
 }
 
 void MainWindow::showNewCurveTab(){
@@ -344,4 +350,13 @@ void MainWindow::loopBand(){
     thread->start();
     dlg->exec();
     //updateAction()?
+}
+
+void MainWindow::animationOver(){
+
+}
+
+void MainWindow::showSimTab(){
+    TabWidget* t = connector->getTabWidget();
+    t->showSimulationTab();
 }

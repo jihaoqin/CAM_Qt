@@ -10,6 +10,9 @@ using GLIndexPair = std::pair<int, int>;
 using GLIndexPairVec = std::vector<GLIndexPair>;
 
 class Controller;
+class GuiConnector;
+class TabBackground;
+class AnimateController;
 
 class Data;
 using DataPtr = std::shared_ptr<Data>;

@@ -6,6 +6,8 @@ Curve::Curve(std::vector<glm::vec3> points, const char* c):color(Color::BLACK)
     setId(c);
     initial(points);
     box = BoundingBox(vertexVec);
+    m_beginInd = 0;
+    m_size = points.size();
 }
 Curve::Curve(const char* c):color(Color::BLACK)
 {
@@ -58,7 +60,7 @@ void Curve::draw(std::shared_ptr<GLProgram> program){
     core->glBindVertexArray(VAO);
     core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
     core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    core->glDrawArrays(GL_LINE_STRIP, 0, vertexVec.size());
+    core->glDrawArrays(GL_LINE_STRIP, m_beginInd, m_size);
     //core->glDepthMask(GL_TRUE);
 }
 
@@ -67,7 +69,10 @@ void Curve::data(std::vector<glm::vec3> points){
     if(binded == true){
         bufferData();
     }
+    m_beginInd = 0;
+    m_size = points.size();
 }
+
 void Curve::initial(std::vector<glm::vec3> points){
     vertexVec.clear();
     indexVec.clear();
@@ -94,4 +99,14 @@ void Curve::setWindingAngle(float angle){
 
 void Curve::setColor(Color c){
     color = c;
+}
+
+void Curve::setShowRange(unsigned int begin, unsigned int size){
+    m_beginInd = begin;
+    m_size = size;
+}
+
+void Curve::resetShowRange(){
+    m_beginInd = 0;
+    m_size = indexVec.size();
 }

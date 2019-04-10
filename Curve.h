@@ -16,10 +16,14 @@ public:
     virtual void draw(std::shared_ptr<GLProgram>) override;
     virtual void setWindingPara(float angle, float coe);
     virtual void setWindingAngle(float angle);
+    void setShowRange(unsigned int, unsigned int);
+    void resetShowRange();
     void setColor(Color);
 private:
     void bufferData();
     void initial(std::vector<glm::vec3>);
+    unsigned int m_beginInd;
+    unsigned int m_size;
     std::vector<Vertex> vertexVec;
     std::vector<unsigned int> indexVec;
     QOpenGLFunctions_4_3_Core *core;

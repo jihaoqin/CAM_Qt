@@ -17,10 +17,8 @@ private:
     void initial(PosDirVec pds, QStringVec names);
     float width;
     TeePtr tee;
-    std::vector<CurvePtr> curves;
     Color color;
     QOpenGLFunctions_4_3_Core *core;
-    Mesh mesh;
 };
 
 using GeneralBandPtr = std::shared_ptr<GeneralBand>;

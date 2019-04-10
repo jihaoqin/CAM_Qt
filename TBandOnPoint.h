@@ -24,8 +24,6 @@ private:
     PointPtr point;
     float width;
     TCurvePtr tcurve;
-    Mesh mesh;
-    vector<CurvePtr> curves;
     Color color;
     QOpenGLFunctions_4_3_Core *core;
 };

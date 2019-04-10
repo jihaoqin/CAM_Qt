@@ -104,9 +104,50 @@ GLIndexPairVec Band::getGLIndexPairVec(EndPtr beginEnd, float dis){
     QString flag;
     if(beginEnd->endId == m_end->frontEnd()->endId){
         flag = "normal";
-        GLIndexPair loopPair;
+        std::vector<int> indexs;
+        indexs.push_back(0);
+        GLIndexPairVec pairVec;
+        for(int i=0; i<m_pds.size(); ++i){
+            int lastInd = indexs.back();
+            Pos lastPos = m_pds.at(lastInd).pos;
+            if(glm::length(m_pds.at(i).pos - lastPos)>dis||m_pds.size()-1 == i){
+                indexs.push_back(i);
+                GLIndexPair loopPair = GLIndexPair{0, i*(m_numPerPd - 1)*6};
+                pairVec.push_back(loopPair);
+            }
+        }
+        return pairVec;
     }
     else{
         flag = "reverse";
+        std::vector<int> indexs;
+        indexs.push_back(m_pds.size()-1);
+        GLIndexPairVec pairVec;
+        for(int i = m_pds.size() - 1; i >= 0; --i){
+            int lastInd = indexs.back();
+            Pos lastPos = m_pds.at(lastInd).pos;
+            if(glm::length(lastPos - m_pds.at(i).pos) > dis || 0 == i){
+                indexs.push_back(i);
+                GLIndexPair loopPair = GLIndexPair{i*(m_numPerPd -1)*6, (m_pds.size()-1-i)*(m_numPerPd-1)*6};
+                pairVec.push_back(loopPair);
+            }
+        }
+        return pairVec;
+    }
+}
+
+void Band::setShowRange(GLIndexPair p){
+    mesh.setShowRange(p);
+    unsigned int beginInd = p.first/(6*(m_numPerPd - 1));
+    unsigned int size = p.second/(6*(m_numPerPd - 1))+1;
+    for(auto c:curves){
+        c->setShowRange(beginInd, size);
+    }
+}
+
+void Band::resetShowRange(){
+    mesh.resetShowRange();
+    for(auto c:curves){
+        c->resetShowRange();
     }
 }

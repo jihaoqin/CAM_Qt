@@ -18,6 +18,7 @@ public:
     void setConnector(GuiConnector*);
 public slots:
     void showNewCurveTab();
+    void showSimulationTab();
 private:
     ObjTreeWidget* tree;
     TabBackground* operation;
