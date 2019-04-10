@@ -5,6 +5,7 @@
 #include "GeneralBand.h"
 #include "Data.h"
 #include "Node.h"
+#include "Band.h"
 using namespace std;
 
 ClosePathThread::ClosePathThread(Controller* c)
@@ -93,5 +94,69 @@ void ClosePathThread::run(){
         ++ind;
     }
     assert(unLinkedNum<3);
+    reorderPath();
     emit calOver();
+}
+
+void ClosePathThread::reorderPath(){
+    auto data = ctrl->data;
+    TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
+    set<End> endsSet = ctrl->allEndsSet();
+    End end1;
+    for(auto ite = endsSet.begin(); ite != endsSet.end();++ite){
+        if(ite->nextEndId.isEmpty()){
+            end1 = *ite;
+            break;
+        }
+    }
+    vector<End> linkedEnds = {end1};
+    End loopE = utility::theOtherEnd(end1, endsSet);
+    while(true){
+        if(loopE.nextEndId.isEmpty()){
+            linkedEnds.push_back(loopE);
+            break;
+        }
+        else{
+            End next = utility::getEnd(loopE.nextEndId, endsSet);
+            linkedEnds.push_back(loopE);
+            linkedEnds.push_back(next);
+            loopE = utility::theOtherEnd(next,endsSet);
+        }
+    }
+    QMutex* mtx = data->getMutex();
+    vector<NodePtr> sortedBandNodePtrs = {getBandNode(end1.bandId())};
+    for(int i =0; i<linkedEnds.size(); i++){
+        if(QString(sortedBandNodePtrs.back()->Id()).contains(linkedEnds.at(i).bandId())){
+            continue;
+        }
+        else{
+            sortedBandNodePtrs.push_back(getBandNode(linkedEnds.at(i).bandId()));
+        }
+    }
+    auto& children = data->root->childrenPtrVec();
+    mtx->lock();
+    int j = 0;
+    for(int i = 0; i<children.size(); i++){
+        auto c = children.at(i);
+        QString id = c->Id();
+        if(id.contains("band")){
+            children.at(i) = sortedBandNodePtrs.at(j);
+            j++;
+        }
+    }
+    mtx->unlock();
+}
+
+NodePtr ClosePathThread::getBandNode(QString bandId){
+    vector<NodePtr> bandNodePtrs;
+    auto data = ctrl->data;
+    TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
+    auto root = data->root;
+    auto children = root->childrenPtrVec();
+    for(auto c:children){
+        QString id = c->Id();
+        if(id == bandId){
+            return c;
+        }
+    }
 }

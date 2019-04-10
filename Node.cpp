@@ -80,7 +80,7 @@ DataObjectPtr Node::getData(){
 Node* Node::fatherPtr(){
     return father;
 }
-std::vector<NodePtr> Node::childrenPtrVec(){
+std::vector<NodePtr>& Node::childrenPtrVec(){
     return children;
 }
 

@@ -9,6 +9,7 @@
 #include "HalfPoint.h"
 #include "Color.h"
 #include "Band.h"
+#include <set>
 class GLWidget;
 class MainWindow;
 class Data;
@@ -34,6 +35,7 @@ public:
     void addTee(float ,float ,float ,float);
     void setColor(QStringVec, Color);
     EndPtrVec allEnds();
+    std::set<End> allEndsSet();
     QString addCurve(QString pId, float uAng);
     void deleteBand(QString id);
     std::shared_ptr<Point> addPoint(HalfPoint);

@@ -551,6 +551,15 @@ EndPtrVec Controller::allEnds(){
     return all;
 }
 
+std::set<End> Controller::allEndsSet(){
+    EndPtrVec endPtrs = allEnds();
+    set<End> endsSet;
+    for(auto e:endPtrs){
+        endsSet.insert(*e);
+    }
+    return endsSet;
+}
+
 void Controller::genCylinderCurve(QString which){
     TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
     LeftCylinderAssist leftAssist(tee, which);

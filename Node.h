@@ -27,7 +27,7 @@ public:
     BoundingBox boudingBoxUnion();
     DataObjectPtr findObjectId(const char*);
     Node* fatherPtr();
-    std::vector<NodePtr> childrenPtrVec();
+    std::vector<NodePtr>& childrenPtrVec();
     void deleteChild(NodePtr child);
     void deleteChild(const char* c);
     void addChild(NodePtr child);
