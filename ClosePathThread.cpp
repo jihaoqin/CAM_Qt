@@ -76,6 +76,9 @@ void ClosePathThread::run(){
             auto& strs = get<1>(tuple1);
             mtx->lock();
             auto band = make_shared<GeneralBand>(pds, strs, data->idGenerator.getBandId(), tee);
+            if(QString(band->getId()).contains("244")){
+                int a = 5;
+            }
             band->setCouple(e);
             band->setCouple(nearEnd);
             data->addBand(band);
@@ -106,7 +109,8 @@ void ClosePathThread::reorderPath(){
     for(auto ite = endsSet.begin(); ite != endsSet.end();++ite){
         if(ite->nextEndId.isEmpty()){
             end1 = *ite;
-            break;
+            qDebug()<<ite->endId;
+            //break;
         }
     }
     vector<End> linkedEnds = {end1};

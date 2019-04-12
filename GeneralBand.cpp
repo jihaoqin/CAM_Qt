@@ -105,8 +105,10 @@ void GeneralBand::initial(PosDirVec pds, QStringVec names){
      QString bandId = getId();
      QString frontId = bandId+".front";
      QString backId = bandId+".back";
-     EndPtr frontEnd = make_shared<End>(fewPds.front(), "", frontId);
-     EndPtr backEnd = make_shared<End>(fewPds.back(), "", backId);
+     PosDir frontPd = {fewPds.front().pos, glm::dot(fewPds.front().pos-fewPds.at(1).pos, fewPds.front().dir)>0? fewPds.front().dir:(-1.0f*fewPds.front().dir)};
+     PosDir backPd = {fewPds.back().pos, glm::dot(fewPds.back().pos - fewPds.at(fewPds.size()-2).pos, fewPds.back().dir)>0? fewPds.back().dir:(-1.0f*fewPds.back().dir)};
+     EndPtr frontEnd = make_shared<End>(frontPd, "", frontId);
+     EndPtr backEnd = make_shared<End>(backPd, "", backId);
      m_end = make_shared<BandEnd>(bandId, EndPtrVec{frontEnd, backEnd});
      mesh.setData(vertexVec, indexVec);
      vector<Pos> edgePos_1;

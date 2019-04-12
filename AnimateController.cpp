@@ -102,14 +102,22 @@ void AnimateController::resetBand(){
 void AnimateController::setPercent(int p){
     windedTotal = p*1.0/100*pairTotal;
     int left = windedTotal;
+    for(auto b:bandPtrs){
+        b->setShowRange({0,0});
+    }
     for(int i =0; i < indexPairVecs.size(); ++i){
         auto& pairVec = indexPairVecs.at(i);
         if(left>pairVec.size()){
             left -= pairVec.size();
+            bandPtrs.at(i)->setShowRange(indexPairVecs.at(i).back());
         }
         else{
             bandInd = i;
-            showInd = left - 1;
+            showInd = left-1;
+            if(showInd >=0){
+                bandPtrs.at(i)->setShowRange(indexPairVecs.at(i).at(showInd));
+            }
+            break;
         }
     }
 }

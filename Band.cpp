@@ -31,12 +31,13 @@ Pos BandEnd::backPos(){
 
 void BandEnd::setCouple(EndPtr& other){
     for(auto e:ends){
-        if(e->isClose(other)){
+        if(e->isClose(other)&&glm::dot(e->pd.dir, other->pd.dir)<0){
             e->nextEndId = other->endId;
             other->nextEndId = e->endId;
             return;
         }
     }
+    assert(0);
 }
 
 QString End::bandId(){

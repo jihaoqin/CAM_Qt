@@ -19,5 +19,8 @@ using DataPtr = std::shared_ptr<Data>;
 
 class Node;
 using NodePtr = std::shared_ptr<Node>;
+class Tee;
+using TeePtr = std::shared_ptr<Tee>;
+
 
 #endif // CLASDECLARE_H

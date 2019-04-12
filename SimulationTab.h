@@ -16,11 +16,13 @@ public slots:
     void showNext();
     void closeMyself();
     void setPercent(int);
+    void fastForward();
 private:
     QPushButton* calButton;
     QPushButton* goonButton;
     QPushButton* pauseButton;
     QPushButton* closeButton;
+    QPushButton* fastButton;
     QSlider* progressSlider;
     QTimer* timer;
 

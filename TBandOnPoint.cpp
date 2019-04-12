@@ -44,8 +44,13 @@ using Dir = glm::vec3;
      QString bandId = getId();
      QString frontId = bandId + ".front";
      QString backId = bandId + ".back";
-     EndPtr frontEnd = make_shared<End>(pds.front(),"", frontId);
-     EndPtr backEnd = make_shared<End>(pds.back(),"", backId);
+     if(QString(getId()).contains("band30")){
+         int a = 4;
+     }
+     PosDir frontPd = {pds.front().pos, -1.0f*pds.front().dir};
+     PosDir backPd = pds.back();
+     EndPtr frontEnd = make_shared<End>(frontPd,"", frontId);
+     EndPtr backEnd = make_shared<End>(backPd,"", backId);
      m_end = make_shared<BandEnd>(bandId, EndPtrVec{frontEnd, backEnd});
      PosVec meshPos;
      vector<Vertex> vertexVec;

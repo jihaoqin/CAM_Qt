@@ -11,7 +11,7 @@ SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* pa
     :QWidget(parent), backWidget(back), connector(con)
 {
     calButton = new QPushButton("calculation", this);
-    goonButton = new QPushButton("continue",this);
+    goonButton = new QPushButton("play",this);
     goonButton->setEnabled(false);
     pauseButton = new QPushButton("pause", this);
     pauseButton->setEnabled(false);
@@ -20,11 +20,14 @@ SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* pa
     progressSlider = new QSlider(Qt::Horizontal, this);
     progressSlider->setEnabled(false);
     progressSlider->setRange(0,100);
+    fastButton = new QPushButton("ff", this);
+    fastButton->setEnabled(false);
     animateCtrl = new AnimateController(connector->getCtrl());
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(calButton);
     layout->addWidget(goonButton);
     layout->addWidget(pauseButton);
+    layout->addWidget(fastButton);
     layout->addWidget(progressSlider);
     layout->addWidget(closeButton);
     layout->addStretch(1);
@@ -35,6 +38,7 @@ SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* pa
     connect(goonButton, &QPushButton::clicked, this, &SimulationTab::goon);
     connect(pauseButton, &QPushButton::clicked, timer, &QTimer::stop);
     connect(closeButton, &QPushButton::clicked, this, &SimulationTab::closeMyself);
+    connect(fastButton, &QPushButton::clicked, this, &SimulationTab::fastForward);
     connect(progressSlider, &QSlider::valueChanged, this, &SimulationTab::setPercent);
     connect(timer, &QTimer::timeout, this, &SimulationTab::showNext);
 }
@@ -44,6 +48,7 @@ void SimulationTab::calculation(){
     goonButton->setEnabled(true);
     pauseButton->setEnabled(true);
     progressSlider->setEnabled(true);
+    fastButton->setEnabled(true);
 }
 
 void SimulationTab::goon(){
@@ -53,7 +58,9 @@ void SimulationTab::goon(){
 void SimulationTab::showNext(){
     animateCtrl->showNext();
     int percent = animateCtrl->getPercent();
+    progressSlider->blockSignals(true);
     progressSlider->setValue(percent);
+    progressSlider->blockSignals(false);
 }
 
 void SimulationTab::closeMyself(){
@@ -65,4 +72,13 @@ void SimulationTab::closeMyself(){
 
 void SimulationTab::setPercent(int percent){
     animateCtrl->setPercent(percent);
+}
+
+void SimulationTab::fastForward(){
+    int  intl = timer->interval();
+    int nextIntl = intl/2;
+    if(nextIntl<=0){
+        nextIntl = 1;
+    }
+    timer->setInterval(nextIntl);
 }
