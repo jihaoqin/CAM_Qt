@@ -41,6 +41,7 @@ void HangingBandSet::bufferData(){
     core->glEnableVertexAttribArray(0);
     core->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)0);
     core->glEnableVertexAttribArray(1);
+    core->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(3*sizeof(float)));
     core->glEnableVertexAttribArray(2);
     core->glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(6*sizeof(float)));
 }
@@ -60,8 +61,6 @@ void HangingBandSet::setData(PosVec posVec){
     for(int i = 0; i < sendPoints.size(); ++i){
         indexVec.push_back(i);
     }
-    std::vector<unsigned int> indexVec;
-    std::vector<Vertex> vertexVec;
     updateBox();
     if(binded == true){
         bufferData();
