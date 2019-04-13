@@ -13,6 +13,7 @@ public:
 private:
     void initBandPtrs();
     void initIndexPairVecs();
+    void initHangingBand();
     Controller* ctrl;
     BandPtrVec bandPtrs;
     std::vector<GLIndexPairVec> indexPairVecs;

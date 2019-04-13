@@ -7,6 +7,7 @@
 #include "Curve.h"
 #include "Band.h"
 #include "GuiConnector.h"
+#include "HangingBandSet.h"
 #include <QMutexLocker>
 using std::shared_ptr;
 using std::make_shared;
@@ -46,6 +47,13 @@ void Data::addCurve(std::shared_ptr<Curve> curve){
 void Data::addBand(std::shared_ptr<Band> b){
     root->addChild(make_shared<Node>(b));
     //connector->updateModel();
+    updateBoundingBox();
+    state.setEmpty(false);
+    state.setChanged(true);
+}
+
+void Data::addHang(std::shared_ptr<HangingBandSet> h){
+    root->addChild(make_shared<Node>(h));
     updateBoundingBox();
     state.setEmpty(false);
     state.setChanged(true);

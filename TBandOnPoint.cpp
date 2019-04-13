@@ -114,11 +114,11 @@ using Dir = glm::vec3;
  void TBandOnPoint::bindGL(QOpenGLContext *c){
      if(binded == false){
         core = c->versionFunctions<QOpenGLFunctions_4_3_Core>();
-         mesh.bindGL(c);
-         binded = true;
-         for(auto i:curves){
-             i->bindGL(c);
-         }
+        mesh.bindGL(c);
+        binded = true;
+        for(auto i:curves){
+            i->bindGL(c);
+        }
      }
      else{
      }

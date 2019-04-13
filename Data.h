@@ -17,6 +17,7 @@ class Node;
 class Curve;
 class Band;
 class GuiConnector;
+class HangingBandSet;
 class Data
 {
 public:
@@ -31,6 +32,7 @@ public:
     void addPoint(std::shared_ptr<Point>);
     void addCurve(std::shared_ptr<Curve>);
     void addBand(std::shared_ptr<Band>);
+    void addHang(std::shared_ptr<HangingBandSet>);
     void deleteBand(QString id);
     bool hasTee();
     void setViewPortRatio(int w, int h);

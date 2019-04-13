@@ -97,7 +97,8 @@ SOURCES += \
     ClosePathDialog.cpp \
     AnimateController.cpp \
     SimulationTab.cpp \
-    EnvelopAssist.cpp
+    EnvelopAssist.cpp \
+    HangingBandSet.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -176,7 +177,8 @@ HEADERS += \
     AnimateController.h \
     NameDeclare.h \
     SimulationTab.h \
-    EnvelopAssist.h
+    EnvelopAssist.h \
+    HangingBandSet.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt

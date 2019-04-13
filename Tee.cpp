@@ -611,3 +611,8 @@ glm::mat4 Tee::rightMat4(){
     utility::setZDir(T, Dir{1, 0, 0});
     return T;
 }
+
+
+TeePara Tee::teePara(){
+    return TeePara{pipeR, sideR, lengthMain, lengthBranch};
+}

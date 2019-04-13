@@ -16,6 +16,13 @@ using Dir = glm::vec3;
 using Pos = glm::vec3;
 
 class GLProgram;
+class TeePara{
+public:
+    float pipeR;
+    float sideR;
+    float lengthMain;
+    float lengthBranch;
+};
 
 class Tee: public DataObject
 {
@@ -32,6 +39,7 @@ public:
     BoundingBox boundingBox();
     void setIdUsing(IdGenerator);
     Ring* getRing(QString);
+    TeePara teePara();
     TriEdgePlane* getTriPlane(QString);
     Cylinder* getCylinder(QString);
     QString topoValue(QString);

@@ -113,8 +113,8 @@ GLIndexPairVec Band::getGLIndexPairVec(EndPtr beginEnd, float dis){
             Pos lastPos = m_pds.at(lastInd).pos;
             if(glm::length(m_pds.at(i).pos - lastPos)>dis||m_pds.size()-1 == i){
                 indexs.push_back(i);
-                GLIndexPair loopPair = GLIndexPair{0, i*(m_numPerPd - 1)*6};
-                pairVec.push_back(loopPair);
+                //GLIndexPair loopPair = GLIndexPair{0, i*(m_numPerPd - 1)*6};
+                pairVec.push_back(GLIndexPair{0, i});
             }
         }
         return pairVec;
@@ -129,8 +129,8 @@ GLIndexPairVec Band::getGLIndexPairVec(EndPtr beginEnd, float dis){
             Pos lastPos = m_pds.at(lastInd).pos;
             if(glm::length(lastPos - m_pds.at(i).pos) > dis || 0 == i){
                 indexs.push_back(i);
-                GLIndexPair loopPair = GLIndexPair{i*(m_numPerPd -1)*6, (m_pds.size()-1-i)*(m_numPerPd-1)*6};
-                pairVec.push_back(loopPair);
+                //GLIndexPair loopPair = GLIndexPair{i*(m_numPerPd -1)*6, (m_pds.size()-1-i)*(m_numPerPd-1)*6};
+                pairVec.push_back(GLIndexPair{i, m_pds.size()-1});
             }
         }
         return pairVec;
@@ -138,11 +138,12 @@ GLIndexPairVec Band::getGLIndexPairVec(EndPtr beginEnd, float dis){
 }
 
 void Band::setShowRange(GLIndexPair p){
-    mesh.setShowRange(p);
-    unsigned int beginInd = p.first/(6*(m_numPerPd - 1));
-    unsigned int size = p.second/(6*(m_numPerPd - 1))+1;
+    GLIndexPair meshP{p.first*(m_numPerPd-1)*6, (p.second-p.first)*(m_numPerPd-1)*6};
+    mesh.setShowRange(meshP);
+    //unsigned int beginInd = p.first/(6*(m_numPerPd - 1));
+    //unsigned int size = p.second/(6*(m_numPerPd - 1))+1;
     for(auto c:curves){
-        c->setShowRange(beginInd, size);
+        c->setShowRange(p.first, p.second-p.first+1);
     }
 }
 
@@ -151,4 +152,17 @@ void Band::resetShowRange(){
     for(auto c:curves){
         c->resetShowRange();
     }
+}
+
+    
+PosDir Band::indexPd(int ind){
+    return m_pds.at(ind);
+}
+    
+PosDirVec Band::indexsPds(vector<int> inds){
+    PosDirVec pds;
+    for(auto i:inds){
+        pds.push_back(m_pds.at(i));
+    }
+    return pds;
 }

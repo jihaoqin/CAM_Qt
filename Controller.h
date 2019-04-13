@@ -69,6 +69,7 @@ public:
     void saveBand(QString path);
     void openBand(QString path);
     void allBindGL();
+    QOpenGLContext* getGLContext();
 private:
     std::shared_ptr<Data> data;
     GLWidget* widget;

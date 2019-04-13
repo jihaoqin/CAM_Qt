@@ -3,7 +3,9 @@
 #include "Data.h"
 #include "Node.h"
 #include "mainwindow.h"
-
+#include "EnvelopAssist.h"
+#include "Data.h"
+#include "HangingBandSet.h"
 
 AnimateController::AnimateController(Controller* c)
     :ctrl(c)
@@ -80,6 +82,7 @@ void AnimateController::showNext(){
 void AnimateController::calculation(){
     initBandPtrs();
     initIndexPairVecs();
+    initHangingBand();
     for(auto b:bandPtrs){
         b->setShowRange(GLIndexPair{0,0});
     }
@@ -119,5 +122,38 @@ void AnimateController::setPercent(int p){
             }
             break;
         }
+    }
+}
+
+void AnimateController::initHangingBand(){
+    auto root = ctrl->data->getNodeRoot();
+    auto tee =  std::dynamic_pointer_cast<Tee>(root->findObjectId("tee"));
+    EnvelopAssist assist(tee);
+    PosVec allPosVec;
+    for(int i = 0; i < bandPtrs.size(); ++i){
+        GLIndexPairVec& pairVec = indexPairVecs.at(i);
+        vector<int> inds;
+        for(auto p:pairVec){
+            inds.push_back(p.first);
+        }
+        BandPtr bPtr = bandPtrs.at(i);
+        auto pds = bPtr->indexsPds(inds);
+        for(auto pd: pds){
+            auto posVec = assist.intersectPoint(pd.pos, pd.dir);
+            assert(posVec.size() == 1);
+            allPosVec.push_back(pd.pos);
+            allPosVec.push_back(posVec.at(0));
+        }
+    }
+    HangingBandSetPtr hangPtr;
+    if(root->findObjectId("post") == nullptr){
+        hangPtr = std::make_shared<HangingBandSet>(allPosVec);
+        QOpenGLContext* c = ctrl->getGLContext();
+        hangPtr->bindGL(c);
+        ctrl->data->addHang(hangPtr);
+    }
+    else{
+        hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
+        hangPtr->setData(allPosVec);
     }
 }

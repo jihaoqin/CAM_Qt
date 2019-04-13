@@ -54,6 +54,8 @@ public:
     GLIndexPairVec getGLIndexPairVec(EndPtr, float);
     void setShowRange(GLIndexPair);
     void resetShowRange();
+    PosDir indexPd(int);
+    PosDirVec indexsPds(vector<int>);
 protected:
     BandEndPtr m_end;
     PosDirVec m_pds;

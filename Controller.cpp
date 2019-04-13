@@ -671,3 +671,8 @@ void Controller::allBindGL(){
 std::shared_ptr<Data> Controller::getData(){
     return data;
 }
+
+
+QOpenGLContext* Controller::getGLContext(){
+    return widget->getGLContext();
+}
