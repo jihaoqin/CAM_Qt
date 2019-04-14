@@ -10,7 +10,7 @@
 AnimateController::AnimateController(Controller* c)
     :ctrl(c)
 {
-    m_distance = 10;
+    m_distance = 2;
     bandInd = 0;
     showInd = 0;
     pairTotal = 0;
@@ -83,6 +83,7 @@ void AnimateController::calculation(){
     initBandPtrs();
     initIndexPairVecs();
     initHangingBand();
+    solveCollision();
     for(auto b:bandPtrs){
         b->setShowRange(GLIndexPair{0,0});
     }
@@ -133,10 +134,17 @@ void AnimateController::initHangingBand(){
     for(int i = 0; i < bandPtrs.size(); ++i){
         GLIndexPairVec& pairVec = indexPairVecs.at(i);
         vector<int> inds;
-        for(auto p:pairVec){
-            inds.push_back(p.first);
-        }
         BandPtr bPtr = bandPtrs.at(i);
+        if(bPtr->beginFlag().contains("front")){
+            for(auto p:pairVec){
+                inds.push_back(p.second);
+            }
+        }
+        else{
+            for(auto p:pairVec){
+                inds.push_back(p.first);
+            }
+        }
         auto pds = bPtr->indexsPds(inds);
         for(auto pd: pds){
             auto posVec = assist.intersectPoint(pd.pos, pd.dir);
@@ -156,4 +164,9 @@ void AnimateController::initHangingBand(){
         hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
         hangPtr->setData(allPosVec);
     }
+}
+
+
+void AnimateController::solveCollision(){
+
 }

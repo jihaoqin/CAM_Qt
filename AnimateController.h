@@ -14,6 +14,7 @@ private:
     void initBandPtrs();
     void initIndexPairVecs();
     void initHangingBand();
+    void solveCollision();
     Controller* ctrl;
     BandPtrVec bandPtrs;
     std::vector<GLIndexPairVec> indexPairVecs;

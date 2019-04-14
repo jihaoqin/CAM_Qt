@@ -56,7 +56,9 @@ public:
     void resetShowRange();
     PosDir indexPd(int);
     PosDirVec indexsPds(vector<int>);
+    QString beginFlag();
 protected:
+    QString m_begin;
     BandEndPtr m_end;
     PosDirVec m_pds;
     Mesh mesh;

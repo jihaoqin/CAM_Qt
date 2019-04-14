@@ -102,9 +102,7 @@ End::End(){
 }
 
 GLIndexPairVec Band::getGLIndexPairVec(EndPtr beginEnd, float dis){
-    QString flag;
     if(beginEnd->endId == m_end->frontEnd()->endId){
-        flag = "normal";
         std::vector<int> indexs;
         indexs.push_back(0);
         GLIndexPairVec pairVec;
@@ -117,10 +115,10 @@ GLIndexPairVec Band::getGLIndexPairVec(EndPtr beginEnd, float dis){
                 pairVec.push_back(GLIndexPair{0, i});
             }
         }
+        m_begin = "front";
         return pairVec;
     }
     else{
-        flag = "reverse";
         std::vector<int> indexs;
         indexs.push_back(m_pds.size()-1);
         GLIndexPairVec pairVec;
@@ -133,6 +131,7 @@ GLIndexPairVec Band::getGLIndexPairVec(EndPtr beginEnd, float dis){
                 pairVec.push_back(GLIndexPair{i, m_pds.size()-1});
             }
         }
+        m_begin = "back";
         return pairVec;
     }
 }
@@ -160,9 +159,23 @@ PosDir Band::indexPd(int ind){
 }
     
 PosDirVec Band::indexsPds(vector<int> inds){
+    if(QString(getId()).contains("band12")){
+        int a = 0;
+    }
     PosDirVec pds;
+    Dir lastDir = glm::normalize(m_pds.at(inds.at(1)).pos-m_pds.at(inds.at(0)).pos);
     for(auto i:inds){
-        pds.push_back(m_pds.at(i));
+        PosDir pd = m_pds.at(i);
+        if(glm::dot(lastDir, pd.dir)<0){
+            pd.dir = pd.dir*(-1.0f);
+        }
+        pds.push_back(pd);
+        lastDir = pd.dir;
     }
     return pds;
+}
+
+
+QString Band::beginFlag(){
+    return m_begin;
 }
