@@ -107,3 +107,20 @@ PosVec Pipe::interPoints(Pos worldPos, Dir worldDir){
     }
     return worldInts;
 }
+
+bool Envelope::isCross(Pos end1, Pos end2){
+    bool flag1 = main.isCross(end1, end2);
+    bool flag2 = branch.isCross(end1, end2);
+    return flag1||flag2;
+}
+
+bool Pipe::isCross(Pos end1, Pos end2){
+    Dir dir = glm::normalize(end2 - end1);
+    PosVec points = interPoints(end1, dir);
+    if(points.size() == 2){
+        return true;
+    }
+    else{
+        return false;
+    }
+}

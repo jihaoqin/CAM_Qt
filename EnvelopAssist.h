@@ -9,6 +9,7 @@ class Pipe{
 public:
     bool isWorldIn(Pos);
     PosVec interPoints(Pos, Dir);
+    bool isCross(Pos, Pos);
 public:
     float length;
     glm::mat4 T;
@@ -21,6 +22,7 @@ class EnvelopAssist
 public:
     EnvelopAssist(TeePtr);
     PosVec intersectPoint(Pos , Dir);
+    bool isCross(Pos, Pos);
 private:
     TeePtr tee;
     float m_dis;
