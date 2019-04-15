@@ -10,6 +10,7 @@ public:
     float v;
     float uAng;
 };
+
 class SPara{
     // surface para
 public:
@@ -17,4 +18,5 @@ public:
     float v;
 };
 using CPParaVec = std::vector<CPPara>;
+using SParaVec = std::vector<SPara>;
 #endif // CPPARA_H

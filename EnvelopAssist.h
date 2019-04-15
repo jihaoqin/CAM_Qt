@@ -15,6 +15,8 @@ public:
     SuperPosVec genInternalSuper(SuperPos, SuperPos, bool);
     bool isCross(Pos, Pos);
 public:
+    Pos paraToLocal(SPara);
+    Pos paraToWorld(SPara);
     float length;
     glm::mat4 T;
     float r;

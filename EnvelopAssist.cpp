@@ -169,8 +169,15 @@ SuperPosVec EnvelopAssist::genInsertedSuper(SuperPosVec b2e){
     if(name == "branch"){
         pipe = branch;
     }
-    pipe.genInternalSuper(beginSuper, endSuper, true);
-    pipe.genInternalSuper(beginSuper, endSuper, false);
+    auto super1 = pipe.genInternalSuper(beginSuper, endSuper, true);
+    auto super2 = pipe.genInternalSuper(beginSuper, endSuper, false);
+    float length1 = 0;
+    float length2 = 0;
+    for(auto i = 0; i<super1.size(); i++){
+        length1 += glm::length(beginSuper.pos - super1.at(i).pos);
+        length2 += glm::length(beginSuper.pos - super2.at(2).pos);
+    }
+    return length1<length2? super1 : super2;
 }
 
 SuperPosVec Pipe::genInternalSuper(SuperPos beginSuper, SuperPos endSuper, bool flag){
@@ -180,19 +187,28 @@ SuperPosVec Pipe::genInternalSuper(SuperPos beginSuper, SuperPos endSuper, bool 
     Pos endLocal = invTrans(endSuper.pos, "pos");
     SPara beginPara = localPara(beginLocal);
     SPara endPara = localPara(endLocal);
-    if(dir == 1){
-        float Du = endPara.u - beginPara.u;
+    SuperPosVec internalSupers{beginSuper};
+    float Du = endPara.u - beginPara.u;
+    float Dv = endPara.v - beginPara.v;
+    if(flag == 1){
         while(Du<0){
             Du += 2*pi;
         }
     }
     else{
-        float Du = endPara.u - beginPara.u;
         while(Du>0){
             Du -= 2*pi;
-            到这里
         }
     }
+    float du = Du/5;
+    float dv = Dv/5;
+    for(int i = 1; i<5; i++){
+        SPara p{beginPara.u + du*i, beginPara.v+dv*i};
+        auto world = paraToWorld(p);
+        internalSupers.push_back(SuperPos{world, beginSuper.meshName});
+    }
+    internalSupers.push_back(endSuper);
+    return internalSupers;
 }
 
 Pos Pipe::invTrans(glm::vec3 v, QString flag){
@@ -204,4 +220,14 @@ SPara Pipe::localPara(Pos local){
     float u = atan2(local.y, local.x);
     float v = local.z;
     return SPara{u, v};
+}
+
+
+Pos Pipe::paraToLocal(SPara p){
+    return Pos{r*cos(p.u), r*sin(p.u), p.v};
+}
+
+Pos Pipe::paraToWorld(SPara p){
+    Pos local = paraToLocal(p);
+    return utility::multiply(T, local, "pos");
 }

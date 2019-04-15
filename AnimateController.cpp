@@ -204,11 +204,13 @@ void AnimateController::solveCollision(){
                 for(int i = beginInd; i <= endInd; ++i){
                     b2e.push_back(poss.at(i));
                 }
-                assist.genInsertedSuper(b2e);
-
+                auto insertSupers = assist.genInsertedSuper(b2e);
+                poss.erase(poss.begin()+beginInd, poss.begin()+endInd+1);
+                poss.insert(poss.begin()+beginInd, insertSupers.begin(), insertSupers.end());
                 deleteInds.clear();
                 some = false;
             }
         }
     }
+    hangPtr->setData(poss);
 }
