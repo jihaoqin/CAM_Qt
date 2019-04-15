@@ -130,7 +130,7 @@ void AnimateController::initHangingBand(){
     auto root = ctrl->data->getNodeRoot();
     auto tee =  std::dynamic_pointer_cast<Tee>(root->findObjectId("tee"));
     EnvelopAssist assist(tee);
-    PosVec allPosVec;
+    SuperPosVec allSuperPosVec;
     vector<int> crossInds;
     for(int i = 0; i < bandPtrs.size(); ++i){
         GLIndexPairVec& pairVec = indexPairVecs.at(i);
@@ -149,19 +149,20 @@ void AnimateController::initHangingBand(){
         auto pds = bPtr->indexsPds(inds);
         for(auto i = 0; i<pds.size(); ++i){
             auto pd = pds.at(i);
-            auto posVec = assist.intersectPoint(pd.pos, pd.dir);
-            assert(posVec.size() == 1);
-            if(assist.isCross(pd.pos, posVec.at(0))){
-                assist.isCross(pd.pos, posVec.at(0));
-                crossInds.push_back(i);
+            auto superPosVec = assist.intersectPoint(pd.pos, pd.dir);
+            assert(superPosVec.size() == 1);
+            if(assist.isCross(pd.pos, superPosVec.at(0).pos)){
+                assist.isCross(pd.pos, superPosVec.at(0).pos);
+                crossInds.push_back(allSuperPosVec.size());
             }
-            allPosVec.push_back(pd.pos);
-            allPosVec.push_back(posVec.at(0));
+            std::string where = superPosVec.at(0).meshName;
+            allSuperPosVec.push_back(SuperPos{pd.pos, where});
+            allSuperPosVec.push_back(superPosVec.at(0));
         }
     }
     HangingBandSetPtr hangPtr;
     if(root->findObjectId("post") == nullptr){
-        hangPtr = std::make_shared<HangingBandSet>(allPosVec);
+        hangPtr = std::make_shared<HangingBandSet>(allSuperPosVec);
         hangPtr->setCrossIndexs(crossInds);
         QOpenGLContext* c = ctrl->getGLContext();
         hangPtr->bindGL(c);
@@ -169,12 +170,45 @@ void AnimateController::initHangingBand(){
     }
     else{
         hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
-        hangPtr->setData(allPosVec);
+        hangPtr->setData(allSuperPosVec);
         hangPtr->setCrossIndexs(crossInds);
     }
 }
 
 
 void AnimateController::solveCollision(){
+    auto root = ctrl->data->getNodeRoot();
+    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
+    auto tee =  std::dynamic_pointer_cast<Tee>(root->findObjectId("tee"));
+    EnvelopAssist assist(tee);
+    SuperPosVec poss = hangPtr->data();
+    vector<int> deleteInds;
+    bool some = false;
+    for(int i = poss.size()-1; i > 0; i = i-2){
+        SuperPos sendSuper = poss.at(i-1);
+        SuperPos getSuper = poss.at(i);
+        if(assist.isCross(sendSuper.pos, getSuper.pos)){
+            deleteInds.push_back(i-1);
+            deleteInds.push_back(i);
+            some = true;
+        }
+        else{
+            if(some == true){
+                //处理一下delete
+                int beginInd = i;
+                int endInd = deleteInds.front()+1;
+                SuperPos beginSuper = poss.at(beginInd);
+                SuperPos endSuper = poss.at(endInd);
+                assert(QString(beginSuper.meshName.c_str()) == QString(endSuper.meshName.c_str()));
+                SuperPosVec b2e;
+                for(int i = beginInd; i <= endInd; ++i){
+                    b2e.push_back(poss.at(i));
+                }
+                assist.genInsertedSuper(b2e);
 
+                deleteInds.clear();
+                some = false;
+            }
+        }
+    }
 }

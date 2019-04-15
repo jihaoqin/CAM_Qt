@@ -3,22 +3,25 @@
 #include "DataObject.h"
 #include "PosDir.h"
 #include "Color.h"
+#include "HalfPoint.h"
 
 
 class HangingBandSet:public DataObject
 {
 public:
-    HangingBandSet(PosVec);
-    void setData(PosVec);
+    HangingBandSet(SuperPosVec);
+    void setData(SuperPosVec);
     virtual void bindGL(QOpenGLContext*);
     virtual void draw(std::shared_ptr<GLProgram>);
     BoundingBox boundingBox();
     void appendCrossIndex(int);
     void setCrossIndexs(std::vector<int>);
+    SuperPosVec data();
 private:
     void updateBox();
     void bufferData();
-    PosVec sendPoints;
+    void solveCollision();
+    SuperPosVec sendPoints;
     std::vector<int> crossInds;
     
     BoundingBox box;

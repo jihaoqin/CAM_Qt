@@ -3,6 +3,7 @@
 #include "utility.h"
 #include "complex"
 #include <algorithm>
+#include "utility.h"
 
 using namespace std;
 
@@ -37,29 +38,29 @@ EnvelopAssist::EnvelopAssist(TeePtr t)
     branchPipe = Pipe{teePara.lengthBranch, TBranchPipe,teePara.pipeR};
 }
 
-PosVec EnvelopAssist::intersectPoint(Pos worldPos, Dir worldDir){
-    PosVec allPoints;
+SuperPosVec EnvelopAssist::intersectPoint(Pos worldPos, Dir worldDir){
+    SuperPosVec allPoints;
     vector<float> pointsDis;
     auto mainInts = main.interPoints(worldPos, worldDir);
     for(auto inter:mainInts){
         if(!branch.isWorldIn(inter)){
-            allPoints.push_back(inter);
+            allPoints.push_back(SuperPos{inter, "main"});
             pointsDis.push_back(glm::length(inter-worldPos));
         }
     }
     auto branchInts = branch.interPoints(worldPos, worldDir);
     for(auto inter:branchInts){
         if(!main.isWorldIn(inter)){
-            allPoints.push_back(inter);
+            allPoints.push_back(SuperPos{inter, "branch"});
             pointsDis.push_back(glm::length(inter-worldPos));
         }
     }
     if(pointsDis.size() == 0){
-        return PosVec{};
+        return SuperPosVec{};
     }
     else{
     	auto ind = std::min_element(pointsDis.begin(), pointsDis.end()) - pointsDis.begin();
-        return PosVec{allPoints.at(ind)};
+        return SuperPosVec{allPoints.at(ind)};
     }
 }
 
@@ -156,4 +157,51 @@ bool Pipe::isCross(Pos end1, Pos end2){
     else{
         return false;
     }
+}
+
+
+SuperPosVec EnvelopAssist::genInsertedSuper(SuperPosVec b2e){
+    SuperPos beginSuper = b2e.front();
+    SuperPos endSuper = b2e.back();
+    assert(QString(beginSuper.meshName.c_str()) == QString(endSuper.meshName.c_str()));
+    QString name = beginSuper.meshName.c_str();
+    Pipe pipe = main;
+    if(name == "branch"){
+        pipe = branch;
+    }
+    pipe.genInternalSuper(beginSuper, endSuper, true);
+    pipe.genInternalSuper(beginSuper, endSuper, false);
+}
+
+SuperPosVec Pipe::genInternalSuper(SuperPos beginSuper, SuperPos endSuper, bool flag){
+    float pi = asin(1)*2;
+    int dir = flag == true? 1:-1;
+    Pos beginLocal = invTrans(beginSuper.pos, "pos");
+    Pos endLocal = invTrans(endSuper.pos, "pos");
+    SPara beginPara = localPara(beginLocal);
+    SPara endPara = localPara(endLocal);
+    if(dir == 1){
+        float Du = endPara.u - beginPara.u;
+        while(Du<0){
+            Du += 2*pi;
+        }
+    }
+    else{
+        float Du = endPara.u - beginPara.u;
+        while(Du>0){
+            Du -= 2*pi;
+            到这里
+        }
+    }
+}
+
+Pos Pipe::invTrans(glm::vec3 v, QString flag){
+    glm::mat4 invT = glm::inverse(T);
+    return utility::multiply(invT, v, flag);
+}
+
+SPara Pipe::localPara(Pos local){
+    float u = atan2(local.y, local.x);
+    float v = local.z;
+    return SPara{u, v};
 }
