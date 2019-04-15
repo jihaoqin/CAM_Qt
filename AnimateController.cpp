@@ -131,6 +131,7 @@ void AnimateController::initHangingBand(){
     auto tee =  std::dynamic_pointer_cast<Tee>(root->findObjectId("tee"));
     EnvelopAssist assist(tee);
     PosVec allPosVec;
+    vector<int> crossInds;
     for(int i = 0; i < bandPtrs.size(); ++i){
         GLIndexPairVec& pairVec = indexPairVecs.at(i);
         vector<int> inds;
@@ -146,9 +147,14 @@ void AnimateController::initHangingBand(){
             }
         }
         auto pds = bPtr->indexsPds(inds);
-        for(auto pd: pds){
+        for(auto i = 0; i<pds.size(); ++i){
+            auto pd = pds.at(i);
             auto posVec = assist.intersectPoint(pd.pos, pd.dir);
             assert(posVec.size() == 1);
+            if(assist.isCross(pd.pos, posVec.at(0))){
+                assist.isCross(pd.pos, posVec.at(0));
+                crossInds.push_back(i);
+            }
             allPosVec.push_back(pd.pos);
             allPosVec.push_back(posVec.at(0));
         }
@@ -156,6 +162,7 @@ void AnimateController::initHangingBand(){
     HangingBandSetPtr hangPtr;
     if(root->findObjectId("post") == nullptr){
         hangPtr = std::make_shared<HangingBandSet>(allPosVec);
+        hangPtr->setCrossIndexs(crossInds);
         QOpenGLContext* c = ctrl->getGLContext();
         hangPtr->bindGL(c);
         ctrl->data->addHang(hangPtr);
@@ -163,6 +170,7 @@ void AnimateController::initHangingBand(){
     else{
         hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
         hangPtr->setData(allPosVec);
+        hangPtr->setCrossIndexs(crossInds);
     }
 }
 

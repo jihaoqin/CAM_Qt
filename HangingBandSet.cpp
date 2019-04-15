@@ -28,6 +28,10 @@ void HangingBandSet::draw(std::shared_ptr<GLProgram> program){
         core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
         core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         core->glDrawElements(GL_LINES, indexVec.size(), GL_UNSIGNED_INT, 0);
+        program->setVec3("material.color", Color::YELLOW);
+        for(auto ind:crossInds){
+            core->glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void*)(2*sizeof(unsigned int)*ind));
+        }
     }
 }
 
@@ -74,4 +78,12 @@ BoundingBox HangingBandSet::boundingBox(){
 
 void HangingBandSet::updateBox(){
     box = BoundingBox(vertexVec);
+}
+
+void HangingBandSet::appendCrossIndex(int ind){
+    crossInds.push_back(ind);
+}
+
+void HangingBandSet::setCrossIndexs(std::vector<int> inds){
+    crossInds = inds;
 }

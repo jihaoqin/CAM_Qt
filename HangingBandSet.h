@@ -13,10 +13,13 @@ public:
     virtual void bindGL(QOpenGLContext*);
     virtual void draw(std::shared_ptr<GLProgram>);
     BoundingBox boundingBox();
+    void appendCrossIndex(int);
+    void setCrossIndexs(std::vector<int>);
 private:
     void updateBox();
     void bufferData();
     PosVec sendPoints;
+    std::vector<int> crossInds;
     
     BoundingBox box;
     Color color;

@@ -28,6 +28,8 @@ private:
     float m_dis;
     Pipe main;
     Pipe branch;
+    Pipe mainPipe;
+    Pipe branchPipe;
 };
 
 #endif // ENVELOPASSIST_H
