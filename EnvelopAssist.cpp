@@ -161,6 +161,48 @@ bool Pipe::isCross(Pos end1, Pos end2){
 
 
 SuperPosVec EnvelopAssist::genInsertedSuper(SuperPosVec b2e){
+    float pi = asin(1)*2;
+    SuperPos beginSuper = b2e.front();
+    SuperPos endSuper = b2e.back();
+    if(QString(beginSuper.meshName.c_str()) == QString(endSuper.meshName.c_str())){
+        return genInsertedInOne(b2e);
+    }
+    else{
+        float dt = pi/8;
+        vector<float> ts{0, dt*1, dt*2, dt*3, dt*4, dt*5, dt*6, dt*7, dt*8};
+        PosVec middlePos;
+        for(auto t:ts){
+            Pos temp1{Pos{0,0,1}*cos(t) + Pos{sqrt(2)/2, sqrt(2)/2, 0}*sin(t)};
+            Pos temp2{Pos{0, 0, 1} * cos(t) + Pos{sqrt(2)/-2, sqrt(2)/-2, 0} * sin(t)};
+            middlePos.push_back(temp1);
+            middlePos.push_back(temp2);
+        }
+        SuperPosVec middleSupers1;
+        for(auto p:middlePos){
+            middleSupers1.push_back(SuperPos{p, beginSuper.meshName});
+        }
+        SuperPosVec middleSupers2;
+        for(auto p:middlePos){
+            middleSupers2.push_back(SuperPos{p, endSuper.meshName});
+        }
+        vector<float> lengths;
+        for(int i = 0; i <middlePos.size(); i++){
+            auto a = genInsertedInOne(SuperPosVec{beginSuper, middleSupers1.at(i)});
+            auto b = genInsertedInOne(SuperPosVec{middleSupers2.at(i), endSuper});
+            lengths.push_back(utility::length(a) + utility::length(b));
+        }
+        int ind = min_element(lengths.begin(), lengths.end()) - lengths.begin();
+        auto middleSuper1 = middleSupers1.at(ind);
+        auto middleSuper2 = middleSupers2.at(ind);
+        auto supers1 = genInsertedInOne(SuperPosVec{beginSuper, middleSuper1});
+        auto supers2 = genInsertedInOne(SuperPosVec{middleSuper2, endSuper});
+        SuperPosVec supers;
+        supers.insert(supers.begin(), supers1.begin(), supers1.end());
+        supers.insert(supers.end(), supers2.begin()+1, supers2.end());
+    }
+}
+
+SuperPosVec EnvelopAssist::genInsertedInOne(SuperPosVec b2e){
     SuperPos beginSuper = b2e.front();
     SuperPos endSuper = b2e.back();
     assert(QString(beginSuper.meshName.c_str()) == QString(endSuper.meshName.c_str()));

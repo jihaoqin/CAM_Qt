@@ -32,6 +32,7 @@ public:
     SuperPosVec intersectPoint(Pos , Dir);
     bool isCross(Pos, Pos);
     SuperPosVec genInsertedSuper(SuperPosVec);
+    SuperPosVec genInsertedInOne(SuperPosVec);
 private:
     TeePtr tee;
     float m_dis;

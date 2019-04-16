@@ -482,3 +482,19 @@ std::set<End>::iterator utility::getEndIte(QString id, std::set<End> ends){
     set<End>::iterator ite = ends.find(e);
     return ite;
 }
+
+float utility::length(PosVec poss){
+    float sum = 0;
+    for(auto i = 0; i<poss.size()-1; i++){
+        sum += glm::length(poss.at(i+1) - poss.at(i));
+    }
+    return sum;
+}
+
+float utility::length(SuperPosVec poss){
+    vector<Pos> ps;
+    for(auto p:poss){
+        ps.push_back(p.pos);
+    }
+    return length(ps);
+}

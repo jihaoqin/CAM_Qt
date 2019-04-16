@@ -196,14 +196,10 @@ void AnimateController::solveCollision(){
             if(some == true){
                 //处理一下delete
                 int beginInd = i;
-                int endInd = deleteInds.front()+1;
+                int endInd = deleteInds.front()+2;
                 SuperPos beginSuper = poss.at(beginInd);
                 SuperPos endSuper = poss.at(endInd);
-                assert(QString(beginSuper.meshName.c_str()) == QString(endSuper.meshName.c_str()));
-                SuperPosVec b2e;
-                for(int i = beginInd; i <= endInd; ++i){
-                    b2e.push_back(poss.at(i));
-                }
+                SuperPosVec b2e{poss.at(beginInd), poss.at(endInd)};
                 auto insertSupers = assist.genInsertedSuper(b2e);
                 poss.erase(poss.begin()+beginInd, poss.begin()+endInd+1);
                 poss.insert(poss.begin()+beginInd, insertSupers.begin(), insertSupers.end());

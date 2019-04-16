@@ -9,6 +9,7 @@
 #include "PosDir.h"
 #include "Band.h"
 #include <set>
+#include "HalfPoint.h"
 namespace utility {
 const float PI = 3.1415926;
 struct Root{
@@ -55,4 +56,6 @@ End theOtherEnd(End, std::set<End>);
 End getEnd(QString, std::set<End>);
 std::set<End>::iterator getEndIte(QString, std::set<End>);
 bool isLinked(EndPtr, EndPtr, const EndPtrVec);
+float length(PosVec);
+float length(SuperPosVec);
 }
