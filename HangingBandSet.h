@@ -18,6 +18,8 @@ public:
     void appendCrossIndex(int);
     void setCrossIndexs(std::vector<int>);
     SuperPosVec data();
+    void setTVec(std::vector<glm::mat4>);
+    void setShowInd(int);
 private:
     void setMesh();
     void updateBox();
@@ -27,6 +29,8 @@ private:
     std::vector<int> crossInds;
     Mesh mesh;
     float width;
+    std::vector<glm::mat4> m_Ts;
+    int m_showInd;
     
     BoundingBox box;
     Color color;

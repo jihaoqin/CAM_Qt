@@ -159,9 +159,6 @@ PosDir Band::indexPd(int ind){
 }
     
 PosDirVec Band::indexsPds(vector<int> inds){
-    if(QString(getId()).contains("band12")){
-        int a = 0;
-    }
     PosDirVec pds;
     Dir lastDir = glm::normalize(m_pds.at(inds.at(1)).pos-m_pds.at(inds.at(0)).pos);
     for(auto i:inds){
@@ -178,4 +175,9 @@ PosDirVec Band::indexsPds(vector<int> inds){
 
 QString Band::beginFlag(){
     return m_begin;
+}
+
+
+Dir Band::outNorm(int ind){
+    return m_norms.at(ind);
 }

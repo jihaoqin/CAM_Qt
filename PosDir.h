@@ -14,4 +14,5 @@ using Pos = glm::vec3;
 using Dir = glm::vec3;
 using PosDirVec = std::vector<PosDir>;
 using PosVec = std::vector<Pos>;
+using DirVec = std::vector<Dir>;
 #endif // POSDIR_H

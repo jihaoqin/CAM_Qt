@@ -60,6 +60,7 @@ using Dir = glm::vec3;
      m_pds = pds;
      for(unsigned int i = 0; i < pds.size(); i++){
          Dir norm = tee->outNorm(pds.at(i).pos, strs.at(i));
+         m_norms.push_back(norm);
          Dir right = glm::cross(pds.at(i).dir, norm);
          Dir left = -1.0f*right;
 

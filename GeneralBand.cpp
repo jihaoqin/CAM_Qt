@@ -64,6 +64,7 @@ void GeneralBand::initial(PosDirVec pds, QStringVec names){
      float sideNum = (int)(width/2/h) + 1;
      for(unsigned int i = 0; i < fewPds.size(); i++){
          Dir norm = tee->outNorm(fewPds.at(i).pos, fewStrs.at(i));
+         m_norms.push_back(norm);
          Dir right = glm::cross(fewPds.at(i).dir, norm);
          Dir left = -1.0f*right;
 

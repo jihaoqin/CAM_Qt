@@ -76,6 +76,9 @@ void AnimateController::showNext(){
         ++showInd;
         bandPtrs.at(bandInd)->setShowRange(indexPairVecs.at(bandInd).at(showInd));
     }
+    auto root = ctrl->data->getNodeRoot();
+    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
+    hangPtr->setShowInd(windedTotal);
     ++windedTotal;
 }
 
@@ -84,6 +87,7 @@ void AnimateController::calculation(){
     initIndexPairVecs();
     initHangingBand();
     solveCollision();
+    initBandPos();
     for(auto b:bandPtrs){
         b->setShowRange(GLIndexPair{0,0});
     }
@@ -244,4 +248,52 @@ std::pair<int, int> AnimateController::getInsertInd(int ind){
             return std::pair<int, int>{i, left - 1};
         }
     }
+}
+
+
+void AnimateController::initBandPos(){
+    auto root = ctrl->data->getNodeRoot();
+    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
+    auto tee =  std::dynamic_pointer_cast<Tee>(root->findObjectId("tee"));
+    EnvelopAssist assist(tee);
+    SuperPosVec poss = hangPtr->data();
+    vector<glm::mat4> Ts;
+    for(int i = 0; i < bandPtrs.size(); i++){
+        BandPtr band = bandPtrs.at(i);
+        auto& pairVec = indexPairVecs.at(i);
+        vector<int> inds;
+        if(band->beginFlag().contains("front")){
+            for(auto p:pairVec){
+                inds.push_back(p.second);
+            }
+        }
+        else{
+            for(auto p:pairVec){
+                inds.push_back(p.first);
+            }
+        }
+        auto pds = band->indexsPds(inds);
+        for(int j = 0; j < pairVec.size(); ++j){
+            Pos p;
+            int ind;
+            if(band->beginFlag().contains("front")){
+                ind = pairVec.at(j).second;
+            }
+            else{
+                ind = pairVec.at(j).first;
+            }
+            Dir z = band->outNorm(ind);
+            Dir y = pds.at(j).dir;
+            Dir x = glm::normalize(glm::cross(y, z));
+            p = band->indexPd(ind).pos;
+            glm::mat4 T;
+            utility::setPos(T, p);
+            utility::setXDir(T, x);
+            utility::setYDir(T, y);
+            utility::setZDir(T, z);
+            Ts.push_back(T);
+        }
+    }
+    hangPtr->setTVec(Ts);
+    hangPtr->setShowInd(0);
 }
