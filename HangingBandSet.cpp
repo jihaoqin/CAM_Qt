@@ -1,10 +1,11 @@
 #include "HangingBandSet.h"
 
 HangingBandSet::HangingBandSet(SuperPosVec ps)
-    :color(Color::BLUE)
+    :color(Color::BLUE), width(2)
 {
     setId("post");
     setData(ps);
+    setMesh();
 }
 
 void HangingBandSet::bindGL(QOpenGLContext* c){
@@ -16,6 +17,7 @@ void HangingBandSet::bindGL(QOpenGLContext* c){
         core->glGenVertexArrays(1, &VAO);
         core->glGenBuffers(1,&VBO);
         core->glGenBuffers(1, &EBO);
+        mesh.bindGL(c);
         bufferData();
         binded = true;
     }
@@ -33,6 +35,7 @@ void HangingBandSet::draw(std::shared_ptr<GLProgram> program){
         for(auto ind:crossInds){
             core->glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int)*ind));
         }
+        mesh.draw();
     }
 }
 
@@ -91,4 +94,30 @@ void HangingBandSet::setCrossIndexs(std::vector<int> inds){
 
 SuperPosVec HangingBandSet::data(){
     return sendPoints;
+}
+
+
+void HangingBandSet::setMesh(){
+    std::vector<Vertex> vertexs;
+    int num = 100;
+    for(auto i = 0; i < num; i++){
+        Vertex v;
+        v.vertex = glm::vec3{width/(-2), i, 0};
+        v.normal = Dir{0,0,1};
+        v.coordinate = glm::vec2{0, 0};
+        vertexs.push_back(v);
+        v.vertex = Pos{width/2, i, 0};
+        vertexs.push_back(v);
+    }
+    vector<unsigned int> inds;
+    for(auto i = 0; i<num-1; i++){
+        inds.push_back(2*i);
+        inds.push_back(2*i+1);
+        inds.push_back(2*i+2);
+
+        inds.push_back(2*i+1);
+        inds.push_back(2*i+3);
+        inds.push_back(2*i+2);
+    }
+    mesh = Mesh(vertexs, inds);
 }

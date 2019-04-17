@@ -10,6 +10,7 @@ public:
     int getPercent();
     void resetBand();
     void setPercent(int);
+    std::pair<int, int> getInsertInd(int);
 private:
     void initBandPtrs();
     void initIndexPairVecs();

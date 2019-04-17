@@ -208,10 +208,40 @@ void AnimateController::solveCollision(){
                 }
                 poss.erase(poss.begin()+beginInd, poss.begin()+endInd+1);
                 poss.insert(poss.begin()+beginInd, doubleSupers.begin(), doubleSupers.end());
+                for(auto i = (beginInd-1)/2; i <= (endInd-1)/2; i++){
+                    auto ij = getInsertInd(i);
+                    auto& pairVec = indexPairVecs.at(ij.first);
+                    pairVec.erase(pairVec.begin()+ij.second);
+                }
+                {
+                    auto ij = getInsertInd((beginInd-1)/2);
+                    auto& pairVec = indexPairVecs.at(ij.first);
+                    GLIndexPairVec ps;
+                    for(int i = 0; i<insertSupers.size(); ++i){
+                        ps.push_back(pairVec.at(ij.second-1));
+                    }
+                    pairVec.insert(pairVec.begin() + ij.second, ps.begin(), ps.end());
+                }
                 deleteInds.clear();
                 some = false;
             }
         }
     }
     hangPtr->setData(poss);
+}
+
+
+std::pair<int, int> AnimateController::getInsertInd(int ind){
+    int i = 0;
+    int left = ind+1;
+    while(left>=1){
+        auto pairVec = indexPairVecs.at(i);
+        if(left > pairVec.size()){
+            left -= pairVec.size();
+            i++;
+        }
+        else{
+            return std::pair<int, int>{i, left - 1};
+        }
+    }
 }

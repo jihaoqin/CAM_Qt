@@ -4,6 +4,7 @@
 #include "PosDir.h"
 #include "Color.h"
 #include "HalfPoint.h"
+#include "Mesh.h"
 
 
 class HangingBandSet:public DataObject
@@ -18,11 +19,14 @@ public:
     void setCrossIndexs(std::vector<int>);
     SuperPosVec data();
 private:
+    void setMesh();
     void updateBox();
     void bufferData();
     void solveCollision();
     SuperPosVec sendPoints;
     std::vector<int> crossInds;
+    Mesh mesh;
+    float width;
     
     BoundingBox box;
     Color color;
