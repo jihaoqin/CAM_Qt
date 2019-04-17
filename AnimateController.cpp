@@ -196,13 +196,18 @@ void AnimateController::solveCollision(){
             if(some == true){
                 //处理一下delete
                 int beginInd = i;
-                int endInd = deleteInds.front()+2;
+                int endInd = deleteInds.at(1)+2;
                 SuperPos beginSuper = poss.at(beginInd);
                 SuperPos endSuper = poss.at(endInd);
                 SuperPosVec b2e{poss.at(beginInd), poss.at(endInd)};
                 auto insertSupers = assist.genInsertedSuper(b2e);
+                SuperPosVec doubleSupers;
+                for(auto s:insertSupers){
+                    doubleSupers.push_back(poss.at(beginInd-1));
+                    doubleSupers.push_back(s);
+                }
                 poss.erase(poss.begin()+beginInd, poss.begin()+endInd+1);
-                poss.insert(poss.begin()+beginInd, insertSupers.begin(), insertSupers.end());
+                poss.insert(poss.begin()+beginInd, doubleSupers.begin(), doubleSupers.end());
                 deleteInds.clear();
                 some = false;
             }

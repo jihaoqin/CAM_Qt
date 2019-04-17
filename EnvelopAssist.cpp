@@ -171,9 +171,10 @@ SuperPosVec EnvelopAssist::genInsertedSuper(SuperPosVec b2e){
         float dt = pi/8;
         vector<float> ts{0, dt*1, dt*2, dt*3, dt*4, dt*5, dt*6, dt*7, dt*8};
         PosVec middlePos;
+        float r = main.r;
         for(auto t:ts){
-            Pos temp1{Pos{0,0,1}*cos(t) + Pos{sqrt(2)/2, sqrt(2)/2, 0}*sin(t)};
-            Pos temp2{Pos{0, 0, 1} * cos(t) + Pos{sqrt(2)/-2, sqrt(2)/-2, 0} * sin(t)};
+            Pos temp1{r*Pos{0,0,1}*cos(t) + r*Pos{sqrt(2)/2, sqrt(2)/2, 0}*sin(t)};
+            Pos temp2{r*Pos{0, 0, 1} * cos(t) + r*Pos{sqrt(2)/-2, sqrt(2)/2, 0} * sin(t)};
             middlePos.push_back(temp1);
             middlePos.push_back(temp2);
         }
@@ -199,6 +200,7 @@ SuperPosVec EnvelopAssist::genInsertedSuper(SuperPosVec b2e){
         SuperPosVec supers;
         supers.insert(supers.begin(), supers1.begin(), supers1.end());
         supers.insert(supers.end(), supers2.begin()+1, supers2.end());
+        return supers;
     }
 }
 
