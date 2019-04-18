@@ -9,6 +9,12 @@
         <file alias="upCurve">pic/upCurve.png</file>
         <file alias="loop">pic/loop.png</file>
         <file alias="sim">pic/simulation.png</file>
+        <file alias="play">pic/play.png</file>
+        <file alias="ff">pic/ff.png</file>
+        <file alias="fFrame">pic/backwardFrame.png</file>
+        <file alias="bFrame">pic/forwardFrame.png</file>
+        <file alias="pause">pic/pause.png</file>
+        <file alias="sf">pic/sf.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

@@ -2,6 +2,7 @@
 #include <QPushButton>
 #include <QSlider>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include "AnimateController.h"
 #include "GuiConnector.h"
 #include "TabBackground.h"
@@ -11,23 +12,31 @@ SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* pa
     :QWidget(parent), backWidget(back), connector(con)
 {
     calButton = new QPushButton("calculation", this);
-    goonButton = new QPushButton("play",this);
-    goonButton->setEnabled(false);
-    pauseButton = new QPushButton("pause", this);
-    pauseButton->setEnabled(false);
+    playAndPauseButton = new QPushButton(QIcon(":/icons/play"), "", this);
+    playAndPauseButton ->setEnabled(false);
+    slowButton = new QPushButton(QIcon(":/icons/sf"),"", this);
+    slowButton->setEnabled(false);
     closeButton = new QPushButton("close", this);
     closeButton->setEnabled(true);
     progressSlider = new QSlider(Qt::Horizontal, this);
     progressSlider->setEnabled(false);
     progressSlider->setRange(0,100);
-    fastButton = new QPushButton("ff", this);
+    fastButton = new QPushButton(QIcon(":/icons/ff"),"", this);
     fastButton->setEnabled(false);
+    fFrameButton = new QPushButton(QIcon(":/icons/fFrame"),"", this);
+    fFrameButton->setEnabled(false);
+    bFrameButton = new QPushButton(QIcon(":/icons/bFrame"), "", this);
+    bFrameButton->setEnabled(false);
     animateCtrl = new AnimateController(connector->getCtrl());
     QVBoxLayout* layout = new QVBoxLayout(this);
+    QHBoxLayout* hLayout = new QHBoxLayout;
+    hLayout->addWidget(slowButton);
+    hLayout->addWidget(bFrameButton);
+    hLayout->addWidget(playAndPauseButton);
+    hLayout->addWidget(fFrameButton);
+    hLayout->addWidget(fastButton);
     layout->addWidget(calButton);
-    layout->addWidget(goonButton);
-    layout->addWidget(pauseButton);
-    layout->addWidget(fastButton);
+    layout->addLayout(hLayout);
     layout->addWidget(progressSlider);
     layout->addWidget(closeButton);
     layout->addStretch(1);
@@ -35,24 +44,35 @@ SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* pa
     timer = new QTimer(this);
     timer->setInterval(500);
     connect(calButton, &QPushButton::clicked, this, &SimulationTab::calculation);
-    connect(goonButton, &QPushButton::clicked, this, &SimulationTab::goon);
-    connect(pauseButton, &QPushButton::clicked, timer, &QTimer::stop);
+    connect(playAndPauseButton, &QPushButton::clicked, this, &SimulationTab::palyOrPause);
+    connect(slowButton, &QPushButton::clicked, this, &SimulationTab::slowForward);
     connect(closeButton, &QPushButton::clicked, this, &SimulationTab::closeMyself);
     connect(fastButton, &QPushButton::clicked, this, &SimulationTab::fastForward);
     connect(progressSlider, &QSlider::valueChanged, this, &SimulationTab::setPercent);
+    connect(fFrameButton, &QPushButton::clicked, this, &SimulationTab::nextFrame);
+    connect(bFrameButton, &QPushButton::clicked, this, &SimulationTab::lastFrame);
     connect(timer, &QTimer::timeout, this, &SimulationTab::showNext);
 }
 
 void SimulationTab::calculation(){
     animateCtrl->calculation();
-    goonButton->setEnabled(true);
-    pauseButton->setEnabled(true);
+    playAndPauseButton->setEnabled(true);
+    slowButton->setEnabled(true);
     progressSlider->setEnabled(true);
     fastButton->setEnabled(true);
+    fFrameButton->setEnabled(true);
+    bFrameButton->setEnabled(true);
 }
 
-void SimulationTab::goon(){
-    timer->start();
+void SimulationTab::palyOrPause(){
+    if(timer->isActive()){
+        playAndPauseButton->setIcon(QIcon(":/icons/play"));
+        timer->stop();
+    }
+    else{
+        playAndPauseButton->setIcon(QIcon(":/icons/pause"));
+        timer->start();
+    }
 }
 
 void SimulationTab::showNext(){
@@ -86,4 +106,19 @@ void SimulationTab::fastForward(){
 
 void SimulationTab::pause(){
     timer->stop();
+}
+
+
+void SimulationTab::slowForward(){
+    int  intl = timer->interval();
+    int nextIntl = intl*2;
+    timer->setInterval(nextIntl);
+}
+
+void SimulationTab::nextFrame(){
+    showNext();
+}
+
+void SimulationTab::lastFrame(){
+
 }

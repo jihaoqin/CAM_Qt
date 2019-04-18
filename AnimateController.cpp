@@ -92,7 +92,7 @@ void AnimateController::calculation(){
     initBandPtrs();
     initIndexPairVecs();
     initHangingBand();
-    solveCollision();
+    //solveCollision();
     initBandPos();
     for(auto b:bandPtrs){
         b->setShowRange(GLIndexPair{0,0});

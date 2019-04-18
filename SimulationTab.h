@@ -12,18 +12,23 @@ public:
     SimulationTab(TabBackground*, GuiConnector*, QWidget* parent = nullptr);
 public slots:
     void calculation();
-    void goon();
+    void palyOrPause();
     void showNext();
     void closeMyself();
     void setPercent(int);
     void fastForward();
+    void slowForward();
     void pause();
+    void nextFrame();
+    void lastFrame();
 private:
     QPushButton* calButton;
-    QPushButton* goonButton;
-    QPushButton* pauseButton;
+    QPushButton* playAndPauseButton;
     QPushButton* closeButton;
+    QPushButton* slowButton;
     QPushButton* fastButton;
+    QPushButton* fFrameButton;
+    QPushButton* bFrameButton;
     QSlider* progressSlider;
     QTimer* timer;
 
