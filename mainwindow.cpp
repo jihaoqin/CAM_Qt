@@ -18,6 +18,7 @@
 #include "ClosePathDialog.h"
 #include "ClosePathThread.h"
 #include "AnimateController.h"
+#include "SimulationTab.h"
 #include <QTimer>
 
 MainWindow::MainWindow(Controller* c, QWidget *parent)
@@ -353,7 +354,8 @@ void MainWindow::loopBand(){
 }
 
 void MainWindow::animationOver(){
-
+    auto simTab = connector->getSimTab();
+    simTab->pause();
 }
 
 void MainWindow::showSimTab(){

@@ -17,6 +17,7 @@ public slots:
     void closeMyself();
     void setPercent(int);
     void fastForward();
+    void pause();
 private:
     QPushButton* calButton;
     QPushButton* goonButton;

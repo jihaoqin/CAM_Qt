@@ -82,3 +82,8 @@ void SimulationTab::fastForward(){
     }
     timer->setInterval(nextIntl);
 }
+
+
+void SimulationTab::pause(){
+    timer->stop();
+}

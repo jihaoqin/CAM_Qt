@@ -78,8 +78,13 @@ void AnimateController::showNext(){
     }
     auto root = ctrl->data->getNodeRoot();
     HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
-    hangPtr->setShowInd(windedTotal);
     ++windedTotal;
+    if(windedTotal != pairTotal){
+        hangPtr->setShowInd(windedTotal);
+    }
+    else{
+        ctrl->mainWindow->animationOver();
+    }
 }
 
 void AnimateController::calculation(){
@@ -210,9 +215,9 @@ void AnimateController::solveCollision(){
                     doubleSupers.push_back(poss.at(beginInd-1));
                     doubleSupers.push_back(s);
                 }
-                poss.erase(poss.begin()+beginInd, poss.begin()+endInd+1);
-                poss.insert(poss.begin()+beginInd, doubleSupers.begin(), doubleSupers.end());
-                for(auto i = (beginInd-1)/2; i <= (endInd-1)/2; i++){
+                poss.erase(poss.begin()+beginInd+1, poss.begin()+endInd-1);
+                poss.insert(poss.begin()+beginInd+1, doubleSupers.begin(), doubleSupers.end());
+                for(auto i = (beginInd+1)/2; i <= (endInd-3)/2; i++){
                     auto ij = getInsertInd(i);
                     auto& pairVec = indexPairVecs.at(ij.first);
                     pairVec.erase(pairVec.begin()+ij.second);
@@ -296,4 +301,11 @@ void AnimateController::initBandPos(){
     }
     hangPtr->setTVec(Ts);
     hangPtr->setShowInd(0);
+    vector<float> lengths;
+    for(int i = 0; i < poss.size()/2; i = i+1){
+        Pos begin = poss.at(2*i).pos;
+        Pos end = poss.at(2*i+1).pos;
+        lengths.push_back(glm::length(begin - end));
+    }
+    hangPtr->setHangingLength(lengths);
 }

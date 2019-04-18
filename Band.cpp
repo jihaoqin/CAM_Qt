@@ -115,6 +115,9 @@ GLIndexPairVec Band::getGLIndexPairVec(EndPtr beginEnd, float dis){
                 pairVec.push_back(GLIndexPair{0, i});
             }
         }
+        if(pairVec.size()==1){
+            pairVec.push_back(GLIndexPair{0, m_pds.size()-1});
+        }
         m_begin = "front";
         return pairVec;
     }
@@ -130,6 +133,9 @@ GLIndexPairVec Band::getGLIndexPairVec(EndPtr beginEnd, float dis){
                 //GLIndexPair loopPair = GLIndexPair{i*(m_numPerPd -1)*6, (m_pds.size()-1-i)*(m_numPerPd-1)*6};
                 pairVec.push_back(GLIndexPair{i, m_pds.size()-1});
             }
+        }
+        if(pairVec.size()==1){
+            pairVec.push_back(GLIndexPair{0, m_pds.size()-1});
         }
         m_begin = "back";
         return pairVec;

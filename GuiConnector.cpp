@@ -90,3 +90,8 @@ std::shared_ptr<Data> GuiConnector::getData(){
 TabWidget* GuiConnector::getTabWidget(){
     return mainWindow->widget->tabWidget;
 }
+
+
+SimulationTab* GuiConnector::getSimTab(){
+    return (SimulationTab*)mainWindow->widget->tabWidget->operation->center;
+}

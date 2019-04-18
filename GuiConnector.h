@@ -10,6 +10,7 @@ class Controller;
 class Data;
 class GenCurveProgressDialog;
 class TabWidget;
+class SimulationTab;
 
 class GuiConnector
 {
@@ -30,6 +31,7 @@ public:
     std::shared_ptr<Data> getData();
     TabWidget* getTabWidget();
     void updateModel();
+    SimulationTab* getSimTab();
 private:
     MainWindow* mainWindow;
 };

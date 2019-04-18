@@ -39,6 +39,7 @@ void HangingBandSet::draw(std::shared_ptr<GLProgram> program){
         */
         program->setMat4("model",m_Ts.at(m_showInd));
         program->setVec3("material.color", Color::YELLOW);
+        mesh.setShowRange(m_lengths.at(m_showInd));
         mesh.draw();
     }
 }
@@ -133,4 +134,13 @@ void HangingBandSet::setTVec(std::vector<glm::mat4> Ts){
 
 void HangingBandSet::setShowInd(int ind){
     m_showInd = ind;
+}
+
+
+void HangingBandSet::setHangingLength(vector<float> ls){
+    m_lengths.clear();
+    for(auto l:ls){
+        int intL = l;
+        m_lengths.push_back(GLIndexPair{0, intL*6});
+    }
 }

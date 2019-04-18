@@ -20,6 +20,7 @@ public:
     SuperPosVec data();
     void setTVec(std::vector<glm::mat4>);
     void setShowInd(int);
+    void setHangingLength(vector<float>);
 private:
     void setMesh();
     void updateBox();
@@ -31,6 +32,8 @@ private:
     float width;
     std::vector<glm::mat4> m_Ts;
     int m_showInd;
+    int hangLength;
+    vector<GLIndexPair> m_lengths;
     
     BoundingBox box;
     Color color;
