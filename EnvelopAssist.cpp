@@ -214,34 +214,12 @@ SuperPosVec EnvelopAssist::genInsertedInOne(SuperPosVec b2e){
     if(name == "branch"){
         pipe = branch;
     }
-    auto super1 = pipe.genInternalSuper();
-    auto super2 = pipe.genInternalSuper();
-    bool super1Cross = false;
-    for(auto s:super1){
-        super1Cross = isCross(beginSuper.pos, s.pos) == true? true:false;
+    auto poss = pipe.genInternalSuper(PosVec{specialSuper.pos, beginSuper.pos, endSuper.pos});
+    SuperPosVec supers;
+    for(auto p:poss){
+        supers.push_back(SuperPos{p, beginSuper.meshName});
     }
-    bool super2Cross = false;
-    for(auto s:super2){
-        super2Cross = isCross(beginSuper.pos, s.pos) == true? true:false;
-    }
-    if(super1Cross == true&&super2Cross == false){
-        return super2;
-    }
-    else if(super1Cross == false && super2Cross == true){
-        return super1;
-    }
-    else{
-        assert(0);
-    }
-    /*
-    float length1 = 0;
-    float length2 = 0;
-    for(auto i = 0; i<super1.size(); i++){
-        length1 += glm::length(beginSuper.pos - super1.at(i).pos);
-        length2 += glm::length(beginSuper.pos - super2.at(i).pos);
-    }
-    return length1<length2? super1 : super2;
-    */
+    return supers;
 }
 
 PosVec Pipe::genInternalSuper(PosVec poss){
@@ -258,32 +236,42 @@ PosVec Pipe::genInternalSuper(PosVec poss){
     glm::vec2 basis1_1{beginLocal.x, beginLocal.y};
     glm::vec2 basis1_2{endLocal.x, endLocal.y};
     glm::mat2 TT;
-    改写基
-    TT[0][0] = beginLocal.x;
-    TT[1][0] = beginLocal.y;
-    TT[0][1] = endLocal.x;
-    TT[1][1] = endLocal.y;
-    glm::vec2 xy = glm::inverse(TT)*glm::vec2(0, 1);
+    TT[0][0] = basis1_1.x;
+    TT[1][0] = basis1_1.y;
+    TT[0][1] = basis1_2.x;
+    TT[1][1] = basis1_2.y;
+    glm::vec2 basis2_1 = glm::inverse(TT)*glm::vec2(0, 1);
+    glm::vec2 basis2_2 = glm::inverse(TT)*glm::vec2(1, 0);
+    glm::vec2 special{specialLocal.x, specialLocal.y};
+    float coord_x = glm::dot(special,basis2_2);
+    float coord_y = glm::dot(special,basis2_1);
     float Du = endPara.u - beginPara.u;
     float Dv = endPara.v - beginPara.v;
-    if(flag == 1){
-        while(Du<0){
+    while(Du>pi){
+        Du -= 2*pi;
+    }
+    while(Du<-1*pi){
+        Du += 2*pi;
+    }
+    if(coord_x<0 && coord_y < 0){
+        if(Du<0){
             Du += 2*pi;
+        }
+        else{
+            Du -= 2*pi;
         }
     }
     else{
-        while(Du>0){
-            Du -= 2*pi;
-        }
+        Du = Du;
     }
     float du = Du/5;
     float dv = Dv/5;
     for(int i = 1; i<5; i++){
         SPara p{beginPara.u + du*i, beginPara.v+dv*i};
         auto world = paraToWorld(p);
-        internalSupers.push_back(SuperPos{world, beginSuper.meshName});
+        internalSupers.push_back(world);
     }
-    internalSupers.push_back(endSuper);
+    internalSupers.push_back(endWorld);
     return internalSupers;
 }
 
