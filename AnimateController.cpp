@@ -65,6 +65,7 @@ void AnimateController::showNext(){
     if(nextShowInd >= indexPairVecs.at(bandInd).size()){
         if(nextBandInd >= bandPtrs.size()){
             ctrl->mainWindow->animationOver();
+            return;
         }
         else{
             showInd=0;
@@ -79,7 +80,7 @@ void AnimateController::showNext(){
     auto root = ctrl->data->getNodeRoot();
     HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
     ++windedTotal;
-    if(windedTotal != pairTotal){
+    if(windedTotal < pairTotal){
         hangPtr->setShowInd(windedTotal);
     }
     else{
@@ -132,6 +133,14 @@ void AnimateController::setPercent(int p){
             }
             break;
         }
+    }
+    auto root = ctrl->data->getNodeRoot();
+    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
+    if(windedTotal == 0){
+        hangPtr->setShowInd(0);
+    }
+    else{
+        hangPtr->setShowInd(windedTotal - 1);
     }
 }
 
