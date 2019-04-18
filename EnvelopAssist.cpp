@@ -162,10 +162,10 @@ bool Pipe::isCross(Pos end1, Pos end2){
 
 SuperPosVec EnvelopAssist::genInsertedSuper(SuperPosVec b2e){
     float pi = asin(1)*2;
-    SuperPos beginSuper = b2e.front();
-    SuperPos endSuper = b2e.back();
+    SuperPos beginSuper = b2e.at(1);
+    SuperPos endSuper = b2e.at(3);
     if(QString(beginSuper.meshName.c_str()) == QString(endSuper.meshName.c_str())){
-        return genInsertedInOne(b2e);
+        return genInsertedInOne(SuperPosVec{b2e.at(0), b2e.at(1), b2e.at(3)});
     }
     else{
         float dt = pi/8;
@@ -205,33 +205,65 @@ SuperPosVec EnvelopAssist::genInsertedSuper(SuperPosVec b2e){
 }
 
 SuperPosVec EnvelopAssist::genInsertedInOne(SuperPosVec b2e){
-    SuperPos beginSuper = b2e.front();
-    SuperPos endSuper = b2e.back();
+    SuperPos specialSuper = b2e.at(0);
+    SuperPos beginSuper = b2e.at(1);
+    SuperPos endSuper = b2e.at(2);
     assert(QString(beginSuper.meshName.c_str()) == QString(endSuper.meshName.c_str()));
     QString name = beginSuper.meshName.c_str();
     Pipe pipe = main;
     if(name == "branch"){
         pipe = branch;
     }
-    auto super1 = pipe.genInternalSuper(beginSuper, endSuper, true);
-    auto super2 = pipe.genInternalSuper(beginSuper, endSuper, false);
+    auto super1 = pipe.genInternalSuper();
+    auto super2 = pipe.genInternalSuper();
+    bool super1Cross = false;
+    for(auto s:super1){
+        super1Cross = isCross(beginSuper.pos, s.pos) == true? true:false;
+    }
+    bool super2Cross = false;
+    for(auto s:super2){
+        super2Cross = isCross(beginSuper.pos, s.pos) == true? true:false;
+    }
+    if(super1Cross == true&&super2Cross == false){
+        return super2;
+    }
+    else if(super1Cross == false && super2Cross == true){
+        return super1;
+    }
+    else{
+        assert(0);
+    }
+    /*
     float length1 = 0;
     float length2 = 0;
     for(auto i = 0; i<super1.size(); i++){
         length1 += glm::length(beginSuper.pos - super1.at(i).pos);
-        length2 += glm::length(beginSuper.pos - super2.at(2).pos);
+        length2 += glm::length(beginSuper.pos - super2.at(i).pos);
     }
     return length1<length2? super1 : super2;
+    */
 }
 
-SuperPosVec Pipe::genInternalSuper(SuperPos beginSuper, SuperPos endSuper, bool flag){
+PosVec Pipe::genInternalSuper(PosVec poss){
     float pi = asin(1)*2;
-    int dir = flag == true? 1:-1;
-    Pos beginLocal = invTrans(beginSuper.pos, "pos");
-    Pos endLocal = invTrans(endSuper.pos, "pos");
+    Pos specialWorld = poss.at(0);
+    Pos beginWorld = poss.at(1);
+    Pos endWorld = poss.at(2);
+    Pos specialLocal = invTrans(specialLocal, "pos");
+    Pos beginLocal = invTrans(beginWorld, "pos");
+    Pos endLocal = invTrans(endWorld, "pos");
     SPara beginPara = localPara(beginLocal);
     SPara endPara = localPara(endLocal);
-    SuperPosVec internalSupers{beginSuper};
+    PosVec internalSupers{beginWorld};
+    glm::vec2 basis1_1{beginLocal.x, beginLocal.y};
+    glm::vec2 basis1_2{endLocal.x, endLocal.y};
+    glm::mat2 TT;
+    改写基
+    TT[0][0] = beginLocal.x;
+    TT[1][0] = beginLocal.y;
+    TT[0][1] = endLocal.x;
+    TT[1][1] = endLocal.y;
+    glm::vec2 xy = glm::inverse(TT)*glm::vec2(0, 1);
     float Du = endPara.u - beginPara.u;
     float Dv = endPara.v - beginPara.v;
     if(flag == 1){

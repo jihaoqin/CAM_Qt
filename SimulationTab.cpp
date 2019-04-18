@@ -44,7 +44,7 @@ SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* pa
     timer = new QTimer(this);
     timer->setInterval(500);
     connect(calButton, &QPushButton::clicked, this, &SimulationTab::calculation);
-    connect(playAndPauseButton, &QPushButton::clicked, this, &SimulationTab::palyOrPause);
+    connect(playAndPauseButton, &QPushButton::clicked, this, &SimulationTab::playOrPause);
     connect(slowButton, &QPushButton::clicked, this, &SimulationTab::slowForward);
     connect(closeButton, &QPushButton::clicked, this, &SimulationTab::closeMyself);
     connect(fastButton, &QPushButton::clicked, this, &SimulationTab::fastForward);
@@ -64,14 +64,14 @@ void SimulationTab::calculation(){
     bFrameButton->setEnabled(true);
 }
 
-void SimulationTab::palyOrPause(){
+void SimulationTab::playOrPause(){
     if(timer->isActive()){
-        playAndPauseButton->setIcon(QIcon(":/icons/play"));
         timer->stop();
+        playAndPauseButton->setIcon(QIcon(":/icons/play"));
     }
     else{
-        playAndPauseButton->setIcon(QIcon(":/icons/pause"));
         timer->start();
+        playAndPauseButton->setIcon(QIcon(":/icons/pause"));
     }
 }
 
@@ -106,6 +106,7 @@ void SimulationTab::fastForward(){
 
 void SimulationTab::pause(){
     timer->stop();
+    playAndPauseButton->setIcon(QIcon(":/icons/play"));
 }
 
 

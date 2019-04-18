@@ -12,7 +12,7 @@ public:
     SimulationTab(TabBackground*, GuiConnector*, QWidget* parent = nullptr);
 public slots:
     void calculation();
-    void palyOrPause();
+    void playOrPause();
     void showNext();
     void closeMyself();
     void setPercent(int);

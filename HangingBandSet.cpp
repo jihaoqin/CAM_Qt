@@ -31,12 +31,12 @@ void HangingBandSet::draw(std::shared_ptr<GLProgram> program){
         core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
         core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         core->glDrawElements(GL_LINES, indexVec.size(), GL_UNSIGNED_INT, 0);
-        /*
+        // /*
         program->setVec3("material.color", Color::YELLOW);
         for(auto ind:crossInds){
             core->glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int)*ind));
         }
-        */
+        // */
         program->setMat4("model",m_Ts.at(m_showInd));
         program->setVec3("material.color", Color::YELLOW);
         mesh.setShowRange(m_lengths.at(m_showInd));

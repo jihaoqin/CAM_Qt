@@ -12,7 +12,7 @@ class Pipe{
 public:
     bool isWorldIn(Pos);
     PosVec interPoints(Pos, Dir);
-    SuperPosVec genInternalSuper(SuperPos, SuperPos, bool);
+    PosVec genInternalSuper(PosVec);
     bool isCross(Pos, Pos);
 public:
     Pos paraToLocal(SPara);

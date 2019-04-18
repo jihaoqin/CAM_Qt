@@ -12,7 +12,7 @@ AnimateController::AnimateController(Controller* c)
 {
     m_distance = 2;
     bandInd = 0;
-    showInd = 0;
+    showInd = -1;
     pairTotal = 0;
     windedTotal = 0;
 }
@@ -68,20 +68,20 @@ void AnimateController::showNext(){
             return;
         }
         else{
+            bandPtrs.at(nextBandInd)->setShowRange(indexPairVecs.at(nextBandInd).at(0));
+            bandInd = nextBandInd;
             showInd=0;
-            ++bandInd;
-            bandPtrs.at(bandInd)->setShowRange(indexPairVecs.at(bandInd).at(showInd));
         }
     }
     else{
-        ++showInd;
-        bandPtrs.at(bandInd)->setShowRange(indexPairVecs.at(bandInd).at(showInd));
+        bandPtrs.at(bandInd)->setShowRange(indexPairVecs.at(bandInd).at(nextShowInd));
+        showInd = nextShowInd;
     }
     auto root = ctrl->data->getNodeRoot();
     HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
     ++windedTotal;
     if(windedTotal < pairTotal){
-        hangPtr->setShowInd(windedTotal);
+        hangPtr->setShowInd(windedTotal - 1);
     }
     else{
         ctrl->mainWindow->animationOver();
@@ -92,7 +92,7 @@ void AnimateController::calculation(){
     initBandPtrs();
     initIndexPairVecs();
     initHangingBand();
-    //solveCollision();
+    solveCollision();
     initBandPos();
     for(auto b:bandPtrs){
         b->setShowRange(GLIndexPair{0,0});
@@ -121,15 +121,19 @@ void AnimateController::setPercent(int p){
     }
     for(int i =0; i < indexPairVecs.size(); ++i){
         auto& pairVec = indexPairVecs.at(i);
-        if(left>pairVec.size()){
+        if(left > pairVec.size()){
             left -= pairVec.size();
             bandPtrs.at(i)->setShowRange(indexPairVecs.at(i).back());
         }
         else{
             bandInd = i;
             showInd = left-1;
-            if(showInd >=0){
+            if(showInd >= 0){
                 bandPtrs.at(i)->setShowRange(indexPairVecs.at(i).at(showInd));
+            }
+            else{
+                bandPtrs.at(i)->setShowRange(indexPairVecs.at(i).at(0));
+                showInd = -1;
             }
             break;
         }
@@ -217,7 +221,7 @@ void AnimateController::solveCollision(){
                 int endInd = deleteInds.at(1)+2;
                 SuperPos beginSuper = poss.at(beginInd);
                 SuperPos endSuper = poss.at(endInd);
-                SuperPosVec b2e{poss.at(beginInd), poss.at(endInd)};
+                SuperPosVec b2e{poss.at(beginInd-1), poss.at(beginInd), poss.at(endInd-1), poss.at(endInd)};
                 auto insertSupers = assist.genInsertedSuper(b2e);
                 SuperPosVec doubleSupers;
                 for(auto s:insertSupers){
@@ -272,6 +276,7 @@ void AnimateController::initBandPos(){
     EnvelopAssist assist(tee);
     SuperPosVec poss = hangPtr->data();
     vector<glm::mat4> Ts;
+    int possBeginInd = 0;
     for(int i = 0; i < bandPtrs.size(); i++){
         BandPtr band = bandPtrs.at(i);
         auto& pairVec = indexPairVecs.at(i);
@@ -297,7 +302,9 @@ void AnimateController::initBandPos(){
                 ind = pairVec.at(j).first;
             }
             Dir z = band->outNorm(ind);
-            Dir y = pds.at(j).dir;
+            //Dir y = pds.at(j).dir;
+            Dir y = glm::normalize(poss.at(possBeginInd+1).pos - poss.at(possBeginInd).pos);
+            z = glm::normalize(z - glm::dot(z,y)*y);
             Dir x = glm::normalize(glm::cross(y, z));
             p = band->indexPd(ind).pos;
             glm::mat4 T;
@@ -306,6 +313,7 @@ void AnimateController::initBandPos(){
             utility::setYDir(T, y);
             utility::setZDir(T, z);
             Ts.push_back(T);
+            possBeginInd += 2;
         }
     }
     hangPtr->setTVec(Ts);
