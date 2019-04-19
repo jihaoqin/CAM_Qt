@@ -90,6 +90,9 @@ void AnimateController::showNext(){
 
 void AnimateController::calculation(){
     initBandPtrs();
+    if(bandPtrs.size() ==0 ){
+        return;
+    }
     initIndexPairVecs();
     initHangingBand();
     solveCollision();
@@ -325,4 +328,17 @@ void AnimateController::initBandPos(){
         lengths.push_back(glm::length(begin - end));
     }
     hangPtr->setHangingLength(lengths);
+}
+
+
+bool AnimateController::hasData(){
+    return bandPtrs.size() == 0? false:true;
+}
+
+void AnimateController::hideBandSet(){
+    auto root = ctrl->data->getNodeRoot();
+    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
+    if(hangPtr != nullptr){
+        hangPtr->setVisiable(false);
+    }
 }

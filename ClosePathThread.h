@@ -2,6 +2,8 @@
 #define CLOSEPATHTHREAD_H
 #include <QThread>
 #include <vector>
+#include <set>
+#include "Band.h"
 
 class Controller;
 class Band;
@@ -21,6 +23,7 @@ protected:
     virtual void run() override;
 private:
     void reorderPath();
+    bool hasManyEmpty(std::set<End>);
     NodePtr getBandNode(QString);
     Controller* ctrl;
 };

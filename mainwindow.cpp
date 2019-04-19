@@ -197,18 +197,21 @@ void MainWindow::updateAction(){
             upCurve->setEnabled(true);
             rightCurve->setEnabled(true);
             loopCurve->setEnabled(true);
+            simAction->setEnabled(true);
         }
         else{
             leftCurve->setEnabled(false);
             upCurve->setEnabled(false);
             rightCurve->setEnabled(false);
             loopCurve->setEnabled(false);
+            simAction->setEnabled(false);
         }
         if(true == opFlag){
             leftCurve->setEnabled(false);
             upCurve->setEnabled(false);
             rightCurve->setEnabled(false);
             loopCurve->setEnabled(false);
+            simAction->setEnabled(false);
         }
     }
 
@@ -361,4 +364,5 @@ void MainWindow::animationOver(){
 void MainWindow::showSimTab(){
     TabWidget* t = connector->getTabWidget();
     t->showSimulationTab();
+    updateAction();
 }

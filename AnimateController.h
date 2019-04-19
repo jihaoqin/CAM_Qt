@@ -11,6 +11,8 @@ public:
     void resetBand();
     void setPercent(int);
     std::pair<int, int> getInsertInd(int);
+    bool hasData();
+    void hideBandSet();
 private:
     void initBandPtrs();
     void initIndexPairVecs();

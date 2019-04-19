@@ -28,6 +28,7 @@ void TabBackground::setWidget(QWidget *w){
     else{
         layout->removeWidget(center);
         center = nullptr;
+        connector->updateAction();
     }
 }
 

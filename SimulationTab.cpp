@@ -56,6 +56,9 @@ SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* pa
 
 void SimulationTab::calculation(){
     animateCtrl->calculation();
+    if(!animateCtrl->hasData()){
+        return;
+    }
     playAndPauseButton->setEnabled(true);
     slowButton->setEnabled(true);
     progressSlider->setEnabled(true);
@@ -86,6 +89,7 @@ void SimulationTab::showNext(){
 void SimulationTab::closeMyself(){
     timer->stop();
     animateCtrl->resetBand();
+    animateCtrl->hideBandSet();
     backWidget->setWidget(nullptr);
     close();
 }

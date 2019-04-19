@@ -105,6 +105,9 @@ void ClosePathThread::reorderPath(){
     auto data = ctrl->data;
     TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
     set<End> endsSet = ctrl->allEndsSet();
+    if(hasManyEmpty(endsSet)){
+        return;
+    }
     End end1;
     for(auto ite = endsSet.begin(); ite != endsSet.end();++ite){
         if(ite->nextEndId.isEmpty()){
@@ -163,4 +166,21 @@ NodePtr ClosePathThread::getBandNode(QString bandId){
             return c;
         }
     }
+}
+
+
+bool ClosePathThread::hasManyEmpty(std::set<End> endsSet){
+    if(endsSet.size() == 0){
+        return true;
+    }
+    int count = 0;
+    for(auto ite = endsSet.begin(); ite != endsSet.end();++ite){
+        if(ite->nextEndId.isEmpty()){
+            count++;
+            if(count>2){
+                return true;
+            }
+        }
+    }
+    return false;
 }
