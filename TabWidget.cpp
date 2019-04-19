@@ -6,9 +6,10 @@
 #include "GuiConnector.h"
 #include "ObjTreeWidget.h"
 #include "SimulationTab.h"
+#include "FromPipeCurveTab.h"
 
 TabWidget::TabWidget(QWidget* parent)
-    :QTabWidget(parent),tree(nullptr)
+    :QTabWidget(parent),tree(nullptr), job("")
 {
     setMouseTracking(true);
     setStyleSheet("background-color:rgb(255,255,255)");
@@ -26,12 +27,21 @@ void TabWidget::showNewCurveTab(){
     operation->setWidget(newCurve);
     newCurve->setTabBack(operation);
     setCurrentIndex(1);
+    job = "newCurveTab";
 }
 
 void TabWidget::showSimulationTab(){
     SimulationTab* simTab = new SimulationTab(operation, connector, this);
     operation->setWidget(simTab);
     setCurrentIndex(1);
+    job = "simulationTab";
+}
+
+void TabWidget::showFromPipeCurveTab(){
+    FromPipeCurveTab* fromTab = new FromPipeCurveTab(operation, connector, this);
+    operation->setWidget(fromTab);
+    setCurrentIndex(1);
+    job = "fromPipeCurveTab";
 }
 
 bool TabWidget::isOperating(){
@@ -42,4 +52,9 @@ void TabWidget::setConnector(GuiConnector *c){
     connector = c;
     tree->setConnector(c);
     operation->setConnector(c);
+}
+
+
+QString TabWidget::doWhat(){
+    return job;
 }

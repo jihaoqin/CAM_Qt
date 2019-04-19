@@ -26,6 +26,7 @@ public slots:
     void showSimTab();
 private slots:
     void showNewCurveTab();
+    void showFromPipeCurveTab();
     void saveBand();
     void openBand();
     void genLeftCurve();
@@ -47,6 +48,7 @@ private:
         QAction* bandOpen;
     //ToolBar
         QAction *newCurve;
+        QAction *fromPipeCurve;
         QAction *leftCurve;
         QAction *rightCurve;
         QAction *upCurve;

@@ -57,7 +57,7 @@ public:
     std::shared_ptr<Camera2> getCamera();
     bool getEmpty();
     bool getChanged();
-    QString addIntersectionPoint(glm::vec3 begin, glm::vec3 dir);
+    QString addIntersectionPointInTee(glm::vec3 begin, glm::vec3 dir);
     void processIntersectionPoint(glm::vec3 begin, glm::vec3 dir, glm::vec2 glXY);
     void clickOnPoint(QString, glm::vec2);
     void processIntersectionWhenRelease();

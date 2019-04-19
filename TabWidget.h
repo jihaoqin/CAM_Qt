@@ -16,12 +16,15 @@ public:
     TabWidget(QWidget* parent = nullptr);
     bool isOperating();
     void setConnector(GuiConnector*);
+    QString doWhat();
 public slots:
     void showNewCurveTab();
     void showSimulationTab();
+    void showFromPipeCurveTab();
 private:
     ObjTreeWidget* tree;
     TabBackground* operation;
+    QString job;
     GuiConnector* connector;
 };
 

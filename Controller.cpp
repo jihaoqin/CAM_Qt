@@ -1,6 +1,7 @@
 #include "Controller.h"
 #include <memory>
 #include "glwidget.h"
+#include "TabWidget.h"
 #include "mainwindow.h"
 #include "GuiConnector.h"
 #include "Cylinder.h"
@@ -129,13 +130,24 @@ void Controller::processIntersectionPoint(glm::vec3 begin, glm::vec3 dir, glm::v
         //后面的点击操作只改变此点的位置，并不新创建点
     //如果是创建点操作
         //创建点
+    TabWidget* tabWidget = mainWindow->connector->getTabWidget();
+    QString job = tabWidget->doWhat();
+    if(job == QString("newCurveTab")){
+
+    }
+    else if(job == QString("fromPipeCurveTab")){
+
+    }
+    else{
+        return;
+    }
     NewCurveTab* newCurveTab = mainWindow->connector->getNewCurveTabWidget();
     QString pointId = newCurveTab->getPointText();
     bool focusOnPointText = newCurveTab->isPointTextFocused();
     if(focusOnPointText == true){
         if(pointId.isEmpty()){
             //创建点
-            QString id = addIntersectionPoint(begin, dir);
+            QString id = addIntersectionPointInTee(begin, dir);
             newCurveTab->setPointText(id);
             float angle = newCurveTab->getWindingAngle()*utility::PI/180;
             QString curveId = addCurve(id,angle);
@@ -175,7 +187,7 @@ std::vector<HalfPoint> Controller::intersectionPointInTee(glm::vec3 begin, glm::
     }
 }
 
-QString Controller::addIntersectionPoint(glm::vec3 begin, glm::vec3 dir){
+QString Controller::addIntersectionPointInTee(glm::vec3 begin, glm::vec3 dir){
     auto pointVec = intersectionPointInTee(begin,dir);
     if(pointVec.size()==0){
         return QString();
@@ -273,8 +285,6 @@ void Controller::processMoveWhenMove(glm::vec3 begin, glm::vec3 dir){
                 pointPtr->setPos(pos);
                 pointPtr->meshId(pointVec.at(0).meshName.c_str());
                 GLWidget * gl = mainWindow->connector->getGLWidget();
-                glm::vec2 p2d = gl->spatialTo2D(pos);
-                glm::vec4 viewport = gl->getGLViewport();
             }
         }
     }

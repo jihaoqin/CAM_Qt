@@ -44,3 +44,4 @@ bool TabBackground::isSet(){
 void TabBackground::setConnector(GuiConnector *c){
     connector = c;
 }
+

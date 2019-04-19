@@ -198,6 +198,7 @@ void MainWindow::updateAction(){
             rightCurve->setEnabled(true);
             loopCurve->setEnabled(true);
             simAction->setEnabled(true);
+            fromPipeCurve->setEnabled(true);
         }
         else{
             leftCurve->setEnabled(false);
@@ -205,6 +206,7 @@ void MainWindow::updateAction(){
             rightCurve->setEnabled(false);
             loopCurve->setEnabled(false);
             simAction->setEnabled(false);
+            fromPipeCurve->setEnabled(false);
         }
         if(true == opFlag){
             leftCurve->setEnabled(false);
@@ -212,6 +214,7 @@ void MainWindow::updateAction(){
             rightCurve->setEnabled(false);
             loopCurve->setEnabled(false);
             simAction->setEnabled(false);
+            fromPipeCurve->setEnabled(false);
         }
     }
 
@@ -240,26 +243,37 @@ void MainWindow::configureToolBar(){
     newCurve->setEnabled(false);
     toolBar->addAction(newCurve);
     connect(newCurve, &QAction::triggered, this, &MainWindow::showNewCurveTab);
+
+    fromPipeCurve = new QAction(QIcon(":/icons/fromPipeCurve"), "fromPipeCurve");
+    fromPipeCurve->setEnabled(false);
+    toolBar->addAction(fromPipeCurve);
+    connect(fromPipeCurve, &QAction::triggered, this, &MainWindow::showFromPipeCurveTab);
+
     leftCurve = new QAction(QIcon(":/icons/leftCurve"), "leftCurve");
     toolBar->addAction(leftCurve);
     leftCurve->setEnabled(true);
     connect(leftCurve, &QAction::triggered, this, &MainWindow::genLeftCurve);
+
     upCurve = new QAction(QIcon(":/icons/upCurve"), "upCurve");
     toolBar->addAction(upCurve);
     upCurve->setEnabled(false);
     connect(upCurve, &QAction::triggered, this, &MainWindow::genUpCurve);
+
     rightCurve = new QAction(QIcon(":/icons/rightCurve"), "rightCurve");
     toolBar->addAction(rightCurve);
     rightCurve->setEnabled(false);
     connect(rightCurve, &QAction::triggered, this, &MainWindow::genRightCurve);
+
     loopCurve = new QAction(QIcon(":/icons/loop"), "loopCurve");
     toolBar->addAction(loopCurve);
     loopCurve->setEnabled(false);
     connect(loopCurve, &QAction::triggered, this, &MainWindow::loopBand);
+
     simAction = new QAction(QIcon(":/icons/sim"),"simulation");
     toolBar->addAction(simAction);
     simAction->setEnabled(true);
     connect(simAction, &QAction::triggered, this, &MainWindow::showSimTab);
+
 }
 
 void MainWindow::showNewCurveTab(){
@@ -364,5 +378,12 @@ void MainWindow::animationOver(){
 void MainWindow::showSimTab(){
     TabWidget* t = connector->getTabWidget();
     t->showSimulationTab();
+    updateAction();
+}
+
+
+void MainWindow::showFromPipeCurveTab(){
+    TabWidget* t = connector->getTabWidget();
+    t->showFromPipeCurveTab();
     updateAction();
 }

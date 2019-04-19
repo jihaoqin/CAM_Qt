@@ -98,7 +98,8 @@ SOURCES += \
     AnimateController.cpp \
     SimulationTab.cpp \
     EnvelopAssist.cpp \
-    HangingBandSet.cpp
+    HangingBandSet.cpp \
+    FromPipeCurveTab.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -178,7 +179,8 @@ HEADERS += \
     NameDeclare.h \
     SimulationTab.h \
     EnvelopAssist.h \
-    HangingBandSet.h
+    HangingBandSet.h \
+    FromPipeCurveTab.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt
@@ -198,7 +200,7 @@ DISTFILES += \
 
 
 # BOOST lib configuration
-DEFINES += LAB
+DEFINES += ROOM
 if(contains(DEFINES, ROOM)){
         BOOST_ROOT = F:\boost_1_69_0
 }else{
