@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QEvent>
 #include "GuiConnector.h"
+#include "FromPipeCurveController.h"
 
 FromPipeCurveTab::FromPipeCurveTab(TabBackground* background, GuiConnector* conn, QWidget* parent)
     :QWidget(parent), connector(conn), back(background)
@@ -32,9 +33,9 @@ void FromPipeCurveTab::initial(){
     dirLabel = new QLabel("winding angle:",this);
     dirSlider = new QSlider(this);
     dirSlider->setOrientation(Qt::Horizontal);
-    dirSlider->setRange(-90, 90);
+    dirSlider->setRange(-89, 89);
     dirSpinBox = new QSpinBox(this);
-    dirSpinBox->setRange(-90, 90);
+    dirSpinBox->setRange(-89, 89);
     dirSpinBox->setSingleStep(1);
     dirSpinBox->setValue(45);
     lamLabel = new QLabel("slippery", this);
@@ -105,4 +106,38 @@ bool FromPipeCurveTab::eventFilter(QObject* target, QEvent* event){
     else{
         return QWidget::eventFilter(target, event);
     }
+}
+
+
+QString FromPipeCurveTab::getPointText(){
+    QString pointId = pointText->toPlainText();
+    return pointId;
+}
+
+bool FromPipeCurveTab::isPointTextFocused(){
+    return focusOnPoint;
+}
+
+void FromPipeCurveTab::setPointText(QString id){
+    pointText->setText(id);
+    ok->setEnabled(true);
+}
+
+float FromPipeCurveTab::getWindingAngle(){
+    float pi = asin(1)*2;
+    return dirSpinBox->value()*pi/180;
+}
+
+
+void FromPipeCurveTab::setBandId(QString id){
+    bandId = id;
+}
+
+void FromPipeCurveTab::updateBand(){
+    if(bandId.isEmpty()){
+        return;
+    }
+    FromPipeCurveController* ctrl;
+    QString pointId = getPointText();
+    ctrl->updateBandUsing(pointId, bandId);
 }

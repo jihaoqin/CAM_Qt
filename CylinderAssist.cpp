@@ -355,3 +355,10 @@ QString CylinderAssist::cylinderId(){
 float CylinderAssist::getLength(){
     return length;
 }
+
+
+SPara CylinderAssist::worldToUV(Pos world){
+    Pos local = world3DToLocal(world, "pos");
+    auto values = local3DToUV(local);
+    return SPara{values.at(0), values.at(1)};
+}

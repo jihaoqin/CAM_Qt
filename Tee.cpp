@@ -374,7 +374,6 @@ vector<HalfPoint> Tee::intersectionPoints(glm::vec3 pos, glm::vec3 dir){
     vector<HalfPoint> result;
     vector<HalfPoint> ringPoints;
     vector<HalfPoint> cylinderPoints;
-    vector<HalfPoint> planePoints;
     vector<HalfPoint> tpPoints;
     for(auto r:ringVec){
         ringPoints = r.intersectionPoints(pos, dir);
@@ -394,14 +393,22 @@ vector<HalfPoint> Tee::intersectionPoints(glm::vec3 pos, glm::vec3 dir){
             result.push_back(p);
         }
     }
-    /*
-    for(auto p:planeVec){
-        planePoints = p.intersectionPoints(pos, dir);
-        for(auto i:planePoints){
-            result.push_back(i);
+    return result;
+}
+
+vector<HalfPoint> Tee::intersectionPointsInPipe(glm::vec3 pos, glm::vec3 dir){
+    vector<HalfPoint> result;
+    vector<HalfPoint> cylinderPoints;
+    auto& pipeHalf = pipeHalfVec.at(0);
+    QString exceptId = pipeHalf.getId();
+    for(auto& c:cylinderVec){
+        if(QString(c.getId())!=exceptId){
+            cylinderPoints = c.intersectionPoints(pos, dir);
+            for(auto p:cylinderPoints){
+                result.push_back(p);
+            }
         }
     }
-    */
     return result;
 }
 
@@ -615,4 +622,27 @@ glm::mat4 Tee::rightMat4(){
 
 TeePara Tee::teePara(){
     return TeePara{pipeR, sideR, lengthMain, lengthBranch};
+}
+
+
+QString Tee::whichPart(QString meshId){
+    auto leftIds = getLeftCylinderId();
+    for(auto id:leftIds){
+        if(id == meshId){
+            return "left";
+        }
+    }
+    auto upIds = getUpCylinderId();
+    for(auto id:upIds){
+        if(id == meshId){
+            return "up";
+        }
+    }
+    auto rightIds = getRightCylinderId();
+    for(auto id:rightIds){
+        if(id == meshId){
+            return "right";
+        }
+    }
+    return "";
 }

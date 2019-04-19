@@ -36,6 +36,62 @@ LeftCylinderAssist::LeftCylinderAssist(TeePtr t, QString which):tee(t)
     }
 }
 
+std::tuple<PosDirVec, QStringVec> LeftCylinderAssist::genCurve(PosDir pd){
+    float pi = asin(1)*2;
+    CPPara p1 = worldToCPPara(pd);
+    p1 = normPara(p1, glm::vec2{0,1});
+    float v3 = m_length - 1;
+    float v1 = p1.v;
+    float alpha_3 = p1.uAng<(0.5*pi)? 0:pi;
+    float lam = (r*(1/cos(p1.uAng) - 1/cos(alpha_3)))/(v3 - v1);
+    float boundary = p1.uAng<(0.5*pi)?0:pi;
+    float v0 = 0;
+    float alpha_0 = acos(1/((v3 - v0)*lam/r + 1/cos(alpha_3)));
+    vector<float> alphas;
+    if(p1.uAng>boundary){
+        float s = 0;
+        float alpha = alpha_0;
+        while(alpha > boundary){
+            alphas.push_back(alpha);
+            s = s+0.5;
+            alpha = atan(tan(alpha_0) - lam/r*s);
+            alpha = p1.uAng<(0.5*pi)? alpha:alpha+pi;
+        }
+    }
+    else{
+        float s = 0;
+        float alpha = alpha_0;
+        while(alpha < boundary){
+            alphas.push_back(alpha);
+            s = s+0.5;
+            alpha = atan(tan(alpha_0) - lam/r*s);
+            alpha = p1.uAng<(0.5*pi)? alpha:alpha+pi;
+        }
+        alphas.push_back(boundary);
+    }
+    vector<PosDir> pdVec;
+    QStringVec strVec;
+    CylinderAssist assist_1(*cylinders.at(0));
+    CylinderAssist assist_2(*cylinders.at(1));
+    for(auto alpha: alphas){
+        float u = p1.u + 1/lam*(lnn(p1.uAng) - lnn(alpha));
+        float v = p1.v + 1/lam*r*(1/cos(p1.uAng) - 1/cos(alpha));
+        CPPara p{u,v,alpha};
+        PosDir pd = paraToWorld(p);
+        pdVec.push_back(pd);
+        if(assist_1.isOnSurface(pd.pos)){
+            strVec.push_back(assist_1.cylinderId());
+        }
+        else if(assist_2.isOnSurface(pd.pos)){
+            strVec.push_back(assist_2.cylinderId());
+        }
+        else{
+            assert(0);
+        }
+    }
+    return tuple<PosDirVec, QStringVec>{pdVec, strVec};
+}
+
 std::tuple<PosDirVec, QStringVec> LeftCylinderAssist::genCurve(EndPtr e){
     End end = *e;
     float pi = asin(1)*2;

@@ -17,9 +17,15 @@ class FromPipeCurveTab:public QWidget
 public:
     friend class GuiConnector;
     FromPipeCurveTab(TabBackground*, GuiConnector*, QWidget* parent = nullptr);
+    QString getPointText();
+    bool isPointTextFocused();
+    void setPointText(QString);
+    float getWindingAngle();
+    void setBandId(QString);
 public slots:
     void okPressed();
     void canclePressed();
+    void updateBand();
 protected:
     virtual bool eventFilter(QObject* target, QEvent* event) override;
 private:
@@ -39,7 +45,7 @@ private:
     QPushButton* cancle;
 
     bool focusOnPoint;
-    QString curveId;
+    QString bandId;
 
     GuiConnector* connector;
     TabBackground* back;

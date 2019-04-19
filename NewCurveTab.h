@@ -25,7 +25,7 @@ public:
     QString getPointText();
     void setPointText(QString);
     void setCurveId(QString);
-    int getWindingAngle();
+    float getWindingAngle();
     float getSlip();
     bool isPointTextFocused();
 public slots:

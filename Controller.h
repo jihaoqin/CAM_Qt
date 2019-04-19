@@ -38,7 +38,8 @@ public:
     void setColor(QStringVec, Color);
     EndPtrVec allEnds();
     std::set<End> allEndsSet();
-    QString addCurve(QString pId, float uAng);
+    QString addCurveInTee(QString pId, float uAng);
+    QString addBandInPipe(QString pId, float uAng);
     void deleteBand(QString id);
     std::shared_ptr<Point> addPoint(HalfPoint);
     void draw();
@@ -58,13 +59,17 @@ public:
     bool getEmpty();
     bool getChanged();
     QString addIntersectionPointInTee(glm::vec3 begin, glm::vec3 dir);
+    QString addIntersectionPointInPipe(glm::vec3 begin, glm::vec3 dir);
     void processIntersectionPoint(glm::vec3 begin, glm::vec3 dir, glm::vec2 glXY);
     void clickOnPoint(QString, glm::vec2);
     void processIntersectionWhenRelease();
     void exitPick();
     void setPointPickState(QString, bool);
     void processMoveWhenMove(glm::vec3, glm::vec3);
+    void processMoveInTee(Pos, Dir);
+    void processMoveInPipe(Pos, Dir);
     std::vector<HalfPoint> intersectionPointInTee(glm::vec3, glm::vec3);
+    std::vector<HalfPoint> intersectionPointInPipe(glm::vec3, glm::vec3);
     void updateCurve(QString, float, float);
     void saveBand(QString path);
     void openBand(QString path);

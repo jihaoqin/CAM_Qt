@@ -8,6 +8,7 @@
 #include <memory>
 #include "CurveController.h"
 #include "ObjTreeWidget.h"
+#include "FromPipeCurveTab.h"
 
 GuiConnector::GuiConnector()
     :mainWindow(nullptr)
@@ -55,6 +56,17 @@ NewCurveTab* GuiConnector::getNewCurveTabWidget(){
     if(op->isSet()){//如果是newCurveOperation
        NewCurveTab* newCurveTab = dynamic_cast<NewCurveTab*>(op->center);
        return newCurveTab;
+    }
+    else{
+        return nullptr;
+    }
+}
+
+FromPipeCurveTab* GuiConnector::getFromPipeCurveTab(){
+    TabBackground* op = mainWindow->widget->tabWidget->operation;
+    if(op->isSet()){//如果是newCurveOperation
+       FromPipeCurveTab* pipeCurveTab = dynamic_cast<FromPipeCurveTab*>(op->center);
+       return pipeCurveTab;
     }
     else{
         return nullptr;

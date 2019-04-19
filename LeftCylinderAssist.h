@@ -23,6 +23,7 @@ class LeftCylinderAssist
 public:
     LeftCylinderAssist(TeePtr, QString which);
     std::tuple<PosDirVec, QStringVec> genCurve(EndPtr);
+    std::tuple<PosDirVec, QStringVec> genCurve(PosDir);
     std::tuple<PosDirVec, QStringVec> genCircleCurve(EndPtr, EndPtr);
     float endToEndAngle(EndPtr, EndPtr);
     bool isPosIn(Pos);

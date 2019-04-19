@@ -33,9 +33,11 @@ public:
     virtual void bindGL(QOpenGLContext*) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;
     vector<HalfPoint> intersectionPoints(glm::vec3 pos, glm::vec3 dir);
+    vector<HalfPoint> intersectionPointsInPipe(glm::vec3 pos, glm::vec3 dir);
     QStringVec getLeftCylinderId();
     QStringVec getUpCylinderId();
     QStringVec getRightCylinderId();
+    QString whichPart(QString);
     BoundingBox boundingBox();
     void setIdUsing(IdGenerator);
     Ring* getRing(QString);

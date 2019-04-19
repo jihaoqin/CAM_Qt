@@ -23,6 +23,7 @@ public:
     Pos outNorm(Pos);
     QString cylinderId();
     float getLength();
+    SPara worldToUV(Pos);
 private:
     glm::vec3 anchor;
     glm::vec3 zDir;

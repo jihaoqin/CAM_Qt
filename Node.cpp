@@ -2,6 +2,8 @@
 #include "DataObject.h"
 #include <QDebug>
 #include "Tee.h"
+#include "Point.h"
+#include "Band.h"
 
 Node::Node():father(), type(nothing),data(nullptr)
 {
@@ -109,4 +111,24 @@ DataObjectPtr Node::findObjectId(const char *id){
         }
     }
     return result;
+}
+
+PointPtr Node::findPointPtr(QString id){
+    auto basis = findObjectId(id.toLatin1().data());
+    if(basis == nullptr){
+        return nullptr;
+    }
+    else{
+        return std::dynamic_pointer_cast<Point>(basis);
+    }
+}
+
+BandPtr Node::findBandPtr(QString id){
+    auto basis = findObjectId(id.toLatin1().data());
+    if(basis == nullptr){
+        return nullptr;
+    }
+    else{
+        return std::dynamic_pointer_cast<Band>(basis);
+    }
 }

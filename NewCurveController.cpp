@@ -61,7 +61,7 @@ void NewCurveController::addSymmetry(PointPtr p, QString flag){
     float pi = asin(1)*2;
     auto teeBase = data->root->findObjectId("tee");
     TeePtr tee = dynamic_pointer_cast<Tee>(teeBase);
-    float windAngle = tab->getWindingAngle()*pi/180;
+    float windAngle = tab->getWindingAngle();
     float lam = tab->getSlip();
     QString pxId = data->idGenerator.getPointId();
     PointSymPtr px = std::make_shared<PointSym>(p, pxId,flag, tee);

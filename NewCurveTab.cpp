@@ -126,8 +126,9 @@ bool NewCurveTab::isPointTextFocused(){
     return focusOnPoint;
 }
 
-int NewCurveTab::getWindingAngle(){
-    return dirSpinBox->value();
+float NewCurveTab::getWindingAngle(){
+    float pi = asin(1)*2;
+    return dirSpinBox->value()*pi/180;
 }
 
 void NewCurveTab::updateCurve(){

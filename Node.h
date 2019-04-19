@@ -3,6 +3,8 @@
 #include <vector>
 #include <memory>
 #include "boundingbox.h"
+#include "NameDeclare.h"
+#include <QString>
 
 
 class Node;
@@ -26,6 +28,8 @@ public:
     Node(DataObjectPtr);
     BoundingBox boudingBoxUnion();
     DataObjectPtr findObjectId(const char*);
+    PointPtr findPointPtr(QString);
+    BandPtr findBandPtr(QString);
     Node* fatherPtr();
     std::vector<NodePtr>& childrenPtrVec();
     void deleteChild(NodePtr child);

@@ -11,6 +11,7 @@ class Data;
 class GenCurveProgressDialog;
 class TabWidget;
 class SimulationTab;
+class FromPipeCurveTab;
 
 class GuiConnector
 {
@@ -22,6 +23,7 @@ public:
     void updateAction();
     GenCurveProgressDialog* getGenCurveProgressDlg();
     NewCurveTab* getNewCurveTabWidget();
+    FromPipeCurveTab* getFromPipeCurveTab();
     std::shared_ptr<GLProgram> getMeshProgram();
     std::shared_ptr<GLProgram> getPointProgram();
     QString getPointText();
