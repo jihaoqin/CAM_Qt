@@ -30,6 +30,7 @@ public:
     DataObjectPtr findObjectId(const char*);
     PointPtr findPointPtr(QString);
     BandPtr findBandPtr(QString);
+    TeePtr findTeePtr();
     Node* fatherPtr();
     std::vector<NodePtr>& childrenPtrVec();
     void deleteChild(NodePtr child);

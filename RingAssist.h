@@ -19,6 +19,7 @@ public:
     PosDir worldProject(glm::vec3 pos, glm::vec3 dir);
     PosDir CPParaToLocal(CPPara p);
     CPPara local3DProjectToPara(glm::vec3 pos, glm::vec3 dir);
+    CPPara worldToCPPara(Pos pos, Dir dir);
     vector<float> local3DProjectToUV(glm::vec3 pos);
     glm::vec3 local3DToWorld(glm::vec3 local, const char*);
     glm::vec3 world3DToLocal(glm::vec3 world, const char*);
@@ -26,6 +27,7 @@ public:
     glm::vec3 localTangentDir(float theta, float alpha, double uWeight, double vWeight);
     vector<EdgePtr> getEdges();
     Dir outNorm(Pos);
+
 private:
     double R;
     double r;

@@ -19,6 +19,8 @@ class Camera2;
 class Tee;
 class GenCurveProgressDialog;
 using TeePtr = std::shared_ptr<Tee>;
+class CBandOnPoint;
+using CBandPtr = std::shared_ptr<CBandOnPoint>;
 class Controller
 {
 public:
@@ -38,8 +40,8 @@ public:
     void setColor(QStringVec, Color);
     EndPtrVec allEnds();
     std::set<End> allEndsSet();
-    QString addCurveInTee(QString pId, float uAng);
-    QString addBandInPipe(QString pId, float uAng);
+    QString addBandInTee(QString pId, float uAng);
+    CBandPtr addCBandInPipe(QString pId, float uAng);
     void deleteBand(QString id);
     std::shared_ptr<Point> addPoint(HalfPoint);
     void draw();

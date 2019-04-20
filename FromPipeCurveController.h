@@ -10,11 +10,11 @@ class GuiConnector;
 class FromPipeCurveController
 {
 public:
-    FromPipeCurveController(FromPipeCurveTab*);
+    FromPipeCurveController(FromPipeCurveTab*, Controller*);
     void updateBandUsing(QString pointId, QString bandId);
 private:
     FromPipeCurveTab* tab;
-    GuiConnector* connector;
+    //GuiConnector* connector;
     std::shared_ptr<Data> data;
 };
 

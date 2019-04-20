@@ -1,5 +1,5 @@
 #include "Edge.h"
-
+#include <QStringList>
 Edge::Edge():boundary(true)
 {
 
@@ -53,4 +53,8 @@ void Edge::setExtend(std::function<CPPara (CPPara, CPPara)> f){
 
 CPPara Edge::extend(CPPara p1, CPPara p2){
     return e(p1, p2);
+}
+
+QString Edge::meshId(){
+    return id.split("_").at(0);
 }

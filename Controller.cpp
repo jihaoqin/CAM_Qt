@@ -145,7 +145,7 @@ void Controller::processIntersectionPoint(glm::vec3 begin, glm::vec3 dir, glm::v
                 QString id = addIntersectionPointInTee(begin, dir);
                 newCurveTab->setPointText(id);
                 float angle = newCurveTab->getWindingAngle();
-                QString curveId = addCurveInTee(id,angle);
+                QString curveId = addBandInTee(id,angle);
                 newCurveTab->setCurveId(curveId);
             }
             else{
@@ -166,8 +166,25 @@ void Controller::processIntersectionPoint(glm::vec3 begin, glm::vec3 dir, glm::v
                 QString id = addIntersectionPointInPipe(begin, dir);
                 pipeTab->setPointText(id);
                 float angle = pipeTab->getWindingAngle();
-                QString bandId = addBandInPipe(id, angle);
-                pipeTab->setBandId(bandId);
+                CBandPtr cBand = addCBandInPipe(id, angle);
+                EndPtr frontE = cBand->bandEnd()->frontEnd();
+                PointPtr pointTee = make_shared<Point>(frontE->pd.pos, data->idGenerator.getPointId().toLatin1().data());
+                data->addPoint(pointTee);
+                TeePtr tee = data->root->findTeePtr();
+                QString tMeshId = tee->cBand2TBandMesh(frontE->bandId());
+                if(tMeshId.contains("ring")){
+                    Ring* ring = tee->getRing(tMeshId);
+                    RingAssist rAssist(*ring);
+                    CPPara para = rAssist.worldToCPPara(frontE->pd.pos, frontE->pd.dir);
+                    QString curveId = addBandInTee(pointTee->getId(), para.uAng);
+                }
+                else if(tMeshId.contains("cylinder")){
+
+                }
+                else{
+                    assert(0);
+                }
+                pipeTab->setBandId(cBand->getId());
             }
             else{
                 clickOnPoint(pointId, glXY);
@@ -366,7 +383,6 @@ void Controller::processMoveInTee(glm::vec3 begin, glm::vec3 dir){
                 glm::vec3 pos = pointVec.at(0).pos;
                 pointPtr->setPos(pos);
                 pointPtr->meshId(pointVec.at(0).meshName.c_str());
-                GLWidget * gl = mainWindow->connector->getGLWidget();
             }
         }
     }
@@ -394,7 +410,7 @@ void Controller::processMoveInPipe(Pos begin, Dir dir){
                 glm::vec3 pos = pointVec.at(0).pos;
                 pointPtr->setPos(pos);
                 pointPtr->meshId(pointVec.at(0).meshName.c_str());
-                GLWidget * gl = mainWindow->connector->getGLWidget();
+                pipeTab->updateBand();
             }
         }
     }
@@ -404,29 +420,29 @@ void Controller::processMoveInPipe(Pos begin, Dir dir){
 }
 
 
-QString Controller::addBandInPipe(QString pId, float uAng){
+CBandPtr Controller::addCBandInPipe(QString pId, float uAng){
     if(!pId.contains("point")){
-        return QString("");
+        return nullptr;
     }
     auto ptr = data->root->findObjectId(pId.toLatin1().data());
     if(ptr == nullptr){
-        return QString("");
+        return nullptr;
     }
     auto pointPtr = std::dynamic_pointer_cast<Point>(ptr);
     auto teeFa = data->root->findObjectId("tee");
     auto teePtr = std::dynamic_pointer_cast<Tee>(teeFa);
     QString meshId(pointPtr->meshId());
     QString bandId = data->idGenerator.getBandId();
-    auto band = std::make_shared<CBandOnPoint>(HalfPoint{pointPtr->getPos(), meshId.toLatin1().data()}, uAng, teePtr);
+    auto band = std::make_shared<CBandOnPoint>(HalfPoint{pointPtr->getPos(), meshId.toLatin1().data()}, uAng, teePtr, bandId);
     QOpenGLContext* gl = widget->getGLContext();
     band->bindGL(gl);
     data->addBand(band);
     mainWindow->updateModel();
     mainWindow->updateAction();
-    return band->getId();
+    return band;
 }
 
-QString Controller::addCurveInTee(QString pId, float uAng){
+QString Controller::addBandInTee(QString pId, float uAng){
     if(!pId.contains("point")){
         return QString("");
     }

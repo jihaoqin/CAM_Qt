@@ -18,6 +18,7 @@ public:
     friend class GuiConnector;
     FromPipeCurveTab(TabBackground*, GuiConnector*, QWidget* parent = nullptr);
     QString getPointText();
+    QString getCBandId();
     bool isPointTextFocused();
     void setPointText(QString);
     float getWindingAngle();

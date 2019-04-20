@@ -546,3 +546,10 @@ Dir RingAssist::outNorm(Pos p){
     assert(abs(glm::length(norm) - 1) < 1e-2);
     return local3DToWorld(norm, "dir");
 }
+
+CPPara RingAssist::worldToCPPara(Pos pos, Dir dir){
+    glm::vec3 localPos = world3DToLocal(pos, "pos");
+    glm::vec3 localDir = world3DToLocal(dir, "dir");
+    CPPara p = local3DProjectToPara(localPos, localDir);
+    return p;
+}

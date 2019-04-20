@@ -137,7 +137,12 @@ void FromPipeCurveTab::updateBand(){
     if(bandId.isEmpty()){
         return;
     }
-    FromPipeCurveController* ctrl;
+    FromPipeCurveController* ctrl = new FromPipeCurveController(this, connector->getCtrl());
     QString pointId = getPointText();
     ctrl->updateBandUsing(pointId, bandId);
+}
+
+
+QString FromPipeCurveTab::getCBandId(){
+    return bandId;
 }

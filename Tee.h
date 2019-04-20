@@ -46,6 +46,7 @@ public:
     Cylinder* getCylinder(QString);
     QString topoValue(QString);
     QString allTopoValue(QString);
+    QString cBand2TBandMesh(QString cBandMesh);
     std::map<QString, QString> edgeTopo();
     std::map<QString, QString> allEdgeTopo();
     Dir outNorm(Pos p, QString meshId);

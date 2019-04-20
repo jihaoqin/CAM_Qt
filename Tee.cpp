@@ -6,6 +6,7 @@
 #include "RingAssist.h"
 #include "CylinderAssist.h"
 #include "TriEdgePlaneAssist.h"
+#include "LeftCylinderAssist.h"
 #include <utility>
 
 using namespace std;
@@ -645,4 +646,38 @@ QString Tee::whichPart(QString meshId){
         }
     }
     return "";
+}
+
+QString Tee::cBand2TBandMesh(QString cBandMesh){
+    QString which = whichPart(cBandMesh);
+    Cylinder* cylinder = getCylinder(cBandMesh);
+    auto edges = cylinder->getEdges();
+    QString tEdgeId;
+    EdgePtr edge;
+    for(auto& e:edges){
+        if(which == "left"){
+            if(abs(e->center().y - (pipeR+sideR))<0.1){
+                edge = e;
+                break;
+            }
+        }
+        else if(which == "right"){
+            if(abs(e->center().x - (pipeR+sideR)) < 0.1){
+                edge = e;
+                break;
+            }
+        }
+        else if(which == "up"){
+            if(abs(e->center().x + (pipeR + sideR)) < 0.1){
+                edge = e;
+                break;
+            }
+        }
+        else{
+            assert(0);
+        }
+    }
+    tEdgeId = allTopoValue(edge->Id());
+    QString tMeshId = tEdgeId.split("_").at(0);
+    return tMeshId;
 }

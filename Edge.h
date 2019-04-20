@@ -19,6 +19,7 @@ public:
     Edge(std::vector<glm::vec3>);
     QString Id();
     void Id(QString);
+    QString meshId();
     glm::vec3 center();
     void data(std::vector<glm::vec3>);
     void setFunc(std::function<bool (float, float)> f);

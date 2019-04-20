@@ -132,3 +132,14 @@ BandPtr Node::findBandPtr(QString id){
         return std::dynamic_pointer_cast<Band>(basis);
     }
 }
+
+
+TeePtr Node::findTeePtr(){
+    auto basis = findObjectId("tee");
+    if(basis == nullptr){
+        return nullptr;
+    }
+    else{
+        return std::dynamic_pointer_cast<Tee>(basis);
+    }
+}
