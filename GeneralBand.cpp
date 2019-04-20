@@ -127,4 +127,5 @@ void GeneralBand::initial(PosDirVec pds, QStringVec names){
      curves.push_back(c1);
      curves.push_back(c2);
      m_pds = fewPds;
+     m_strs = fewStrs;
 }

@@ -46,8 +46,8 @@ void FromPipeCurveTab::initial(){
     lamSpinBox->setValue(0);
     connect(dirSpinBox, SIGNAL(valueChanged(int)), dirSlider, SLOT(setValue(int)));
     connect(dirSlider, SIGNAL(valueChanged(int)), dirSpinBox, SLOT(setValue(int)));
-    connect(dirSpinBox, SIGNAL(valueChanged(int)), this, SLOT(updateCurve()));
-    connect(lamSpinBox, SIGNAL(valueChanged(double)), this, SLOT(updateCurve()));
+    connect(dirSpinBox, SIGNAL(valueChanged(int)), this, SLOT(updateBand()));
+    connect(lamSpinBox, SIGNAL(valueChanged(double)), this, SLOT(updateBand()));
     QVBoxLayout* layout_2 = new QVBoxLayout();
     QFormLayout* layout_22 = new QFormLayout();
     QFormLayout* layout_21 = new QFormLayout();
@@ -129,20 +129,29 @@ float FromPipeCurveTab::getWindingAngle(){
 }
 
 
-void FromPipeCurveTab::setBandId(QString id){
-    bandId = id;
+void FromPipeCurveTab::setCBandId(QString id){
+    cBandId = id;
 }
 
 void FromPipeCurveTab::updateBand(){
-    if(bandId.isEmpty()){
+    if(cBandId.isEmpty()){
         return;
     }
     FromPipeCurveController* ctrl = new FromPipeCurveController(this, connector->getCtrl());
-    QString pointId = getPointText();
-    ctrl->updateBandUsing(pointId, bandId);
+    QString cPointId = getPointText();
+    ctrl->updateBandUsing(cPointId, cBandId, tPointId, tBandId);
 }
 
 
 QString FromPipeCurveTab::getCBandId(){
-    return bandId;
+    return cBandId;
+}
+
+
+void FromPipeCurveTab::setTPointId(QString t){
+    tPointId = t;
+}
+
+void FromPipeCurveTab::setTBandId(QString tband){
+    tBandId = tband;
 }

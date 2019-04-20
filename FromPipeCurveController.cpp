@@ -11,9 +11,14 @@ FromPipeCurveController::FromPipeCurveController(FromPipeCurveTab* t, Controller
 
 }
 
-void FromPipeCurveController::updateBandUsing(QString pointId, QString bandId){
-    PointPtr pointPtr = data->getNodeRoot()->findPointPtr(pointId);
-    BandPtr bandPtr = data->getNodeRoot()->findBandPtr(bandId);
-    CBandPtr cBand = std::dynamic_pointer_cast<CBandOnPoint>(bandPtr);
-    cBand->setPara(HalfPoint{pointPtr->getPos(),  pointPtr->meshId()}, tab->getWindingAngle());
+void FromPipeCurveController::updateBandUsing(QString cPointId, QString cBandId, QString tPointId , QString tBandId){
+    PointPtr cPointPtr = data->getNodeRoot()->findPointPtr(cPointId);
+    BandPtr cBandPtr = data->getNodeRoot()->findBandPtr(cBandId);
+    CBandPtr cBand = std::dynamic_pointer_cast<CBandOnPoint>(cBandPtr);
+    cBand->setPara(HalfPoint{cPointPtr->getPos(),  cPointPtr->meshId()}, tab->getWindingAngle());
+
+    PointPtr tPointPtr = data->getNodeRoot()->findPointPtr(tPointId);
+    tPointPtr->setPos(cBand->bandEnd()->frontPos());
+    TeePtr tee = data->getNodeRoot()->findTeePtr();
+    tPointPtr->meshId(tee->cBand2TBandMesh(cBand->frontMeshId()).toLatin1().data());
 }

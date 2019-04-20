@@ -63,6 +63,7 @@ protected:
     BandEndPtr m_end;
     PosDirVec m_pds;
     DirVec m_norms;
+    QStringVec m_strs;
     Mesh mesh;
     vector<CurvePtr> curves;
     unsigned int m_numPerPd;

@@ -113,6 +113,7 @@ void CBandOnPoint::initial(PosDirVec pds, QStringVec names){
      auto& c2 = curves.at(1);
      c2->data(edgePos_2);
      m_pds = fewPds;
+     m_strs = fewStrs;
 }
 
 void CBandOnPoint::bindGL(QOpenGLContext* c){
@@ -144,4 +145,8 @@ void CBandOnPoint::setPara(HalfPoint p, float angle){
     m_point = p;
     windingAngle = angle;
     updateSelf();
+}
+
+QString CBandOnPoint::frontMeshId(){
+    return m_strs.front();
 }

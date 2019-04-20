@@ -22,7 +22,9 @@ public:
     bool isPointTextFocused();
     void setPointText(QString);
     float getWindingAngle();
-    void setBandId(QString);
+    void setCBandId(QString);
+    void setTBandId(QString);
+    void setTPointId(QString);
 public slots:
     void okPressed();
     void canclePressed();
@@ -46,7 +48,9 @@ private:
     QPushButton* cancle;
 
     bool focusOnPoint;
-    QString bandId;
+    QString cBandId;
+    QString tBandId;
+    QString tPointId;
 
     GuiConnector* connector;
     TabBackground* back;

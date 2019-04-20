@@ -167,11 +167,14 @@ void Controller::processIntersectionPoint(glm::vec3 begin, glm::vec3 dir, glm::v
                 pipeTab->setPointText(id);
                 float angle = pipeTab->getWindingAngle();
                 CBandPtr cBand = addCBandInPipe(id, angle);
+                TeePtr tee = data->root->findTeePtr();
+                QString tMeshId = tee->cBand2TBandMesh(cBand->frontMeshId());
                 EndPtr frontE = cBand->bandEnd()->frontEnd();
                 PointPtr pointTee = make_shared<Point>(frontE->pd.pos, data->idGenerator.getPointId().toLatin1().data());
+                pointTee->meshId(tMeshId.toLatin1().data());
+                auto gl = widget->getGLContext();
+                pointTee->bindGL(gl);
                 data->addPoint(pointTee);
-                TeePtr tee = data->root->findTeePtr();
-                QString tMeshId = tee->cBand2TBandMesh(frontE->bandId());
                 if(tMeshId.contains("ring")){
                     Ring* ring = tee->getRing(tMeshId);
                     RingAssist rAssist(*ring);
@@ -184,7 +187,7 @@ void Controller::processIntersectionPoint(glm::vec3 begin, glm::vec3 dir, glm::v
                 else{
                     assert(0);
                 }
-                pipeTab->setBandId(cBand->getId());
+                pipeTab->setCBandId(cBand->getId());
             }
             else{
                 clickOnPoint(pointId, glXY);

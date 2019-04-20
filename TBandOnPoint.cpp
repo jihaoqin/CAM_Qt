@@ -58,6 +58,7 @@ using Dir = glm::vec3;
      float h = 1;
      float sideNum = (int)(width/2/h) + 1;
      m_pds = pds;
+     m_strs = strs;
      for(unsigned int i = 0; i < pds.size(); i++){
          Dir norm = tee->outNorm(pds.at(i).pos, strs.at(i));
          m_norms.push_back(norm);

@@ -12,6 +12,7 @@ public:
     virtual void bindGL(QOpenGLContext*);
     virtual void draw(std::shared_ptr<GLProgram>);
     void setPara(HalfPoint, float angle);
+    QString frontMeshId();
 protected:
     virtual void updateSelf();
 private:

@@ -11,7 +11,7 @@ class FromPipeCurveController
 {
 public:
     FromPipeCurveController(FromPipeCurveTab*, Controller*);
-    void updateBandUsing(QString pointId, QString bandId);
+    void updateBandUsing(QString cPointId, QString cBandId, QString tPointId, QString tBandId);
 private:
     FromPipeCurveTab* tab;
     //GuiConnector* connector;

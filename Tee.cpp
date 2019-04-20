@@ -655,7 +655,7 @@ QString Tee::cBand2TBandMesh(QString cBandMesh){
     QString tEdgeId;
     EdgePtr edge;
     for(auto& e:edges){
-        if(which == "left"){
+        if(which == "up"){
             if(abs(e->center().y - (pipeR+sideR))<0.1){
                 edge = e;
                 break;
@@ -667,7 +667,7 @@ QString Tee::cBand2TBandMesh(QString cBandMesh){
                 break;
             }
         }
-        else if(which == "up"){
+        else if(which == "left"){
             if(abs(e->center().x + (pipeR + sideR)) < 0.1){
                 edge = e;
                 break;
