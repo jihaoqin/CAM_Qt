@@ -23,6 +23,7 @@ class Tee;
 using TeePtr = std::shared_ptr<Tee>;
 class Point;
 using PointPtr = std::shared_ptr<Point>;
-
+class Curve;
+using CurvePtr = std::shared_ptr<Curve>;
 
 #endif // CLASDECLARE_H

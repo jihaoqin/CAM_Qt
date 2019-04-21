@@ -264,11 +264,12 @@ CPPara RingAssist::local3DProjectToPara(glm::vec3 pos, glm::vec3 dir){
     glm::vec3 alphaDir = localTangentDir(nearTheta, nearAlpha, 0,1);
     glm::vec3 norm = glm::cross(thetaDir, alphaDir);
     assert(abs(glm::length(norm) - 1) < 1e-2);
-    glm::vec3 nearDir = dir - (dir*norm)*norm;
+    glm::vec3 nearDir = glm::normalize(dir - glm::dot(dir,norm)*norm);
     float tany = glm::dot(nearDir, alphaDir);
     float tanx = glm::dot(nearDir, thetaDir);
     float uAngle = atan2(tany, tanx);
     p.uAng = uAngle;
+    PosDir pd = CPParaToLocal(p);
     return p;
 }
 

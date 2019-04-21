@@ -33,6 +33,7 @@ NewCurveTab::NewCurveTab(QWidget* parent):QWidget(parent),focusOnPoint(true),cur
     dirSlider = new QSlider(this);
     dirSlider->setOrientation(Qt::Horizontal);
     dirSlider->setRange(-90, 90);
+    dirSlider->setValue(45);
     dirSpinBox = new QSpinBox(this);
     dirSpinBox->setRange(-90, 90);
     dirSpinBox->setSingleStep(1);

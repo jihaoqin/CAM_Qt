@@ -31,6 +31,7 @@ public:
     PointPtr findPointPtr(QString);
     BandPtr findBandPtr(QString);
     TeePtr findTeePtr();
+    CurvePtr findCurvePtr(QString);
     Node* fatherPtr();
     std::vector<NodePtr>& childrenPtrVec();
     void deleteChild(NodePtr child);

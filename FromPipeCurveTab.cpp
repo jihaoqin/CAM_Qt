@@ -9,6 +9,7 @@
 #include <QEvent>
 #include "GuiConnector.h"
 #include "FromPipeCurveController.h"
+#include <QCheckBox>
 
 FromPipeCurveTab::FromPipeCurveTab(TabBackground* background, GuiConnector* conn, QWidget* parent)
     :QWidget(parent), connector(conn), back(background)
@@ -31,11 +32,14 @@ void FromPipeCurveTab::initial(){
 
     dirBox = new QGroupBox("Direction",this);
     dirLabel = new QLabel("winding angle:",this);
+    oppositeBox = new QCheckBox("symmetry", this);
+    oppositeBox->setCheckState(Qt::Unchecked);
     dirSlider = new QSlider(this);
     dirSlider->setOrientation(Qt::Horizontal);
-    dirSlider->setRange(-89, 89);
+    dirSlider->setRange(30, 89);
+    dirSlider->setValue(45);
     dirSpinBox = new QSpinBox(this);
-    dirSpinBox->setRange(-89, 89);
+    dirSpinBox->setRange(30, 89);
     dirSpinBox->setSingleStep(1);
     dirSpinBox->setValue(45);
     lamLabel = new QLabel("slippery", this);
@@ -53,6 +57,7 @@ void FromPipeCurveTab::initial(){
     QFormLayout* layout_21 = new QFormLayout();
     layout_21->addWidget(dirLabel);
     layout_21->addWidget(dirSpinBox);
+    layout_21->addWidget(oppositeBox);
     layout_22->addWidget(lamLabel);
     layout_22->addWidget(lamSpinBox);
     layout_2->addLayout(layout_21);
@@ -139,7 +144,7 @@ void FromPipeCurveTab::updateBand(){
     }
     FromPipeCurveController* ctrl = new FromPipeCurveController(this, connector->getCtrl());
     QString cPointId = getPointText();
-    ctrl->updateBandUsing(cPointId, cBandId, tPointId, tBandId);
+    ctrl->updateBandUsing(cPointId, cBandId, tPointId, tCurveId);
 }
 
 
@@ -152,6 +157,11 @@ void FromPipeCurveTab::setTPointId(QString t){
     tPointId = t;
 }
 
-void FromPipeCurveTab::setTBandId(QString tband){
-    tBandId = tband;
+void FromPipeCurveTab::setTCurveId(QString tband){
+    tCurveId = tband;
+}
+
+
+float FromPipeCurveTab::getSlip(){
+    return lamSpinBox->value();
 }

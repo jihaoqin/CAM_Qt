@@ -362,3 +362,11 @@ SPara CylinderAssist::worldToUV(Pos world){
     auto values = local3DToUV(local);
     return SPara{values.at(0), values.at(1)};
 }
+
+
+CPPara CylinderAssist::worldToCPPara(Pos pos, Dir dir){
+    Pos localPos = world3DToLocal(pos, "pos");
+    Dir localDir = world3DToLocal(dir, "dir");
+    CPPara para  = local3DProjectToPara(localPos, localDir);
+    return para;
+}

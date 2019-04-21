@@ -143,3 +143,14 @@ TeePtr Node::findTeePtr(){
         return std::dynamic_pointer_cast<Tee>(basis);
     }
 }
+
+
+CurvePtr Node::findCurvePtr(QString id){
+    auto basis = findObjectId(id.toLatin1().data());
+    if(basis == nullptr){
+        return nullptr;
+    }
+    else{
+        return std::dynamic_pointer_cast<Curve>(basis);
+    }
+}

@@ -10,6 +10,7 @@ class QSlider;
 class QDoubleSpinBox;
 class QPushButton;
 class TabBackground;
+class QCheckBox;
 
 class FromPipeCurveTab:public QWidget
 {
@@ -23,8 +24,9 @@ public:
     void setPointText(QString);
     float getWindingAngle();
     void setCBandId(QString);
-    void setTBandId(QString);
+    void setTCurveId(QString);
     void setTPointId(QString);
+    float getSlip();
 public slots:
     void okPressed();
     void canclePressed();
@@ -39,6 +41,7 @@ private:
 
     QGroupBox* dirBox;
     QLabel* dirLabel;
+    QCheckBox* oppositeBox;
     QSpinBox* dirSpinBox;
     QSlider* dirSlider;
     QLabel* lamLabel;
@@ -49,7 +52,7 @@ private:
 
     bool focusOnPoint;
     QString cBandId;
-    QString tBandId;
+    QString tCurveId;
     QString tPointId;
 
     GuiConnector* connector;
