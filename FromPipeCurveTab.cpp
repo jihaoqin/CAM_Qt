@@ -9,6 +9,7 @@
 #include <QEvent>
 #include "GuiConnector.h"
 #include "FromPipeCurveController.h"
+#include "TabBackground.h"
 #include <QCheckBox>
 
 FromPipeCurveTab::FromPipeCurveTab(TabBackground* background, GuiConnector* conn, QWidget* parent)
@@ -86,10 +87,23 @@ void FromPipeCurveTab::initial(){
 
 
 void FromPipeCurveTab::okPressed(){
+    FromPipeCurveController* c = new FromPipeCurveController(this, connector->getCtrl());
+    connector->setGLWidgetClickable(false);
+    c->okPressed();
+    back->setWidget(nullptr);
+    connector->updateModel();
+    connector->updateAction();
+    close();
 }
 
 void FromPipeCurveTab::canclePressed(){
-
+    FromPipeCurveController* c = new FromPipeCurveController(this, connector->getCtrl());
+    connector->setGLWidgetClickable(false);
+    c->canclePressed();
+    back->setWidget(nullptr);
+    connector->updateModel();
+    connector->updateAction();
+    close();
 }
 
 
@@ -164,4 +178,14 @@ void FromPipeCurveTab::setTCurveId(QString tband){
 
 float FromPipeCurveTab::getSlip(){
     return lamSpinBox->value();
+}
+
+
+QString FromPipeCurveTab::getTPointId(){
+    return tPointId;
+}
+
+
+QString FromPipeCurveTab::getTCurveId(){
+    return tCurveId;
 }

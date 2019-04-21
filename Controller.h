@@ -47,6 +47,7 @@ public:
     void draw();
     void drawDataObject(std::shared_ptr<DataObject>);
     bool hasTee();
+    GuiConnector* getConnector();
     void genLeftCurve();
     void genUpCurve();
     void genRightCurve();

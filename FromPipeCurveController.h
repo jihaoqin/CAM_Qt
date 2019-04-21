@@ -5,16 +5,19 @@
 
 class Controller;
 class FromPipeCurveTab;
-class GuiConnector;
 
 class FromPipeCurveController
 {
 public:
     FromPipeCurveController(FromPipeCurveTab*, Controller*);
     void updateBandUsing(QString cPointId, QString cBandId, QString tPointId, QString tBandId);
+    void okPressed();
+    void canclePressed();
+    void addSymmetry(PointPtr p, QString flag);
+    void hide(QString);
 private:
     FromPipeCurveTab* tab;
-    //GuiConnector* connector;
+    Controller* controller;
     std::shared_ptr<Data> data;
 };
 

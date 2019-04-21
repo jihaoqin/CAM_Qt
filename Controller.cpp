@@ -844,3 +844,7 @@ std::shared_ptr<Data> Controller::getData(){
 QOpenGLContext* Controller::getGLContext(){
     return widget->getGLContext();
 }
+
+GuiConnector* Controller::getConnector(){
+    return mainWindow->connector;
+}

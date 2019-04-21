@@ -23,6 +23,7 @@ class Data
 public:
     friend class Controller;
     friend class NewCurveController;
+    friend class FromPipeCurveController;
     friend class OpenBandThread;
     friend class GenGeneralBandThread;
     friend class ClosePathThread;

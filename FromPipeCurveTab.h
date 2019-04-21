@@ -1,7 +1,7 @@
 #ifndef FROMPIPECURVETAB_H
 #define FROMPIPECURVETAB_H
 #include <QWidget>
-
+#include "NameDeclare.h"
 class QGroupBox;
 class QLabel;
 class QTextEdit;
@@ -20,6 +20,8 @@ public:
     FromPipeCurveTab(TabBackground*, GuiConnector*, QWidget* parent = nullptr);
     QString getPointText();
     QString getCBandId();
+    QString getTCurveId();
+    QString getTPointId();
     bool isPointTextFocused();
     void setPointText(QString);
     float getWindingAngle();
