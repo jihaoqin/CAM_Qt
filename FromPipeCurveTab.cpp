@@ -38,9 +38,9 @@ void FromPipeCurveTab::initial(){
     dirSlider = new QSlider(this);
     dirSlider->setOrientation(Qt::Horizontal);
     dirSlider->setRange(2, 30);
-    dirSlider->setValue(45);
+    dirSlider->setValue(10);
     dirSpinBox = new QSpinBox(this);
-    dirSpinBox->setRange(2, 89);
+    dirSpinBox->setRange(2, 30);
     dirSpinBox->setSingleStep(1);
     dirSpinBox->setValue(10);
     lamLabel = new QLabel("slippery", this);
@@ -53,6 +53,7 @@ void FromPipeCurveTab::initial(){
     connect(dirSlider, SIGNAL(valueChanged(int)), dirSpinBox, SLOT(setValue(int)));
     connect(dirSpinBox, SIGNAL(valueChanged(int)), this, SLOT(updateBand()));
     connect(lamSpinBox, SIGNAL(valueChanged(double)), this, SLOT(updateBand()));
+    connect(oppositeBox, SIGNAL(stateChanged(int)), this, SLOT(updateBand()));
     QVBoxLayout* layout_2 = new QVBoxLayout();
     QFormLayout* layout_22 = new QFormLayout();
     QFormLayout* layout_21 = new QFormLayout();
@@ -144,7 +145,8 @@ void FromPipeCurveTab::setPointText(QString id){
 
 float FromPipeCurveTab::getWindingAngle(){
     float pi = asin(1)*2;
-    return dirSpinBox->value()*pi/180;
+    int symbol = oppositeBox->isChecked()? -1:1;
+    return dirSpinBox->value()*pi/180*symbol;
 }
 
 

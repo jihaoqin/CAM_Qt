@@ -242,8 +242,15 @@ void AnimateController::solveCollision(){
                     auto ij = getInsertInd((beginInd-1)/2);
                     auto& pairVec = indexPairVecs.at(ij.first);
                     GLIndexPairVec ps;
-                    for(int i = 0; i<insertSupers.size(); ++i){
-                        ps.push_back(pairVec.at(ij.second-1));
+                    if(ij.second == 0){
+                        for(int i = 0; i<insertSupers.size(); ++i){
+                            ps.push_back(pairVec.at(ij.second));
+                        }
+                    }
+                    else{
+                        for(int i = 0; i<insertSupers.size(); ++i){
+                            ps.push_back(pairVec.at(ij.second-1));
+                        }
                     }
                     pairVec.insert(pairVec.begin() + ij.second, ps.begin(), ps.end());
                 }

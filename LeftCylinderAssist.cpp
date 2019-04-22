@@ -57,6 +57,7 @@ std::tuple<PosDirVec, QStringVec> LeftCylinderAssist::genCurve(PosDir pd){
             alpha = atan(tan(alpha_0) - lam/r*s);
             alpha = p1.uAng<(0.5*pi)? alpha:alpha+pi;
         }
+        alphas.push_back(boundary);
     }
     else{
         float s = 0;
@@ -113,13 +114,14 @@ std::tuple<PosDirVec, QStringVec> LeftCylinderAssist::genCurve(EndPtr e){
             alpha = atan(tan(p1.uAng) - lam/r*s);
             alpha = p1.uAng<(0.5*pi)? alpha:alpha+pi;
         }
+        alphas.push_back(boundary);
     }
     else{
         float s = 0;
         float alpha = p1.uAng;
         while(alpha < boundary){
             alphas.push_back(alpha);
-            s = s+2;
+            s = s+0.5;
             alpha = atan(tan(p1.uAng) - lam/r*s);
             alpha = p1.uAng<(0.5*pi)? alpha:alpha+pi;
         }

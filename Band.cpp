@@ -184,3 +184,39 @@ QString Band::beginFlag(){
 Dir Band::outNorm(int ind){
     return m_norms.at(ind);
 }
+
+void BandEnd::serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const{
+    writer.StartObject();
+    writer.String("type");
+    writer.String("BandEnd");
+    writer.String("bandId");
+    writer.String(bandId.toLatin1().data());
+    writer.String("frontEnd");
+    ends.at(0)->serialize(writer);
+    writer.String("backEnd");
+    ends.at(1)->serialize(writer);
+    writer.EndObject();
+}
+
+void End::serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const{
+    writer.StartObject();
+    writer.String("type");
+    writer.String("End");
+    writer.String("endId");
+    writer.String(endId.toLatin1().data());
+    writer.String("nextEndId");
+    writer.String(nextEndId.toLatin1().data());
+    writer.String("pos");
+    writer.StartObject();
+    writer.Double(pd.pos.x);
+    writer.Double(pd.pos.y);
+    writer.Double(pd.pos.z);
+    writer.EndObject();
+    writer.String("dir");
+    writer.StartObject();
+    writer.Double(pd.dir.x);
+    writer.Double(pd.dir.y);
+    writer.Double(pd.dir.z);
+    writer.EndObject();
+    writer.EndObject();
+}

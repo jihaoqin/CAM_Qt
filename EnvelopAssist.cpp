@@ -188,15 +188,15 @@ SuperPosVec EnvelopAssist::genInsertedSuper(SuperPosVec b2e){
         }
         vector<float> lengths;
         for(int i = 0; i <middlePos.size(); i++){
-            auto a = genInsertedInOne(SuperPosVec{beginSuper, middleSupers1.at(i)});
-            auto b = genInsertedInOne(SuperPosVec{middleSupers2.at(i), endSuper});
+            auto a = genInsertedInOne(SuperPosVec{b2e.at(0), beginSuper, middleSupers1.at(i)});
+            auto b = genInsertedInOne(SuperPosVec{b2e.at(0), middleSupers2.at(i), endSuper});
             lengths.push_back(utility::length(a) + utility::length(b));
         }
         int ind = min_element(lengths.begin(), lengths.end()) - lengths.begin();
         auto middleSuper1 = middleSupers1.at(ind);
         auto middleSuper2 = middleSupers2.at(ind);
-        auto supers1 = genInsertedInOne(SuperPosVec{beginSuper, middleSuper1});
-        auto supers2 = genInsertedInOne(SuperPosVec{middleSuper2, endSuper});
+        auto supers1 = genInsertedInOne(SuperPosVec{b2e.at(0), beginSuper, middleSuper1});
+        auto supers2 = genInsertedInOne(SuperPosVec{b2e.at(0), middleSuper2, endSuper});
         SuperPosVec supers;
         supers.insert(supers.begin(), supers1.begin(), supers1.end());
         supers.insert(supers.end(), supers2.begin()+1, supers2.end());

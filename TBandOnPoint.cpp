@@ -156,5 +156,7 @@ using Dir = glm::vec3;
      writer.Double(width);
      writer.String("curve");
      tcurve->serialize(writer);
+     writer.String("ends");
+     m_end->serialize(writer);
      writer.EndObject();
  }

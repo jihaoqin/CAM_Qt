@@ -8,6 +8,7 @@ using namespace std;
 GeneralBand::GeneralBand(PosDirVec pds, QStringVec names, QString name, TeePtr t):
     tee(t), color(Color::YELLOW)
 {
+    type = "GeneralBand";
     setId(name.toLatin1().data());
     initial(pds, names);
 }

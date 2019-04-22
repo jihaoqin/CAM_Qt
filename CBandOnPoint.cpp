@@ -7,7 +7,7 @@
 using namespace std;
 
 CBandOnPoint::CBandOnPoint(HalfPoint p, float angle, TeePtr t, QString id)
-    :m_point(p), windingAngle(angle), tee(t), color(Color::YELLOW)
+    :m_point(p), windingAngle(angle), tee(t), color(Color::GREEN)
 {
     setId(id.toLatin1().data());
     CurvePtr c1 = std::make_shared<Curve>("");

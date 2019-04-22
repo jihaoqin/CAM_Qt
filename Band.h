@@ -24,6 +24,7 @@ public:
     void setCouple(EndPtr&);
     void setCouple(End&);
     bool isCoupled();
+    void serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const;
     PosDir pd;
     QString nextEndId;
     QString endId;
@@ -36,6 +37,7 @@ public:
     QString bandId;
     EndPtrVec ends;
     void setCouple(EndPtr&);
+    void serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const;
     EndPtr frontEnd();
     Pos frontPos();
     EndPtr backEnd();
