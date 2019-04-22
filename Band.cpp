@@ -207,16 +207,16 @@ void End::serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) co
     writer.String("nextEndId");
     writer.String(nextEndId.toLatin1().data());
     writer.String("pos");
-    writer.StartObject();
+    writer.StartArray();
     writer.Double(pd.pos.x);
     writer.Double(pd.pos.y);
     writer.Double(pd.pos.z);
-    writer.EndObject();
+    writer.EndArray();
     writer.String("dir");
-    writer.StartObject();
+    writer.StartArray();
     writer.Double(pd.dir.x);
     writer.Double(pd.dir.y);
     writer.Double(pd.dir.z);
-    writer.EndObject();
+    writer.EndArray();
     writer.EndObject();
 }

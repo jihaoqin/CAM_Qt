@@ -130,3 +130,39 @@ void GeneralBand::initial(PosDirVec pds, QStringVec names){
      m_pds = fewPds;
      m_strs = fewStrs;
 }
+
+ void GeneralBand::serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const{
+     writer.StartObject();
+     writer.String("type");
+     writer.String("GeneralBand");
+     writer.String("width");
+     writer.Double(width);
+     writer.String("ends");
+     m_end->serialize(writer);
+     writer.String("poss");
+     writer.StartArray();
+     for(auto pd:m_pds){
+         writer.Double(pd.pos.x);
+         writer.Double(pd.pos.y);
+         writer.Double(pd.pos.z);
+     }
+     writer.EndArray();
+
+     writer.String("dirs");
+     writer.StartArray();
+     for(auto pd:m_pds){
+         writer.Double(pd.dir.x);
+         writer.Double(pd.dir.y);
+         writer.Double(pd.dir.z);
+     }
+     writer.EndArray();
+
+     writer.String("meshNames");
+     writer.StartArray();
+     for(auto s:m_strs){
+         writer.String(s.toLatin1().data());
+     }
+     writer.EndArray();
+
+     writer.EndObject();
+ }

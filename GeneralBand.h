@@ -13,6 +13,7 @@ public:
     virtual void draw(std::shared_ptr<GLProgram>) override;
     BoundingBox boundingBox();
     void setColor(Color) override;
+    virtual void serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const override;
 private:
     void initial(PosDirVec pds, QStringVec names);
     float width;

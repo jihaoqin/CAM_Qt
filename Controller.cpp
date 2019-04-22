@@ -563,6 +563,9 @@ void Controller::saveBand(QString path){
             if(b->typeStr() == "TBandOnPoint"){
                 b->serialize(writer);
             }
+            else if(b->typeStr() == "GeneralBand"){
+                b->serialize(writer);
+            }
         }
     }
     writer.EndArray();
