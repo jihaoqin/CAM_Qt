@@ -1,7 +1,8 @@
 #include "HangingBandSet.h"
+#include "utility.h"
 
 HangingBandSet::HangingBandSet(SuperPosVec ps)
-    :color(Color::BLUE), width(2)
+    :color(Color::BLUE), width(2), m_hangVisiable(true)
 {
     setId("post");
     setData(ps);
@@ -25,19 +26,21 @@ void HangingBandSet::bindGL(QOpenGLContext* c){
     
 void HangingBandSet::draw(std::shared_ptr<GLProgram> program){
     if(binded == true && visiable == true){
-        program->setMat4("model", glm::mat4(1.0));
+        program->setMat4("model", m_animateT*glm::mat4(1.0));
         program->setVec3("material.color", color.rgb);
         core->glBindVertexArray(VAO);
         core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
         core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        core->glDrawElements(GL_LINES, indexVec.size(), GL_UNSIGNED_INT, 0);
-        // /*
+        if(m_hangVisiable == true){
+            core->glDrawElements(GL_LINES, indexVec.size(), GL_UNSIGNED_INT, 0);
+        }
+        /*
         program->setVec3("material.color", Color::YELLOW);
         for(auto ind:crossInds){
             core->glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int)*ind));
         }
-        // */
-        program->setMat4("model",m_Ts.at(m_showInd));
+        */
+        program->setMat4("model",m_animateT*m_Ts.at(m_showInd));
         program->setVec3("material.color", Color::YELLOW);
         mesh.setShowRange(m_lengths.at(m_showInd));
         mesh.draw();
@@ -145,8 +148,14 @@ void HangingBandSet::setHangingLength(vector<float> ls){
     }
 }
 
-glm::mat4 HangingBandSet::T(int ind){
+glm::mat4 HangingBandSet::receiveT(int ind){
     return m_Ts.at(ind);
+}
+
+glm::mat4 HangingBandSet::sendT(int ind){
+    auto T1 = receiveT(ind);
+    utility::setPos(T1, sendPos(ind));
+    return T1;
 }
 
 Pos HangingBandSet::sendPos(int ind){
@@ -158,6 +167,18 @@ Pos HangingBandSet::receivePos(int ind){
 }
 
 int HangingBandSet::coupleSum(){
-    assert(poss.size()&1 == 0);
+    assert((poss.size()&1) == 0);
     return poss.size()/2;
+}
+
+glm::mat4 HangingBandSet::animateT(int ind){
+    return rotxs.at(ind);
+}
+
+void HangingBandSet::setAnimateTs(vector<glm::mat4> Ts){
+    rotxs = Ts;
+}
+
+void HangingBandSet::setHangLinesVisiable(bool flag){
+    m_hangVisiable = flag;
 }

@@ -220,3 +220,10 @@ void End::serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) co
     writer.EndArray();
     writer.EndObject();
 }
+
+void Band::setAnimateT(glm::mat4 T){
+    m_animateT = T;
+    for(auto c:curves){
+        c->setAnimateT(T);
+    }
+}

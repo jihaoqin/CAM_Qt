@@ -7,11 +7,15 @@
 #include "GuiConnector.h"
 #include "TabBackground.h"
 #include <QTimer>
+#include <QCheckBox>
 
 SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* parent)
     :QWidget(parent), backWidget(back), connector(con)
 {
     calButton = new QPushButton("calculation", this);
+    absoluteBox = new QCheckBox("absolute", this);
+    hangVisableBox = new QCheckBox("show hang lines", this);
+    hangVisableBox->setChecked(true);
     playAndPauseButton = new QPushButton(QIcon(":/icons/play"), "", this);
     playAndPauseButton ->setEnabled(false);
     slowButton = new QPushButton(QIcon(":/icons/sf"),"", this);
@@ -36,6 +40,8 @@ SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* pa
     hLayout->addWidget(fFrameButton);
     hLayout->addWidget(fastButton);
     layout->addWidget(calButton);
+    layout->addWidget(absoluteBox);
+    layout->addWidget(hangVisableBox);
     layout->addLayout(hLayout);
     layout->addWidget(progressSlider);
     layout->addWidget(closeButton);
@@ -126,4 +132,13 @@ void SimulationTab::nextFrame(){
 
 void SimulationTab::lastFrame(){
 
+}
+
+bool SimulationTab::isAbsolute(){
+    return absoluteBox->isChecked();
+}
+
+
+bool SimulationTab::shallShowHangLines(){
+    return hangVisableBox->isChecked();
 }

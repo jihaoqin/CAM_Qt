@@ -101,7 +101,8 @@ SOURCES += \
     HangingBandSet.cpp \
     FromPipeCurveTab.cpp \
     CBandOnPoint.cpp \
-    FromPipeCurveController.cpp
+    FromPipeCurveController.cpp \
+    Axiss.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -184,7 +185,8 @@ HEADERS += \
     HangingBandSet.h \
     FromPipeCurveTab.h \
     CBandOnPoint.h \
-    FromPipeCurveController.h
+    FromPipeCurveController.h \
+    Axiss.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt

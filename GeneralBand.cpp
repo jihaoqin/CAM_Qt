@@ -27,6 +27,7 @@ void GeneralBand::draw(std::shared_ptr<GLProgram> p){
     if(binded == false || visiable == false){
         return;
     }
+    p->setMat4("model", m_animateT);
     p->setVec3("material.color", color.rgb);
     core->glDepthMask(GL_FALSE);
     mesh.draw();

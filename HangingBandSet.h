@@ -21,10 +21,14 @@ public:
     void setTVec(std::vector<glm::mat4>);
     void setShowInd(int);
     void setHangingLength(vector<float>);
+    glm::mat4 animateT(int ind);
+    void setAnimateTs(vector<glm::mat4>);
     Pos sendPos(int ind);
     Pos receivePos(int ind);
-    glm::mat4 T(int ind);
+    glm::mat4 receiveT(int ind);
+    glm::mat4 sendT(int ind);
     int coupleSum();
+    void setHangLinesVisiable(bool);
 private:
     void setMesh();
     void updateBox();
@@ -38,6 +42,8 @@ private:
     int m_showInd;
     int hangLength;
     vector<GLIndexPair> m_lengths;
+    vector<glm::mat4> rotxs;
+    bool m_hangVisiable;
     
     BoundingBox box;
     Color color;

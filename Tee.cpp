@@ -157,7 +157,7 @@ void Tee::draw(std::shared_ptr<GLProgram> p){
     if(binded == false || visiable == false){
         return;
     }
-    p->setMat4("model", modelMat);
+    p->setMat4("model", m_animateT*modelMat);
     p->setVec3("material.color", color.rgb);
     core->glDepthMask(GL_TRUE);
     for(unsigned int i = 0; i < planeVec.size(); i++){

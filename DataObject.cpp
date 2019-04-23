@@ -1,7 +1,7 @@
 #include "DataObject.h"
 #include <QOpenGLFunctions_4_3_Core>
 #include <QDebug>
-DataObject::DataObject():binded(false), visiable(true),box(),type()
+DataObject::DataObject():binded(false), visiable(true),box(),type(), m_animateT(glm::mat4(1.0))
 {
 
 }
@@ -85,4 +85,9 @@ QStringVec DataObject::fatherId(){
 
 QString DataObject::typeStr(){
     return QString(type.c_str());
+}
+
+
+void DataObject::setAnimateT(glm::mat4 T){
+    m_animateT = T;
 }

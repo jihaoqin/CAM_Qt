@@ -285,12 +285,6 @@ void Controller::drawDataObject(std::shared_ptr<DataObject> ob){
     if(id.contains("point")){
         p = mainWindow->connector->getPointProgram();
     }
-    else if(id.contains("line")){
-        //to do
-    }
-    else if(id.contains("direction")){
-        //to do
-    }
     else{
         p = mainWindow->connector->getMeshProgram();
     }

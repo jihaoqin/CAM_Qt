@@ -6,6 +6,8 @@
 #include "EnvelopAssist.h"
 #include "Data.h"
 #include "HangingBandSet.h"
+#include "GuiConnector.h"
+#include "SimulationTab.h"
 
 AnimateController::AnimateController(Controller* c)
     :ctrl(c)
@@ -60,6 +62,35 @@ void AnimateController::initIndexPairVecs(){
 }
 
 void AnimateController::showNext(){
+    ++windedTotal;
+    auto connector = ctrl->getConnector();
+    auto tab = connector->getSimTab();
+    auto root = ctrl->getData()->getNodeRoot();
+    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
+    if(tab->isAbsolute()){
+        if(root != nullptr){
+            glm::mat4 T = hangPtr->animateT(windedTotal - 1);
+            auto drawFunc = [T](DataObjectPtr p)->void{ if(p != nullptr){p->setAnimateT(T);}};
+            root->dataOperation(drawFunc);
+        }
+    }
+    else{
+        glm::mat4 T = glm::mat4(1.0);
+        auto drawFunc = [T](DataObjectPtr p)->void{ if(p != nullptr){p->setAnimateT(T);}};
+        root->dataOperation(drawFunc);
+    }
+    if(tab->shallShowHangLines()){
+        hangPtr->setHangLinesVisiable(true);
+    }
+    else{
+        hangPtr->setHangLinesVisiable(false);
+    }
+    if(windedTotal < pairTotal){
+        hangPtr->setShowInd(windedTotal - 1);
+    }
+    else{
+        ctrl->mainWindow->animationOver();
+    }
     int nextShowInd = showInd+1;
     int nextBandInd = bandInd+1;
     if(nextShowInd >= indexPairVecs.at(bandInd).size()){
@@ -76,15 +107,6 @@ void AnimateController::showNext(){
     else{
         bandPtrs.at(bandInd)->setShowRange(indexPairVecs.at(bandInd).at(nextShowInd));
         showInd = nextShowInd;
-    }
-    auto root = ctrl->data->getNodeRoot();
-    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
-    ++windedTotal;
-    if(windedTotal < pairTotal){
-        hangPtr->setShowInd(windedTotal - 1);
-    }
-    else{
-        ctrl->mainWindow->animationOver();
     }
 }
 
@@ -103,8 +125,7 @@ void AnimateController::calculation(){
     for(auto pairVec:indexPairVecs){
         pairTotal += pairVec.size();
     }
-    axis3Data();
-    axis4Data();
+    axis5Data();
 }
 
 int AnimateController::getPercent(){
@@ -353,40 +374,44 @@ void AnimateController::hideBandSet(){
 }
 
 Axis3DataVec AnimateController::axis3Data(){
-    //主轴回转坐标：theta
-    //主轴轴向的平移：x
-    //主轴垂直轴向的平移：z
     Axis3DataVec datas;
-    auto root = ctrl->data->getNodeRoot();
-    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
-    for(auto i = 0; i < hangPtr->coupleSum(); i++){
-        Axis3Data moveData;
-        glm::mat4 T = hangPtr->T(i);
-        Pos sendPos = hangPtr->sendPos(i);
-        moveData.theta = -1*atan2(sendPos.y, sendPos.z);
-        moveData.x = sendPos.x;
-        moveData.z = glm::length(glm::vec2(sendPos.z, sendPos.y));
-        datas.push_back(moveData);
-    }
-    float lastTheta = datas.at(0).theta;
-    float pi = asin(1)*2;
-    for(auto i = 1; i < hangPtr->coupleSum(); i++){
-        float theta = datas.at(i).theta;
-        while(theta < lastTheta - pi){
-            theta += 2*pi;
-        }
-        while(theta > lastTheta + pi){
-            theta -= 2*pi;
-        }
-        datas.at(i).theta = theta;
-    }
     return datas;
 }
 
 Axis4DataVec AnimateController::axis4Data(){
     Axis4DataVec datas;
+    return datas;
 }
 
 Axis5DataVec AnimateController::axis5Data(){
     Axis5DataVec datas;
+    float pi = asin(1)*2;
+    auto root = ctrl->data->getNodeRoot();
+    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
+    vector<glm::mat4> rotxs;
+    for(auto i = 0; i < hangPtr->coupleSum(); i++){
+        Axis5Data moveData;
+        glm::mat4 sendT = hangPtr->sendT(i);
+        Pos sendPos = hangPtr->sendPos(i);
+        float theta = atan2(sendPos.y, sendPos.z);
+        moveData.theta = theta;
+        moveData.x = sendPos.x;
+        moveData.z = glm::length(glm::vec2(sendPos.z, sendPos.y));
+        glm::mat4 rotx = utility::rotx(theta);
+        rotxs.push_back(rotx);
+        glm::mat4 newSendT = rotx*sendT;
+        float yProjX = newSendT[1][0];
+        float yProjZ = newSendT[1][2];
+        float yaw = pi/2 - atan2(yProjZ, yProjX);
+        moveData.yaw = yaw;
+        glm::mat4 roty = utility::roty(-1*yaw);
+        glm::mat4 nnSendT = roty*newSendT;
+        float xProjX = nnSendT[0][0];
+        float xProjY = nnSendT[0][1];
+        float flip = atan(xProjY/xProjX);
+        moveData.flip = -flip;
+        datas.push_back(moveData);
+    }
+    hangPtr->setAnimateTs(rotxs);
+    return datas;
 }
