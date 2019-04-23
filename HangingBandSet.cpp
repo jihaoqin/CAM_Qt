@@ -61,9 +61,9 @@ void HangingBandSet::bufferData(){
 
 
 void HangingBandSet::setData(SuperPosVec posVec){
-    sendPoints = posVec;
+    poss = posVec;
     vertexVec.clear();
-    for(auto p:sendPoints){
+    for(auto p:poss){
         Vertex v;
         v.vertex = p.pos;
         v.normal = Dir{1, 0, 0};
@@ -71,7 +71,7 @@ void HangingBandSet::setData(SuperPosVec posVec){
         vertexVec.push_back(v);
     }
     indexVec.clear();
-    for(int i = 0; i < sendPoints.size(); ++i){
+    for(int i = 0; i < poss.size(); ++i){
         indexVec.push_back(i);
     }
     updateBox();
@@ -98,7 +98,7 @@ void HangingBandSet::setCrossIndexs(std::vector<int> inds){
 }
 
 SuperPosVec HangingBandSet::data(){
-    return sendPoints;
+    return poss;
 }
 
 
@@ -143,4 +143,21 @@ void HangingBandSet::setHangingLength(vector<float> ls){
         int intL = l;
         m_lengths.push_back(GLIndexPair{0, intL*6});
     }
+}
+
+glm::mat4 HangingBandSet::T(int ind){
+    return m_Ts.at(ind);
+}
+
+Pos HangingBandSet::sendPos(int ind){
+    return poss.at(2*ind+1).pos;
+}
+
+Pos HangingBandSet::receivePos(int ind){
+    return poss.at(2*ind).pos;
+}
+
+int HangingBandSet::coupleSum(){
+    assert(poss.size()&1 == 0);
+    return poss.size()/2;
 }

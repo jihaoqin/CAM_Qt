@@ -21,12 +21,16 @@ public:
     void setTVec(std::vector<glm::mat4>);
     void setShowInd(int);
     void setHangingLength(vector<float>);
+    Pos sendPos(int ind);
+    Pos receivePos(int ind);
+    glm::mat4 T(int ind);
+    int coupleSum();
 private:
     void setMesh();
     void updateBox();
     void bufferData();
     void solveCollision();
-    SuperPosVec sendPoints;
+    SuperPosVec poss;
     std::vector<int> crossInds;
     Mesh mesh;
     float width;

@@ -103,6 +103,8 @@ void AnimateController::calculation(){
     for(auto pairVec:indexPairVecs){
         pairTotal += pairVec.size();
     }
+    axis3Data();
+    axis4Data();
 }
 
 int AnimateController::getPercent(){
@@ -348,4 +350,43 @@ void AnimateController::hideBandSet(){
     if(hangPtr != nullptr){
         hangPtr->setVisiable(false);
     }
+}
+
+Axis3DataVec AnimateController::axis3Data(){
+    //主轴回转坐标：theta
+    //主轴轴向的平移：x
+    //主轴垂直轴向的平移：z
+    Axis3DataVec datas;
+    auto root = ctrl->data->getNodeRoot();
+    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
+    for(auto i = 0; i < hangPtr->coupleSum(); i++){
+        Axis3Data moveData;
+        glm::mat4 T = hangPtr->T(i);
+        Pos sendPos = hangPtr->sendPos(i);
+        moveData.theta = -1*atan2(sendPos.y, sendPos.z);
+        moveData.x = sendPos.x;
+        moveData.z = glm::length(glm::vec2(sendPos.z, sendPos.y));
+        datas.push_back(moveData);
+    }
+    float lastTheta = datas.at(0).theta;
+    float pi = asin(1)*2;
+    for(auto i = 1; i < hangPtr->coupleSum(); i++){
+        float theta = datas.at(i).theta;
+        while(theta < lastTheta - pi){
+            theta += 2*pi;
+        }
+        while(theta > lastTheta + pi){
+            theta -= 2*pi;
+        }
+        datas.at(i).theta = theta;
+    }
+    return datas;
+}
+
+Axis4DataVec AnimateController::axis4Data(){
+    Axis4DataVec datas;
+}
+
+Axis5DataVec AnimateController::axis5Data(){
+    Axis5DataVec datas;
 }
