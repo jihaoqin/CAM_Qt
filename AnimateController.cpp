@@ -258,6 +258,9 @@ void AnimateController::solveCollision(){
                 }
                 poss.erase(poss.begin()+beginInd+1, poss.begin()+endInd-1);
                 poss.insert(poss.begin()+beginInd+1, doubleSupers.begin(), doubleSupers.end());
+                for(auto& ind:insertInds){
+                    ind += doubleSupers.size() - (endInd - beginInd -2);
+                }
                 for(int i = 0; i < doubleSupers.size(); i++){
                     insertInds.push_back(beginInd+1+i);
                 }
