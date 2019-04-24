@@ -220,6 +220,7 @@ void AnimateController::initHangingBand(){
         hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
         hangPtr->setData(allSuperPosVec);
         hangPtr->setCrossIndexs(crossInds);
+        hangPtr->setVisiable(true);
     }
 }
 
@@ -232,6 +233,7 @@ void AnimateController::solveCollision(){
     SuperPosVec poss = hangPtr->data();
     vector<int> deleteInds;
     bool some = false;
+    vector<int> insertInds;
     for(int i = poss.size()-1; i > 0; i = i-2){
         SuperPos sendSuper = poss.at(i-1);
         SuperPos getSuper = poss.at(i);
@@ -256,6 +258,9 @@ void AnimateController::solveCollision(){
                 }
                 poss.erase(poss.begin()+beginInd+1, poss.begin()+endInd-1);
                 poss.insert(poss.begin()+beginInd+1, doubleSupers.begin(), doubleSupers.end());
+                for(int i = 0; i < doubleSupers.size(); i++){
+                    insertInds.push_back(beginInd+1+i);
+                }
                 for(auto i = (beginInd+1)/2; i <= (endInd-3)/2; i++){
                     auto ij = getInsertInd(i);
                     auto& pairVec = indexPairVecs.at(ij.first);
@@ -276,12 +281,14 @@ void AnimateController::solveCollision(){
                         }
                     }
                     pairVec.insert(pairVec.begin() + ij.second, ps.begin(), ps.end());
+
                 }
                 deleteInds.clear();
                 some = false;
             }
         }
     }
+    hangPtr->setCrossIndexs(insertInds);
     hangPtr->setData(poss);
 }
 
@@ -414,4 +421,12 @@ Axis5DataVec AnimateController::axis5Data(){
     }
     hangPtr->setAnimateTs(rotxs);
     return datas;
+}
+
+
+void AnimateController::resetAnimateT(){
+    auto root = ctrl->getData()->getNodeRoot();
+    glm::mat4 T = glm::mat4(1.0);
+    auto drawFunc = [T](DataObjectPtr p)->void{ if(p != nullptr){p->setAnimateT(T);}};
+    root->dataOperation(drawFunc);
 }

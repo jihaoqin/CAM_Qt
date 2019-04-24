@@ -8,9 +8,9 @@
 class Axiss
 {
 public:
-    Axiss(float xmin, float xmax, float ymin, float ymax);
+    Axiss(float xmin, float xmax, float ymin, float ymax, float r);
     void bindGL(QOpenGLContext*);
-    void show();
+    void draw(std::shared_ptr<GLProgram>);
 private:
     void initial();
     float m_xmin;

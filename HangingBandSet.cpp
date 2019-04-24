@@ -27,19 +27,17 @@ void HangingBandSet::bindGL(QOpenGLContext* c){
 void HangingBandSet::draw(std::shared_ptr<GLProgram> program){
     if(binded == true && visiable == true){
         program->setMat4("model", m_animateT*glm::mat4(1.0));
-        program->setVec3("material.color", color.rgb);
         core->glBindVertexArray(VAO);
         core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
         core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         if(m_hangVisiable == true){
+            program->setVec3("material.color", Color::YELLOW);
+            for(auto ind:crossInds){
+                core->glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int)*ind));
+            }
+            program->setVec3("material.color", color.rgb);
             core->glDrawElements(GL_LINES, indexVec.size(), GL_UNSIGNED_INT, 0);
         }
-        /*
-        program->setVec3("material.color", Color::YELLOW);
-        for(auto ind:crossInds){
-            core->glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int)*ind));
-        }
-        */
         program->setMat4("model",m_animateT*m_Ts.at(m_showInd));
         program->setVec3("material.color", Color::YELLOW);
         mesh.setShowRange(m_lengths.at(m_showInd));

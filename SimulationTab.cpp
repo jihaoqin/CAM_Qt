@@ -96,6 +96,7 @@ void SimulationTab::closeMyself(){
     timer->stop();
     animateCtrl->resetBand();
     animateCtrl->hideBandSet();
+    animateCtrl->resetAnimateT();
     backWidget->setWidget(nullptr);
     close();
 }

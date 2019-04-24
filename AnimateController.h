@@ -35,6 +35,7 @@ public:
     int getPercent();
     void resetBand();
     void setPercent(int);
+    void resetAnimateT();
     std::pair<int, int> getInsertInd(int);
     bool hasData();
     void hideBandSet();
