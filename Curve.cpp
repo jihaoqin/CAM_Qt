@@ -55,7 +55,7 @@ void Curve::draw(std::shared_ptr<GLProgram> program){
     core->glEnable(GL_LINE_SMOOTH);
     //core->glEnable(GL_BLEND);
     core->glHint(GL_LINE_SMOOTH_HINT, GL_FASTEST);
-    program->setMat4("model", glm::mat4(1.0));
+    program->setMat4("model", m_animateT*glm::mat4(1.0));
     program->setVec3("material.color", color.rgb);
     core->glBindVertexArray(VAO);
     core->glBindBuffer(GL_ARRAY_BUFFER, VBO);

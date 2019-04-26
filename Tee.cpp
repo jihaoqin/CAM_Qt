@@ -11,7 +11,7 @@
 
 using namespace std;
 Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdGenerator& g)
-    :modelMat(glm::mat4(0.99)), color(Color::RED),
+    :modelMat(glm::mat4(0.99)), color(Color::RED),axiss(lengthMain/-2 - pipeR, lengthMain/2 + pipeR, 0, lengthBranch, 0.2*pipeR),
         lengthMain(_lengthMain), lengthBranch(_lengthBranch), pipeR(_pipeR), sideR(_sideR)
       , symMap()
 
@@ -19,7 +19,7 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdG
     modelMat[3][3] = 1;
     float pi = asin(1)*2;
     setId("tee");
-    Mesh up = generateCircle(glm::vec3(0, lengthBranch, 0), glm::vec3(0, 1, 0), pipeR);
+    Mesh up = generateCircle(glm::vec3(0, lengthBranch - pipeR, 0), glm::vec3(0, 1, 0), pipeR);
     Mesh left = generateCircle(glm::vec3(-1.0*lengthMain/2, 0, 0), glm::vec3(-1, 0, 0),pipeR);
     Mesh right = generateCircle(glm::vec3(1.0*lengthMain/2, 0, 0), glm::vec3(1, 0, 0),pipeR);
     Ring ringLeft(g.getRingId(), sideR+pipeR, pipeR, utility::PI/2,
@@ -27,9 +27,9 @@ Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdG
     Ring ringRight(g.getRingId(), sideR+pipeR, pipeR, utility::PI/2,
                     glm::vec3(pipeR+sideR, pipeR+sideR,0), glm::vec3(0,0,1), glm::vec3(-1,0,0));
     Cylinder branch1(g.getCylinderId(), glm::vec3(0, pipeR + sideR, 0),
-                    glm::vec3(0, lengthBranch, 0), pipeR, pi, glm::vec3{0,0,1});
+                    glm::vec3(0, lengthBranch - pipeR, 0), pipeR, pi, glm::vec3{0,0,1});
     Cylinder branch2(g.getCylinderId(), glm::vec3(0, pipeR + sideR, 0),
-                    glm::vec3(0, lengthBranch, 0), pipeR, pi, glm::vec3{0,0,-1});
+                    glm::vec3(0, lengthBranch- pipeR, 0), pipeR, pi, glm::vec3{0,0,-1});
     upCylinderId.push_back(branch1.getId());
     upCylinderId.push_back(branch2.getId());
     Cylinder mainPipeLeft1(g.getCylinderId(), glm::vec3(-1*(pipeR+sideR), 0, 0),
@@ -150,6 +150,7 @@ void Tee::bindGL(QOpenGLContext * c){
     for(unsigned int i = 0; i<triEdgePlaneVec.size(); i++){
         triEdgePlaneVec.at(i).bindGL(c);
     }
+    axiss.bindGL(c);
     binded = true;
 }
 
@@ -157,7 +158,7 @@ void Tee::draw(std::shared_ptr<GLProgram> p){
     if(binded == false || visiable == false){
         return;
     }
-    p->setMat4("model", modelMat);
+    p->setMat4("model", m_animateT*modelMat);
     p->setVec3("material.color", color.rgb);
     core->glDepthMask(GL_TRUE);
     for(unsigned int i = 0; i < planeVec.size(); i++){
@@ -173,6 +174,7 @@ void Tee::draw(std::shared_ptr<GLProgram> p){
         triEdgePlaneVec.at(i).draw(p);
     }
     p->setMat4("model", glm::mat4(1.0f));
+    axiss.draw(p);
 }
 
 Mesh Tee::generateRevolution(glm::vec3 anchor, glm::vec3 dir, std::vector<Vertex> edge, float angle){

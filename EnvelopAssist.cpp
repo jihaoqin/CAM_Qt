@@ -173,8 +173,8 @@ SuperPosVec EnvelopAssist::genInsertedSuper(SuperPosVec b2e){
         PosVec middlePos;
         float r = main.r;
         for(auto t:ts){
-            Pos temp1{r*Pos{0,0,1}*cos(t) + r*Pos{sqrt(2)/2, sqrt(2)/2, 0}*sin(t)};
-            Pos temp2{r*Pos{0, 0, 1} * cos(t) + r*Pos{sqrt(2)/-2, sqrt(2)/2, 0} * sin(t)};
+            Pos temp1{r*Pos{0,0,1}*cos(t) + r*Pos{1, 1, 0}*sin(t)};
+            Pos temp2{r*Pos{0, 0, 1} * cos(t) + r*Pos{-1, 1, 0} * sin(t)};
             middlePos.push_back(temp1);
             middlePos.push_back(temp2);
         }
@@ -227,7 +227,7 @@ PosVec Pipe::genInternalSuper(PosVec poss){
     Pos specialWorld = poss.at(0);
     Pos beginWorld = poss.at(1);
     Pos endWorld = poss.at(2);
-    Pos specialLocal = invTrans(specialLocal, "pos");
+    Pos specialLocal = invTrans(specialWorld, "pos");
     Pos beginLocal = invTrans(beginWorld, "pos");
     Pos endLocal = invTrans(endWorld, "pos");
     SPara beginPara = localPara(beginLocal);

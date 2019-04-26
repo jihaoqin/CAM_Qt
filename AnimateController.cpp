@@ -6,6 +6,8 @@
 #include "EnvelopAssist.h"
 #include "Data.h"
 #include "HangingBandSet.h"
+#include "GuiConnector.h"
+#include "SimulationTab.h"
 
 AnimateController::AnimateController(Controller* c)
     :ctrl(c)
@@ -60,6 +62,35 @@ void AnimateController::initIndexPairVecs(){
 }
 
 void AnimateController::showNext(){
+    ++windedTotal;
+    auto connector = ctrl->getConnector();
+    auto tab = connector->getSimTab();
+    auto root = ctrl->getData()->getNodeRoot();
+    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
+    if(tab->isAbsolute()){
+        if(root != nullptr){
+            glm::mat4 T = hangPtr->animateT(windedTotal - 1);
+            auto drawFunc = [T](DataObjectPtr p)->void{ if(p != nullptr){p->setAnimateT(T);}};
+            root->dataOperation(drawFunc);
+        }
+    }
+    else{
+        glm::mat4 T = glm::mat4(1.0);
+        auto drawFunc = [T](DataObjectPtr p)->void{ if(p != nullptr){p->setAnimateT(T);}};
+        root->dataOperation(drawFunc);
+    }
+    if(tab->shallShowHangLines()){
+        hangPtr->setHangLinesVisiable(true);
+    }
+    else{
+        hangPtr->setHangLinesVisiable(false);
+    }
+    if(windedTotal < pairTotal){
+        hangPtr->setShowInd(windedTotal - 1);
+    }
+    else{
+        ctrl->mainWindow->animationOver();
+    }
     int nextShowInd = showInd+1;
     int nextBandInd = bandInd+1;
     if(nextShowInd >= indexPairVecs.at(bandInd).size()){
@@ -76,15 +107,6 @@ void AnimateController::showNext(){
     else{
         bandPtrs.at(bandInd)->setShowRange(indexPairVecs.at(bandInd).at(nextShowInd));
         showInd = nextShowInd;
-    }
-    auto root = ctrl->data->getNodeRoot();
-    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
-    ++windedTotal;
-    if(windedTotal < pairTotal){
-        hangPtr->setShowInd(windedTotal - 1);
-    }
-    else{
-        ctrl->mainWindow->animationOver();
     }
 }
 
@@ -103,6 +125,7 @@ void AnimateController::calculation(){
     for(auto pairVec:indexPairVecs){
         pairTotal += pairVec.size();
     }
+    axis5Data();
 }
 
 int AnimateController::getPercent(){
@@ -197,6 +220,7 @@ void AnimateController::initHangingBand(){
         hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
         hangPtr->setData(allSuperPosVec);
         hangPtr->setCrossIndexs(crossInds);
+        hangPtr->setVisiable(true);
     }
 }
 
@@ -209,10 +233,11 @@ void AnimateController::solveCollision(){
     SuperPosVec poss = hangPtr->data();
     vector<int> deleteInds;
     bool some = false;
+    vector<int> insertInds;
     for(int i = poss.size()-1; i > 0; i = i-2){
-        SuperPos sendSuper = poss.at(i-1);
-        SuperPos getSuper = poss.at(i);
-        if(assist.isCross(sendSuper.pos, getSuper.pos)){
+        SuperPos getSuper = poss.at(i-1);
+        SuperPos sendSuper = poss.at(i);
+        if(assist.isCross(getSuper.pos, sendSuper.pos)){
             deleteInds.push_back(i-1);
             deleteInds.push_back(i);
             some = true;
@@ -233,6 +258,12 @@ void AnimateController::solveCollision(){
                 }
                 poss.erase(poss.begin()+beginInd+1, poss.begin()+endInd-1);
                 poss.insert(poss.begin()+beginInd+1, doubleSupers.begin(), doubleSupers.end());
+                for(auto& ind:insertInds){
+                    ind += doubleSupers.size() - (endInd - beginInd -2);
+                }
+                for(int i = 0; i < doubleSupers.size(); i++){
+                    insertInds.push_back(beginInd+1+i);
+                }
                 for(auto i = (beginInd+1)/2; i <= (endInd-3)/2; i++){
                     auto ij = getInsertInd(i);
                     auto& pairVec = indexPairVecs.at(ij.first);
@@ -249,16 +280,18 @@ void AnimateController::solveCollision(){
                     }
                     else{
                         for(int i = 0; i<insertSupers.size(); ++i){
-                            ps.push_back(pairVec.at(ij.second-1));
+                            ps.push_back(pairVec.at(ij.second));
                         }
                     }
                     pairVec.insert(pairVec.begin() + ij.second, ps.begin(), ps.end());
+
                 }
                 deleteInds.clear();
                 some = false;
             }
         }
     }
+    hangPtr->setCrossIndexs(insertInds);
     hangPtr->setData(poss);
 }
 
@@ -312,7 +345,6 @@ void AnimateController::initBandPos(){
                 ind = pairVec.at(j).first;
             }
             Dir z = band->outNorm(ind);
-            //Dir y = pds.at(j).dir;
             Dir y = glm::normalize(poss.at(possBeginInd+1).pos - poss.at(possBeginInd).pos);
             z = glm::normalize(z - glm::dot(z,y)*y);
             Dir x = glm::normalize(glm::cross(y, z));
@@ -348,4 +380,70 @@ void AnimateController::hideBandSet(){
     if(hangPtr != nullptr){
         hangPtr->setVisiable(false);
     }
+}
+
+
+Axis4DataVec AnimateController::axis4Data(){
+    Axis4DataVec datas;
+    float pi = asin(1)*2;
+    auto root = ctrl->data->getNodeRoot();
+    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
+    for(auto i = 0; i < hangPtr->coupleSum(); i++){
+        Axis4Data moveData;
+        glm::mat4 sendT = hangPtr->sendT(i);
+        Pos sendPos = hangPtr->sendPos(i);
+        float theta = atan2(sendPos.y, sendPos.z);
+        moveData.theta = theta;
+        moveData.x = sendPos.x;
+        moveData.z = glm::length(glm::vec2(sendPos.z, sendPos.y));
+        glm::mat4 rotx = utility::rotx(theta);
+        glm::mat4 newSendT = rotx*sendT;
+        Dir newSendT_Z = newSendT[2];
+        float z0 = newSendT_Z[0];
+        float z1 = newSendT_Z[1];
+        moveData.flip = atan2(-1*z0, z1);
+        datas.push_back(moveData);
+    }
+    return datas;
+}
+
+Axis5DataVec AnimateController::axis5Data(){
+    Axis5DataVec datas;
+    float pi = asin(1)*2;
+    auto root = ctrl->data->getNodeRoot();
+    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
+    vector<glm::mat4> rotxs;
+    for(auto i = 0; i < hangPtr->coupleSum(); i++){
+        Axis5Data moveData;
+        glm::mat4 sendT = hangPtr->sendT(i);
+        Pos sendPos = hangPtr->sendPos(i);
+        float theta = atan2(sendPos.y, sendPos.z);
+        moveData.theta = theta;
+        moveData.x = sendPos.x;
+        moveData.z = glm::length(glm::vec2(sendPos.z, sendPos.y));
+        glm::mat4 rotx = utility::rotx(theta);
+        rotxs.push_back(rotx);
+        glm::mat4 newSendT = rotx*sendT;
+        float yProjX = newSendT[1][0];
+        float yProjZ = newSendT[1][2];
+        float yaw = pi/2 - atan2(yProjZ, yProjX);
+        moveData.yaw = yaw;
+        glm::mat4 roty = utility::roty(-1*yaw);
+        glm::mat4 nnSendT = roty*newSendT;
+        float xProjX = nnSendT[0][0];
+        float xProjY = nnSendT[0][1];
+        float flip = atan(xProjY/xProjX);
+        moveData.flip = -flip;
+        datas.push_back(moveData);
+    }
+    hangPtr->setAnimateTs(rotxs);
+    return datas;
+}
+
+
+void AnimateController::resetAnimateT(){
+    auto root = ctrl->getData()->getNodeRoot();
+    glm::mat4 T = glm::mat4(1.0);
+    auto drawFunc = [T](DataObjectPtr p)->void{ if(p != nullptr){p->setAnimateT(T);}};
+    root->dataOperation(drawFunc);
 }

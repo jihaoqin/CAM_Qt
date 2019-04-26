@@ -101,7 +101,12 @@ SOURCES += \
     HangingBandSet.cpp \
     FromPipeCurveTab.cpp \
     CBandOnPoint.cpp \
-    FromPipeCurveController.cpp
+    FromPipeCurveController.cpp \
+    Axiss.cpp \
+    MoveDataTab.cpp \
+    AxisIni.cpp \
+    MoveData.cpp \
+    AxisConfigDialog.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -184,7 +189,12 @@ HEADERS += \
     HangingBandSet.h \
     FromPipeCurveTab.h \
     CBandOnPoint.h \
-    FromPipeCurveController.h
+    FromPipeCurveController.h \
+    Axiss.h \
+    MoveDataTab.h \
+    AxisIni.h \
+    MoveData.h \
+    AxisConfigDialog.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt
@@ -218,3 +228,6 @@ DEPENDPATH += $$BOOST_ROOT\stage
 
 RESOURCES += \
     res.qrc
+
+FORMS += \
+    axisconfigdialog.ui

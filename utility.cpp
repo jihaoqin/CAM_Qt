@@ -498,3 +498,13 @@ float utility::length(SuperPosVec poss){
     }
     return length(ps);
 }
+
+glm::mat4 utility::rotx(float angle){
+    auto T = glm::rotate(glm::mat4(1.0), angle, Dir{1,0,0});
+    return T;
+}
+
+glm::mat4 utility::roty(float angle){
+    auto T = glm::rotate(glm::mat4(1.0), angle, Dir{0,1,0});
+    return T;
+}

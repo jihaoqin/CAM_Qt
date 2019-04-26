@@ -30,6 +30,7 @@ public:
     QString typeStr();
     virtual void serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const{
     }
+    virtual void setAnimateT(glm::mat4);
 protected:
     virtual void updateChild();
     virtual void update();
@@ -40,6 +41,7 @@ protected:
     bool visiable;
     BoundingBox box;
     std::string type;
+    glm::mat4 m_animateT;
 private:
     std::string id;
 };

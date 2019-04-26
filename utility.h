@@ -58,4 +58,6 @@ std::set<End>::iterator getEndIte(QString, std::set<End>);
 bool isLinked(EndPtr, EndPtr, const EndPtrVec);
 float length(PosVec);
 float length(SuperPosVec);
+glm::mat4 rotx(float);
+glm::mat4 roty(float);
 }

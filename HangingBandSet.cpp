@@ -1,7 +1,8 @@
 #include "HangingBandSet.h"
+#include "utility.h"
 
 HangingBandSet::HangingBandSet(SuperPosVec ps)
-    :color(Color::BLUE), width(2)
+    :color(Color::BLUE), width(2), m_hangVisiable(true)
 {
     setId("post");
     setData(ps);
@@ -25,19 +26,19 @@ void HangingBandSet::bindGL(QOpenGLContext* c){
     
 void HangingBandSet::draw(std::shared_ptr<GLProgram> program){
     if(binded == true && visiable == true){
-        program->setMat4("model", glm::mat4(1.0));
-        program->setVec3("material.color", color.rgb);
+        program->setMat4("model", m_animateT*glm::mat4(1.0));
         core->glBindVertexArray(VAO);
         core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
         core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        core->glDrawElements(GL_LINES, indexVec.size(), GL_UNSIGNED_INT, 0);
-        // /*
-        program->setVec3("material.color", Color::YELLOW);
-        for(auto ind:crossInds){
-            core->glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int)*ind));
+        if(m_hangVisiable == true){
+            program->setVec3("material.color", Color::YELLOW);
+            for(int i = 0; i < crossInds.size(); i+=2){
+                core->glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int)*crossInds.at(i)));
+            }
+            program->setVec3("material.color", color.rgb);
+            core->glDrawElements(GL_LINES, indexVec.size(), GL_UNSIGNED_INT, 0);
         }
-        // */
-        program->setMat4("model",m_Ts.at(m_showInd));
+        program->setMat4("model",m_animateT*m_Ts.at(m_showInd));
         program->setVec3("material.color", Color::YELLOW);
         mesh.setShowRange(m_lengths.at(m_showInd));
         mesh.draw();
@@ -61,9 +62,9 @@ void HangingBandSet::bufferData(){
 
 
 void HangingBandSet::setData(SuperPosVec posVec){
-    sendPoints = posVec;
+    poss = posVec;
     vertexVec.clear();
-    for(auto p:sendPoints){
+    for(auto p:poss){
         Vertex v;
         v.vertex = p.pos;
         v.normal = Dir{1, 0, 0};
@@ -71,7 +72,7 @@ void HangingBandSet::setData(SuperPosVec posVec){
         vertexVec.push_back(v);
     }
     indexVec.clear();
-    for(int i = 0; i < sendPoints.size(); ++i){
+    for(int i = 0; i < poss.size(); ++i){
         indexVec.push_back(i);
     }
     updateBox();
@@ -98,7 +99,7 @@ void HangingBandSet::setCrossIndexs(std::vector<int> inds){
 }
 
 SuperPosVec HangingBandSet::data(){
-    return sendPoints;
+    return poss;
 }
 
 
@@ -143,4 +144,39 @@ void HangingBandSet::setHangingLength(vector<float> ls){
         int intL = l;
         m_lengths.push_back(GLIndexPair{0, intL*6});
     }
+}
+
+glm::mat4 HangingBandSet::receiveT(int ind){
+    return m_Ts.at(ind);
+}
+
+glm::mat4 HangingBandSet::sendT(int ind){
+    auto T1 = receiveT(ind);
+    utility::setPos(T1, sendPos(ind));
+    return T1;
+}
+
+Pos HangingBandSet::sendPos(int ind){
+    return poss.at(2*ind+1).pos;
+}
+
+Pos HangingBandSet::receivePos(int ind){
+    return poss.at(2*ind).pos;
+}
+
+int HangingBandSet::coupleSum(){
+    assert((poss.size()&1) == 0);
+    return poss.size()/2;
+}
+
+glm::mat4 HangingBandSet::animateT(int ind){
+    return rotxs.at(ind);
+}
+
+void HangingBandSet::setAnimateTs(vector<glm::mat4> Ts){
+    rotxs = Ts;
+}
+
+void HangingBandSet::setHangLinesVisiable(bool flag){
+    m_hangVisiable = flag;
 }

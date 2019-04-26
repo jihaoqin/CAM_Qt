@@ -11,6 +11,7 @@
 #include "IdGenerator.h"
 #include "TriEdgePlane.h"
 #include "IdGenerator.h"
+#include "Axiss.h"
 
 using Dir = glm::vec3;
 using Pos = glm::vec3;
@@ -80,6 +81,7 @@ private:
     float sideR;
     float lengthMain;
     float lengthBranch;
+    Axiss axiss;
     std::map<std::pair<QString, QString>, QString> symMap;
     QOpenGLFunctions_4_3_Core *core;
 

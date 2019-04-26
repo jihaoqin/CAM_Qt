@@ -285,12 +285,6 @@ void Controller::drawDataObject(std::shared_ptr<DataObject> ob){
     if(id.contains("point")){
         p = mainWindow->connector->getPointProgram();
     }
-    else if(id.contains("line")){
-        //to do
-    }
-    else if(id.contains("direction")){
-        //to do
-    }
     else{
         p = mainWindow->connector->getMeshProgram();
     }
@@ -561,6 +555,9 @@ void Controller::saveBand(QString path){
         if(id.contains("band")){
             BandPtr b = std::dynamic_pointer_cast<Band>(c->getData());
             if(b->typeStr() == "TBandOnPoint"){
+                b->serialize(writer);
+            }
+            else if(b->typeStr() == "GeneralBand"){
                 b->serialize(writer);
             }
         }

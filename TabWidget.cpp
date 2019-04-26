@@ -7,6 +7,7 @@
 #include "ObjTreeWidget.h"
 #include "SimulationTab.h"
 #include "FromPipeCurveTab.h"
+#include "MoveDataTab.h"
 
 TabWidget::TabWidget(QWidget* parent)
     :QTabWidget(parent),tree(nullptr), job("")
@@ -57,4 +58,11 @@ void TabWidget::setConnector(GuiConnector *c){
 
 QString TabWidget::doWhat(){
     return job;
+}
+
+void TabWidget::showMoveDataTab(){
+    MoveDataTab* dataTab = new MoveDataTab(operation, connector, this);
+    operation->setWidget(dataTab);
+    setCurrentIndex(1);
+    job = "moveDataTab";
 }

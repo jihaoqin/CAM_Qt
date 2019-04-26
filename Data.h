@@ -9,6 +9,7 @@
 #include <QString>
 #include "DataState.h"
 #include "IdGenerator.h"
+#include "AxisIni.h"
 #include <QMutex>
 class Cylinder;
 class Ring;
@@ -44,6 +45,7 @@ public:
     bool getChanged();
     bool getEmpty();
     void bindConnector(GuiConnector*);
+    AxisIni& getAxissIni();
     QMutex* getMutex();
     std::shared_ptr<Node> getNodeRoot();
 private:
@@ -52,6 +54,7 @@ private:
     std::shared_ptr<Node> root;
     BoundingBox box;
     DataState state;
+    AxisIni axiss;
     IdGenerator idGenerator;
     GuiConnector* connector;
     void updateBoundingBox();

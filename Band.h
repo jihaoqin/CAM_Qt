@@ -60,6 +60,7 @@ public:
     PosDirVec indexsPds(vector<int>);
     Dir outNorm(int);
     QString beginFlag();
+    virtual void setAnimateT(glm::mat4) override;
 protected:
     QString m_begin;
     BandEndPtr m_end;
