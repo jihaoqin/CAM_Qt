@@ -1,6 +1,12 @@
 <RCC>
     <qresource prefix="/images">
         <file alias="tee">pic/tee.PNG</file>
+        <file alias="config">pic/config.png</file>
+        <file alias="yellow">pic/yellow.png</file>
+        <file alias="qing">pic/qing.png</file>
+        <file alias="blue">pic/blue.png</file>
+        <file alias="green">pic/green.png</file>
+        <file alias="red">pic/red.png</file>
     </qresource>
     <qresource prefix="/icons">
         <file alias="newCurve">pic/newCurve.png</file>

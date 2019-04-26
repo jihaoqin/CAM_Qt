@@ -12,7 +12,7 @@
 using std::shared_ptr;
 using std::make_shared;
 Data::Data():box(), state(), idGenerator(), root(nullptr), connector(nullptr)
-  , mtx(QMutex::Recursive)
+  , mtx(QMutex::Recursive), axiss(5)
 {
     camera = std::make_shared<Camera2>(BoundingBox());
 }
@@ -150,4 +150,9 @@ std::shared_ptr<Node> Data::getNodeRoot(){
 
 QMutex* Data::getMutex(){
     return &mtx;
+}
+
+
+AxisIni& Data::getAxissIni(){
+    return axiss;
 }

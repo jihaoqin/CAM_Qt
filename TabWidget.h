@@ -21,6 +21,7 @@ public slots:
     void showNewCurveTab();
     void showSimulationTab();
     void showFromPipeCurveTab();
+    void showMoveDataTab();
 private:
     ObjTreeWidget* tree;
     TabBackground* operation;

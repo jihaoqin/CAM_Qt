@@ -280,7 +280,7 @@ void AnimateController::solveCollision(){
                     }
                     else{
                         for(int i = 0; i<insertSupers.size(); ++i){
-                            ps.push_back(pairVec.at(ij.second-1));
+                            ps.push_back(pairVec.at(ij.second));
                         }
                     }
                     pairVec.insert(pairVec.begin() + ij.second, ps.begin(), ps.end());
@@ -382,13 +382,28 @@ void AnimateController::hideBandSet(){
     }
 }
 
-Axis3DataVec AnimateController::axis3Data(){
-    Axis3DataVec datas;
-    return datas;
-}
 
 Axis4DataVec AnimateController::axis4Data(){
     Axis4DataVec datas;
+    float pi = asin(1)*2;
+    auto root = ctrl->data->getNodeRoot();
+    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
+    for(auto i = 0; i < hangPtr->coupleSum(); i++){
+        Axis4Data moveData;
+        glm::mat4 sendT = hangPtr->sendT(i);
+        Pos sendPos = hangPtr->sendPos(i);
+        float theta = atan2(sendPos.y, sendPos.z);
+        moveData.theta = theta;
+        moveData.x = sendPos.x;
+        moveData.z = glm::length(glm::vec2(sendPos.z, sendPos.y));
+        glm::mat4 rotx = utility::rotx(theta);
+        glm::mat4 newSendT = rotx*sendT;
+        Dir newSendT_Z = newSendT[2];
+        float z0 = newSendT_Z[0];
+        float z1 = newSendT_Z[1];
+        moveData.flip = atan2(-1*z0, z1);
+        datas.push_back(moveData);
+    }
     return datas;
 }
 

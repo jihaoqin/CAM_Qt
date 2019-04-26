@@ -271,8 +271,13 @@ void MainWindow::configureToolBar(){
 
     simAction = new QAction(QIcon(":/icons/sim"),"simulation");
     toolBar->addAction(simAction);
-    simAction->setEnabled(true);
+    simAction->setEnabled(false);
     connect(simAction, &QAction::triggered, this, &MainWindow::showSimTab);
+
+    outputAction = new QAction("output");
+    toolBar->addAction(outputAction);
+    outputAction->setEnabled(true);
+    connect(outputAction, &QAction::triggered, this, &MainWindow::showMoveDataTab);
 
 }
 
@@ -385,5 +390,12 @@ void MainWindow::showSimTab(){
 void MainWindow::showFromPipeCurveTab(){
     TabWidget* t = connector->getTabWidget();
     t->showFromPipeCurveTab();
+    updateAction();
+}
+
+
+void MainWindow::showMoveDataTab(){
+    TabWidget* t = connector->getTabWidget();
+    t->showMoveDataTab();
     updateAction();
 }

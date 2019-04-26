@@ -2,6 +2,8 @@
 #define NAMEDECLARE_H
 #include<memory>
 #include <vector>
+#include <QString>
+using QStringVec = std::vector<QString>;
 
 class Band;
 using BandPtr = std::shared_ptr<Band>;
