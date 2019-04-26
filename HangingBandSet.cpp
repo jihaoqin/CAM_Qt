@@ -32,8 +32,8 @@ void HangingBandSet::draw(std::shared_ptr<GLProgram> program){
         core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         if(m_hangVisiable == true){
             program->setVec3("material.color", Color::YELLOW);
-            for(auto ind:crossInds){
-                core->glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int)*ind));
+            for(int i = 0; i < crossInds.size(); i+=2){
+                core->glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int)*crossInds.at(i)));
             }
             program->setVec3("material.color", color.rgb);
             core->glDrawElements(GL_LINES, indexVec.size(), GL_UNSIGNED_INT, 0);

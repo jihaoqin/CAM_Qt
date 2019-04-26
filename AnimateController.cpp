@@ -235,9 +235,9 @@ void AnimateController::solveCollision(){
     bool some = false;
     vector<int> insertInds;
     for(int i = poss.size()-1; i > 0; i = i-2){
-        SuperPos sendSuper = poss.at(i-1);
-        SuperPos getSuper = poss.at(i);
-        if(assist.isCross(sendSuper.pos, getSuper.pos)){
+        SuperPos getSuper = poss.at(i-1);
+        SuperPos sendSuper = poss.at(i);
+        if(assist.isCross(getSuper.pos, sendSuper.pos)){
             deleteInds.push_back(i-1);
             deleteInds.push_back(i);
             some = true;
@@ -345,7 +345,6 @@ void AnimateController::initBandPos(){
                 ind = pairVec.at(j).first;
             }
             Dir z = band->outNorm(ind);
-            //Dir y = pds.at(j).dir;
             Dir y = glm::normalize(poss.at(possBeginInd+1).pos - poss.at(possBeginInd).pos);
             z = glm::normalize(z - glm::dot(z,y)*y);
             Dir x = glm::normalize(glm::cross(y, z));
