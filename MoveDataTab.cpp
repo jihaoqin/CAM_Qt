@@ -1,12 +1,13 @@
+#include <QPushButton>
+#include <QLabel>
+#include <QVBoxLayout>
 #include "MoveDataTab.h"
 #include "GuiConnector.h"
 #include "Node.h"
 #include "Data.h"
 #include "HangingBandSet.h"
 #include "MoveData.h"
-#include <QPushButton>
-#include <QLabel>
-#include <QVBoxLayout>
+#include "AxisConfigDialog.h"
 
 MoveDataTab::MoveDataTab(TabBackground* background, GuiConnector* conn, QWidget* parent)
     :QWidget(parent), back(background), connector(conn)
@@ -68,7 +69,9 @@ void MoveDataTab::calData(){
 }
 
 void MoveDataTab::modifyMachine(){
-
+    auto& axisIni = connector->getData()->getAxissIni();
+    AxisConfigDialog* dialog = new AxisConfigDialog(&axisIni, this);
+    dialog->exec();
 }
 
 void MoveDataTab::calAxis4Data(){

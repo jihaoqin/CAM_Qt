@@ -1,7 +1,7 @@
 #include "AxisIni.h"
 
 AxisIni::AxisIni(int num)
-    :axis_Offs(num, 0)
+    :names(num, "1"), machine("untitled"), axis_Offs(num, 0), config(0)
 {
 }
 
@@ -39,4 +39,9 @@ QString AxisIni::machineName(){
 
 int AxisIni::axisSum(){
     return axis_Offs.size();
+}
+
+
+QString AxisIni::setAxisSum(int num){
+
 }
