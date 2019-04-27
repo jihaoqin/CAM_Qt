@@ -20,7 +20,16 @@ AxisConfigDialog::~AxisConfigDialog()
 
 void AxisConfigDialog::initial(){
     updateUI();
+    QDoubleValidator *doubleReg = new QDoubleValidator(this);
+    ui->hengOffLineEdit->setValidator(doubleReg);
+    ui->zongOffLineEdit->setValidator(doubleReg);
+    ui->spindleOffLineEdit->setValidator(doubleReg);
+    ui->yawOffLineEdit->setValidator(doubleReg);
+    ui->flipOffLineEdit->setValidator(doubleReg);
     connect(ui->axisSumCombox, SIGNAL(currentIndexChanged(int)), this, SLOT(setAxisConfig(int)));
+    connect(ui->hengNameLineEdit, &QLineEdit::textChanged, this, &AxisConfigDialog::updateAxis);
+    connect(ui->cancleButton, &QPushButton::clicked, this, &AxisConfigDialog::close);
+    connect(ui->okButton, &QPushButton::clicked, this, &AxisConfigDialog::saveIni);
 }
 
 void AxisConfigDialog::updateUI(){
@@ -30,9 +39,15 @@ void AxisConfigDialog::updateUI(){
     int axisSum = axis->axisSum();
     if(axisSum == 4){
         ui->axisSumCombox->setCurrentIndex(0);
+        ui->yawNameLineEdit->setEnabled(false);
+        ui->yawOffLineEdit->setEnabled(false);
     }
     else if(axisSum == 5){
         ui->axisSumCombox->setCurrentIndex(1);
+        ui->yawNameLineEdit->setEnabled(true);
+        ui->yawOffLineEdit->setEnabled(true);
+        ui->yawLeftCheckbox->setEnabled(true);
+        ui->yawRightCheckbox->setEnabled(true);
     }
     else{
         ui->axisSumCombox->setCurrentIndex(0);
@@ -184,4 +199,15 @@ void AxisConfigDialog::setAxisConfig(int ind){
     else{
         assert(0);
     }
+    updateUI();
+}
+
+
+void AxisConfigDialog::saveIni(){
+    *axisData = *axis;
+    close();
+}
+
+void AxisConfigDialog::updateAxis(){
+
 }

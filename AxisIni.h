@@ -16,7 +16,7 @@ public:
     QString showStr(int);
     QString name(int);
     QString machineName();
-    QString setAxisSum(int);
+    void setAxisSum(int);
     int axisSum();
     int config;
 private:

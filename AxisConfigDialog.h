@@ -24,9 +24,10 @@ public slots:
     void flipDownCheckbox(int);
     void yawLeftCheckbox(int);
     void setAxisConfig(int);
+    void saveIni();
+    void updateAxis();
 private:
     void initial();
-
 private:
     Ui::AxisConfigDialog *ui;
     AxisIni* axisData;
