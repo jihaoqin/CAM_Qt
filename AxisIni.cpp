@@ -32,12 +32,23 @@ QString AxisIni::name(int ind){
     }
 }
 
+void AxisIni::setName(int ind, QString s){
+    names.at(ind) = s;
+}
+
+void AxisIni::setOff(int ind, float v){
+    axis_Offs.at(ind) = v;
+}
+
 QString AxisIni::machineName(){
     return machine;
 }
 
+void AxisIni::machineName(QString s){
+    machine = s;
+}
 
-int AxisIni::axisSum(){
+int AxisIni::axisSum() const{
     return axis_Offs.size();
 }
 
@@ -71,4 +82,38 @@ void AxisIni::setAxisSum(int num){
     else{
         assert(0);
     }
+}
+
+void AxisIni::serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const{
+    writer.StartObject();
+    writer.String("type");
+    writer.String("AxisIni");
+    writer.String("machine");
+    writer.String(machine.toLatin1().data());
+    writer.String("axisSum");
+    writer.Int(axisSum());
+    writer.String("axis_Offs");
+    writer.StartArray();
+    for(auto off:axis_Offs){
+        writer.Double(off);
+    }
+    writer.EndArray();
+    writer.String("names");
+    writer.StartArray();
+    for(auto name:names){
+        writer.String(name.toLatin1().data());
+    }
+    writer.EndArray();
+    writer.String("config");
+    writer.Int(config);
+    writer.EndObject();
+}
+
+
+QString AxisIni::tabMachineName(){
+    return QString("Machine: ") + machine;
+}
+
+QString AxisIni::tabAxis(int ind){
+    return QString("Axis ") + names.at(ind) + ": " + QString::number(axis_Offs.at(ind));
 }

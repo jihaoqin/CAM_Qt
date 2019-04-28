@@ -547,7 +547,7 @@
   <widget class="QPushButton" name="okButton">
    <property name="geometry">
     <rect>
-     <x>70</x>
+     <x>120</x>
      <y>390</y>
      <width>75</width>
      <height>23</height>
@@ -560,8 +560,8 @@
   <widget class="QPushButton" name="saveAsButton">
    <property name="geometry">
     <rect>
-     <x>240</x>
-     <y>390</y>
+     <x>490</x>
+     <y>40</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -573,7 +573,7 @@
   <widget class="QPushButton" name="cancleButton">
    <property name="geometry">
     <rect>
-     <x>400</x>
+     <x>430</x>
      <y>390</y>
      <width>75</width>
      <height>23</height>
@@ -643,6 +643,19 @@
    </property>
    <property name="text">
     <string>Config:</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="importButton">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>0</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>import</string>
    </property>
   </widget>
  </widget>

@@ -18,20 +18,19 @@ MoveDataTab::MoveDataTab(TabBackground* background, GuiConnector* conn, QWidget*
     modifyButton = new QPushButton("modify axis", this);
     connect(modifyButton, &QPushButton::clicked, this, &MoveDataTab::modifyMachine);
 
-    auto& axiss = connector->getData()->getAxissIni();
 
     QFont title;
-    title.setPointSize(14);
-    machineLabel = new QLabel("Machine:", this);
+    title.setPointSize(12);
+    machineLabel = new QLabel(this);
     machineLabel->setFont(title);
 
     QFont content;
     content.setPointSize(10);
-    axis_1_nameLabel = new QLabel("Axis", this);
-    axis_2_nameLabel = new QLabel("Axis A:", this);
-    axis_3_nameLabel = new QLabel("B", this);
-    axis_4_nameLabel = new QLabel("c", this);
-    axis_5_nameLabel = new QLabel("d", this);
+    axis_1_nameLabel = new QLabel(this);
+    axis_2_nameLabel = new QLabel(this);
+    axis_3_nameLabel = new QLabel(this);
+    axis_4_nameLabel = new QLabel(this);
+    axis_5_nameLabel = new QLabel(this);
     axis_1_nameLabel->setFont(content);
     axis_2_nameLabel->setFont(content);
     axis_3_nameLabel->setFont(content);
@@ -51,6 +50,7 @@ MoveDataTab::MoveDataTab(TabBackground* background, GuiConnector* conn, QWidget*
     layout->addWidget(cancleButton);
     layout->addStretch(1);
     setLayout(layout);
+    updateLabel();
 }
 
 
@@ -72,6 +72,7 @@ void MoveDataTab::modifyMachine(){
     auto& axisIni = connector->getData()->getAxissIni();
     AxisConfigDialog* dialog = new AxisConfigDialog(&axisIni, this);
     dialog->exec();
+    updateLabel();
 }
 
 void MoveDataTab::calAxis4Data(){
@@ -131,4 +132,22 @@ void MoveDataTab::calAxis5Data(){
         datas.push_back(moveData);
     }
     hangPtr->setAnimateTs(rotxs);
+}
+
+
+void MoveDataTab::updateLabel(){
+    auto& axiss = connector->getData()->getAxissIni();
+    machineLabel->setText(axiss.tabMachineName());
+
+    axis_1_nameLabel->setText(axiss.tabAxis(0));
+    axis_2_nameLabel->setText(axiss.tabAxis(1));
+    axis_3_nameLabel->setText(axiss.tabAxis(2));
+    axis_4_nameLabel->setText(axiss.tabAxis(3));
+    if(axiss.axisSum() == 4){
+        axis_5_nameLabel->hide();
+    }
+    else{
+        axis_5_nameLabel->show();
+        axis_5_nameLabel->setText(axiss.tabAxis(4));
+    }
 }

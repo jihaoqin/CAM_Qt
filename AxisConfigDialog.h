@@ -26,6 +26,8 @@ public slots:
     void setAxisConfig(int);
     void saveIni();
     void updateAxis();
+    void saveInFile();
+    void importFromFile();
 private:
     void initial();
 private:

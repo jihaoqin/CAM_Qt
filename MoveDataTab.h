@@ -13,6 +13,7 @@ class MoveDataTab:public QWidget
     Q_OBJECT
 public:
     MoveDataTab(TabBackground*, GuiConnector*, QWidget* parent = nullptr);
+    void updateLabel();
 public slots:
     void calData();
     void calAxis4Data();
