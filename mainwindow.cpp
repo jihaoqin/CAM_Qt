@@ -199,6 +199,7 @@ void MainWindow::updateAction(){
             loopCurve->setEnabled(true);
             simAction->setEnabled(true);
             fromPipeCurve->setEnabled(true);
+            outputAction->setEnabled(true);
         }
         else{
             leftCurve->setEnabled(false);
@@ -207,6 +208,7 @@ void MainWindow::updateAction(){
             loopCurve->setEnabled(false);
             simAction->setEnabled(false);
             fromPipeCurve->setEnabled(false);
+            outputAction->setEnabled(false);
         }
         if(true == opFlag){
             leftCurve->setEnabled(false);
@@ -215,6 +217,7 @@ void MainWindow::updateAction(){
             loopCurve->setEnabled(false);
             simAction->setEnabled(false);
             fromPipeCurve->setEnabled(false);
+            outputAction->setEnabled(false);
         }
     }
 
@@ -274,7 +277,7 @@ void MainWindow::configureToolBar(){
     simAction->setEnabled(false);
     connect(simAction, &QAction::triggered, this, &MainWindow::showSimTab);
 
-    outputAction = new QAction("output");
+    outputAction = new QAction(QIcon(":/icons/XYZ"), "output");
     toolBar->addAction(outputAction);
     outputAction->setEnabled(true);
     connect(outputAction, &QAction::triggered, this, &MainWindow::showMoveDataTab);

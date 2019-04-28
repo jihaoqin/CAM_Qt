@@ -22,6 +22,7 @@
         <file alias="pause">pic/pause.png</file>
         <file alias="sf">pic/sf.png</file>
         <file alias="fromPipeCurve">pic/fromPipeCurve.png</file>
+        <file alias="XYZ">pic/XYZ.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

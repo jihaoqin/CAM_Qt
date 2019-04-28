@@ -9,6 +9,7 @@
 #include "MoveData.h"
 #include "AxisConfigDialog.h"
 #include "QFileDialog"
+#include "TabBackground.h"
 #include <fstream>
 
 MoveDataTab::MoveDataTab(TabBackground* background, GuiConnector* conn, QWidget* parent)
@@ -53,7 +54,7 @@ MoveDataTab::MoveDataTab(TabBackground* background, GuiConnector* conn, QWidget*
     setLayout(layout);
     updateLabel();
 
-    connect(cancleButton, SIGNAL(clicked(bool)), this, SLOT(close()));
+    connect(cancleButton, SIGNAL(clicked(bool)), this, SLOT(closeMyself()));
     connect(outputButton, &QPushButton::clicked, this, &MoveDataTab::output);
 }
 
@@ -98,10 +99,11 @@ void MoveDataTab::calAxis4Data(){
         moveData.z = glm::length(glm::vec2(sendPos.z, sendPos.y));
         glm::mat4 rotx = utility::rotx(theta);
         glm::mat4 newSendT = rotx*sendT;
-        Dir newSendT_Z = newSendT[2];
-        float z0 = newSendT_Z[0];
-        float z1 = newSendT_Z[1];
-        moveData.flip = atan2(-1*z0, z1);
+        Dir newSendT_Y = newSendT[1];
+        float y0 = newSendT_Y[0];
+        float y1 = newSendT_Y[1];
+        //张力的合力垂直于辊子
+        moveData.flip = atan2(-1*y0, y1);
         if(axiss.config & AxisIni::xLeft){
             moveData.x = axiss.off(0) - moveData.x;
         }
@@ -213,6 +215,10 @@ void MoveDataTab::updateLabel(){
         axis_5_nameLabel->show();
         axis_5_nameLabel->setText(axiss.tabAxis(4));
     }
+    auto hangPtr = std::dynamic_pointer_cast<HangingBandSet>(connector->getData()->getNodeRoot()->findObjectId("post"));
+    if(hangPtr == nullptr){
+        outputButton->setEnabled(false);
+    }
 }
 
 
@@ -301,4 +307,9 @@ void MoveDataTab::smoothData(){
     else{
         assert(0);
     }
+}
+
+void MoveDataTab::closeMyself(){
+    back->setWidget(nullptr);
+    close();
 }

@@ -17,6 +17,6 @@ int main(int argc, char *argv[])
     MainWindow w(&ctrl);
     data->bindConnector(w.connector);
     w.show();
-    ctrl.addTee(120, 70, 10, 5);
+    ctrl.addTee(90, 52.5, 7.5, 7.5);
     return a.exec();
 }

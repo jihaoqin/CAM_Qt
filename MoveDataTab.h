@@ -20,6 +20,7 @@ public slots:
     void calAxis5Data();
     void modifyMachine();
     void output();
+    void closeMyself();
 
 private:
     void smoothData();
