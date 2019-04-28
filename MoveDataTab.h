@@ -19,8 +19,10 @@ public slots:
     void calAxis4Data();
     void calAxis5Data();
     void modifyMachine();
+    void output();
 
 private:
+    void smoothData();
     QPushButton* cancleButton;
     QPushButton* outputButton;
     QPushButton* modifyButton;

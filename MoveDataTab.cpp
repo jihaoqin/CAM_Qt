@@ -8,13 +8,14 @@
 #include "HangingBandSet.h"
 #include "MoveData.h"
 #include "AxisConfigDialog.h"
+#include "QFileDialog"
+#include <fstream>
 
 MoveDataTab::MoveDataTab(TabBackground* background, GuiConnector* conn, QWidget* parent)
     :QWidget(parent), back(background), connector(conn)
 {
     cancleButton = new QPushButton("close", this);
     outputButton = new QPushButton("output G-code", this);
-    connect(outputButton, &QPushButton::clicked, this, &MoveDataTab::calData);
     modifyButton = new QPushButton("modify axis", this);
     connect(modifyButton, &QPushButton::clicked, this, &MoveDataTab::modifyMachine);
 
@@ -51,6 +52,9 @@ MoveDataTab::MoveDataTab(TabBackground* background, GuiConnector* conn, QWidget*
     layout->addStretch(1);
     setLayout(layout);
     updateLabel();
+
+    connect(cancleButton, SIGNAL(clicked(bool)), this, SLOT(close()));
+    connect(outputButton, &QPushButton::clicked, this, &MoveDataTab::output);
 }
 
 
@@ -62,6 +66,7 @@ void MoveDataTab::calData(){
     }
     else if(axisSum == 5){
 
+        calAxis5Data();
     }
     else{
         assert(0);
@@ -82,6 +87,7 @@ void MoveDataTab::calAxis4Data(){
     Axis4DataVec& datas = axis4Datas;
     datas.clear();
     float pi = asin(1)*2;
+    auto& axiss = connector->getData()->getAxissIni();
     for(auto i = 0; i < hangPtr->coupleSum(); i++){
         Axis4Data moveData;
         glm::mat4 sendT = hangPtr->sendT(i);
@@ -96,8 +102,33 @@ void MoveDataTab::calAxis4Data(){
         float z0 = newSendT_Z[0];
         float z1 = newSendT_Z[1];
         moveData.flip = atan2(-1*z0, z1);
+        if(axiss.config & AxisIni::xLeft){
+            moveData.x = axiss.off(0) - moveData.x;
+        }
+        else{
+            moveData.x = axiss.off(0) + moveData.x;
+        }
+        if(axiss.config & AxisIni::zDown){
+            moveData.z = axiss.off(1) - moveData.z;
+        }
+        else{
+            moveData.z = axiss.off(1) + moveData.z;
+        }
+        if(axiss.config & AxisIni::spindleLeft){
+            moveData.theta = axiss.off(2) - moveData.theta;
+        }
+        else{
+            moveData.theta = axiss.off(2) + moveData.theta;
+        }
+        if(axiss.config & AxisIni::flipDown){
+            moveData.flip = axiss.off(3) + moveData.flip;
+        }
+        else{
+            moveData.flip = axiss.off(3) - moveData.flip;
+        }
         datas.push_back(moveData);
     }
+    smoothData();
 }
 
 void MoveDataTab::calAxis5Data(){
@@ -108,6 +139,7 @@ void MoveDataTab::calAxis5Data(){
     datas.clear();
     float pi = asin(1)*2;
     vector<glm::mat4> rotxs;
+    auto& axiss = connector->getData()->getAxissIni();
     for(auto i = 0; i < hangPtr->coupleSum(); i++){
         Axis5Data moveData;
         glm::mat4 sendT = hangPtr->sendT(i);
@@ -119,19 +151,50 @@ void MoveDataTab::calAxis5Data(){
         glm::mat4 rotx = utility::rotx(theta);
         rotxs.push_back(rotx);
         glm::mat4 newSendT = rotx*sendT;
-        float yProjX = newSendT[1][0];
-        float yProjZ = newSendT[1][2];
-        float yaw = pi/2 - atan2(yProjZ, yProjX);
+        float x0 = newSendT[0][0];
+        float x1 = newSendT[0][1];
+        float yaw = atan2(x0, x1);
         moveData.yaw = yaw;
-        glm::mat4 roty = utility::roty(-1*yaw);
-        glm::mat4 nnSendT = roty*newSendT;
-        float xProjX = nnSendT[0][0];
-        float xProjY = nnSendT[0][1];
-        float flip = atan(xProjY/xProjX);
-        moveData.flip = -flip;
+        glm::mat4 macT = utility::roty(yaw);
+        glm::vec3 Tx = macT[0];
+        glm::vec3 Ty = macT[1];
+        glm::vec3 y = newSendT[1];
+        float flip = atan2(-1*glm::dot(Tx, y), glm::dot(Ty, y));
+        moveData.flip = flip;
+
+        if(axiss.config & AxisIni::xLeft){
+            moveData.x = axiss.off(0) - moveData.x;
+        }
+        else{
+            moveData.x = axiss.off(0) + moveData.x;
+        }
+        if(axiss.config & AxisIni::zDown){
+            moveData.z = axiss.off(1) - moveData.z;
+        }
+        else{
+            moveData.z = axiss.off(1) + moveData.z;
+        }
+        if(axiss.config & AxisIni::spindleLeft){
+            moveData.theta = axiss.off(2) - moveData.theta;
+        }
+        else{
+            moveData.theta = axiss.off(2) + moveData.theta;
+        }
+        if(axiss.config & AxisIni::flipDown){
+            moveData.flip = axiss.off(3) + moveData.flip;
+        }
+        else{
+            moveData.flip = axiss.off(3) - moveData.flip;
+        }
+        if(axiss.config & AxisIni::yawLeft){
+            moveData.yaw = axiss.off(4) + moveData.yaw;
+        }
+        else{
+            moveData.yaw = axiss.off(4) - moveData.yaw;
+        }
         datas.push_back(moveData);
     }
-    hangPtr->setAnimateTs(rotxs);
+    smoothData();
 }
 
 
@@ -149,5 +212,93 @@ void MoveDataTab::updateLabel(){
     else{
         axis_5_nameLabel->show();
         axis_5_nameLabel->setText(axiss.tabAxis(4));
+    }
+}
+
+
+void MoveDataTab::output(){
+    calData();
+    auto& axis = connector->getData()->getAxissIni();
+    QString fileName = QFileDialog::getSaveFileName(this, "Save G-code",axis.machineName(),"*.gcode");
+    if(fileName.isEmpty()){
+        return ;
+    }
+    else{
+        if(axis.axisSum() == 4){
+
+            std::ofstream outFile;
+            outFile.open(fileName.toLatin1().data());
+            for(auto& data:axis4Datas){
+                QString str = axis.name(0) + " " + QString::number(data.x) + " " + axis.name(1) + " " + QString::number(data.z)
+                        + " " + axis.name(2) + " " + QString::number(data.theta) + " " + axis.name(3) + " " + QString::number(data.flip)
+                        +"\n";
+                outFile<<str.toLatin1().data();
+            }
+            outFile.close();
+        }
+        else{
+            std::ofstream outFile;
+            outFile.open(fileName.toLatin1().data());
+            for(auto& data:axis5Datas){
+                QString str = axis.name(0) + " " + QString::number(data.x) + " " + axis.name(1) + " " + QString::number(data.z)
+                        + " " + axis.name(2) + " " + QString::number(data.theta) + " " + axis.name(3) + " " + QString::number(data.flip)
+                        + " " + axis.name(4) + " " + QString::number(data.yaw)
+                        + "\n";
+                outFile<<str.toLatin1().data();
+            }
+            outFile.close();
+        }
+    }
+}
+
+void MoveDataTab::smoothData(){
+    auto& axis = connector->getData()->getAxissIni();
+    float pi = asin(1)*2;
+    if(axis.axisSum() == 4){
+        auto& datas = axis4Datas;
+        float lastTheta = datas.at(0).theta;
+        float lastFlip = datas.at(0).flip;
+        for(auto& data:datas){
+            while(data.theta > lastTheta + pi){
+                data.theta -= 2*pi;
+            }
+            while(data.theta < lastTheta - pi){
+                data.theta += 2*pi;
+            }
+            lastTheta = data.theta;
+
+            while(data.flip > lastFlip + pi){
+                data.flip -= 2*pi;
+            }
+            while(data.flip < lastFlip - pi){
+                data.flip += 2*pi;
+            }
+            lastFlip = data.flip;
+        }
+    }
+    else if(axis.axisSum() == 5){
+        auto& datas = axis5Datas;
+        float lastTheta = datas.at(0).theta;
+        float lastFlip = datas.at(0).flip;
+        for(auto& data:datas){
+            while(data.theta > lastTheta + pi){
+                data.theta -= 2*pi;
+            }
+            while(data.theta < lastTheta - pi){
+                data.theta += 2*pi;
+            }
+            lastTheta = data.theta;
+
+            while(data.flip > lastFlip + pi){
+                data.flip -= 2*pi;
+            }
+            while(data.flip < lastFlip - pi){
+                data.flip += 2*pi;
+            }
+            lastFlip = data.flip;
+        }
+    }
+    else{
+        assert(0);
     }
 }

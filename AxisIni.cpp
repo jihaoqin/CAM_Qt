@@ -117,3 +117,8 @@ QString AxisIni::tabMachineName(){
 QString AxisIni::tabAxis(int ind){
     return QString("Axis ") + names.at(ind) + ": " + QString::number(axis_Offs.at(ind));
 }
+
+
+float AxisIni::off(int ind){
+    return axis_Offs.at(ind);
+}

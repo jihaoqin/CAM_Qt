@@ -14,6 +14,7 @@ public:
     };
     AxisIni(int);
     QString offStr(int);
+    float off(int);
     QString showStr(int);
     QString name(int);
     void setName(int, QString);
