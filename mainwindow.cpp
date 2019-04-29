@@ -20,6 +20,12 @@
 #include "AnimateController.h"
 #include "SimulationTab.h"
 #include <QTimer>
+#include "Data.h"
+#include "rapidjson/document.h"
+#include "rapidjson/filereadstream.h"
+#include <fstream>
+
+using namespace rapidjson;
 
 MainWindow::MainWindow(Controller* c, QWidget *parent)
     : QMainWindow(parent), ctrl(nullptr), widget(nullptr), teeNewDialog(nullptr), connector(nullptr)
@@ -74,6 +80,7 @@ void MainWindow::configureMenuBar(){
     //update the status of actions below "File" menu
     connect(fileMenu, &QMenu::aboutToShow, this, &MainWindow::updateAction);
     connect(actionNew, &QAction::triggered, this, &MainWindow::saveOrNot);
+    connect(actionSave, &QAction::triggered, this, &MainWindow::saveIni);
     connect(bandMenu, &QMenu::aboutToShow, this, &MainWindow::updateAction);
     connect(bandSave, &QAction::triggered, this, &MainWindow::saveBand);
     connect(bandOpen, &QAction::triggered, this, &MainWindow::openBand);
@@ -120,7 +127,9 @@ void MainWindow::showTeeParameterDialog(){
     int flag = teeNewDialog->exec();
     if(flag){
         TeePara para = teeNewDialog->getTeePara();
-        ctrl->addTee(para.mainLength, para.branchLength, para.R, para.sideR);
+        float width = teeNewDialog->bandWidth();
+        ctrl->getData()->bandWidth(width);
+        ctrl->addTee(para.lengthMain, para.lengthBranch, para.pipeR, para.sideR);
         updateAction();
     }
     delete teeNewDialog;
@@ -401,4 +410,21 @@ void MainWindow::showMoveDataTab(){
     TabWidget* t = connector->getTabWidget();
     t->showMoveDataTab();
     updateAction();
+}
+
+
+void MainWindow::saveIni(){
+    QString fileName = QFileDialog::getSaveFileName(this, "save","","*.windIni");
+    if(fileName.isEmpty()){
+        return ;
+    }
+    else{
+        StringBuffer sb;
+        PrettyWriter<StringBuffer> writer(sb);
+        ctrl->getData()->serialize(writer);
+        std::ofstream outFile;
+        outFile.open(fileName.toLatin1().data());
+        outFile<<sb.GetString();
+        outFile.close();
+    }
 }

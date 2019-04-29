@@ -19,5 +19,6 @@ int main(int argc, char *argv[])
     w.show();
     ctrl.addTee(90, 52.5, 7.5, 7.5);
     data->bandWidth(5);
+    data->getEnvelopeIni() = EnvelopData{25, 20};
     return a.exec();
 }

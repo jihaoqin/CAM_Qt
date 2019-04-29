@@ -5,12 +5,7 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <mainwindow.h>
-struct TeePara{
-    float mainLength;
-    float branchLength;
-    float R;
-    float sideR;
-};
+#include "TeePara.h"
 
 class TeeParameterDialog: public QDialog
 {
@@ -19,6 +14,7 @@ class TeeParameterDialog: public QDialog
 public:
     TeeParameterDialog(MainWindow* parent);
     TeePara getTeePara();
+    float bandWidth();
 public slots:
     void readData();
 
@@ -39,8 +35,13 @@ private:
     QLineEdit *RLine;
     QLabel *RLabel;
 
+
+    QLineEdit *widthLine;
+    QLabel *widthLabel;
+
     QLabel *teePic;
 
     TeePara para;
+    float m_width;
 };
 

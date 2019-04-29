@@ -170,3 +170,17 @@ float Data::bandWidth(){
 void Data::bandWidth(float w){
     m_bandWidth = w;
 }
+
+
+void Data::serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const{
+    writer.StartObject();
+    writer.String("AxisIni");
+    axiss.serialize(writer);
+    writer.String("EnvelopData");
+    envelop.serialize(writer);
+    writer.String("width");
+    writer.Double(m_bandWidth);
+    writer.String("idGenerator");
+    idGenerator.serialize(writer);
+    writer.EndObject();
+}

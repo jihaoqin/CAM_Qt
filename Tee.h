@@ -12,18 +12,12 @@
 #include "TriEdgePlane.h"
 #include "IdGenerator.h"
 #include "Axiss.h"
+#include "TeePara.h"
 
 using Dir = glm::vec3;
 using Pos = glm::vec3;
 
 class GLProgram;
-class TeePara{
-public:
-    float pipeR;
-    float sideR;
-    float lengthMain;
-    float lengthBranch;
-};
 
 class Tee: public DataObject
 {

@@ -47,3 +47,25 @@ QString IdGenerator::getBandId(){
     bandIndex++;
     return id;
 }
+
+
+void IdGenerator::serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const{
+    writer.StartObject();
+    writer.String("type");
+    writer.String("IdGenerator");
+    writer.String("cylinderIndex");
+    writer.Int(cylinderIndex);
+    writer.String("ringIndex");
+    writer.Int(ringIndex);
+    writer.String("pointIndex");
+    writer.Int(pointIndex);
+    writer.String("planeIndex");
+    writer.Int(planeIndex);
+    writer.String("curveIndex");
+    writer.Int(curveIndex);
+    writer.String("triEdgePlaneIndex");
+    writer.Int(triEdgePlaneIndex);
+    writer.String("bandIndex");
+    writer.Int(bandIndex);
+    writer.EndObject();
+}

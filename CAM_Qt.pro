@@ -108,7 +108,8 @@ SOURCES += \
     MoveData.cpp \
     AxisConfigDialog.cpp \
     EnvelopData.cpp \
-    EnvelopIniDialog.cpp
+    EnvelopIniDialog.cpp \
+    TeePara.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -198,7 +199,8 @@ HEADERS += \
     MoveData.h \
     AxisConfigDialog.h \
     EnvelopData.h \
-    EnvelopIniDialog.h
+    EnvelopIniDialog.h \
+    TeePara.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt

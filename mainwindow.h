@@ -33,6 +33,7 @@ private slots:
     void genLeftCurve();
     void genUpCurve();
     void genRightCurve();
+    void saveIni();
 private:
     void configureStatusBar();
     void configureMenuBar();

@@ -52,6 +52,7 @@ public:
     void bandWidth(float);
     std::shared_ptr<Node> getNodeRoot();
     EnvelopData& getEnvelopeIni();
+    void serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const;
 private:
     QMutex mtx;
     std::shared_ptr<Camera2> camera;
