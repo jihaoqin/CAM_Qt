@@ -12,7 +12,7 @@
 using std::shared_ptr;
 using std::make_shared;
 Data::Data():box(), state(), idGenerator(), root(nullptr), connector(nullptr)
-  , mtx(QMutex::Recursive), axiss(5)
+  , mtx(QMutex::Recursive), axiss(5), m_bandWidth(2)
 {
     camera = std::make_shared<Camera2>(BoundingBox());
 }
@@ -155,4 +155,18 @@ QMutex* Data::getMutex(){
 
 AxisIni& Data::getAxissIni(){
     return axiss;
+}
+
+
+EnvelopData& Data::getEnvelopeIni(){
+    return envelop;
+}
+
+
+float Data::bandWidth(){
+    return m_bandWidth;
+}
+
+void Data::bandWidth(float w){
+    m_bandWidth = w;
 }

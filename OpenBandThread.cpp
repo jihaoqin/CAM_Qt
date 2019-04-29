@@ -139,7 +139,7 @@ void OpenBandThread::run(){
             }
             TeePtr tee = data->getNodeRoot()->findTeePtr();
             mtx.lock();
-            band = make_shared<GeneralBand>(pds, strs, newBandId, tee);
+            band = make_shared<GeneralBand>(pds, strs, newBandId, tee, width);
             data->addBand(band);
             mtx.unlock();
             --left;

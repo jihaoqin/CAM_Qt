@@ -106,7 +106,9 @@ SOURCES += \
     MoveDataTab.cpp \
     AxisIni.cpp \
     MoveData.cpp \
-    AxisConfigDialog.cpp
+    AxisConfigDialog.cpp \
+    EnvelopData.cpp \
+    EnvelopIniDialog.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -194,7 +196,9 @@ HEADERS += \
     MoveDataTab.h \
     AxisIni.h \
     MoveData.h \
-    AxisConfigDialog.h
+    AxisConfigDialog.h \
+    EnvelopData.h \
+    EnvelopIniDialog.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt
@@ -230,4 +234,5 @@ RESOURCES += \
     res.qrc
 
 FORMS += \
-    axisconfigdialog.ui
+    axisconfigdialog.ui \
+    envelopinidialog.ui

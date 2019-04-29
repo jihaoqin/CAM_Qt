@@ -18,5 +18,6 @@ int main(int argc, char *argv[])
     data->bindConnector(w.connector);
     w.show();
     ctrl.addTee(90, 52.5, 7.5, 7.5);
+    data->bandWidth(5);
     return a.exec();
 }

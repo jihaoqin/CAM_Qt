@@ -177,7 +177,7 @@ void AnimateController::setPercent(int p){
 void AnimateController::initHangingBand(){
     auto root = ctrl->data->getNodeRoot();
     auto tee =  std::dynamic_pointer_cast<Tee>(root->findObjectId("tee"));
-    EnvelopAssist assist(tee);
+    EnvelopAssist assist(tee, ctrl->data->getEnvelopeIni());
     SuperPosVec allSuperPosVec;
     vector<int> crossInds;
     for(int i = 0; i < bandPtrs.size(); ++i){
@@ -229,7 +229,7 @@ void AnimateController::solveCollision(){
     auto root = ctrl->data->getNodeRoot();
     HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
     auto tee =  std::dynamic_pointer_cast<Tee>(root->findObjectId("tee"));
-    EnvelopAssist assist(tee);
+    EnvelopAssist assist(tee, ctrl->data->getEnvelopeIni());
     SuperPosVec poss = hangPtr->data();
     vector<int> deleteInds;
     bool some = false;
@@ -316,7 +316,7 @@ void AnimateController::initBandPos(){
     auto root = ctrl->data->getNodeRoot();
     HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
     auto tee =  std::dynamic_pointer_cast<Tee>(root->findObjectId("tee"));
-    EnvelopAssist assist(tee);
+    EnvelopAssist assist(tee, ctrl->data->getEnvelopeIni());
     SuperPosVec poss = hangPtr->data();
     vector<glm::mat4> Ts;
     int possBeginInd = 0;

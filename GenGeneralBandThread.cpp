@@ -50,7 +50,7 @@ void GenGeneralBandThread::run(){
         auto& pds = get<0>(tuple1);
         auto& strs = get<1>(tuple1);
         mtx->lock();
-        GeneralBandPtr band = make_shared<GeneralBand>(pds, strs, data->idGenerator.getBandId(), tee);
+        GeneralBandPtr band = make_shared<GeneralBand>(pds, strs, data->idGenerator.getBandId(), tee, data->bandWidth());
         band->setCouple(e);
         data->addBand(band);
         mtx->unlock();

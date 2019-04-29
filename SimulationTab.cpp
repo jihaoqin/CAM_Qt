@@ -8,10 +8,12 @@
 #include "TabBackground.h"
 #include <QTimer>
 #include <QCheckBox>
+#include "EnvelopIniDialog.h"
 
 SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* parent)
     :QWidget(parent), backWidget(back), connector(con)
 {
+    envelopButton = new QPushButton("envelop ini", this);
     calButton = new QPushButton("calculation", this);
     absoluteBox = new QCheckBox("absolute", this);
     hangVisableBox = new QCheckBox("show hang lines", this);
@@ -39,6 +41,7 @@ SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* pa
     hLayout->addWidget(playAndPauseButton);
     hLayout->addWidget(fFrameButton);
     hLayout->addWidget(fastButton);
+    layout->addWidget(envelopButton);
     layout->addWidget(calButton);
     layout->addWidget(absoluteBox);
     layout->addWidget(hangVisableBox);
@@ -49,6 +52,7 @@ SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* pa
     setLayout(layout);
     timer = new QTimer(this);
     timer->setInterval(500);
+    connect(envelopButton, &QPushButton::clicked, this, &SimulationTab::showEnvelopIniDialog);
     connect(calButton, &QPushButton::clicked, this, &SimulationTab::calculation);
     connect(playAndPauseButton, &QPushButton::clicked, this, &SimulationTab::playOrPause);
     connect(slowButton, &QPushButton::clicked, this, &SimulationTab::slowForward);
@@ -142,4 +146,10 @@ bool SimulationTab::isAbsolute(){
 
 bool SimulationTab::shallShowHangLines(){
     return hangVisableBox->isChecked();
+}
+
+
+void SimulationTab::showEnvelopIniDialog(){
+    EnvelopIniDialog dialog(connector, this);
+    dialog.exec();
 }

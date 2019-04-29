@@ -7,6 +7,7 @@
         <file alias="blue">pic/blue.png</file>
         <file alias="green">pic/green.png</file>
         <file alias="red">pic/red.png</file>
+        <file alias="envelope">pic/envelope.png</file>
     </qresource>
     <qresource prefix="/icons">
         <file alias="newCurve">pic/newCurve.png</file>

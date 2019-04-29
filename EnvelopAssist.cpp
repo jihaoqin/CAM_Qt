@@ -7,23 +7,22 @@
 
 using namespace std;
 
-EnvelopAssist::EnvelopAssist(TeePtr t)
+EnvelopAssist::EnvelopAssist(TeePtr t, EnvelopData d)
     :tee(t)
 {
-    m_dis = 10;
     TeePara teePara = tee->teePara();
     glm::mat4 TMain;
-    utility::setPos(TMain, Pos{teePara.lengthMain/2+m_dis, 0, 0});
+    utility::setPos(TMain, Pos{teePara.lengthMain/2+d.incLength, 0, 0});
     utility::setXDir(TMain, Dir{0, 0, 1});
     utility::setYDir(TMain, Dir{0, 1, 0});
     utility::setZDir(TMain, Dir{-1, 0, 0});
-    main = Pipe{teePara.lengthMain+2*m_dis, TMain, teePara.pipeR+m_dis};
+    main = Pipe{teePara.lengthMain+2*d.incLength, TMain, teePara.pipeR+d.incPipeR};
     glm::mat4 TBranch;
     utility::setPos(TBranch, Pos{0, 0, 0});
     utility::setXDir(TBranch, Dir{-1, 0, 0});
     utility::setYDir(TBranch, Dir{0, 0, 1});
     utility::setZDir(TBranch, Dir{0, 1, 0});
-    branch = Pipe{teePara.lengthBranch-teePara.pipeR+m_dis, TBranch, teePara.pipeR+m_dis};
+    branch = Pipe{teePara.lengthBranch-teePara.pipeR+d.incLength, TBranch, teePara.pipeR+d.incPipeR};
     glm::mat4 TMainPipe;
     utility::setPos(TMainPipe, Pos{teePara.lengthMain/2, 0, 0});
     utility::setXDir(TMainPipe, Dir{0, 0, 1});

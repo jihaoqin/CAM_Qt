@@ -104,7 +104,7 @@ void FromPipeCurveController::addSymmetry(PointPtr p, QString flag){
     QString curvexId = data->idGenerator.getCurveId();
     TCurvePtr curvex = std::make_shared<TCurve>(px,windAngle*i,lam*i, curvexId.toLatin1().data(),tee);
     QString bandxId = data->idGenerator.getBandId();
-    TBandOnPointPtr bandx = std::make_shared<TBandOnPoint>(px, 2, curvex, bandxId, tee);
+    TBandOnPointPtr bandx = std::make_shared<TBandOnPoint>(px, data->bandWidth(), curvex, bandxId, tee);
     bandx->setColor(Color::YELLOW);
     p->addChild(px);
     px->addChild(curvex);

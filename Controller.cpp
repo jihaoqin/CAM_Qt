@@ -436,7 +436,8 @@ CBandPtr Controller::addCBandInPipe(QString pId, float uAng){
     auto teePtr = std::dynamic_pointer_cast<Tee>(teeFa);
     QString meshId(pointPtr->meshId());
     QString bandId = data->idGenerator.getBandId();
-    auto band = std::make_shared<CBandOnPoint>(HalfPoint{pointPtr->getPos(), meshId.toLatin1().data()}, uAng, teePtr, bandId);
+    auto band = std::make_shared<CBandOnPoint>(HalfPoint{pointPtr->getPos(), meshId.toLatin1().data()},
+                                               uAng, teePtr, bandId, data->bandWidth());
     QOpenGLContext* gl = widget->getGLContext();
     band->bindGL(gl);
     data->addBand(band);
@@ -461,7 +462,7 @@ QString Controller::addBandInTee(QString pId, float uAng){
     auto curve = std::make_shared<TCurve>(pointPtr, uAng, 0, id.toLatin1().data(), teePtr);
     pointPtr->addChild(curve);
     QString bandId = data->idGenerator.getBandId();
-    auto band = std::make_shared<TBandOnPoint>(pointPtr, 2, curve, bandId, teePtr);
+    auto band = std::make_shared<TBandOnPoint>(pointPtr, data->bandWidth(), curve, bandId, teePtr);
     pointPtr->addChild(band);
     curve->addChild(band);
     QOpenGLContext* gl = widget->getGLContext();
@@ -754,7 +755,7 @@ void Controller::genCylinderCurve(QString which){
         auto tuple1 = leftAssist.genCurve(e);
         auto& pds = get<0>(tuple1);
         auto& strs = get<1>(tuple1);
-        GeneralBandPtr band = make_shared<GeneralBand>(pds, strs, data->idGenerator.getBandId(), tee);
+        GeneralBandPtr band = make_shared<GeneralBand>(pds, strs, data->idGenerator.getBandId(), tee, data->bandWidth());
         QOpenGLContext* gl = widget->getGLContext();
         band->setCouple(e);
         band->bindGL(gl);
@@ -810,7 +811,7 @@ void Controller::closePath(){
             auto tuple1 = leftAssist.genCircleCurve(e, nearEnd);
             auto& pds = get<0>(tuple1);
             auto& strs = get<1>(tuple1);
-            auto band = make_shared<GeneralBand>(pds, strs, data->idGenerator.getBandId(), tee);
+            auto band = make_shared<GeneralBand>(pds, strs, data->idGenerator.getBandId(), tee, data->bandWidth());
             QOpenGLContext* gl = widget->getGLContext();
             band->setCouple(e);
             band->setCouple(nearEnd);

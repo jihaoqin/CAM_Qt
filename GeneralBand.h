@@ -8,7 +8,7 @@
 class GeneralBand:public Band
 {
 public:
-    GeneralBand(PosDirVec pds, QStringVec names, QString name, TeePtr t);
+    GeneralBand(PosDirVec pds, QStringVec names, QString name, TeePtr t, float w);
     virtual void bindGL(QOpenGLContext* c) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;
     BoundingBox boundingBox();

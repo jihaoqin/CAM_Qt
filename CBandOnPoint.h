@@ -8,7 +8,7 @@
 class CBandOnPoint:public Band
 {
 public:
-    CBandOnPoint(HalfPoint, float angle, TeePtr, QString);
+    CBandOnPoint(HalfPoint, float angle, TeePtr, QString, float w);
     virtual void bindGL(QOpenGLContext*);
     virtual void draw(std::shared_ptr<GLProgram>);
     void setPara(HalfPoint, float angle);

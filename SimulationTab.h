@@ -24,7 +24,9 @@ public slots:
     void pause();
     void nextFrame();
     void lastFrame();
+    void showEnvelopIniDialog();
 private:
+    QPushButton* envelopButton;
     QPushButton* calButton;
     QCheckBox* absoluteBox;
     QCheckBox* hangVisableBox;

@@ -11,6 +11,7 @@
 #include "IdGenerator.h"
 #include "AxisIni.h"
 #include <QMutex>
+#include "EnvelopData.h"
 class Cylinder;
 class Ring;
 class Point;
@@ -47,7 +48,10 @@ public:
     void bindConnector(GuiConnector*);
     AxisIni& getAxissIni();
     QMutex* getMutex();
+    float bandWidth();
+    void bandWidth(float);
     std::shared_ptr<Node> getNodeRoot();
+    EnvelopData& getEnvelopeIni();
 private:
     QMutex mtx;
     std::shared_ptr<Camera2> camera;
@@ -55,6 +59,8 @@ private:
     BoundingBox box;
     DataState state;
     AxisIni axiss;
+    EnvelopData envelop;
+    float m_bandWidth;
     IdGenerator idGenerator;
     GuiConnector* connector;
     void updateBoundingBox();
