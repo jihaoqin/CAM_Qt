@@ -164,6 +164,9 @@ void Controller::processIntersectionPoint(glm::vec3 begin, glm::vec3 dir, glm::v
         if(focusOnPointText == true){
             if(pointId.isEmpty()){
                 QString id = addIntersectionPointInPipe(begin, dir);
+                if(!id.contains("point")){
+                    return ;
+                }
                 pipeTab->setPointText(id);
                 float angle = pipeTab->getWindingAngle();
                 CBandPtr cBand = addCBandInPipe(id, angle);
