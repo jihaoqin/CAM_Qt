@@ -10,6 +10,8 @@
 #include "GuiConnector.h"
 #include "Data.h"
 #include "Node.h"
+#include "Model.h"
+#include "Controller.h"
 
 using namespace rapidjson;
 AxisConfigDialog::AxisConfigDialog(GuiConnector* c, AxisIni* axis_, QWidget *parent) :
@@ -372,8 +374,9 @@ void AxisConfigDialog::loadModel(){
     }
     else{
         ModelReader loader(fileName.toLatin1().data());
-        const auto& meshs = loader.modelMeshs();
+        auto& mesh = loader.modelMesh();
         auto headPtr = connector->getData()->getNodeRoot()->findHeadPtr();
-        headPtr->setMesh();
+        headPtr->setMeshData(mesh.vertexs(), mesh.indexs());
+        connector->getCtrl()->allBindGL();
     }
 }

@@ -10,10 +10,10 @@ class ModelReader
 {
 public:
     ModelReader(const char* filePath);
-    vector<Mesh>& modelMeshs();
+    Mesh& modelMesh();
     ~ModelReader();
 private:
-    std::vector<Mesh> m_mesh;
+    Mesh m_mesh;
     std::vector<Mesh> meshVec;
     std::string directory;
 	void loadModel(const aiScene*);

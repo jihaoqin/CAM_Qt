@@ -7,18 +7,20 @@
 class Model:public DataObject
 {
 public:
-    Model(std::vector<Mesh>, QString);
+    Model(Mesh, QString);
     Model();
     void setShowInd(int);
     void setAnimateTs(std::vector<glm::mat4>);
+    void setMeshData(vector<Vertex> v, vector<unsigned int> ind);
     virtual void setAnimateT(glm::mat4) override;
 public:
     virtual void bindGL(QOpenGLContext*) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;
 private:
     std::vector<glm::mat4> m_Ts;
-    std::vector<Mesh> m_meshs;
+    Mesh m_mesh;
     int m_showInd;
+    bool hasMesh;
 };
 
 #endif // MODEL_H

@@ -26,7 +26,7 @@ void Data::updateBoundingBox(){
 
 void Data::addTee(std::shared_ptr<Tee> t){
     root = std::make_shared<Node>(t);
-    root->addChild(make_shared<Node>(make_shared<Model>(vector<Mesh>{}, "head")));
+    root->addChild(make_shared<Node>(make_shared<Model>(Mesh(), "head")));
     updateBoundingBox();
     camera->bindBoundingBox(box);
     state.setEmpty(false);

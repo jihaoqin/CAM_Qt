@@ -1,9 +1,10 @@
 #include "Model.h"
 #include "Color.h"
 
-Model::Model(std::vector<Mesh> meshs, QString name)
-    :m_meshs(meshs)
+Model::Model(Mesh m, QString name)
+    :m_mesh(m),m_showInd(0),m_Ts({glm::mat4(1.0)}), hasMesh(false)
 {
+    visiable = true;
     setId(name.toLatin1().data());
 }
 
@@ -13,12 +14,11 @@ Model::Model(){
 
 
 void Model::bindGL(QOpenGLContext* c){
-    if(binded  == true){
+    if(binded  == true || hasMesh == false){
         return ;
     }
-    for(auto& m:m_meshs){
-        m.bindGL(c);
-    }
+    m_mesh.bindGL(c);
+    binded = true;
 }
 
 void Model::draw(std::shared_ptr<GLProgram> p){
@@ -27,9 +27,7 @@ void Model::draw(std::shared_ptr<GLProgram> p){
     }
     p->setMat4("model", m_Ts.at(m_showInd));
     p->setVec3("material.color", Color::YELLOW);
-    for(auto& m: m_meshs){
-        m.draw();
-    }
+    m_mesh.draw();
 }
 
 void Model::setAnimateT(glm::mat4){
@@ -39,4 +37,11 @@ void Model::setAnimateT(glm::mat4){
 
 void Model::setShowInd(int ind){
     m_showInd = ind;
+}
+
+void Model::setMeshData(vector<Vertex> v, vector<unsigned int> ind){
+    m_mesh.setData(v, ind);
+    if(v.size() > 0){
+        hasMesh == true;
+    }
 }

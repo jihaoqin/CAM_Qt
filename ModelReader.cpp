@@ -30,11 +30,11 @@ ModelReader::ModelReader(const char* filePath)
             vertexAll.insert(vertexAll.end(), vs.begin(), vs.end());
             auto&& inds = m.indexs();
             for(auto i:inds){
-                inds.push_back(vSum+i);
+                indexAll.push_back(vSum+i);
             }
             vSum += vs.size();
-            这里
         }
+        m_mesh.setData(vertexAll, indexAll);
 	}
 }
 
@@ -108,6 +108,6 @@ Mesh ModelReader::processMesh(const unsigned int index, const aiScene *s) {
 }
 
 
-vector<Mesh>& ModelReader::modelMesh(){
+Mesh& ModelReader::modelMesh(){
     return m_mesh;
 }

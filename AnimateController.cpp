@@ -125,7 +125,7 @@ void AnimateController::calculation(){
     for(auto pairVec:indexPairVecs){
         pairTotal += pairVec.size();
     }
-    axis5Data();
+    setRotxs();
 }
 
 int AnimateController::getPercent(){
@@ -383,61 +383,20 @@ void AnimateController::hideBandSet(){
 }
 
 
-Axis4DataVec AnimateController::axis4Data(){
-    Axis4DataVec datas;
-    float pi = asin(1)*2;
-    auto root = ctrl->data->getNodeRoot();
-    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
-    for(auto i = 0; i < hangPtr->coupleSum(); i++){
-        Axis4Data moveData;
-        glm::mat4 sendT = hangPtr->sendT(i);
-        Pos sendPos = hangPtr->sendPos(i);
-        float theta = atan2(sendPos.y, sendPos.z);
-        moveData.theta = theta;
-        moveData.x = sendPos.x;
-        moveData.z = glm::length(glm::vec2(sendPos.z, sendPos.y));
-        glm::mat4 rotx = utility::rotx(theta);
-        glm::mat4 newSendT = rotx*sendT;
-        Dir newSendT_Z = newSendT[2];
-        float z0 = newSendT_Z[0];
-        float z1 = newSendT_Z[1];
-        moveData.flip = atan2(-1*z0, z1);
-        datas.push_back(moveData);
-    }
-    return datas;
-}
 
-Axis5DataVec AnimateController::axis5Data(){
-    Axis5DataVec datas;
+void AnimateController::setRotxs(){
     float pi = asin(1)*2;
     auto root = ctrl->data->getNodeRoot();
     HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
     vector<glm::mat4> rotxs;
     for(auto i = 0; i < hangPtr->coupleSum(); i++){
-        Axis5Data moveData;
         glm::mat4 sendT = hangPtr->sendT(i);
         Pos sendPos = hangPtr->sendPos(i);
         float theta = atan2(sendPos.y, sendPos.z);
-        moveData.theta = theta;
-        moveData.x = sendPos.x;
-        moveData.z = glm::length(glm::vec2(sendPos.z, sendPos.y));
         glm::mat4 rotx = utility::rotx(theta);
         rotxs.push_back(rotx);
-        glm::mat4 newSendT = rotx*sendT;
-        float yProjX = newSendT[1][0];
-        float yProjZ = newSendT[1][2];
-        float yaw = pi/2 - atan2(yProjZ, yProjX);
-        moveData.yaw = yaw;
-        glm::mat4 roty = utility::roty(-1*yaw);
-        glm::mat4 nnSendT = roty*newSendT;
-        float xProjX = nnSendT[0][0];
-        float xProjY = nnSendT[0][1];
-        float flip = atan(xProjY/xProjX);
-        moveData.flip = -flip;
-        datas.push_back(moveData);
     }
     hangPtr->setAnimateTs(rotxs);
-    return datas;
 }
 
 
