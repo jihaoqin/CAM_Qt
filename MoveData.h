@@ -22,16 +22,16 @@ class AxisMoveData{
 public:
     AxisMoveData(int);
     int axisSum();
-    float x();
-    float x(float);
-    float z();
-    float z(float);
-    float flip();
-    float flip(float);
-    float theta();
-    float theta(float);
-    float yaw();
-    float yaw(float);
+    float& x();
+    float& x(float);
+    float& z();
+    float& z(float);
+    float& flip();
+    float& flip(float);
+    float& theta();
+    float& theta(float);
+    float& yaw();
+    float& yaw(float);
 private:
     int m_axisSum;
     float m_theta;//主轴回转

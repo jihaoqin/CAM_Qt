@@ -16,6 +16,8 @@ public:
     bool shallShowHangLines();
     bool isAbsolute();
     void updateLabel();
+    void smoothData();
+    void setHeadAnimate();
 public slots:
     void output();
     void calculation();
