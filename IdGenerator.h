@@ -1,7 +1,7 @@
 #ifndef IDGENERATOR_H
 #define IDGENERATOR_H
 #include <QString>
-
+#include "rapidjson/prettywriter.h"
 
 class IdGenerator
 {
@@ -14,6 +14,7 @@ public:
     QString getCurveId();
     QString getTriEdgePlaneId();
     QString getBandId();
+    void serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const;
 private:
     unsigned int cylinderIndex;
     unsigned int ringIndex;

@@ -1,30 +1,26 @@
-#pragma once
-#include <iostream>
-#include <assimp/scene.h>
-#include "Mesh.h"
-#include "boundingbox.h"
-#include <string>
-#include <QOpenGLContext>
+#ifndef MODEL_H
+#define MODEL_H
 #include "DataObject.h"
-#include "Color.h"
-class Model: public DataObject
+#include "glm/glm.hpp"
+#include "Mesh.h"
+
+class Model:public DataObject
 {
 public:
-	Model(const char* filePath);
-	~Model();
-	BoundingBox boundingBox();
-    glm::mat4 modelMatrix();
+    Model(Mesh, QString);
+    Model();
+    void setShowInd(int);
+    void setAnimateTs(std::vector<glm::mat4>);
+    void setMeshData(vector<Vertex> v, vector<unsigned int> ind);
+    virtual void setAnimateT(glm::mat4) override;
 public:
     virtual void bindGL(QOpenGLContext*) override;
     virtual void draw(std::shared_ptr<GLProgram>) override;
 private:
-    std::vector<Mesh> meshVec;
-    std::string directory;
-    glm::mat4 modelMat;
-    Color color;
-	void loadModel(const aiScene*);
-	void processNode(const aiNode *, const aiScene *);
-	Mesh processMesh(const unsigned int, const aiScene *);
+    std::vector<glm::mat4> m_Ts;
+    Mesh m_mesh;
+    int m_showInd;
+    bool hasMesh;
 };
 
-
+#endif // MODEL_H

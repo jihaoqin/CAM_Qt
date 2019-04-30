@@ -4,6 +4,7 @@
 #include "Tee.h"
 #include "Point.h"
 #include "Band.h"
+#include "Model.h"
 
 Node::Node():father(), type(nothing),data(nullptr)
 {
@@ -152,5 +153,15 @@ CurvePtr Node::findCurvePtr(QString id){
     }
     else{
         return std::dynamic_pointer_cast<Curve>(basis);
+    }
+}
+
+HeadPtr Node::findHeadPtr(){
+    auto basis = findObjectId("head");
+    if(basis == nullptr){
+        return nullptr;
+    }
+    else{
+        return std::dynamic_pointer_cast<Model>(basis);
     }
 }

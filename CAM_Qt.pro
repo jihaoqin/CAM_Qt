@@ -29,7 +29,6 @@ SOURCES += \
         mainwindow.cpp \
     glwidget.cpp \
     Mesh.cpp \
-    Model.cpp \
     boundingbox.cpp \
     Camera2.cpp \
     PerspectiveMat.cpp \
@@ -106,13 +105,17 @@ SOURCES += \
     MoveDataTab.cpp \
     AxisIni.cpp \
     MoveData.cpp \
-    AxisConfigDialog.cpp
+    AxisConfigDialog.cpp \
+    EnvelopData.cpp \
+    EnvelopIniDialog.cpp \
+    TeePara.cpp \
+    ModelReader.cpp \
+    Model.cpp
 
 HEADERS += \
         mainwindow.h \
     glwidget.h \
     Mesh.h \
-    Model.h \
     boundingbox.h \
     Camera2.h \
     PerspectiveMat.h \
@@ -194,7 +197,12 @@ HEADERS += \
     MoveDataTab.h \
     AxisIni.h \
     MoveData.h \
-    AxisConfigDialog.h
+    AxisConfigDialog.h \
+    EnvelopData.h \
+    EnvelopIniDialog.h \
+    TeePara.h \
+    ModelReader.h \
+    Model.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt
@@ -230,4 +238,5 @@ RESOURCES += \
     res.qrc
 
 FORMS += \
-    axisconfigdialog.ui
+    axisconfigdialog.ui \
+    envelopinidialog.ui

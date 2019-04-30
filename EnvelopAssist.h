@@ -5,6 +5,7 @@
 #include "HalfPoint.h"
 #include <QString>
 #include "CPPara.h"
+#include "EnvelopData.h"
 class Envelop;
 using EnvelopPtr = std::shared_ptr<Envelop>;
 
@@ -28,7 +29,7 @@ private:
 class EnvelopAssist
 {
 public:
-    EnvelopAssist(TeePtr);
+    EnvelopAssist(TeePtr, EnvelopData);
     SuperPosVec intersectPoint(Pos , Dir);
     bool isCross(Pos, Pos);
     SuperPosVec genInsertedSuper(SuperPosVec);

@@ -1,5 +1,5 @@
 #pragma once
-#include "Model.h"
+#include "ModelReader.h"
 #include "config.h"
 #include <vector>
 #include "Line.h"
@@ -11,6 +11,7 @@
 #include "IdGenerator.h"
 #include "AxisIni.h"
 #include <QMutex>
+#include "EnvelopData.h"
 class Cylinder;
 class Ring;
 class Point;
@@ -47,7 +48,11 @@ public:
     void bindConnector(GuiConnector*);
     AxisIni& getAxissIni();
     QMutex* getMutex();
+    float bandWidth();
+    void bandWidth(float);
     std::shared_ptr<Node> getNodeRoot();
+    EnvelopData& getEnvelopeIni();
+    void serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const;
 private:
     QMutex mtx;
     std::shared_ptr<Camera2> camera;
@@ -55,6 +60,8 @@ private:
     BoundingBox box;
     DataState state;
     AxisIni axiss;
+    EnvelopData envelop;
+    float m_bandWidth;
     IdGenerator idGenerator;
     GuiConnector* connector;
     void updateBoundingBox();

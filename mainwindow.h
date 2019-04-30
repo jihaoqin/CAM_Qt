@@ -24,7 +24,6 @@ public slots:
     void loopBand();
     void animationOver();
     void showSimTab();
-    void showMoveDataTab();
 private slots:
     void showNewCurveTab();
     void showFromPipeCurveTab();
@@ -33,6 +32,7 @@ private slots:
     void genLeftCurve();
     void genUpCurve();
     void genRightCurve();
+    void saveIni();
 private:
     void configureStatusBar();
     void configureMenuBar();
@@ -55,7 +55,6 @@ private:
         QAction *upCurve;
         QAction *loopCurve;
         QAction *simAction;
-        QAction *outputAction;
     QToolBar* toolBar;
 };
 

@@ -6,8 +6,8 @@
 #include <tuple>
 using namespace std;
 
-CBandOnPoint::CBandOnPoint(HalfPoint p, float angle, TeePtr t, QString id)
-    :m_point(p), windingAngle(angle), tee(t), color(Color::GREEN)
+CBandOnPoint::CBandOnPoint(HalfPoint p, float angle, TeePtr t, QString id, float w)
+    :m_point(p), windingAngle(angle), tee(t), color(Color::GREEN), width(w)
 {
     setId(id.toLatin1().data());
     CurvePtr c1 = std::make_shared<Curve>("");
@@ -49,7 +49,6 @@ void CBandOnPoint::initial(PosDirVec pds, QStringVec names){
 
      PosVec meshPos;
      vector<Vertex> vertexVec;
-     width = 2;
      float h = 1;
      float sideNum = (int)(width/2/h) + 1;
      for(unsigned int i = 0; i < fewPds.size(); i++){

@@ -14,7 +14,7 @@ class AxisConfigDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit AxisConfigDialog(AxisIni*, QWidget *parent = nullptr);
+    explicit AxisConfigDialog(GuiConnector* , AxisIni*, QWidget *parent = nullptr);
     void updateUI();
     ~AxisConfigDialog();
 public slots:
@@ -28,12 +28,14 @@ public slots:
     void updateAxis();
     void saveInFile();
     void importFromFile();
+    void loadModel();
 private:
     void initial();
 private:
     Ui::AxisConfigDialog *ui;
     AxisIni* axisData;
     AxisIni* axis;
+    GuiConnector* connector;
 };
 
 #endif // AXISCONFIGDIALOG_H

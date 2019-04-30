@@ -8,10 +8,52 @@
 #include "TabBackground.h"
 #include <QTimer>
 #include <QCheckBox>
+#include "EnvelopIniDialog.h"
+#include <QLabel>
+#include "Data.h"
+#include "AxisConfigDialog.h"
+#include <QFileDialog>
+#include <fstream>
+#include "HangingBandSet.h"
+#include "Node.h"
 
 SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* parent)
     :QWidget(parent), backWidget(back), connector(con)
 {
+    QVBoxLayout* layout = new QVBoxLayout(this);
+    QFont title;
+    title.setPointSize(12);
+    machineLabel = new QLabel(this);
+    machineLabel->setFont(title);
+
+    QFont content;
+    content.setPointSize(10);
+    axis_1_nameLabel = new QLabel(this);
+    axis_2_nameLabel = new QLabel(this);
+    axis_3_nameLabel = new QLabel(this);
+    axis_4_nameLabel = new QLabel(this);
+    axis_5_nameLabel = new QLabel(this);
+    axis_1_nameLabel->setFont(content);
+    axis_2_nameLabel->setFont(content);
+    axis_3_nameLabel->setFont(content);
+    axis_4_nameLabel->setFont(content);
+    axis_5_nameLabel->setFont(content);
+
+    layout->addWidget(machineLabel);
+    layout->addWidget(axis_1_nameLabel);
+    layout->addWidget(axis_2_nameLabel);
+    layout->addWidget(axis_3_nameLabel);
+    layout->addWidget(axis_4_nameLabel);
+    layout->addWidget(axis_5_nameLabel);
+    updateLabel();
+
+    outputButton = new QPushButton("export G-code", this);
+    outputButton->setEnabled(false);
+    connect(outputButton, &QPushButton::clicked, this, &SimulationTab::output);
+    axisIniButton = new QPushButton("axis ini", this);
+    layout->addWidget(axisIniButton);
+    connect(axisIniButton, &QPushButton::clicked, this, &SimulationTab::modifyMachine);
+    envelopButton = new QPushButton("envelop ini", this);
     calButton = new QPushButton("calculation", this);
     absoluteBox = new QCheckBox("absolute", this);
     hangVisableBox = new QCheckBox("show hang lines", this);
@@ -32,23 +74,25 @@ SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* pa
     bFrameButton = new QPushButton(QIcon(":/icons/bFrame"), "", this);
     bFrameButton->setEnabled(false);
     animateCtrl = new AnimateController(connector->getCtrl());
-    QVBoxLayout* layout = new QVBoxLayout(this);
     QHBoxLayout* hLayout = new QHBoxLayout;
     hLayout->addWidget(slowButton);
     hLayout->addWidget(bFrameButton);
     hLayout->addWidget(playAndPauseButton);
     hLayout->addWidget(fFrameButton);
     hLayout->addWidget(fastButton);
+    layout->addWidget(envelopButton);
     layout->addWidget(calButton);
     layout->addWidget(absoluteBox);
     layout->addWidget(hangVisableBox);
     layout->addLayout(hLayout);
     layout->addWidget(progressSlider);
+    layout->addWidget(outputButton);
     layout->addWidget(closeButton);
     layout->addStretch(1);
     setLayout(layout);
     timer = new QTimer(this);
     timer->setInterval(500);
+    connect(envelopButton, &QPushButton::clicked, this, &SimulationTab::showEnvelopIniDialog);
     connect(calButton, &QPushButton::clicked, this, &SimulationTab::calculation);
     connect(playAndPauseButton, &QPushButton::clicked, this, &SimulationTab::playOrPause);
     connect(slowButton, &QPushButton::clicked, this, &SimulationTab::slowForward);
@@ -62,6 +106,8 @@ SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* pa
 
 void SimulationTab::calculation(){
     animateCtrl->calculation();
+    calMoveData();
+    setHeadAnimate();
     if(!animateCtrl->hasData()){
         return;
     }
@@ -71,6 +117,7 @@ void SimulationTab::calculation(){
     fastButton->setEnabled(true);
     fFrameButton->setEnabled(true);
     bFrameButton->setEnabled(true);
+    outputButton->setEnabled(true);
 }
 
 void SimulationTab::playOrPause(){
@@ -142,4 +189,226 @@ bool SimulationTab::isAbsolute(){
 
 bool SimulationTab::shallShowHangLines(){
     return hangVisableBox->isChecked();
+}
+
+
+void SimulationTab::showEnvelopIniDialog(){
+    EnvelopIniDialog dialog(connector, this);
+    dialog.exec();
+}
+
+void SimulationTab::updateLabel(){
+    auto& axiss = connector->getData()->getAxissIni();
+    machineLabel->setText(axiss.tabMachineName());
+
+    axis_1_nameLabel->setText(axiss.tabAxis(0));
+    axis_2_nameLabel->setText(axiss.tabAxis(1));
+    axis_3_nameLabel->setText(axiss.tabAxis(2));
+    axis_4_nameLabel->setText(axiss.tabAxis(3));
+    if(axiss.axisSum() == 4){
+        axis_5_nameLabel->hide();
+    }
+    else{
+        axis_5_nameLabel->show();
+        axis_5_nameLabel->setText(axiss.tabAxis(4));
+    }
+}
+
+void SimulationTab::modifyMachine(){
+    auto& axisIni = connector->getData()->getAxissIni();
+    AxisConfigDialog* dialog = new AxisConfigDialog(connector, &axisIni, this);
+    dialog->exec();
+    updateLabel();
+}
+
+void SimulationTab::output(){
+    //calMoveData();
+    auto& axis = connector->getData()->getAxissIni();
+    QString fileName = QFileDialog::getSaveFileName(this, "Save G-code",axis.machineName(),"*.gcode");
+    if(fileName.isEmpty()){
+        return ;
+    }
+    else{
+        std::ofstream outFile;
+        outFile.open(fileName.toLatin1().data());
+        for(auto& data:moveDatas){
+            QString str = axis.name(0) + " " + QString::number(data.x()) + " " + axis.name(1) + " " + QString::number(data.z())
+                    + " " + axis.name(2) + " " + QString::number(data.theta()) + " " + axis.name(3) + " " + QString::number(data.flip());
+            if(data.axisSum() == 5){
+                str += " " + axis.name(4) + " " + data.yaw();
+            }
+            str += "\n";
+            outFile<<str.toLatin1().data();
+        }
+        outFile.close();
+    }
+}
+
+void SimulationTab::calMoveData(){
+    auto& axis = connector->getData()->getAxissIni();
+    if(axis.axisSum() == 4){
+        calAxis4Data();
+    }
+    else if(axis.axisSum() == 5){
+        calAxis5Data();
+    }
+    else{
+        assert(0);
+    }
+}
+
+void SimulationTab::calAxis4Data(){
+    auto root = connector->getData()->getNodeRoot();
+    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
+
+    AxisMoveDataVec& datas = moveDatas;
+    datas.clear();
+    float pi = asin(1)*2;
+    auto& axiss = connector->getData()->getAxissIni();
+    for(auto i = 0; i < hangPtr->coupleSum(); i++){
+        AxisMoveData moveData(4);
+        glm::mat4 sendT = hangPtr->sendT(i);
+        Pos sendPos = hangPtr->sendPos(i);
+        float theta = atan2(sendPos.y, sendPos.z);
+        moveData.theta(theta);
+        moveData.x(sendPos.x);
+        moveData.z(glm::length(glm::vec2(sendPos.z, sendPos.y)));
+        glm::mat4 rotx = utility::rotx(theta);
+        glm::mat4 newSendT = rotx*sendT;
+        Dir newSendT_Y = newSendT[1];
+        float y0 = newSendT_Y[0];
+        float y1 = newSendT_Y[1];
+        //张力的合力垂直于辊子
+        moveData.flip(atan2(-1*y0, y1));
+        if(axiss.config & AxisIni::xLeft){
+            moveData.x(axiss.off(0) - moveData.x());
+        }
+        else{
+            moveData.x(axiss.off(0) + moveData.x());
+        }
+        if(axiss.config & AxisIni::zDown){
+            moveData.z(axiss.off(1) - moveData.z());
+        }
+        else{
+            moveData.z(axiss.off(1) + moveData.z());
+        }
+        if(axiss.config & AxisIni::spindleLeft){
+            moveData.theta(axiss.off(2) - moveData.theta());
+        }
+        else{
+            moveData.theta(axiss.off(2) + moveData.theta());
+        }
+        if(axiss.config & AxisIni::flipDown){
+            moveData.flip(axiss.off(3) + moveData.flip());
+        }
+        else{
+            moveData.flip(axiss.off(3) - moveData.flip());
+        }
+        datas.push_back(moveData);
+    }
+    smoothData();
+}
+
+void SimulationTab::calAxis5Data(){
+    auto root = connector->getData()->getNodeRoot();
+    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
+
+    auto& datas = moveDatas;
+    datas.clear();
+    float pi = asin(1)*2;
+    vector<glm::mat4> rotxs;
+    auto& axiss = connector->getData()->getAxissIni();
+    for(auto i = 0; i < hangPtr->coupleSum(); i++){
+        AxisMoveData moveData(5);
+        glm::mat4 sendT = hangPtr->sendT(i);
+        Pos sendPos = hangPtr->sendPos(i);
+        float theta = atan2(sendPos.y, sendPos.z);
+        moveData.theta() = theta;
+        moveData.x() = sendPos.x;
+        moveData.z() = glm::length(glm::vec2(sendPos.z, sendPos.y));
+        glm::mat4 rotx = utility::rotx(theta);
+        rotxs.push_back(rotx);
+        glm::mat4 newSendT = rotx*sendT;
+        float x0 = newSendT[0][0];
+        float x1 = newSendT[0][1];
+        float yaw = atan2(x0, x1);
+        moveData.yaw() = yaw;
+        glm::mat4 macT = utility::roty(yaw);
+        glm::vec3 Tx = macT[0];
+        glm::vec3 Ty = macT[1];
+        glm::vec3 y = newSendT[1];
+        float flip = atan2(-1*glm::dot(Tx, y), glm::dot(Ty, y));
+        moveData.flip() = flip;
+
+        if(axiss.config & AxisIni::xLeft){
+            moveData.x() = axiss.off(0) - moveData.x();
+        }
+        else{
+            moveData.x() = axiss.off(0) + moveData.x();
+        }
+        if(axiss.config & AxisIni::zDown){
+            moveData.z() = axiss.off(1) - moveData.z();
+        }
+        else{
+            moveData.z() = axiss.off(1) + moveData.z();
+        }
+        if(axiss.config & AxisIni::spindleLeft){
+            moveData.theta() = axiss.off(2) - moveData.theta();
+        }
+        else{
+            moveData.theta() = axiss.off(2) + moveData.theta();
+        }
+        if(axiss.config & AxisIni::flipDown){
+            moveData.flip() = axiss.off(3) + moveData.flip();
+        }
+        else{
+            moveData.flip() = axiss.off(3) - moveData.flip();
+        }
+        if(axiss.config & AxisIni::yawLeft){
+            moveData.yaw() = axiss.off(4) + moveData.yaw();
+        }
+        else{
+            moveData.yaw() = axiss.off(4) - moveData.yaw();
+        }
+        datas.push_back(moveData);
+    }
+    smoothData();
+}
+
+void SimulationTab::smoothData(){
+    auto& axis = connector->getData()->getAxissIni();
+    float pi = asin(1)*2;
+    auto& datas = moveDatas;
+    float lastTheta = datas.at(0).theta();
+    float lastFlip = datas.at(0).flip();
+    for(auto& data:datas){
+        while(data.theta() > lastTheta + pi){
+            data.theta() -= 2*pi;
+        }
+        while(data.theta() < lastTheta - pi){
+            data.theta() += 2*pi;
+        }
+        lastTheta = data.theta();
+
+        while(data.flip() > lastFlip + pi){
+            data.flip() -= 2*pi;
+        }
+        while(data.flip() < lastFlip - pi){
+            data.flip() += 2*pi;
+        }
+        lastFlip = data.flip();
+    }
+}
+
+
+void SimulationTab::setHeadAnimate(){
+    auto root = connector->getData()->getNodeRoot();
+    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
+
+    auto& datas = moveDatas;
+    vector<glm::mat4> animateTs;
+    for(auto& data:datas){
+       这里：
+        data.x();
+    }
 }

@@ -54,7 +54,6 @@ using Dir = glm::vec3;
      m_end = make_shared<BandEnd>(bandId, EndPtrVec{frontEnd, backEnd});
      PosVec meshPos;
      vector<Vertex> vertexVec;
-     width = 2;
      float h = 1;
      float sideNum = (int)(width/2/h) + 1;
      m_pds = pds;

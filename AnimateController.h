@@ -15,14 +15,13 @@ public:
     std::pair<int, int> getInsertInd(int);
     bool hasData();
     void hideBandSet();
-    Axis4DataVec axis4Data();
-    Axis5DataVec axis5Data();
 private:
     void initBandPtrs();
     void initIndexPairVecs();
     void initHangingBand();
     void solveCollision();
     void initBandPos();
+    void setRotxs();
     Controller* ctrl;
     BandPtrVec bandPtrs;
     std::vector<GLIndexPairVec> indexPairVecs;

@@ -5,13 +5,19 @@
 #include <QFileDialog>
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
+#include "ModelReader.h"
 #include <fstream>
+#include "GuiConnector.h"
+#include "Data.h"
+#include "Node.h"
+#include "Model.h"
+#include "Controller.h"
 
 using namespace rapidjson;
-AxisConfigDialog::AxisConfigDialog(AxisIni* axis_, QWidget *parent) :
+AxisConfigDialog::AxisConfigDialog(GuiConnector* c, AxisIni* axis_, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AxisConfigDialog),
-    axisData(axis_), axis(new AxisIni(*axis_))
+    axisData(axis_), axis(new AxisIni(*axis_)), connector(c)
 {
     ui->setupUi(this);
     initial();
@@ -60,6 +66,8 @@ void AxisConfigDialog::initial(){
     connect(ui->okButton, &QPushButton::clicked, this, &AxisConfigDialog::saveIni);
     connect(ui->saveAsButton, &QPushButton::clicked, this, &AxisConfigDialog::saveInFile);
     connect(ui->importButton, &QPushButton::clicked, this, &AxisConfigDialog::importFromFile);
+
+    connect(ui->loadModelButton, &QPushButton::clicked, this, &AxisConfigDialog::loadModel);
 }
 
 void AxisConfigDialog::updateUI(){
@@ -355,5 +363,20 @@ void AxisConfigDialog::importFromFile(){
         }
         axis->config = config;
         updateUI();
+    }
+}
+
+
+void AxisConfigDialog::loadModel(){
+    QString fileName = QFileDialog::getOpenFileName(this, "load model","","*.STL");
+    if(fileName.isEmpty()){
+        return ;
+    }
+    else{
+        ModelReader loader(fileName.toLatin1().data());
+        auto& mesh = loader.modelMesh();
+        auto headPtr = connector->getData()->getNodeRoot()->findHeadPtr();
+        headPtr->setMeshData(mesh.vertexs(), mesh.indexs());
+        connector->getCtrl()->allBindGL();
     }
 }

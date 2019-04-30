@@ -5,8 +5,8 @@
 #include <tuple>
 using namespace std;
 
-GeneralBand::GeneralBand(PosDirVec pds, QStringVec names, QString name, TeePtr t):
-    tee(t), color(Color::YELLOW)
+GeneralBand::GeneralBand(PosDirVec pds, QStringVec names, QString name, TeePtr t, float w):
+    tee(t), color(Color::YELLOW), width(w)
 {
     type = "GeneralBand";
     setId(name.toLatin1().data());
@@ -61,7 +61,6 @@ void GeneralBand::initial(PosDirVec pds, QStringVec names){
 
      PosVec meshPos;
      vector<Vertex> vertexVec;
-     width = 2;
      float h = 1;
      float sideNum = (int)(width/2/h) + 1;
      for(unsigned int i = 0; i < fewPds.size(); i++){

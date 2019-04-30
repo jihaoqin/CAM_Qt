@@ -9,10 +9,12 @@
 
 class Node;
 class DataObject;
+class Model;
 
 using DataObjectPtr = std::shared_ptr<DataObject>;
 using NodePtr = std::shared_ptr<Node>;
 using wNodePtr = std::weak_ptr<Node>;
+using HeadPtr = std::shared_ptr<Model>;
 
 class Node
 {
@@ -32,6 +34,8 @@ public:
     BandPtr findBandPtr(QString);
     TeePtr findTeePtr();
     CurvePtr findCurvePtr(QString);
+    HeadPtr findHeadPtr();
+
     Node* fatherPtr();
     std::vector<NodePtr>& childrenPtrVec();
     void deleteChild(NodePtr child);

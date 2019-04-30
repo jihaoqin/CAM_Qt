@@ -63,6 +63,15 @@ TeeParameterDialog::TeeParameterDialog(MainWindow *parent):QDialog(dynamic_cast<
     hLayout_4->addWidget(RLabel);
     hLayout_4->addWidget(RLine);
 
+    widthLine = new QLineEdit(this);
+    widthLine->setValidator(doubleReg);
+    widthLine->setFixedWidth(lineWidth);
+    widthLabel = new QLabel("width", this);
+    widthLine->setFixedWidth(lineWidth);
+    QHBoxLayout *hLayout_5 = new QHBoxLayout;
+    hLayout_5->addWidget(widthLabel);
+    hLayout_5->addWidget(widthLine);
+
     teePic = new QLabel(this);
     QPixmap teePixmap(":/images/tee");
     teePic->setPixmap(teePixmap);
@@ -74,6 +83,7 @@ TeeParameterDialog::TeeParameterDialog(MainWindow *parent):QDialog(dynamic_cast<
     leftLayout->addLayout(hLayout_2);
     leftLayout->addLayout(hLayout_3);
     leftLayout->addLayout(hLayout_4);
+    leftLayout->addLayout(hLayout_5);
 
     QHBoxLayout* hLayout = new QHBoxLayout;
     hLayout->addLayout(leftLayout);
@@ -99,7 +109,8 @@ void TeeParameterDialog::readData(){
         QMessageBox::information(NULL, "Info", "Invalid data!", QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
     }
     else{
-        para = TeePara{mainLength, branchLength, R, sideR};
+        para = TeePara{R, sideR, mainLength, branchLength};
+        m_width = widthLine->text().toFloat();
         close();
         setResult(QDialog::Accepted);
     }
@@ -133,4 +144,9 @@ bool TeeParameterDialog::isValid(float mainLength, float branchLength, float R ,
 
 TeePara TeeParameterDialog::getTeePara(){
     return para;
+}
+
+
+float TeeParameterDialog::bandWidth(){
+    return m_width;
 }

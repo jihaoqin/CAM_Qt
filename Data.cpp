@@ -8,11 +8,12 @@
 #include "Band.h"
 #include "GuiConnector.h"
 #include "HangingBandSet.h"
+#include "Model.h"
 #include <QMutexLocker>
 using std::shared_ptr;
 using std::make_shared;
 Data::Data():box(), state(), idGenerator(), root(nullptr), connector(nullptr)
-  , mtx(QMutex::Recursive), axiss(5)
+  , mtx(QMutex::Recursive), axiss(5), m_bandWidth(2)
 {
     camera = std::make_shared<Camera2>(BoundingBox());
 }
@@ -25,6 +26,7 @@ void Data::updateBoundingBox(){
 
 void Data::addTee(std::shared_ptr<Tee> t){
     root = std::make_shared<Node>(t);
+    root->addChild(make_shared<Node>(make_shared<Model>(Mesh(), "head")));
     updateBoundingBox();
     camera->bindBoundingBox(box);
     state.setEmpty(false);
@@ -155,4 +157,32 @@ QMutex* Data::getMutex(){
 
 AxisIni& Data::getAxissIni(){
     return axiss;
+}
+
+
+EnvelopData& Data::getEnvelopeIni(){
+    return envelop;
+}
+
+
+float Data::bandWidth(){
+    return m_bandWidth;
+}
+
+void Data::bandWidth(float w){
+    m_bandWidth = w;
+}
+
+
+void Data::serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const{
+    writer.StartObject();
+    writer.String("AxisIni");
+    axiss.serialize(writer);
+    writer.String("EnvelopData");
+    envelop.serialize(writer);
+    writer.String("width");
+    writer.Double(m_bandWidth);
+    writer.String("idGenerator");
+    idGenerator.serialize(writer);
+    writer.EndObject();
 }

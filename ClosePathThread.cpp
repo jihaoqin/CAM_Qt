@@ -40,7 +40,7 @@ void ClosePathThread::run(){
                 BandPtr band = dynamic_pointer_cast<Band>(objPtr);
                 BandEndPtr bandEnd = band->bandEnd();
                 for(auto end:bandEnd->ends){
-                    if(leftAssist.isReturn(end)){
+                    if(leftAssist.isReturn(end)&& !end->isCoupled()){
                         couplingEndVec.push_back(end);
                     }
                 }
@@ -75,10 +75,7 @@ void ClosePathThread::run(){
             auto& pds = get<0>(tuple1);
             auto& strs = get<1>(tuple1);
             mtx->lock();
-            auto band = make_shared<GeneralBand>(pds, strs, data->idGenerator.getBandId(), tee);
-            if(QString(band->getId()).contains("244")){
-                int a = 5;
-            }
+            auto band = make_shared<GeneralBand>(pds, strs, data->idGenerator.getBandId(), tee, data->bandWidth());
             band->setCouple(e);
             band->setCouple(nearEnd);
             data->addBand(band);
