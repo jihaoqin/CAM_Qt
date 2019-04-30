@@ -16,6 +16,7 @@
 #include <fstream>
 #include "HangingBandSet.h"
 #include "Node.h"
+#include "Model.h"
 
 SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* parent)
     :QWidget(parent), backWidget(back), connector(con)
@@ -404,11 +405,58 @@ void SimulationTab::smoothData(){
 void SimulationTab::setHeadAnimate(){
     auto root = connector->getData()->getNodeRoot();
     HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
+    auto axisIni = connector->getData()->getAxissIni();
 
     auto& datas = moveDatas;
     vector<glm::mat4> animateTs;
     for(auto& data:datas){
-       这里：
-        data.x();
+        float xpos;
+        if(axisIni.config & AxisIni::xLeft){
+            xpos = axisIni.off(0) - data.x();
+        }
+        else{
+            xpos = data.x() - axisIni.off(0);
+        }
+
+        float zpos;
+        if(axisIni.config & AxisIni::zDown){
+            zpos = data.z() - axisIni.off(1);
+        }
+        else{
+            zpos = axisIni.off(1) - data.z();
+        }
+
+        float theta;
+        if(axisIni.config & AxisIni::spindleLeft){
+            theta = axisIni.off(3) - data.theta();
+        }
+        else{
+            theta = data.theta() - axisIni.off(3);
+        }
+
+        glm::mat4 T;
+        utility::setPos(T, Pos{xpos, 0, zpos});
+        if(axisIni.axisSum() == 5){
+            float yaw;
+            if(axisIni.config & AxisIni::yawLeft){
+                yaw = axisIni.off(4) - data.yaw();
+            }
+            else{
+                yaw = data.yaw() - axisIni.off(4);
+            }
+            T = T * utility::roty(yaw);
+        }
+
+        float flip;
+        if(axisIni.config & AxisIni::flipDown){
+            flip = data.flip() - axisIni.off(3);
+        }
+        else{
+            flip = axisIni.off(3) -  data.z();
+        }
+        T = T * utility::rotz(flip);
+        animateTs.push_back(T);
     }
+    auto headPtr = root->findHeadPtr();
+    headPtr->setAnimateTs(animateTs);
 }

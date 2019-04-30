@@ -8,6 +8,7 @@
 #include "HangingBandSet.h"
 #include "GuiConnector.h"
 #include "SimulationTab.h"
+#include "Model.h"
 
 AnimateController::AnimateController(Controller* c)
     :ctrl(c)
@@ -85,8 +86,10 @@ void AnimateController::showNext(){
     else{
         hangPtr->setHangLinesVisiable(false);
     }
+    auto headPtr = root->findHeadPtr();
     if(windedTotal < pairTotal){
         hangPtr->setShowInd(windedTotal - 1);
+        headPtr->setShowInd(windedTotal - 1);
     }
     else{
         ctrl->mainWindow->animationOver();
@@ -166,11 +169,14 @@ void AnimateController::setPercent(int p){
     }
     auto root = ctrl->data->getNodeRoot();
     HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
+    auto headPtr = root->findHeadPtr();
     if(windedTotal == 0){
         hangPtr->setShowInd(0);
+        headPtr->setShowInd(0);
     }
     else{
         hangPtr->setShowInd(windedTotal - 1);
+        headPtr->setShowInd(windedTotal - 1);
     }
 }
 

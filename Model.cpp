@@ -45,3 +45,9 @@ void Model::setMeshData(vector<Vertex> v, vector<unsigned int> ind){
         hasMesh == true;
     }
 }
+
+
+void Model::setAnimateTs(std::vector<glm::mat4> ts){
+    m_Ts = ts;
+    m_showInd = 0;
+}
