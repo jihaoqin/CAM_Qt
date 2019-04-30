@@ -26,6 +26,8 @@ public:
     void setShowRange(GLIndexPair);
     void resetShowRange();
     BoundingBox boundingBox();
+    vector<Vertex> vertexs();
+    vector<unsigned int> indexs();
 protected:
     void bufferData();
     bool binded;

@@ -2,7 +2,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include <glm/gtc/matrix_transform.hpp>
-#include "Model.h"
+#include "ModelReader.h"
 #include "PerspectiveMat.h"
 #include "LineLight.h"
 #include <QOpenGLShaderProgram>

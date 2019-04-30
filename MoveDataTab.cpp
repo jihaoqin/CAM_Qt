@@ -76,7 +76,7 @@ void MoveDataTab::calData(){
 
 void MoveDataTab::modifyMachine(){
     auto& axisIni = connector->getData()->getAxissIni();
-    AxisConfigDialog* dialog = new AxisConfigDialog(&axisIni, this);
+    AxisConfigDialog* dialog = new AxisConfigDialog(connector, &axisIni, this);
     dialog->exec();
     updateLabel();
 }

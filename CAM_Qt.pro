@@ -29,7 +29,6 @@ SOURCES += \
         mainwindow.cpp \
     glwidget.cpp \
     Mesh.cpp \
-    Model.cpp \
     boundingbox.cpp \
     Camera2.cpp \
     PerspectiveMat.cpp \
@@ -109,13 +108,14 @@ SOURCES += \
     AxisConfigDialog.cpp \
     EnvelopData.cpp \
     EnvelopIniDialog.cpp \
-    TeePara.cpp
+    TeePara.cpp \
+    ModelReader.cpp \
+    Model.cpp
 
 HEADERS += \
         mainwindow.h \
     glwidget.h \
     Mesh.h \
-    Model.h \
     boundingbox.h \
     Camera2.h \
     PerspectiveMat.h \
@@ -200,7 +200,9 @@ HEADERS += \
     AxisConfigDialog.h \
     EnvelopData.h \
     EnvelopIniDialog.h \
-    TeePara.h
+    TeePara.h \
+    ModelReader.h \
+    Model.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt

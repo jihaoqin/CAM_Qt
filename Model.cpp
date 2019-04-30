@@ -1,124 +1,42 @@
 #include "Model.h"
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-#include "stb_image.h"
-#include <string>
+#include "Color.h"
 
-using std::vector;
-Model::Model(const char* filePath):modelMat(glm::mat4(1.0)), color(Color::RED)
+Model::Model(std::vector<Mesh> meshs, QString name)
+    :m_meshs(meshs)
 {
-	Assimp::Importer importer;
-	const aiScene *scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs);
-	std::string path = filePath;
-	directory = path.substr(0, path.find_last_of('/'));
-	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
-	{
-		std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
-		return;
-	}
-	if (!scene) {
-		std::cout << "Failed to import the model.\n";
-	}
-	else {
-		loadModel(scene);
-	}
-	//计算包围盒
-    vector<BoundingBox> boxVec;
-    for(auto m:meshVec){
-        boxVec.push_back(m.boundingBox());
+    setId(name.toLatin1().data());
+}
+
+Model::Model(){
+
+}
+
+
+void Model::bindGL(QOpenGLContext* c){
+    if(binded  == true){
+        return ;
     }
-    box = BoundingBox::OrBox(boxVec);
-}
-
-
-Model::~Model()
-{
-}
-
-
-BoundingBox Model::boundingBox()
-{
-	return box;
-}
-
-void Model::loadModel(const aiScene *s) {
-	if (!s) {
-		std::cout << "Pointer pointed to model is NULL";
-	}
-	else {
-		const aiNode *n = s->mRootNode;
-		if (!n) {
-			std::cout << "RootNode is NULL.\n";
-		}
-		else {
-			processNode(n, s);
-		}
-	}
-}
-
-void Model::processNode(const aiNode* n, const aiScene* s) {
-	for (int i = 0; i < n->mNumMeshes; i++) {
-		meshVec.push_back(processMesh(n->mMeshes[i], s));
-	}
-	unsigned int num = n->mNumChildren;
-	if (0 == num) {
-		//do nothing
-		return;
-	}
-	else {
-		for (int i = 0; i < num; i++) {
-			processNode(n->mChildren[i], s);
-		}
-	}
-}
-
-Mesh Model::processMesh(const unsigned int index, const aiScene *s) {
-	const aiMesh* m = s->mMeshes[index];
-	//process position
-	vector<Vertex> verVec;
-
-	for (int i = 0; i < m->mNumVertices; i++) {
-		Vertex ver;
-		auto& v = m->mVertices[i];
-		auto& n = m->mNormals[i];
-		ver.vertex = glm::vec3(v.x, v.y, v.z);
-		ver.normal = glm::vec3(n.x, n.y, n.z);
-
-		if (m->mTextureCoords[0]) {
-			glm::vec2 tex;
-			tex.x = m->mTextureCoords[0][i].x;
-			tex.y = m->mTextureCoords[0][i].y;
-			ver.coordinate = tex;
-		}
-		verVec.push_back(ver);
-	}
-	vector<unsigned int> indexs;
-	for (int i = 0; i < m->mNumFaces; i++) {
-		aiFace& face = m->mFaces[i];
-		for (int j = 0; j < face.mNumIndices; j++) {
-			indexs.push_back(face.mIndices[j]);
-		}
-	}
-
-    return Mesh(verVec, indexs);
-}
-
-void Model::bindGL(QOpenGLContext *c){
-    for(unsigned int i = 0; i < meshVec.size(); i++){
-       meshVec.at(i).bindGL(c);
-    }
-    binded = true;
-}
-
-void Model::draw(std::shared_ptr<GLProgram> program){
-
-    program->setMat4("model", modelMat);
-    program->setVec3("material.color", color.rgb);
-	for(unsigned int i = 0; i < meshVec.size(); i++){
-       meshVec.at(i).draw();
+    for(auto& m:m_meshs){
+        m.bindGL(c);
     }
 }
-glm::mat4 Model::modelMatrix(){
-    return modelMat;
+
+void Model::draw(std::shared_ptr<GLProgram> p){
+    if(binded == false || visiable == false){
+        return ;
+    }
+    p->setMat4("model", m_Ts.at(m_showInd));
+    p->setVec3("material.color", Color::YELLOW);
+    for(auto& m: m_meshs){
+        m.draw();
+    }
+}
+
+void Model::setAnimateT(glm::mat4){
+    //屏蔽统一的旋转
+    return ;
+}
+
+void Model::setShowInd(int ind){
+    m_showInd = ind;
 }

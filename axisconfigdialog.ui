@@ -560,7 +560,7 @@
   <widget class="QPushButton" name="saveAsButton">
    <property name="geometry">
     <rect>
-     <x>490</x>
+     <x>220</x>
      <y>40</y>
      <width>75</width>
      <height>23</height>
@@ -648,14 +648,27 @@
   <widget class="QPushButton" name="importButton">
    <property name="geometry">
     <rect>
-     <x>490</x>
-     <y>0</y>
+     <x>220</x>
+     <y>10</y>
      <width>75</width>
      <height>23</height>
     </rect>
    </property>
    <property name="text">
-    <string>import</string>
+    <string>import ini</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="loadModelButton">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>10</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>load model</string>
    </property>
   </widget>
  </widget>

@@ -1,5 +1,5 @@
 #pragma once
-#include "Model.h"
+#include "ModelReader.h"
 #include "config.h"
 #include <vector>
 #include "Line.h"

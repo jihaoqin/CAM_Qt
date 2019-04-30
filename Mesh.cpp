@@ -89,3 +89,12 @@ void Mesh::resetShowRange(){
     m_beginIndex = 0;
     m_size = indexVec.size();
 }
+
+
+vector<Vertex> Mesh::vertexs(){
+    return vertexVec;
+}
+
+vector<unsigned int> Mesh::indexs(){
+    return indexVec;
+}
