@@ -288,10 +288,10 @@ void SimulationTab::calAxis4Data(){
             moveData.x(axiss.off(0) + moveData.x());
         }
         if(axiss.config & AxisIni::zDown){
-            moveData.z(axiss.off(1) - moveData.z());
+            moveData.z(axiss.off(1) + moveData.z());
         }
         else{
-            moveData.z(axiss.off(1) + moveData.z());
+            moveData.z(axiss.off(1) - moveData.z());
         }
         if(axiss.config & AxisIni::spindleLeft){
             moveData.theta(axiss.off(2) - moveData.theta());
@@ -348,10 +348,10 @@ void SimulationTab::calAxis5Data(){
             moveData.x() = axiss.off(0) + moveData.x();
         }
         if(axiss.config & AxisIni::zDown){
-            moveData.z() = axiss.off(1) - moveData.z();
+            moveData.z() = axiss.off(1) + moveData.z();
         }
         else{
-            moveData.z() = axiss.off(1) + moveData.z();
+            moveData.z() = axiss.off(1) - moveData.z();
         }
         if(axiss.config & AxisIni::spindleLeft){
             moveData.theta() = axiss.off(2) - moveData.theta();
@@ -366,10 +366,10 @@ void SimulationTab::calAxis5Data(){
             moveData.flip() = axiss.off(3) - moveData.flip();
         }
         if(axiss.config & AxisIni::yawLeft){
-            moveData.yaw() = axiss.off(4) + moveData.yaw();
+            moveData.yaw() = axiss.off(4) - moveData.yaw();
         }
         else{
-            moveData.yaw() = axiss.off(4) - moveData.yaw();
+            moveData.yaw() = axiss.off(4) + moveData.yaw();
         }
         datas.push_back(moveData);
     }
@@ -434,7 +434,7 @@ void SimulationTab::setHeadAnimate(){
             theta = data.theta() - axisIni.off(3);
         }
 
-        glm::mat4 T;
+        glm::mat4 T(1.0f);
         utility::setPos(T, Pos{xpos, 0, zpos});
         if(axisIni.axisSum() == 5){
             float yaw;
@@ -452,7 +452,7 @@ void SimulationTab::setHeadAnimate(){
             flip = data.flip() - axisIni.off(3);
         }
         else{
-            flip = axisIni.off(3) -  data.z();
+            flip = axisIni.off(3) -  data.flip();
         }
         T = T * utility::rotz(flip);
         animateTs.push_back(T);

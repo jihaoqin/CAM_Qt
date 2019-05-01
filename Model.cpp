@@ -41,8 +41,8 @@ void Model::setShowInd(int ind){
 
 void Model::setMeshData(vector<Vertex> v, vector<unsigned int> ind){
     m_mesh.setData(v, ind);
-    if(v.size() > 0){
-        hasMesh == true;
+    if(v.size()>0){
+        hasMesh = true;
     }
 }
 
