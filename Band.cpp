@@ -106,6 +106,7 @@ GLIndexPairVec Band::getGLIndexPairVec(EndPtr beginEnd, float dis){
         std::vector<int> indexs;
         indexs.push_back(0);
         GLIndexPairVec pairVec;
+        pairVec.push_back(GLIndexPair{0, 0});
         for(int i=0; i<m_pds.size(); ++i){
             int lastInd = indexs.back();
             Pos lastPos = m_pds.at(lastInd).pos;
@@ -125,6 +126,7 @@ GLIndexPairVec Band::getGLIndexPairVec(EndPtr beginEnd, float dis){
         std::vector<int> indexs;
         indexs.push_back(m_pds.size()-1);
         GLIndexPairVec pairVec;
+        pairVec.push_back(GLIndexPair{m_pds.size()-1, m_pds.size()-1});
         for(int i = m_pds.size() - 1; i >= 0; --i){
             int lastInd = indexs.back();
             Pos lastPos = m_pds.at(lastInd).pos;
@@ -225,5 +227,15 @@ void Band::setAnimateT(glm::mat4 T){
     m_animateT = T;
     for(auto c:curves){
         c->setAnimateT(T);
+    }
+}
+
+
+QString End::nextBandId(){
+    if(nextEndId.isEmpty()){
+        return "";
+    }
+    else{
+        return nextEndId.split(".").front();
     }
 }

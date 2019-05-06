@@ -16,6 +16,7 @@ public:
     QString offStr(int);
     float off(int);
     QString showStr(int);
+    QString offGcode(int);
     QString name(int);
     void setName(int, QString);
     void setOff(int, float);

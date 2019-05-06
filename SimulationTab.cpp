@@ -225,22 +225,36 @@ void SimulationTab::modifyMachine(){
 void SimulationTab::output(){
     //calMoveData();
     auto& axis = connector->getData()->getAxissIni();
-    QString fileName = QFileDialog::getSaveFileName(this, "Save G-code",axis.machineName(),"*.gcode");
+    QString fileName = QFileDialog::getSaveFileName(this, "Save G-code",axis.machineName(),"*.ngc");
     if(fileName.isEmpty()){
         return ;
     }
     else{
+        float pi = asin(1)*2;
         std::ofstream outFile;
         outFile.open(fileName.toLatin1().data());
+        QString machineIniInfo = ";"+axis.machineName()+"\n";
+        QString off1 = axis.offGcode(0) + "\n";
+        QString off2 = axis.offGcode(1) + "\n";
+        QString off3 = axis.offGcode(2) + "\n";
+        QString off4 = axis.offGcode(3) + "\n";
+        outFile<<machineIniInfo.toLatin1().data();
+        outFile<<"G90 F200\n";
+        outFile<<off1.toLatin1().data();
+        outFile<<off2.toLatin1().data();
+        outFile<<off3.toLatin1().data();
+        outFile<<off4.toLatin1().data();
+        outFile<<"G01\n";
         for(auto& data:moveDatas){
-            QString str = axis.name(0) + " " + QString::number(data.x()) + " " + axis.name(1) + " " + QString::number(data.z())
-                    + " " + axis.name(2) + " " + QString::number(data.theta()) + " " + axis.name(3) + " " + QString::number(data.flip());
+            QString str = axis.name(0) + " " + "[#1+" + QString::number(data.x()-axis.off(0)) + "] " + axis.name(1) + " " + "[#2+" + QString::number(data.z()-axis.off(1))
+                    + "] " + axis.name(2) + " " + "[#3+" + QString::number(180/pi*(data.theta()-axis.off(2))) + "] " + axis.name(3) + " "+ "[#4+"  + QString::number(180/pi*(data.flip()-axis.off(3)))+"]";
             if(data.axisSum() == 5){
-                str += " " + axis.name(4) + " " + data.yaw();
+                str += " " + axis.name(4) + " " + "[#5+" + QString::number(180/pi*(data.yaw() - axis.off(4)))+"]";
             }
             str += "\n";
             outFile<<str.toLatin1().data();
         }
+        outFile<<"M30";
         outFile.close();
     }
 }

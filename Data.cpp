@@ -83,10 +83,32 @@ void Data::deleteBand(QString id){
             }
         }
     }
+    allIds.push_back(id);
     for(auto id:allIds){
+        if(id.contains("band")){
+            BandPtr band = std::dynamic_pointer_cast<Band>(root->findObjectId(id.toLatin1().data()));
+            if(band == nullptr){
+                continue;
+            }
+            QStringVec endIds{band->bandEnd()->frontEnd()->nextEndId,
+                             band->bandEnd()->backEnd()->nextEndId};
+            for(int i = 0; i < endIds.size(); i++){
+                QString endId = endIds.at(i);
+                BandPtr band = root->findBandPtr(endId.split(".").front());
+                if(band == nullptr){
+                    continue;
+                }
+                if(endId.contains("front")){
+                    band->bandEnd()->frontEnd()->nextEndId = "";
+                }
+                else{
+                    band->bandEnd()->backEnd()->nextEndId = "";
+                }
+            }
+        }
         root->deleteChild(id.toLatin1().data());
     }
-    root->deleteChild(id.toLatin1().data());
+    //root->deleteChild(id.toLatin1().data());
     connector->updateModel();
     updateBoundingBox();
     state.setEmpty(false);

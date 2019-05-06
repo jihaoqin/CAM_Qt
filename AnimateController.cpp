@@ -201,6 +201,9 @@ void AnimateController::initHangingBand(){
             }
         }
         auto pds = bPtr->indexsPds(inds);
+        if(i == bandPtrs.size()-1){
+            int a = 5;
+        }
         for(auto i = 0; i<pds.size(); ++i){
             auto pd = pds.at(i);
             auto superPosVec = assist.intersectPoint(pd.pos, pd.dir);

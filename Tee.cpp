@@ -11,7 +11,7 @@
 
 using namespace std;
 Tee::Tee(float _lengthMain, float _lengthBranch, float _pipeR, float _sideR, IdGenerator& g)
-    :modelMat(glm::mat4(0.99)), color(Color::RED),axiss(lengthMain/-2 - pipeR, lengthMain/2 + pipeR, 0, lengthBranch, 0.2*pipeR),
+    :modelMat(glm::mat4(0.99)), color({0.6f, 0.6f, 0.6f}),axiss(lengthMain/-2 - pipeR, lengthMain/2 + pipeR, 0, lengthBranch, 0.2*pipeR),
         lengthMain(_lengthMain), lengthBranch(_lengthBranch), pipeR(_pipeR), sideR(_sideR)
       , symMap()
 

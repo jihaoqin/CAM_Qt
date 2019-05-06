@@ -158,6 +158,7 @@ void AxisConfigDialog::updateUI(){
     }
 
     {
+        float pi = asin(1)*2;
         ui->hengNameLineEdit->setText(axis->name(0));
         ui->hengOffLineEdit->setText(axis->offStr(0));
 
@@ -165,14 +166,14 @@ void AxisConfigDialog::updateUI(){
         ui->zongOffLineEdit->setText(axis->offStr(1));
 
         ui->spindleNameLineEdit->setText(axis->name(2));
-        ui->spindleOffLineEdit->setText(axis->offStr(2));
+        ui->spindleOffLineEdit->setText(QString::number(axis->off(2)*180/pi));
 
         ui->flipNameLineEdit->setText(axis->name(3));
-        ui->flipOffLineEdit->setText(axis->offStr(3));
+        ui->flipOffLineEdit->setText(QString::number(axis->off(3)*180/pi));
 
         if(axisSum == 5){
             ui->yawNameLineEdit->setText(axis->name(4));
-            ui->yawOffLineEdit->setText(axis->offStr(4));
+            ui->yawOffLineEdit->setText(QString::number(axis->off(4)*180/pi));
         }
     }
 
@@ -274,14 +275,15 @@ void AxisConfigDialog::updateAxis(){
     axis->setName(2,ui->spindleNameLineEdit->text());
     axis->setName(3,ui->flipNameLineEdit->text());
 
+    float pi = asin(1)*2;
     axis->setOff(0, ui->hengOffLineEdit->text().toDouble());
     axis->setOff(1, ui->zongOffLineEdit->text().toDouble());
-    axis->setOff(2, ui->spindleOffLineEdit->text().toDouble());
-    axis->setOff(3, ui->flipOffLineEdit->text().toDouble());
+    axis->setOff(2, ui->spindleOffLineEdit->text().toDouble()*pi/180);
+    axis->setOff(3, ui->flipOffLineEdit->text().toDouble()*pi/180);
 
     if(axis->axisSum() == 5){
-        axis->setName(4,ui->zongNameLineEdit->text());
-        axis->setOff(4, ui->hengOffLineEdit->text().toDouble());
+        axis->setName(4,ui->yawNameLineEdit->text());
+        axis->setOff(4, ui->yawOffLineEdit->text().toDouble()*pi/180);
     }
 
     if(ui->xLeftCheckbox->checkState() == Qt::CheckState::Checked){

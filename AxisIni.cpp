@@ -10,7 +10,13 @@ QString AxisIni::offStr(int ind){
         return QString("");
     }
     else{
-        return QString::number(axis_Offs.at(ind));
+        if(ind >= 2){
+            float pi = asin(1)*2;
+            return QString::number(axis_Offs.at(ind)*180/pi);
+        }
+        else{
+            return QString::number(axis_Offs.at(ind));
+        }
     }
 }
 
@@ -121,4 +127,9 @@ QString AxisIni::tabAxis(int ind){
 
 float AxisIni::off(int ind){
     return axis_Offs.at(ind);
+}
+
+
+QString AxisIni::offGcode(int ind){
+    return QString("#") + QString::number(ind+1) + " = " + offStr(ind) + ";" + name(ind) +"'s offset";
 }

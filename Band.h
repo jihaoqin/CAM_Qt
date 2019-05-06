@@ -20,6 +20,7 @@ public:
     bool operator<(const End& right) const;
     QString bandId();
     QString theOtherId();
+    QString nextBandId();
     bool isClose(EndPtr&);
     void setCouple(EndPtr&);
     void setCouple(End&);
