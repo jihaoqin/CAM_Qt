@@ -165,11 +165,11 @@ void AxisConfigDialog::updateUI(){
         ui->zongNameLineEdit->setText(axis->name(1));
         ui->zongOffLineEdit->setText(axis->offStr(1));
 
-        ui->spindleNameLineEdit->setText(axis->name(2));
-        ui->spindleOffLineEdit->setText(QString::number(axis->off(2)*180/pi));
+        ui->flipNameLineEdit->setText(axis->name(2));
+        ui->flipOffLineEdit->setText(QString::number(axis->off(2)*180/pi));
 
-        ui->flipNameLineEdit->setText(axis->name(3));
-        ui->flipOffLineEdit->setText(QString::number(axis->off(3)*180/pi));
+        ui->spindleNameLineEdit->setText(axis->name(3));
+        ui->spindleOffLineEdit->setText(QString::number(axis->off(3)*180/pi));
 
         if(axisSum == 5){
             ui->yawNameLineEdit->setText(axis->name(4));
@@ -272,14 +272,14 @@ void AxisConfigDialog::updateAxis(){
     }
     axis->setName(0, ui->hengNameLineEdit->text());
     axis->setName(1,ui->zongNameLineEdit->text());
-    axis->setName(2,ui->spindleNameLineEdit->text());
-    axis->setName(3,ui->flipNameLineEdit->text());
+    axis->setName(2,ui->flipNameLineEdit->text());
+    axis->setName(3,ui->spindleNameLineEdit->text());
 
     float pi = asin(1)*2;
     axis->setOff(0, ui->hengOffLineEdit->text().toDouble());
     axis->setOff(1, ui->zongOffLineEdit->text().toDouble());
-    axis->setOff(2, ui->spindleOffLineEdit->text().toDouble()*pi/180);
-    axis->setOff(3, ui->flipOffLineEdit->text().toDouble()*pi/180);
+    axis->setOff(2, ui->flipOffLineEdit->text().toDouble()*pi/180);
+    axis->setOff(3, ui->spindleOffLineEdit->text().toDouble()*pi/180);
 
     if(axis->axisSum() == 5){
         axis->setName(4,ui->yawNameLineEdit->text());

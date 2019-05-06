@@ -246,16 +246,12 @@ void SimulationTab::output(){
         outFile<<off4.toLatin1().data();
         outFile<<"G01\n";
         for(auto& data:moveDatas){
-            /*
-            QString str = axis.name(0) + " " + "[#1+" + QString::number(data.x()-axis.off(0)) + "] " + axis.name(1) + " " + "[#2+" + QString::number(data.z()-axis.off(1))
-                    + "] " + axis.name(2) + " " + "[#3+" + QString::number(180/pi*(data.theta()-axis.off(2))) + "] " + axis.name(3) + " "+ "[#4+"  + QString::number(180/pi*(data.flip()-axis.off(3)))+"]";
-                    */
             QString str = axis.name(0) + " " + "[#1+" + data.origin_x(axis) + "] "
                     + axis.name(1) + " " + "[#2+" + data.origin_z(axis) + "] "
-                    + axis.name(2) + " " + "[#3+" + QString::number(180/pi*(data.theta()-axis.off(2))) + "] "
-                    + axis.name(3) + " "+ "[#4+"  + QString::number(180/pi*(data.flip()-axis.off(3)))+"]";
+                    + axis.name(2) + " " + "[#3+" + data.origin_flip(axis) + "] "
+                    + axis.name(3) + " "+ "[#4+"  + data.origin_theta(axis) +"]";
             if(data.axisSum() == 5){
-                str += " " + axis.name(4) + " " + "[#5+" + QString::number(180/pi*(data.yaw() - axis.off(4)))+"]";
+                str += " " + axis.name(4) + " " + "[#5+" + data.origin_yaw(axis) + "]";
             }
             str += "\n";
             outFile<<str.toLatin1().data();
