@@ -1,6 +1,8 @@
 #ifndef MOVEDATA_H
 #define MOVEDATA_H
 #include <vector>
+#include <QString>
+#include "AxisIni.h"
 
 
 class Axis4Data{
@@ -24,14 +26,19 @@ public:
     int axisSum();
     float& x();
     float& x(float);
+    QString origin_x(AxisIni);
     float& z();
     float& z(float);
+    QString origin_z(AxisIni);
     float& flip();
     float& flip(float);
+    QString origin_flip(AxisIni);
     float& theta();
     float& theta(float);
+    QString origin_theta(AxisIni);
     float& yaw();
     float& yaw(float);
+    QString origin_yaw(AxisIni);
 private:
     int m_axisSum;
     float m_theta;//主轴回转

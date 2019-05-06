@@ -55,3 +55,61 @@ float& AxisMoveData::yaw(float v){
 int AxisMoveData::axisSum(){
     return m_axisSum;
 }
+
+QString AxisMoveData::origin_x(AxisIni ini){
+    float original = x()-ini.off(0);
+    QString str = QString::number(original);
+    if(str.contains("e")){
+        return "0";
+    }
+    else{
+        return str;
+    }
+}
+
+QString AxisMoveData::origin_z(AxisIni ini){
+    float original = z()-ini.off(1);
+    QString str = QString::number(original);
+    if(str.contains("e")){
+        return "0";
+    }
+    else{
+        return str;
+    }
+}
+
+QString AxisMoveData::origin_flip(AxisIni ini){
+    float pi = asin(1)*2;
+    float original = (flip()-ini.off(2))*180/pi;
+    QString str = QString::number(original);
+    if(str.contains("e")){
+        return "0";
+    }
+    else{
+        return str;
+    }
+}
+
+QString AxisMoveData::origin_theta(AxisIni ini){
+    float pi = asin(1)*2;
+    float original = (theta()-ini.off(3))*180/pi;
+    QString str = QString::number(original);
+    if(str.contains("e")){
+        return "0";
+    }
+    else{
+        return str;
+    }
+}
+
+QString AxisMoveData::origin_yaw(AxisIni ini){
+    float pi = asin(1)*2;
+    float original = (yaw()-ini.off(4))*180/pi;
+    QString str = QString::number(original);
+    if(str.contains("e")){
+        return "0";
+    }
+    else{
+        return str;
+    }
+}

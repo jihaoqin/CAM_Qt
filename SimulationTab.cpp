@@ -239,15 +239,21 @@ void SimulationTab::output(){
         QString off3 = axis.offGcode(2) + "\n";
         QString off4 = axis.offGcode(3) + "\n";
         outFile<<machineIniInfo.toLatin1().data();
-        outFile<<"G90 F200\n";
+        outFile<<"G90 F600\n";
         outFile<<off1.toLatin1().data();
         outFile<<off2.toLatin1().data();
         outFile<<off3.toLatin1().data();
         outFile<<off4.toLatin1().data();
         outFile<<"G01\n";
         for(auto& data:moveDatas){
+            /*
             QString str = axis.name(0) + " " + "[#1+" + QString::number(data.x()-axis.off(0)) + "] " + axis.name(1) + " " + "[#2+" + QString::number(data.z()-axis.off(1))
                     + "] " + axis.name(2) + " " + "[#3+" + QString::number(180/pi*(data.theta()-axis.off(2))) + "] " + axis.name(3) + " "+ "[#4+"  + QString::number(180/pi*(data.flip()-axis.off(3)))+"]";
+                    */
+            QString str = axis.name(0) + " " + "[#1+" + data.origin_x(axis) + "] "
+                    + axis.name(1) + " " + "[#2+" + data.origin_z(axis) + "] "
+                    + axis.name(2) + " " + "[#3+" + QString::number(180/pi*(data.theta()-axis.off(2))) + "] "
+                    + axis.name(3) + " "+ "[#4+"  + QString::number(180/pi*(data.flip()-axis.off(3)))+"]";
             if(data.axisSum() == 5){
                 str += " " + axis.name(4) + " " + "[#5+" + QString::number(180/pi*(data.yaw() - axis.off(4)))+"]";
             }
