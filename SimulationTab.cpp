@@ -283,6 +283,9 @@ void SimulationTab::calAxis4Data(){
     float pi = asin(1)*2;
     auto& axiss = connector->getData()->getAxissIni();
     for(auto i = 0; i < hangPtr->coupleSum(); i++){
+        if(i == 123){
+            int a = 0;
+        }
         AxisMoveData moveData(4);
         glm::mat4 sendT = hangPtr->sendT(i);
         Pos sendPos = hangPtr->sendPos(i);
