@@ -309,17 +309,17 @@ void SimulationTab::calAxis4Data(){
         else{
             moveData.z(axiss.off(1) - moveData.z());
         }
-        if(axiss.config & AxisIni::spindleLeft){
-            moveData.theta(axiss.off(2) - moveData.theta());
-        }
-        else{
-            moveData.theta(axiss.off(2) + moveData.theta());
-        }
         if(axiss.config & AxisIni::flipDown){
-            moveData.flip(axiss.off(3) + moveData.flip());
+            moveData.flip(axiss.off(2) + moveData.flip());
         }
         else{
-            moveData.flip(axiss.off(3) - moveData.flip());
+            moveData.flip(axiss.off(2) - moveData.flip());
+        }
+        if(axiss.config & AxisIni::spindleLeft){
+            moveData.theta(axiss.off(3) - moveData.theta());
+        }
+        else{
+            moveData.theta(axiss.off(3) + moveData.theta());
         }
         datas.push_back(moveData);
     }

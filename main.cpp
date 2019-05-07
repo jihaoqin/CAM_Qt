@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     MainWindow w(&ctrl);
     data->bindConnector(w.connector);
     w.show();
-    ctrl.addTee(90, 52.5, 7.5, 7.5);
+    ctrl.addTee(90, 69, 7.5, 7.5);
     data->bandWidth(2);
     data->getEnvelopeIni() = EnvelopData{30, 20};
     return a.exec();
