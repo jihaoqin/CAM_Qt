@@ -15,6 +15,8 @@ public:
     PosVec interPoints(Pos, Dir);
     PosVec genInternalSuper(PosVec);
     bool isCross(Pos, Pos);
+    bool needOff(Pos world, float rLim);
+    Pos offedPos(Pos world, float rLim);
 public:
     Pos paraToLocal(SPara);
     Pos paraToWorld(SPara);
@@ -34,6 +36,8 @@ public:
     bool isCross(Pos, Pos);
     SuperPosVec genInsertedSuper(SuperPosVec);
     SuperPosVec genInsertedInOne(SuperPosVec);
+    bool needOff(SuperPos, float rOff);
+    SuperPos offedMainPos(SuperPos, float rOff);
 private:
     TeePtr tee;
     float m_dis;

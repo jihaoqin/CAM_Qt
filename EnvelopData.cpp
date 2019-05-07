@@ -1,7 +1,7 @@
 #include "EnvelopData.h"
 
 EnvelopData::EnvelopData()
-    :incPipeR(0), incLength(0)
+    :incPipeR(0), incMLength(0), incBLength(0)
 {
 
 }
@@ -13,12 +13,15 @@ void EnvelopData::serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& wr
     writer.String("EnvelopData");
     writer.String("incPipeR");
     writer.Double(incPipeR);
-    writer.String("incLength");
-    writer.Double(incLength);
+    writer.String("incBLength");
+    writer.Double(incBLength);
+    writer.String("incMLength");
+    writer.Double(incMLength);
     writer.EndObject();
 }
 
-EnvelopData::EnvelopData(float incR_, float incL_){
+EnvelopData::EnvelopData(float incR_, float incBL_, float incML_){
     incPipeR = incR_;
-    incLength = incL_;
+    incBLength = incBL_;
+    incMLength = incML_;
 }

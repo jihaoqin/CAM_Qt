@@ -131,5 +131,5 @@ float AxisIni::off(int ind){
 
 
 QString AxisIni::offGcode(int ind){
-    return QString("#") + QString::number(ind+1) + " = " + offStr(ind) + "\t\t;" + name(ind) +"'s offset";
+    return QString("#") + QString::number(ind+1) + " = " + offStr(ind) + "\t;" + name(ind) +"'s offset";
 }

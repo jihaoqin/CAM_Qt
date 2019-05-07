@@ -18,7 +18,6 @@ public:
     explicit EnvelopIniDialog(GuiConnector* , QWidget *parent = nullptr);
     ~EnvelopIniDialog();
 public slots:
-    void updateTempIni();
     void okPressed();
 private:
     Ui::EnvelopIniDialog *ui;

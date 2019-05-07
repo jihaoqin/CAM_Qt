@@ -39,7 +39,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="incLLineEdit">
+  <widget class="QLineEdit" name="incBLLineEdit">
    <property name="geometry">
     <rect>
      <x>430</x>
@@ -121,6 +121,16 @@
    </property>
    <property name="text">
     <string>cancle</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="incMLLineEdit">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>280</y>
+     <width>51</width>
+     <height>20</height>
+    </rect>
    </property>
   </widget>
  </widget>

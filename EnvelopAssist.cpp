@@ -12,17 +12,17 @@ EnvelopAssist::EnvelopAssist(TeePtr t, EnvelopData d)
 {
     TeePara teePara = tee->teePara();
     glm::mat4 TMain;
-    utility::setPos(TMain, Pos{teePara.lengthMain/2+d.incLength, 0, 0});
+    utility::setPos(TMain, Pos{teePara.lengthMain/2+d.incMLength, 0, 0});
     utility::setXDir(TMain, Dir{0, 0, 1});
     utility::setYDir(TMain, Dir{0, 1, 0});
     utility::setZDir(TMain, Dir{-1, 0, 0});
-    main = Pipe{teePara.lengthMain+2*d.incLength, TMain, teePara.pipeR+d.incPipeR};
+    main = Pipe{teePara.lengthMain+2*d.incMLength, TMain, teePara.pipeR+d.incPipeR};
     glm::mat4 TBranch;
     utility::setPos(TBranch, Pos{0, 0, 0});
     utility::setXDir(TBranch, Dir{-1, 0, 0});
     utility::setYDir(TBranch, Dir{0, 0, 1});
     utility::setZDir(TBranch, Dir{0, 1, 0});
-    branch = Pipe{teePara.lengthBranch-teePara.pipeR+d.incLength, TBranch, teePara.pipeR+d.incPipeR};
+    branch = Pipe{teePara.lengthBranch-teePara.pipeR+d.incBLength, TBranch, teePara.pipeR+d.incPipeR};
     glm::mat4 TMainPipe;
     utility::setPos(TMainPipe, Pos{teePara.lengthMain/2, 0, 0});
     utility::setXDir(TMainPipe, Dir{0, 0, 1});
@@ -293,4 +293,51 @@ Pos Pipe::paraToLocal(SPara p){
 Pos Pipe::paraToWorld(SPara p){
     Pos local = paraToLocal(p);
     return utility::multiply(T, local, "pos");
+}
+
+
+bool EnvelopAssist::needOff(SuperPos p, float rOff){
+    QString name = p.meshName.c_str();
+    if(name.contains("main")){
+        Pipe& mainEnvelop = main;
+        if(mainEnvelop.needOff(p.pos, mainEnvelop.r+rOff)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        return false;
+    }
+}
+
+SuperPos EnvelopAssist::offedMainPos(SuperPos pos, float rOff){
+
+    return SuperPos{main.offedPos(pos.pos, mainPipe.r+rOff), "main"};
+}
+
+bool Pipe::needOff(Pos world, float rLim){
+    glm::mat4 invT = glm::inverse(T);
+    Pos local = utility::multiply(invT, world, "pos");
+    if(abs(local.z)<1e-1 || abs(local.z - length) < 1e-1){
+        if(glm::length(glm::vec2{local.x, local.y}) < rLim){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        return false;
+    }
+}
+
+Pos Pipe::offedPos(Pos world, float rLim){
+    glm::mat4 invT = glm::inverse(T);
+    Pos local = utility::multiply(invT, world, "pos");
+    float l = glm::length(glm::vec2{local.x, local.y});
+    float R = rLim;
+    Pos newLocal = Pos{R/l*local.x, R/l*local.y, local.z};
+    return utility::multiply(T, newLocal, "pos");
 }

@@ -206,6 +206,7 @@ void AnimateController::initHangingBand(){
         }
         for(auto i = 0; i<pds.size(); ++i){
             auto pd = pds.at(i);
+            //pd = PosDir{Pos{}, Dir{}};
             auto superPosVec = assist.intersectPoint(pd.pos, pd.dir);
             assert(superPosVec.size() == 1);
             if(assist.isCross(pd.pos, superPosVec.at(0).pos)){
@@ -298,6 +299,15 @@ void AnimateController::solveCollision(){
                 deleteInds.clear();
                 some = false;
             }
+        }
+    }
+    for(auto i = 0; i < poss.size()-1; i+=2){
+        SuperPos& beginP = poss.at(i);
+        SuperPos& endP = poss.at(i+1);
+        if(assist.needOff(endP, 20)){
+            SuperPos offP = assist.offedMainPos(endP, 20);
+            endP = offP;
+            insertInds.push_back(i);
         }
     }
     hangPtr->setCrossIndexs(insertInds);

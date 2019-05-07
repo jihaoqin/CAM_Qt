@@ -17,14 +17,14 @@ EnvelopIniDialog::EnvelopIniDialog(GuiConnector* c, QWidget *parent) :
     ui->mainLengthLabel->setText(QString::number(tee->teePara().lengthMain));
     ui->branchLenghtLabel->setText(QString::number(tee->teePara().lengthBranch));
     ui->incRLineEdit->setText(QString::number(envelop.incPipeR));
-    ui->incLLineEdit->setText(QString::number(envelop.incLength));
+    ui->incBLLineEdit->setText(QString::number(envelop.incBLength));
+    ui->incMLLineEdit->setText(QString::number(envelop.incMLength));
 
     QDoubleValidator *doubleReg = new QDoubleValidator(this);
-    ui->incLLineEdit->setValidator(doubleReg);
+    ui->incMLLineEdit->setValidator(doubleReg);
+    ui->incBLLineEdit->setValidator(doubleReg);
     ui->incRLineEdit->setValidator(doubleReg);
 
-    connect(ui->incLLineEdit, &QLineEdit::textChanged, this, &EnvelopIniDialog::updateTempIni);
-    connect(ui->incRLineEdit, &QLineEdit::textChanged, this, &EnvelopIniDialog::updateTempIni);
     connect(ui->okButton, &QPushButton::clicked, this, &EnvelopIniDialog::okPressed);
     connect(ui->cancleButton, &QPushButton::clicked, this, &EnvelopIniDialog::close);
 }
@@ -35,12 +35,10 @@ EnvelopIniDialog::~EnvelopIniDialog()
 }
 
 
-void EnvelopIniDialog::updateTempIni(){
-    tempIni.incLength = ui->incLLineEdit->text().toFloat();
-    tempIni.incPipeR = ui->incRLineEdit->text().toFloat();
-}
-
 void EnvelopIniDialog::okPressed(){
+    tempIni.incMLength = ui->incMLLineEdit->text().toFloat();
+    tempIni.incBLength = ui->incBLLineEdit->text().toFloat();
+    tempIni.incPipeR = ui->incRLineEdit->text().toFloat();
     connector->getData()->getEnvelopeIni() = tempIni;
     close();
 }
