@@ -29,6 +29,7 @@ public:
     glm::mat4 sendT(int ind);
     int coupleSum();
     void setHangLinesVisiable(bool);
+    Pos currentSendPos();
 private:
     void setMesh();
     void updateBox();

@@ -9,6 +9,7 @@ class QSlider;
 class QTimer;
 class QCheckBox;
 class QLabel;
+class QLineEdit;
 class SimulationTab:public QWidget
 {
 public:
@@ -18,6 +19,7 @@ public:
     void updateLabel();
     void smoothData();
     void setHeadAnimate();
+    void updateCurPos();
 public slots:
     void output();
     void calculation();
@@ -57,6 +59,7 @@ private:
     QPushButton* fFrameButton;
     QPushButton* bFrameButton;
     QSlider* progressSlider;
+    QLineEdit* curPosLine;
     QTimer* timer;
 
     AxisMoveDataVec moveDatas;

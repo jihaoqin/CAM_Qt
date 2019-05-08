@@ -2,6 +2,7 @@
 #define ANIMATECONTROLLER_H
 #include "NameDeclare.h"
 #include "MoveData.h"
+#include "PosDir.h"
 class AnimateController
 {
 public:
@@ -15,6 +16,7 @@ public:
     std::pair<int, int> getInsertInd(int);
     bool hasData();
     void hideBandSet();
+    Pos currentPos();
 private:
     void initBandPtrs();
     void initIndexPairVecs();

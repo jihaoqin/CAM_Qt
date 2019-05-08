@@ -24,6 +24,7 @@ void AnimateController::initBandPtrs(){
     DataPtr data = ctrl->getData();
     NodePtr root = data->getNodeRoot();
     auto children = root->childrenPtrVec();
+    bandPtrs.clear();
     for(auto c:children){
         QString id = c->Id();
         if(id.contains("band")){
@@ -424,4 +425,12 @@ void AnimateController::resetAnimateT(){
     glm::mat4 T = glm::mat4(1.0);
     auto drawFunc = [T](DataObjectPtr p)->void{ if(p != nullptr){p->setAnimateT(T);}};
     root->dataOperation(drawFunc);
+}
+
+
+Pos AnimateController::currentPos(){
+    auto root = ctrl->data->getNodeRoot();
+    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
+    hangPtr->currentSendPos();
+    return hangPtr->sendPos(2*(windedTotal-1)+1);
 }

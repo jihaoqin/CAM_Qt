@@ -31,6 +31,11 @@ void HangingBandSet::draw(std::shared_ptr<GLProgram> program){
         core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
         core->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         if(m_hangVisiable == true){
+            program->setVec3("material.color", Color::RED);
+            int which = 0;
+            for(int i = which; i < which+1; i+=2){
+                core->glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int)*i));
+            }
             program->setVec3("material.color", Color::YELLOW);
             for(int i = 0; i < crossInds.size(); i+=2){
                 core->glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int)*crossInds.at(i)));
@@ -179,4 +184,13 @@ void HangingBandSet::setAnimateTs(vector<glm::mat4> Ts){
 
 void HangingBandSet::setHangLinesVisiable(bool flag){
     m_hangVisiable = flag;
+}
+
+Pos HangingBandSet::currentSendPos(){
+    glm::mat4 currentT = m_Ts.at(m_showInd);
+    glm::vec3 curRecPos = currentT[3];
+    glm::vec3 yDir = currentT[1];
+    //glm::vec3 sendPos = curRecPos + m_lengths.at(m_showInd).second*1.0f/6.0f*yDir;
+    glm::vec3 sendPos = poss.at(m_showInd*2+1).pos;
+    return sendPos;
 }

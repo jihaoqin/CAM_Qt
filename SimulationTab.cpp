@@ -17,6 +17,7 @@
 #include "HangingBandSet.h"
 #include "Node.h"
 #include "Model.h"
+#include <QLineEdit>
 
 SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* parent)
     :QWidget(parent), backWidget(back), connector(con)
@@ -75,6 +76,7 @@ SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* pa
     bFrameButton = new QPushButton(QIcon(":/icons/bFrame"), "", this);
     bFrameButton->setEnabled(false);
     animateCtrl = new AnimateController(connector->getCtrl());
+    curPosLine = new QLineEdit(this);
     QHBoxLayout* hLayout = new QHBoxLayout;
     hLayout->addWidget(slowButton);
     hLayout->addWidget(bFrameButton);
@@ -89,6 +91,7 @@ SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* pa
     layout->addWidget(progressSlider);
     layout->addWidget(outputButton);
     layout->addWidget(closeButton);
+    layout->addWidget(curPosLine);
     layout->addStretch(1);
     setLayout(layout);
     timer = new QTimer(this);
@@ -134,6 +137,7 @@ void SimulationTab::playOrPause(){
 
 void SimulationTab::showNext(){
     animateCtrl->showNext();
+    updateCurPos();
     int percent = animateCtrl->getPercent();
     progressSlider->blockSignals(true);
     progressSlider->setValue(percent);
@@ -282,6 +286,7 @@ void SimulationTab::calAxis4Data(){
     datas.clear();
     float pi = asin(1)*2;
     auto& axiss = connector->getData()->getAxissIni();
+    PosVec sendPoss;
     for(auto i = 0; i < hangPtr->coupleSum(); i++){
         if(i == 123){
             int a = 0;
@@ -289,6 +294,7 @@ void SimulationTab::calAxis4Data(){
         AxisMoveData moveData(4);
         glm::mat4 sendT = hangPtr->sendT(i);
         Pos sendPos = hangPtr->sendPos(i);
+        sendPoss.push_back(sendPos);
         float theta = atan2(sendPos.y, sendPos.z);
         moveData.theta(theta);
         moveData.x(sendPos.x);
@@ -401,7 +407,11 @@ void SimulationTab::smoothData(){
     auto& datas = moveDatas;
     float lastTheta = datas.at(0).theta();
     float lastFlip = datas.at(0).flip();
+    int i = 0;
     for(auto& data:datas){
+        if(i == 123){
+            int a = 0;
+        }
         while(data.theta() > lastTheta + pi){
             data.theta() -= 2*pi;
         }
@@ -417,6 +427,7 @@ void SimulationTab::smoothData(){
             data.flip() += 2*pi;
         }
         lastFlip = data.flip();
+        i++;
     }
 }
 
@@ -478,4 +489,13 @@ void SimulationTab::setHeadAnimate(){
     }
     auto headPtr = root->findHeadPtr();
     headPtr->setAnimateTs(animateTs);
+}
+
+
+void SimulationTab::updateCurPos(){
+    auto root = connector->getData()->getNodeRoot();
+    HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
+    Pos curSendPos = hangPtr->currentSendPos();
+    QString xyz = QString("x ") + QString::number(curSendPos.x) + ", y " + QString::number(curSendPos.y) + ", z" + QString::number(curSendPos.z);
+    curPosLine->setText(xyz);
 }
