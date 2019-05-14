@@ -308,13 +308,27 @@ bool EnvelopAssist::needOff(SuperPos p, float rOff){
         }
     }
     else{
-        return false;
+        Pipe& branchEnvelop = branch;
+        if(branchEnvelop.needOff(p.pos, branchEnvelop.r+rOff)){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }
 
-SuperPos EnvelopAssist::offedMainPos(SuperPos pos, float rOff){
-
-    return SuperPos{main.offedPos(pos.pos, mainPipe.r+rOff), "main"};
+SuperPos EnvelopAssist::offedPos(SuperPos pos, float rOff){
+    QString name = pos.meshName.c_str();
+    if(name.contains("main")){
+        return SuperPos{main.offedPos(pos.pos, mainPipe.r+rOff), "main"};
+    }
+    else if(name.contains("branch")){
+        return SuperPos{branch.offedPos(pos.pos, branchPipe.r+rOff), "branch"};
+    }
+    else{
+        assert(0);
+    }
 }
 
 bool Pipe::needOff(Pos world, float rLim){

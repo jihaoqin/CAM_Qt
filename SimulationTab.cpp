@@ -348,6 +348,9 @@ void SimulationTab::calAxis5Data(){
         AxisMoveData moveData(5);
         glm::mat4 sendT = hangPtr->sendT(i);
         Pos sendPos = hangPtr->sendPos(i);
+        if(glm::length(sendPos-Pos{-39.9055,9.7296,46.4928}) < 0.2){
+            int a = 0;
+        }
         float theta = atan2(sendPos.y, sendPos.z);
         moveData.theta() = theta;
         moveData.x() = sendPos.x;
@@ -356,14 +359,13 @@ void SimulationTab::calAxis5Data(){
         rotxs.push_back(rotx);
         glm::mat4 newSendT = rotx*sendT;
         float x0 = newSendT[0][0];
-        float x1 = newSendT[0][1];
-        float yaw = atan2(x0, x1);
+        float x2 = newSendT[0][2];
+        //float yaw = atan2(-1*x2, x0);
+        float yaw = atan(-1*x2/x0);
         moveData.yaw() = yaw;
-        glm::mat4 macT = utility::roty(yaw);
-        glm::vec3 Tx = macT[0];
-        glm::vec3 Ty = macT[1];
-        glm::vec3 y = newSendT[1];
-        float flip = atan2(-1*glm::dot(Tx, y), glm::dot(Ty, y));
+        glm::vec3 Tx = newSendT[0];
+        //float flip = atan2(Tx[1],cos(yaw)*Tx[0]-sin(yaw)*Tx[2]);
+        float flip = atan(Tx[1]/(cos(yaw)*Tx[0]-sin(yaw)*Tx[2]));
         moveData.flip() = flip;
 
         if(axiss.config & AxisIni::xLeft){

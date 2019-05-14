@@ -65,6 +65,9 @@ void AnimateController::initIndexPairVecs(){
 
 void AnimateController::showNext(){
     ++windedTotal;
+    if(windedTotal>pairTotal){
+        ctrl->mainWindow->animationOver();
+    }
     auto connector = ctrl->getConnector();
     auto tab = connector->getSimTab();
     auto root = ctrl->getData()->getNodeRoot();
@@ -306,7 +309,7 @@ void AnimateController::solveCollision(){
         SuperPos& beginP = poss.at(i);
         SuperPos& endP = poss.at(i+1);
         if(assist.needOff(endP, 20)){
-            SuperPos offP = assist.offedMainPos(endP, 20);
+            SuperPos offP = assist.offedPos(endP, 20);
             endP = offP;
             insertInds.push_back(i);
         }

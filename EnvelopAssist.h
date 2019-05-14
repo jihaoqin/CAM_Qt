@@ -37,7 +37,7 @@ public:
     SuperPosVec genInsertedSuper(SuperPosVec);
     SuperPosVec genInsertedInOne(SuperPosVec);
     bool needOff(SuperPos, float rOff);
-    SuperPos offedMainPos(SuperPos, float rOff);
+    SuperPos offedPos(SuperPos, float rOff);
 private:
     TeePtr tee;
     float m_dis;
