@@ -20,6 +20,8 @@ public:
     QString name(int);
     void setName(int, QString);
     void setOff(int, float);
+    void setHeadR(float);
+    float getHeadR();
     QString machineName();
     void machineName(QString);
     QString tabMachineName();
@@ -33,6 +35,7 @@ private:
     QStringVec names;
     QString machine;
     std::vector<float> axis_Offs;
+    float headR;
 };
 
 

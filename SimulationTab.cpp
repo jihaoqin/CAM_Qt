@@ -286,7 +286,7 @@ void SimulationTab::calAxis4Data(){
     datas.clear();
     float pi = asin(1)*2;
     auto& axiss = connector->getData()->getAxissIni();
-    PosVec sendPoss;
+    vector<glm::mat4> rotxs;
     for(auto i = 0; i < hangPtr->coupleSum(); i++){
         if(i == 123){
             int a = 0;
@@ -294,18 +294,39 @@ void SimulationTab::calAxis4Data(){
         AxisMoveData moveData(4);
         glm::mat4 sendT = hangPtr->sendT(i);
         Pos sendPos = hangPtr->sendPos(i);
-        sendPoss.push_back(sendPos);
-        float theta = atan2(sendPos.y, sendPos.z);
-        moveData.theta(theta);
-        moveData.x(sendPos.x);
-        moveData.z(glm::length(glm::vec2(sendPos.z, sendPos.y)));
+        if(glm::length(sendPos - Pos{21.3311, 65, -17.3562})<0.1){
+            int a = 1;
+        }
+        Pos tempHead = sendPos;
+        float tempTheta = atan2(tempHead.y, tempHead.z);
+        glm::mat4 tempRotx = utility::rotx(tempTheta);
+        glm::mat4 tempNewSendT = tempRotx*sendT;
+        Dir tempNewSendT_Y = tempNewSendT[1];
+        float tempY0 = tempNewSendT_Y[0];
+        float tempY1 = tempNewSendT_Y[1];
+        float tempFlip = atan(-1*tempY0/tempY1);
+
+        Dir ny = -1.0f*tempNewSendT_Y;
+        float some = glm::dot(Dir{0,0,1}, ny);
+        float some1 = (float) pow(glm::length(ny),2);
+        auto some2 = some/some1*ny;
+        Dir dir = Dir{0,0,1}-glm::dot(Dir{0,0,1}, ny)/(float)pow(glm::length(ny),2)*ny;
+        dir = glm::normalize(dir);
+        Pos tempNewSendT_Pos = tempNewSendT[3];
+        Pos head = tempNewSendT_Pos + axiss.getHeadR()*dir;
+        float theta = tempTheta + atan2(head.y, head.z);
         glm::mat4 rotx = utility::rotx(theta);
         glm::mat4 newSendT = rotx*sendT;
         Dir newSendT_Y = newSendT[1];
         float y0 = newSendT_Y[0];
         float y1 = newSendT_Y[1];
-        //张力的合力垂直于辊子
-        moveData.flip(atan2(-1*y0, y1));
+        float flip = atan2(-1*y0, y1);
+
+        rotxs.push_back(rotx);
+        moveData.theta(theta);
+        moveData.x(head.x);
+        moveData.z(glm::length(glm::vec2(head.z, head.y)));
+        moveData.flip(flip);
         if(axiss.config & AxisIni::xLeft){
             moveData.x(axiss.off(0) - moveData.x());
         }
@@ -333,6 +354,7 @@ void SimulationTab::calAxis4Data(){
         datas.push_back(moveData);
     }
     smoothData();
+    hangPtr->setAnimateTs(rotxs);
 }
 
 void SimulationTab::calAxis5Data(){
@@ -348,24 +370,36 @@ void SimulationTab::calAxis5Data(){
         AxisMoveData moveData(5);
         glm::mat4 sendT = hangPtr->sendT(i);
         Pos sendPos = hangPtr->sendPos(i);
-        if(glm::length(sendPos-Pos{-39.9055,9.7296,46.4928}) < 0.2){
-            int a = 0;
-        }
-        float theta = atan2(sendPos.y, sendPos.z);
+        Pos head = sendPos + glm::vec3(sendT[2])*axiss.getHeadR();
+        float theta = atan2(head.y, head.z);
         moveData.theta() = theta;
         moveData.x() = sendPos.x;
-        moveData.z() = glm::length(glm::vec2(sendPos.z, sendPos.y));
+        moveData.z() = glm::length(glm::vec2(head.z, head.y));
         glm::mat4 rotx = utility::rotx(theta);
         rotxs.push_back(rotx);
         glm::mat4 newSendT = rotx*sendT;
         float x0 = newSendT[0][0];
         float x2 = newSendT[0][2];
-        //float yaw = atan2(-1*x2, x0);
         float yaw = atan(-1*x2/x0);
-        moveData.yaw() = yaw;
         glm::vec3 Tx = newSendT[0];
-        //float flip = atan2(Tx[1],cos(yaw)*Tx[0]-sin(yaw)*Tx[2]);
         float flip = atan(Tx[1]/(cos(yaw)*Tx[0]-sin(yaw)*Tx[2]));
+        glm::mat4 headT = utility::roty(yaw)*utility::rotz(flip);
+        float xx = glm::dot(headT[0], newSendT[0]);
+        float yz = glm::dot(headT[2], newSendT[1]);
+        if(xx < 0 && yz <0){
+            yaw = yaw + pi;
+            flip = pi -flip;
+        }
+        else if(xx<0 && yz>0){
+        }
+        else if(xx>0 && yz<0){
+            yaw = yaw + pi;
+            flip = -1*flip;
+        }
+        else if(xx>0 && yz>0){
+            flip = flip + pi;
+        }
+        moveData.yaw() = yaw;
         moveData.flip() = flip;
 
         if(axiss.config & AxisIni::xLeft){

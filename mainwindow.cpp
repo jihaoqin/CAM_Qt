@@ -31,6 +31,7 @@ MainWindow::MainWindow(Controller* c, QWidget *parent)
     : QMainWindow(parent), ctrl(nullptr), widget(nullptr), teeNewDialog(nullptr), connector(nullptr)
 {
     //setStyleSheet("background-color:rgb(255,255,255)");
+    setWindowTitle("FiberStudio");
     widget = new CentralWidget(this);
     configureMenuBar();
     configureStatusBar();
@@ -58,9 +59,9 @@ void MainWindow::bindController(Controller *c){
 
 void MainWindow::configureStatusBar(){
     QStatusBar* staBar = statusBar();
-    QLabel *label = new QLabel(this);
-    label->setText("No File");
-    staBar->addPermanentWidget(label);
+    //QLabel *label = new QLabel(this);
+    //label->setText("No File");
+    //staBar->addPermanentWidget(label);
 
 }
 

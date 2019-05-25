@@ -1,7 +1,7 @@
 #include "AxisIni.h"
 
 AxisIni::AxisIni(int num)
-    :names(num, "untitled"), machine("untitled"), axis_Offs(num, 0), config(0)
+    :names(num, "untitled"), machine("untitled"), axis_Offs(num, 0), config(0),headR(0)
 {
 }
 
@@ -98,6 +98,8 @@ void AxisIni::serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer
     writer.String(machine.toLatin1().data());
     writer.String("axisSum");
     writer.Int(axisSum());
+    writer.String("head radius");
+    writer.Double(headR);
     writer.String("axis_Offs");
     writer.StartArray();
     for(auto off:axis_Offs){
@@ -132,4 +134,13 @@ float AxisIni::off(int ind){
 
 QString AxisIni::offGcode(int ind){
     return QString("#") + QString::number(ind+1) + " = " + offStr(ind) + "\t;" + name(ind) +"'s offset";
+}
+
+
+void AxisIni::setHeadR(float r){
+    headR = r;
+}
+
+float AxisIni::getHeadR(){
+    return headR;
 }

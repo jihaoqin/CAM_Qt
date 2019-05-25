@@ -4,6 +4,8 @@
 Axiss::Axiss(float xmin, float xmax, float ymin, float ymax, float r)
     :m_xmin(xmin), m_xmax(xmax), m_ymin(ymin), m_ymax(ymax), m_r(r), binded(false)
 {
+    m_zmin = 0;
+    m_zmax = m_xmax;
     initial();
 }
 
@@ -32,6 +34,7 @@ void Axiss::bindGL(QOpenGLContext *c){
 
     xEnd.bindGL(c);
     yEnd.bindGL(c);
+    zEnd.bindGL(c);
     binded = true;
 }
 
@@ -43,12 +46,16 @@ void Axiss::draw(std::shared_ptr<GLProgram> p){
         p->setMat4("model", glm::mat4(1.0f));
         p->setVec3("material.color", Color::RED);
         core->glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void*)(0));
-        p->setVec3("material.color", Color::BLUE);
+        p->setVec3("material.color", Color::GREEN);
         core->glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void*)(2*sizeof(unsigned)));
+        p->setVec3("material.color", Color::BLUE);
+        core->glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void*)(4*sizeof(unsigned)));
         p->setVec3("material.color", Color::RED);
         xEnd.draw();
-        p->setVec3("material.color", Color::BLUE);
+        p->setVec3("material.color", Color::GREEN);
         yEnd.draw();
+        p->setVec3("material.color", Color::BLUE);
+        zEnd.draw();
     }
 }
 
@@ -57,16 +64,18 @@ void Axiss::initial(){
         {m_xmin, 0, 0},
         {m_xmax, 0, 0},
         {0, m_ymin, 0},
-        {0, m_ymax, 0}
+        {0, m_ymax, 0},
+        {0, 0, m_zmin},
+        {0, 0, m_zmax}
     };
-    for(int i = 0; i < 4; i++){
+    for(int i = 0; i < 6; i++){
         Vertex v;
         v.vertex = poss.at(i);
         v.normal = Dir{0,0,1};
         v.coordinate = glm::vec2{0,0};
         vertexVec.push_back(v);
     }
-    indexVec = vector<unsigned int>{0, 1, 2, 3};
+    indexVec = vector<unsigned int>{0, 1, 2, 3, 4, 5};
 
     float pi = asin(1)*2;
     {
@@ -142,4 +151,40 @@ void Axiss::initial(){
     }
     yEnd = Mesh(yEndVertexs, vector<unsigned int>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11});
     }
+
+    PosVec zEndPoss ={
+        {0, 0, m_zmax},
+        {0.5*m_r, 0, m_zmax-m_r},
+        {0.5*m_r*cos(pi*2/3), 0.5*m_r*sin(pi*2/3), m_zmax-m_r},
+        {0.5*m_r*cos(pi*4/3), 0.5*m_r*sin(pi*4/3), m_zmax-m_r}
+    };
+    vector<unsigned int> zEndIndex = {
+        0, 2, 1,
+        0, 1, 3,
+        0, 3, 2,
+        1, 2, 3,
+    };
+    VertexVec zEndVertexs;
+    for(int i = 0; i < 4; i++){
+        Dir dir1 = zEndPoss.at(zEndIndex.at(3*i+1)) - zEndPoss.at(zEndIndex.at(3*i));
+        Dir dir2 = zEndPoss.at(zEndIndex.at(3*i+2)) - zEndPoss.at(zEndIndex.at(3*i));
+        Dir norm = glm::normalize(glm::cross(dir1, dir2));
+        Vertex v;
+        v.vertex = zEndPoss.at(zEndIndex.at(3*i));
+        v.normal = norm;
+        v.coordinate = glm::vec2{0, 0};
+        zEndVertexs.push_back(v);
+
+        v.vertex = zEndPoss.at(zEndIndex.at(3*i+1));
+        v.normal = norm;
+        v.coordinate = glm::vec2{0, 0};
+        zEndVertexs.push_back(v);
+
+        v.vertex = zEndPoss.at(zEndIndex.at(3*i+2));
+        v.normal = norm;
+        v.coordinate = glm::vec2{0, 0};
+        zEndVertexs.push_back(v);
+    }
+    zEnd = Mesh(zEndVertexs, vector<unsigned int>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11});
+
 }

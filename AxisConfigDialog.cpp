@@ -85,6 +85,7 @@ void AxisConfigDialog::updateUI(){
     ui->yawOffLineEdit->blockSignals(true);
 
     ui->machineLineEdit->setText(axis->machineName());
+    ui->headRLine->setText(QString::number(axis->getHeadR()));
     int axisSum = axis->axisSum();
     if(axisSum == 4){
         ui->axisSumCombox->setCurrentIndex(0);
@@ -270,6 +271,7 @@ void AxisConfigDialog::updateAxis(){
     else{
         axis->setAxisSum(5);
     }
+    axis->setHeadR(ui->headRLine->text().toFloat());
     axis->setName(0, ui->hengNameLineEdit->text());
     axis->setName(1,ui->zongNameLineEdit->text());
     axis->setName(2,ui->flipNameLineEdit->text());
@@ -344,6 +346,7 @@ void AxisConfigDialog::importFromFile(){
         assert(doc["type"] == "AxisIni");
         QString machine = doc["machine"].GetString();
         int axisSum = doc["axisSum"].GetInt();
+        float r = doc["head radius"].GetDouble();
         std::vector<float> axis_Offs;
         const Value& offs = doc["axis_Offs"];
         for(int i =0; i<offs.Size(); i++){
@@ -359,6 +362,7 @@ void AxisConfigDialog::importFromFile(){
         axis = new AxisIni(axisSum);
         axis->machineName(machine);
         axis->setAxisSum(axisSum);
+        axis->setHeadR(r);
         for(int i = 0; i<axisSum; i++){
             axis->setOff(i, axis_Offs.at(i));
             axis->setName(i, axis_Names.at(i));

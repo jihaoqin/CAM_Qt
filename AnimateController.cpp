@@ -410,12 +410,14 @@ void AnimateController::hideBandSet(){
 void AnimateController::setRotxs(){
     float pi = asin(1)*2;
     auto root = ctrl->data->getNodeRoot();
+    auto& axiss = ctrl->getData()->getAxissIni();
     HangingBandSetPtr hangPtr = std::dynamic_pointer_cast<HangingBandSet>(root->findObjectId("post"));
     vector<glm::mat4> rotxs;
     for(auto i = 0; i < hangPtr->coupleSum(); i++){
         glm::mat4 sendT = hangPtr->sendT(i);
         Pos sendPos = hangPtr->sendPos(i);
-        float theta = atan2(sendPos.y, sendPos.z);
+        Pos head = sendPos;
+        float theta = atan2(head.y, head.z);
         glm::mat4 rotx = utility::rotx(theta);
         rotxs.push_back(rotx);
     }

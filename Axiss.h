@@ -17,9 +17,12 @@ private:
     float m_xmax;
     float m_ymin;
     float m_ymax;
+    float m_zmin;
+    float m_zmax;
     float m_r;
     Mesh xEnd;
     Mesh yEnd;
+    Mesh zEnd;
 
     bool binded;
     unsigned int VAO,VBO,EBO;
