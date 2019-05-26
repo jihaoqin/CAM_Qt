@@ -45,6 +45,7 @@ void Cylinder::bindGL(QOpenGLContext* c){
 }
 void Cylinder::draw(std::shared_ptr<GLProgram> program){
     if(visiable == true){
+        program->setVec3("material.color", {1.0f*76.0/350, 1.0f*180.0/350, 1.0f*231.0/350});
         m.draw();
     }
 }

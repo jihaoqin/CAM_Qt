@@ -84,6 +84,7 @@ void TriEdgePlane::bindGL(QOpenGLContext *c){
 
 void TriEdgePlane::draw(std::shared_ptr<GLProgram> p){
     if(visiable == true){
+        p->setVec3("material.color", {1.0f*255.0/255, 1.0f*192.0/255, 1.0f*159.0/255});
         m.draw();
     }
 }
