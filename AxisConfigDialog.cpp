@@ -49,6 +49,7 @@ void AxisConfigDialog::initial(){
     connect(ui->spindleOffLineEdit, &QLineEdit::textChanged, this, &AxisConfigDialog::updateAxis);
     connect(ui->flipOffLineEdit, &QLineEdit::textChanged, this, &AxisConfigDialog::updateAxis);
     connect(ui->yawOffLineEdit, &QLineEdit::textChanged, this, &AxisConfigDialog::updateAxis);
+    connect(ui->headRLine, &QLineEdit::textChanged, this, &AxisConfigDialog::updateAxis);
 
 
     connect(ui->spindleLeftCheckbox, &QCheckBox::clicked, ui->spindleRightCheckbox, &QCheckBox::click);
@@ -83,6 +84,7 @@ void AxisConfigDialog::updateUI(){
     ui->spindleOffLineEdit->blockSignals(true);
     ui->flipOffLineEdit->blockSignals(true);
     ui->yawOffLineEdit->blockSignals(true);
+    ui->headRLine->blockSignals(true);
 
     ui->machineLineEdit->setText(axis->machineName());
     ui->headRLine->setText(QString::number(axis->getHeadR()));
@@ -190,6 +192,7 @@ void AxisConfigDialog::updateUI(){
     ui->spindleOffLineEdit->blockSignals(false);
     ui->flipOffLineEdit->blockSignals(false);
     ui->yawOffLineEdit->blockSignals(false);
+    ui->headRLine->blockSignals(false);
 }
 
 
@@ -307,6 +310,7 @@ void AxisConfigDialog::updateAxis(){
             axis->config |= AxisIni::yawLeft;
         }
     }
+    axis->setHeadR(ui->headRLine->text().toDouble());
 }
 
 void AxisConfigDialog::saveInFile(){

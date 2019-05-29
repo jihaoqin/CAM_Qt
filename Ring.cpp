@@ -30,7 +30,7 @@ void Ring::bindGL(QOpenGLContext *c){
 
 void Ring::draw(std::shared_ptr<GLProgram> p){
     if(visiable == true){
-        p->setVec3("material.color", {1.0f*255.0/255, 1.0f*238.0/255, 1.0f*147.0/255});
+        //p->setVec3("material.color", {1.0f*255.0/255, 1.0f*238.0/255, 1.0f*147.0/255});
         m.draw();
     }
 }

@@ -227,7 +227,6 @@ void SimulationTab::modifyMachine(){
 }
 
 void SimulationTab::output(){
-    //calMoveData();
     auto& axis = connector->getData()->getAxissIni();
     QString fileName = QFileDialog::getSaveFileName(this, "Save G-code",axis.machineName(),"*.ngc");
     if(fileName.isEmpty()){
@@ -294,9 +293,6 @@ void SimulationTab::calAxis4Data(){
         AxisMoveData moveData(4);
         glm::mat4 sendT = hangPtr->sendT(i);
         Pos sendPos = hangPtr->sendPos(i);
-        if(glm::length(sendPos - Pos{21.3311, 65, -17.3562})<0.1){
-            int a = 1;
-        }
         Pos tempHead = sendPos;
         float tempTheta = atan2(tempHead.y, tempHead.z);
         glm::mat4 tempRotx = utility::rotx(tempTheta);
@@ -370,13 +366,15 @@ void SimulationTab::calAxis5Data(){
         AxisMoveData moveData(5);
         glm::mat4 sendT = hangPtr->sendT(i);
         Pos sendPos = hangPtr->sendPos(i);
+        if(glm::length(sendPos - Pos{-2.60872, 41.8646, 27.376})<0.1){
+            int a =1;
+        }
         Pos head = sendPos + glm::vec3(sendT[2])*axiss.getHeadR();
         float theta = atan2(head.y, head.z);
         moveData.theta() = theta;
-        moveData.x() = sendPos.x;
+        moveData.x() = head.x;
         moveData.z() = glm::length(glm::vec2(head.z, head.y));
         glm::mat4 rotx = utility::rotx(theta);
-        rotxs.push_back(rotx);
         glm::mat4 newSendT = rotx*sendT;
         float x0 = newSendT[0][0];
         float x2 = newSendT[0][2];
@@ -399,6 +397,52 @@ void SimulationTab::calAxis5Data(){
         else if(xx>0 && yz>0){
             flip = flip + pi;
         }
+        while(yaw < -1*pi){
+            yaw += 2*pi;
+        }
+        while(yaw > pi){
+            yaw -= 2*pi;
+        }
+        //begin 避障
+        bool change = false;
+        if(yaw >pi/4){
+            yaw = pi/4;
+            change = true;
+        }
+        if(yaw < pi/-4){
+            yaw = pi/-4;
+            change = true;
+        }
+        if(change == true)
+        {
+        glm::mat4 sendT = hangPtr->sendT(i);
+        Pos sendPos = hangPtr->sendPos(i);
+        Pos tempHead = sendPos;
+        float tempTheta = atan2(tempHead.y, tempHead.z);
+        glm::mat4 tempRotx = utility::rotx(tempTheta);
+        glm::mat4 tempNewSendT = tempRotx*sendT;
+
+        glm::vec3 tempTy = tempNewSendT[1];
+        Dir ny = -1.0f*tempTy;
+        glm::mat4 tempM = utility::roty(yaw);
+        glm::vec3 tempMz = tempM[2];
+        Dir dir = tempMz-glm::dot(tempMz, ny)/(float)pow(glm::length(ny),2)*ny;
+        dir = glm::normalize(dir);
+        Pos tempNewSendT_Pos = tempNewSendT[3];
+        Pos head = tempNewSendT_Pos + axiss.getHeadR()*dir;
+        //Pos head = tempNewSendT_Pos;
+        theta = tempTheta + atan2(head.y, head.z);
+        moveData.theta() = theta;
+        moveData.x() = head.x;
+        moveData.z() = glm::length(glm::vec2(head.z, head.y));
+        rotx = utility::rotx(theta);
+        glm::mat4 newSendT = rotx*sendT;
+        glm::vec3 Ty = newSendT[1];
+        flip = atan((Ty[2]*sin(yaw)-Ty[0]*cos(yaw))/Ty[1]);
+        glm::mat4 headT = utility::roty(yaw)*utility::rotz(flip);
+        }
+        //end 避障
+        rotxs.push_back(rotx);
         moveData.yaw() = yaw;
         moveData.flip() = flip;
 
@@ -435,6 +479,7 @@ void SimulationTab::calAxis5Data(){
         datas.push_back(moveData);
     }
     smoothData();
+    hangPtr->setAnimateTs(rotxs);
 }
 
 void SimulationTab::smoothData(){

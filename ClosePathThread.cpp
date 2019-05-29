@@ -106,10 +106,11 @@ void ClosePathThread::reorderPath(){
         return;
     }
     End end1;
-    for(auto ite = endsSet.begin(); ite != endsSet.end();++ite){
+    vector<End> endsVec = ctrl->allEndsVec();
+    for(auto ite = endsVec.begin(); ite != endsVec.end();++ite){
         if(ite->nextEndId.isEmpty()){
             end1 = *ite;
-            qDebug()<<ite->endId;
+            //qDebug()<<ite->endId;
             //break;
         }
     }

@@ -300,7 +300,7 @@ bool EnvelopAssist::needOff(SuperPos p, float rOff){
     QString name = p.meshName.c_str();
     if(name.contains("main")){
         Pipe& mainEnvelop = main;
-        if(mainEnvelop.needOff(p.pos, mainEnvelop.r+rOff)){
+        if(mainEnvelop.needOff(p.pos, mainPipe.r+rOff)){
             return true;
         }
         else{
@@ -309,7 +309,7 @@ bool EnvelopAssist::needOff(SuperPos p, float rOff){
     }
     else{
         Pipe& branchEnvelop = branch;
-        if(branchEnvelop.needOff(p.pos, branchEnvelop.r+rOff)){
+        if(branchEnvelop.needOff(p.pos, branchPipe.r+rOff)){
             return true;
         }
         else{

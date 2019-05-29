@@ -39,6 +39,7 @@ public:
     void addTee(float ,float ,float ,float);
     void setColor(QStringVec, Color);
     EndPtrVec allEnds();
+    std::vector<End> allEndsVec();
     std::set<End> allEndsSet();
     QString addBandInTee(QString pId, float uAng);
     CBandPtr addCBandInPipe(QString pId, float uAng);

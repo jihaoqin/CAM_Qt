@@ -205,16 +205,11 @@ void AnimateController::initHangingBand(){
             }
         }
         auto pds = bPtr->indexsPds(inds);
-        if(i == bandPtrs.size()-1){
-            int a = 5;
-        }
         for(auto i = 0; i<pds.size(); ++i){
             auto pd = pds.at(i);
-            //pd = PosDir{Pos{}, Dir{}};
             auto superPosVec = assist.intersectPoint(pd.pos, pd.dir);
             assert(superPosVec.size() == 1);
             if(assist.isCross(pd.pos, superPosVec.at(0).pos)){
-                assist.isCross(pd.pos, superPosVec.at(0).pos);
                 crossInds.push_back(allSuperPosVec.size());
             }
             std::string where = superPosVec.at(0).meshName;
@@ -309,6 +304,7 @@ void AnimateController::solveCollision(){
         SuperPos& beginP = poss.at(i);
         SuperPos& endP = poss.at(i+1);
         if(assist.needOff(endP, 20)){
+            assist.needOff(endP, 20);
             SuperPos offP = assist.offedPos(endP, 20);
             endP = offP;
             insertInds.push_back(i);

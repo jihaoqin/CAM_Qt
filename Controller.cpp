@@ -720,6 +720,15 @@ EndPtrVec Controller::allEnds(){
     return all;
 }
 
+std::vector<End> Controller::allEndsVec(){
+    EndPtrVec endPtrs = allEnds();
+    vector<End> endsVec;
+    for(auto e:endPtrs){
+        endsVec.push_back(*e);
+    }
+    return endsVec;
+}
+
 std::set<End> Controller::allEndsSet(){
     EndPtrVec endPtrs = allEnds();
     set<End> endsSet;
