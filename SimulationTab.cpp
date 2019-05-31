@@ -52,6 +52,9 @@ SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* pa
     outputButton = new QPushButton("export G-code", this);
     outputButton->setEnabled(false);
     connect(outputButton, &QPushButton::clicked, this, &SimulationTab::output);
+    robotButton = new QPushButton("export robot-code", this);
+    robotButton->setEnabled(false);
+    connect(robotButton, &QPushButton::clicked, this, &SimulationTab::output);
     axisIniButton = new QPushButton("axis ini", this);
     layout->addWidget(axisIniButton);
     connect(axisIniButton, &QPushButton::clicked, this, &SimulationTab::modifyMachine);
@@ -90,6 +93,7 @@ SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* pa
     layout->addLayout(hLayout);
     layout->addWidget(progressSlider);
     layout->addWidget(outputButton);
+    layout->addWidget(robotButton);
     layout->addWidget(closeButton);
     layout->addWidget(curPosLine);
     layout->addStretch(1);
@@ -122,6 +126,7 @@ void SimulationTab::calculation(){
     fFrameButton->setEnabled(true);
     bFrameButton->setEnabled(true);
     outputButton->setEnabled(true);
+    robotButton->setEnabled(true);
 }
 
 void SimulationTab::playOrPause(){
@@ -578,4 +583,29 @@ void SimulationTab::updateCurPos(){
     Pos curSendPos = hangPtr->currentSendPos();
     QString xyz = QString("x ") + QString::number(curSendPos.x) + ", y " + QString::number(curSendPos.y) + ", z" + QString::number(curSendPos.z);
     curPosLine->setText(xyz);
+}
+
+void SimulationTab::outputComau(){
+    auto axis = connector->getData()->getAxissIni();
+    for(auto data:moveDatas){
+        glm::mat4 triOnBase;//测量
+        glm::mat4 headOnTri;
+        if(axis.axisSum() == 4){
+            headOnTri = glm::mat4(1.0);
+            glm::mat4 posMat = glm::translate(glm::mat4(1.0), Pos{data.x(), 0, data.z()});
+        }
+        else if(axis.axisSum() == 5){
+        }
+        glm::mat4 flangeOnHead;
+        glm::mat4 flangeOnTri = flangeOnHead*headOnTri;
+        glm::mat4 flangeOnBase = flangeOnTri*triOnBase;
+        float X = flangeOnBase[3][0];
+        float Y = flangeOnBase[3][1];
+        float Z = flangeOnBase[3][2];
+        float A = 0;
+        float B = 0;
+        float C = 0;
+        float spindle = 0;
+        float flip = 0;
+    }
 }

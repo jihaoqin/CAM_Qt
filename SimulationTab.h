@@ -22,6 +22,7 @@ public:
     void updateCurPos();
 public slots:
     void output();
+    void outputComau();
     void calculation();
     void playOrPause();
     void showNext();
@@ -47,6 +48,7 @@ private:
     QLabel* axis_5_nameLabel;
 
     QPushButton* outputButton;
+    QPushButton* robotButton;
     QPushButton* axisIniButton;
     QPushButton* envelopButton;
     QPushButton* calButton;
