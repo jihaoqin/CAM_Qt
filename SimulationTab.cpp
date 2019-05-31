@@ -592,7 +592,7 @@ void SimulationTab::outputComau(){
         glm::mat4 headOnTri;
         if(axis.axisSum() == 4){
             headOnTri = glm::mat4(1.0);
-            glm::mat4 posMat = glm::translate(glm::mat4(1.0), Pos{data.x(), 0, data.z()});
+            glm::mat4 posMat = glm::translate(glm::mat4(1.0), Pos{data.origin_x(), 0, data.origin_z()});
         }
         else if(axis.axisSum() == 5){
         }
