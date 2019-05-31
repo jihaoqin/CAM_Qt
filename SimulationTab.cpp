@@ -430,7 +430,6 @@ void SimulationTab::calAxis5Data(){
         dir = glm::normalize(dir);
         Pos tempNewSendT_Pos = tempNewSendT[3];
         Pos head = tempNewSendT_Pos + axiss.getHeadR()*dir;
-        //Pos head = tempNewSendT_Pos;
         theta = tempTheta + atan2(head.y, head.z);
         moveData.theta() = theta;
         moveData.x() = head.x;

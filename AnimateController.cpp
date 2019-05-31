@@ -303,11 +303,22 @@ void AnimateController::solveCollision(){
     for(auto i = 0; i < poss.size()-1; i+=2){
         SuperPos& beginP = poss.at(i);
         SuperPos& endP = poss.at(i+1);
-        if(assist.needOff(endP, 20)){
-            assist.needOff(endP, 20);
-            SuperPos offP = assist.offedPos(endP, 20);
-            endP = offP;
-            insertInds.push_back(i);
+        if(QString(endP.meshName.c_str()).contains("main")){
+            if(assist.needOff(endP, 20)){
+                SuperPos offP = assist.offedPos(endP, 20);
+                endP = offP;
+                insertInds.push_back(i);
+            }
+        }
+        else if(QString(endP.meshName.c_str()).contains("branch")){
+            if(assist.needOff(endP, 40)){
+                SuperPos offP = assist.offedPos(endP, 40);
+                endP = offP;
+                insertInds.push_back(i);
+            }
+        }
+        else{
+            assert(0);
         }
     }
     hangPtr->setCrossIndexs(insertInds);

@@ -37,10 +37,10 @@ void FromPipeCurveTab::initial(){
     oppositeBox->setCheckState(Qt::Unchecked);
     dirSlider = new QSlider(this);
     dirSlider->setOrientation(Qt::Horizontal);
-    dirSlider->setRange(2, 30);
+    dirSlider->setRange(2, 80);
     dirSlider->setValue(10);
     dirSpinBox = new QSpinBox(this);
-    dirSpinBox->setRange(2, 30);
+    dirSpinBox->setRange(2, 80);
     dirSpinBox->setSingleStep(1);
     dirSpinBox->setValue(10);
     lamLabel = new QLabel("slippery", this);

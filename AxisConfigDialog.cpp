@@ -271,7 +271,7 @@ void AxisConfigDialog::updateAxis(){
     if(ui->axisSumCombox->currentIndex() == 0){
         axis->setAxisSum(4);
     }
-    else{
+    else if(ui->axisSumCombox->currentIndex() == 1){
         axis->setAxisSum(5);
     }
     axis->setHeadR(ui->headRLine->text().toFloat());
