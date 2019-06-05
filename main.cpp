@@ -19,8 +19,11 @@ int main(int argc, char *argv[])
     w.show();
     ctrl.addTee(90, 69, 7.5, 7.5);
     //ctrl.addTee(90, 52.5, 7.5, 7.5);
-    //ctrl.addTee(90, 37.5, 7.5, 7.5);
-    //ctrl.addTee(60, 27.5, 7.5, 7.5);//环绕模具
+    //ctrl.addTee(80, 50, 7.5, 7.5);//主管一段-5，支管-12.5
+    //ctrl.addTee(65, 40, 7.5, 7.5);//
+    //ctrl.addTee(70, 30, 7.5, 7.5);//
+    //ctrl.addTee(50, 50, 7.5, 7.5);//
+    //ctrl.addTee(50, 60, 7.5, 7.5);//
     data->bandWidth(2);
     data->getEnvelopeIni() = EnvelopData{40, 20, 5};
     return a.exec();

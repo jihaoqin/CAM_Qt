@@ -304,15 +304,15 @@ void AnimateController::solveCollision(){
         SuperPos& beginP = poss.at(i);
         SuperPos& endP = poss.at(i+1);
         if(QString(endP.meshName.c_str()).contains("main")){
-            if(assist.needOff(endP, 20)){
-                SuperPos offP = assist.offedPos(endP, 20);
+            if(assist.needOff(endP, 15)){
+                SuperPos offP = assist.offedPos(endP, 15);
                 endP = offP;
                 insertInds.push_back(i);
             }
         }
         else if(QString(endP.meshName.c_str()).contains("branch")){
-            if(assist.needOff(endP, 40)){
-                SuperPos offP = assist.offedPos(endP, 40);
+            if(assist.needOff(endP, 20)){
+                SuperPos offP = assist.offedPos(endP, 20);
                 endP = offP;
                 insertInds.push_back(i);
             }

@@ -61,4 +61,5 @@ float length(SuperPosVec);
 glm::mat4 rotx(float);
 glm::mat4 roty(float);
 glm::mat4 rotz(float);
+vector<float> RPY_ZYX(glm::mat4);
 }

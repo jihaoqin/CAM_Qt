@@ -513,3 +513,25 @@ glm::mat4 utility::rotz(float angle){
     auto T = glm::rotate(glm::mat4(1.0), angle, Dir{0, 0, 1});
     return T;
 }
+
+vector<float> utility::RPY_ZYX(glm::mat4 T){
+    float r,p,y;
+    float sinp = -1*T[0][2];
+    if(abs(abs(sinp)-1)<1e-2){
+        p = asin(sinp);
+        y = 0;
+        //begin mat1
+        glm::mat2 mat1;
+        mat1[0] = glm::vec2{-cos(y), sin(y)*sinp};
+        mat1[1] = glm::vec2{sin(y)*sinp, cos(y)};
+        //end mat1
+        auto srcr = glm::inverse(mat1)*glm::vec2{T[1][0], T[1][1]};
+        r = atan2(srcr[0], srcr[1]);
+    }
+    else{
+        r = atan2(T[0][1], T[0][0]);
+        p = asin(sinp);
+        y = atan2(T[1][2], T[2][2]);
+    }
+    return vector<float>{r,p,y};
+}

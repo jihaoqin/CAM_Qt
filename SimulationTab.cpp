@@ -54,7 +54,7 @@ SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* pa
     connect(outputButton, &QPushButton::clicked, this, &SimulationTab::output);
     robotButton = new QPushButton("export robot-code", this);
     robotButton->setEnabled(false);
-    connect(robotButton, &QPushButton::clicked, this, &SimulationTab::output);
+    connect(robotButton, &QPushButton::clicked, this, &SimulationTab::outputComau);
     axisIniButton = new QPushButton("axis ini", this);
     layout->addWidget(axisIniButton);
     connect(axisIniButton, &QPushButton::clicked, this, &SimulationTab::modifyMachine);
@@ -587,25 +587,77 @@ void SimulationTab::updateCurPos(){
 
 void SimulationTab::outputComau(){
     auto axis = connector->getData()->getAxissIni();
+    QString fileName = QFileDialog::getSaveFileName(this, "Save G-code",axis.machineName(),"*.ngc");
+    if(fileName.isEmpty()){
+        return ;
+    }
+    float pi = asin(1)*2;
+    std::ofstream outFile;
+    outFile.open(fileName.toLatin1().data());
+    QString machineIniInfo = ";"+axis.machineName()+"\n";
+    outFile<<machineIniInfo.toLatin1().data();
+    outFile<<"G90\n";
+    outFile<<"#1 = X;offset between table and tee pipe \n";
+    outFile<<"$P_UIFR[1]=CTRANS(X,1669,Y,0,Z,490):CROT(X,0,Y,0,Z,90);table coordinate system\n";
+    outFile<<"ORIWKS\n";
+    outFile<<"ORIVIRT1\n";
+    outFile<<"TRAORI\n";
+    outFile<<"G54\n";
+    outFile<<"F10\n";
+    glm::mat4 triOnBase;//测量
+    glm::mat4 headOnTri;
     for(auto data:moveDatas){
-        glm::mat4 triOnBase;//测量
-        glm::mat4 headOnTri;
+        float hengOnTri;
+        float zongOnTri;
+        if(axis.config & AxisIni::xLeft){
+            hengOnTri = -1*(data.x() - axis.off(0));
+        }
+        else{
+            hengOnTri = data.x() - axis.off(0);
+        }
+        if(axis.config & AxisIni::zDown){
+            zongOnTri = data.z() - axis.off(1);
+        }
+        else{
+            zongOnTri = -1*(data.z() - axis.off(1));
+        }
         if(axis.axisSum() == 4){
-            headOnTri = glm::mat4(1.0);
-            glm::mat4 posMat = glm::translate(glm::mat4(1.0), Pos{data.origin_x(), 0, data.origin_z()});
+            headOnTri = glm::translate(glm::mat4(1.0f), Pos{hengOnTri, 0, zongOnTri});
         }
         else if(axis.axisSum() == 5){
+            float yawOnTri;
+            if(axis.config & AxisIni::yawLeft){
+                yawOnTri = -1*(data.yaw() - axis.off(4));
+            }
+            else{
+                yawOnTri = data.yaw() - axis.off(4);
+            }
+            glm::mat4 posMat = glm::translate(glm::mat4(1.0f), Pos{hengOnTri, 0, zongOnTri});
+            headOnTri = posMat * glm::rotate(glm::mat4(1.0f), yawOnTri, Dir{0,1,0});
         }
+        //begin flangeOnHead
         glm::mat4 flangeOnHead;
-        glm::mat4 flangeOnTri = flangeOnHead*headOnTri;
-        glm::mat4 flangeOnBase = flangeOnTri*triOnBase;
-        float X = flangeOnBase[3][0];
-        float Y = flangeOnBase[3][1];
-        float Z = flangeOnBase[3][2];
-        float A = 0;
-        float B = 0;
-        float C = 0;
-        float spindle = 0;
-        float flip = 0;
+        flangeOnHead[0] = glm::vec4{0, 0, -1, 0};
+        flangeOnHead[1] = glm::vec4{-1, 0, 0, 0};
+        flangeOnHead[2] = glm::vec4{0, 1, 0, 0};
+        flangeOnHead[3] = glm::vec4{0, 199, 426, 1};
+        //end flangeOnHead
+        glm::mat4 flangeOnTri = headOnTri*flangeOnHead;
+        glm::mat4 flangeOnBase = triOnBase*flangeOnTri;
+        glm::mat4 T = flangeOnTri;
+        float X = T[3][0];
+        float Y = T[3][1];
+        float Z = T[3][2];
+        auto ABC = utility::RPY_ZYX(T);
+        float A = ABC.at(0);
+        float B = ABC.at(1);
+        float C = ABC.at(2);
+        float spindle = data.theta();
+        float flip = data.flip();
+        QString str = QString("G1 X=[#1+%1] Y=%2 Z=%3 A=%4 B=%5 C=%6 OUT1=%7 OUT2=%8\n").arg(X).arg(Y).arg(Z)
+                .arg(A*180/pi).arg(B*180/pi).arg(C*180/pi).arg(spindle*180/pi).arg(flip*180/pi);
+        outFile<<str.toLatin1().data();
     }
+    outFile<<"M30";
+    outFile.close();
 }
