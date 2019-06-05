@@ -535,3 +535,19 @@ vector<float> utility::RPY_ZYX(glm::mat4 T){
     }
     return vector<float>{r,p,y};
 }
+
+vector<float> utility::RPY_XYZ(glm::mat4 T){
+    float r,p,y;
+    float sinp = -1*T[2][0];
+    if(abs(abs(sinp)-1)<1e-2){
+        p = asin(sinp);
+        y = 0;
+        r = atan2(T[1][2], T[1][1]);
+    }
+    else{
+        r = atan2(T[0][1], T[0][0]);
+        p = asin(sinp);
+        y = atan2(T[1][2], T[2][2]);
+    }
+    return vector<float>{r,p,y};
+}

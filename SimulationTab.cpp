@@ -648,7 +648,7 @@ void SimulationTab::outputComau(){
         float X = T[3][0];
         float Y = T[3][1];
         float Z = T[3][2];
-        auto ABC = utility::RPY_ZYX(T);
+        auto ABC = utility::RPY_XYZ(T);
         float A = ABC.at(0);
         float B = ABC.at(1);
         float C = ABC.at(2);
