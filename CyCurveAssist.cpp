@@ -26,7 +26,8 @@ tuple<vector<CPPara>, vector<EdgePtr>, float> CyCurveAssist::genCurve(CPPara p, 
 
 tuple<CPParaVec, EdgePtr, float> CyCurveAssist::rungeKutta(float sSpan, CPPara p,  float coe){
     int sign = sSpan>0? 1:-1;
-    float h = sign*0.1;
+    //间隔
+    float h = sign*1;
     float s_last;
     CPPara p_last;
     p_last = p;

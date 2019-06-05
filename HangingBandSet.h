@@ -10,7 +10,7 @@
 class HangingBandSet:public DataObject
 {
 public:
-    HangingBandSet(SuperPosVec);
+    HangingBandSet(SuperPosVec, float w);
     void setData(SuperPosVec);
     virtual void bindGL(QOpenGLContext*);
     virtual void draw(std::shared_ptr<GLProgram>);

@@ -47,7 +47,8 @@ tuple<CPParaVec, EdgePtrVec, float> TriCurveAssist::genCurve(CPPara p, float coe
     float pi = asin(1)*2;
     float uAng = p.uAng;
     int sign = length>0?1:-1;
-    float ds = sign*0.1;
+    //间隔
+    float ds = sign*1;
     float u_last = p.u;
     float v_last = p.v;
     vector<CPPara> paras{p};

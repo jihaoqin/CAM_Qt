@@ -1,8 +1,8 @@
 #include "HangingBandSet.h"
 #include "utility.h"
 
-HangingBandSet::HangingBandSet(SuperPosVec ps)
-    :color(Color::BLUE), width(2), m_hangVisiable(true)
+HangingBandSet::HangingBandSet(SuperPosVec ps, float w)
+    :color(Color::BLUE), width(w), m_hangVisiable(true)
 {
     setId("post");
     setData(ps);
@@ -110,7 +110,7 @@ SuperPosVec HangingBandSet::data(){
 
 void HangingBandSet::setMesh(){
     std::vector<Vertex> vertexs;
-    int num = 100;
+    int num = 1000;
     for(auto i = 0; i < num; i++){
         Vertex v;
         v.vertex = glm::vec3{width/(-2), i, 0};

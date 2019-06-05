@@ -219,7 +219,7 @@ void AnimateController::initHangingBand(){
     }
     HangingBandSetPtr hangPtr;
     if(root->findObjectId("post") == nullptr){
-        hangPtr = std::make_shared<HangingBandSet>(allSuperPosVec);
+        hangPtr = std::make_shared<HangingBandSet>(allSuperPosVec, ctrl->data->bandWidth());
         hangPtr->setCrossIndexs(crossInds);
         QOpenGLContext* c = ctrl->getGLContext();
         hangPtr->bindGL(c);
@@ -304,8 +304,8 @@ void AnimateController::solveCollision(){
         SuperPos& beginP = poss.at(i);
         SuperPos& endP = poss.at(i+1);
         if(QString(endP.meshName.c_str()).contains("main")){
-            if(assist.needOff(endP, 15)){
-                SuperPos offP = assist.offedPos(endP, 15);
+            if(assist.needOff(endP, 30)){
+                SuperPos offP = assist.offedPos(endP, 30);
                 endP = offP;
                 insertInds.push_back(i);
             }
