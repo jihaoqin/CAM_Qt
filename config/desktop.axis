@@ -1,0 +1,19 @@
+{
+    "type": "AxisIni",
+    "machine": "desktop",
+    "axisSum": 4,
+    "head radius": 10.0,
+    "axis_Offs": [
+        0.0,
+        92.94300079345703,
+        0.0,
+        0.0
+    ],
+    "names": [
+        "Z",
+        "X",
+        "A",
+        "C"
+    ],
+    "config": 4097
+}

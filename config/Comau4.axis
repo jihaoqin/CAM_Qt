@@ -1,0 +1,19 @@
+{
+    "type": "AxisIni",
+    "machine": "Comau4",
+    "axisSum": 4,
+    "head radius": 13.0,
+    "axis_Offs": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+    ],
+    "names": [
+        "X",
+        "GaoDuNotZ",
+        "untitled",
+        "untitled"
+    ],
+    "config": 0
+}
