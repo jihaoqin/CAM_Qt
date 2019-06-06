@@ -597,29 +597,37 @@ void SimulationTab::outputComau(){
     QString machineIniInfo = ";"+axis.machineName()+"\n";
     outFile<<machineIniInfo.toLatin1().data();
     outFile<<"G90\n";
-    outFile<<"#1 = X;offset between table and tee pipe \n";
-    outFile<<"$P_UIFR[1]=CTRANS(X,1669,Y,0,Z,490):CROT(X,0,Y,0,Z,90);table coordinate system\n";
+    outFile<<"R1 = X;offset between table and tee pipe \n";
+    outFile<<"$P_UIFR[1]=CTRANS(X,1838.936,Y,1007.022-R1,Z,893.659):CROT(X,0,Y,0,Z,0);workpiece coordinate system\n";
     outFile<<"ORIWKS\n";
     outFile<<"ORIVIRT1\n";
     outFile<<"TRAORI\n";
     outFile<<"G54\n";
     outFile<<"F10\n";
+    outFile<<"G01 MB1 = 0\n";
     glm::mat4 triOnBase;//测量
     glm::mat4 headOnTri;
     for(auto data:moveDatas){
         float hengOnTri;
         float zongOnTri;
+        float flip;
         if(axis.config & AxisIni::xLeft){
-            hengOnTri = -1*(data.x() - axis.off(0));
+            hengOnTri = axis.off(0) -data.x() ;
         }
         else{
-            hengOnTri = data.x() - axis.off(0);
+            hengOnTri = data.x() + axis.off(0);
         }
         if(axis.config & AxisIni::zDown){
-            zongOnTri = data.z() - axis.off(1);
+            zongOnTri = data.z() + axis.off(1);
         }
         else{
-            zongOnTri = -1*(data.z() - axis.off(1));
+            zongOnTri = -data.z() + axis.off(1);
+        }
+        if(axis.config & AxisIni::flipDown){
+            flip = data.flip() + axis.off(2);
+        }
+        else{
+            flip = -data.flip() + axis.off(2);
         }
         if(axis.axisSum() == 4){
             headOnTri = glm::translate(glm::mat4(1.0f), Pos{hengOnTri, 0, zongOnTri});
@@ -637,14 +645,27 @@ void SimulationTab::outputComau(){
         }
         //begin flangeOnHead
         glm::mat4 flangeOnHead;
-        flangeOnHead[0] = glm::vec4{0, 0, -1, 0};
-        flangeOnHead[1] = glm::vec4{-1, 0, 0, 0};
-        flangeOnHead[2] = glm::vec4{0, 1, 0, 0};
-        flangeOnHead[3] = glm::vec4{0, 199, 426, 1};
+        flangeOnHead[0] = glm::vec4{1, 0, 0, 0};
+        flangeOnHead[1] = glm::vec4{0, 1, 0, 0};
+        flangeOnHead[2] = glm::vec4{0, 0, 1, 0};
+        flangeOnHead[3] = glm::vec4{-426, 0, 199, 1};
         //end flangeOnHead
-        glm::mat4 flangeOnTri = headOnTri*flangeOnHead;
-        glm::mat4 flangeOnBase = triOnBase*flangeOnTri;
-        glm::mat4 T = flangeOnTri;
+        //begin triOnWorkpiece
+        glm::mat4 triOnWorkpiece;
+        triOnWorkpiece[0] = glm::vec4{0, -1, 0, 0};
+        triOnWorkpiece[1] = glm::vec4{0, 0, 1, 0};
+        triOnWorkpiece[2] = glm::vec4{-1, 0, 0, 0};
+        triOnWorkpiece[3] = glm::vec4{0, 0, 0, 1};
+        //end triOnWorkpiece
+        //begin toolOnHead
+        glm::mat4 toolOnHead;
+        toolOnHead[0] = glm::vec4{0, 0, -1, 0};
+        toolOnHead[1] = glm::vec4{-1, 0, 0, 0};
+        toolOnHead[2] = glm::vec4{0, 1, 0, 0};
+        toolOnHead[3] = glm::vec4{0, 0, 0, 1};
+        //end toolOnHead
+        glm::mat4 toolOnWorkpiece = triOnWorkpiece*headOnTri*toolOnHead;
+        glm::mat4 T = toolOnWorkpiece;
         float X = T[3][0];
         float Y = T[3][1];
         float Z = T[3][2];
@@ -653,9 +674,16 @@ void SimulationTab::outputComau(){
         float B = ABC.at(1);
         float C = ABC.at(2);
         float spindle = data.theta();
-        float flip = data.flip();
-        QString str = QString("G1 X=[#1+%1] Y=%2 Z=%3 A=%4 B=%5 C=%6 OUT1=%7 OUT2=%8\n").arg(X).arg(Y).arg(Z)
-                .arg(A*180/pi).arg(B*180/pi).arg(C*180/pi).arg(spindle*180/pi).arg(flip*180/pi);
+        auto XStr = utility::numStr(X);
+        auto YStr = utility::numStr(Y);
+        auto ZStr = utility::numStr(Z);
+        auto AStr = utility::numStr(A*180/pi);
+        auto BStr = utility::numStr(B*180/pi);
+        auto CStr = utility::numStr(C*180/pi);
+        auto flipStr = utility::numStr(flip*180/pi);
+        auto spindleStr = utility::numStr(spindle*180/pi);
+        QString str = QString("G1 X=%1 Y=%2 Z=%3 A=%4 B=%5 C=%6 MA1=%7 MB1=%8\n").arg(XStr).arg(YStr).arg(ZStr)
+                .arg(AStr).arg(BStr).arg(CStr).arg(flipStr).arg(spindleStr);
         outFile<<str.toLatin1().data();
     }
     outFile<<"M30";

@@ -551,3 +551,13 @@ vector<float> utility::RPY_XYZ(glm::mat4 T){
     }
     return vector<float>{r,p,y};
 }
+
+QString utility::numStr(float num){
+    QString str = QString::number(num);
+    if(str.contains("e")){
+        return "0";
+    }
+    else{
+        return str;
+    }
+}
