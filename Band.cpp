@@ -239,3 +239,7 @@ QString End::nextBandId(){
         return nextEndId.split(".").front();
     }
 }
+
+void Band::setId(const char* c){
+    id = std::string(c);
+}

@@ -29,6 +29,7 @@ private slots:
     void showFromPipeCurveTab();
     void saveBand();
     void openBand();
+    void freezeBand();
     void genLeftCurve();
     void genUpCurve();
     void genRightCurve();
@@ -47,6 +48,7 @@ private:
     QMenu* bandMenu;
         QAction* bandSave;
         QAction* bandOpen;
+        QAction* freeze;
     //ToolBar
         QAction *newCurve;
         QAction *fromPipeCurve;

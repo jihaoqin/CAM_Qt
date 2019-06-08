@@ -60,7 +60,11 @@ tuple<CPParaVec, EdgePtr, float> CyCurveAssist::rungeKutta(float sSpan, CPPara p
 }
 
 CPPara CyCurveAssist::evalNext(float x, CPPara p, float coe, float h){
-    vector<float> y0{p.u, p.v, p.uAng};
+    //vector<float> y0{p.u, p.v, p.uAng};
+    vector<float> y0;
+    y0.push_back(p.u);
+    y0.push_back(p.v);
+    y0.push_back(p.uAng);
     using namespace numpy;
     vector<float> K1(y0.size());
     vector<float> K2(y0.size());
@@ -81,7 +85,12 @@ vector<float> CyCurveAssist::ringDiff(float s, vector<float> y0, float coe){
     float uAngn = -1*coe*pow(cos(uAng),2)/R;
     float un = cos(uAng)/R;
     float vn = sin(uAng);
-    return vector<float>{un, vn, uAngn};
+    vector<float> result;
+    result.push_back(un);
+    result.push_back(vn);
+    result.push_back(uAngn);
+    return result;
+    //return vector<float>{un, vn, uAngn};
 }
 
 tuple<vector<PosDir>, vector<EdgePtr>, float> CyCurveAssist::genCurve(glm::vec3 pos, glm::vec3 dir, float coe, float l){

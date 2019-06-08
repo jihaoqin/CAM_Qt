@@ -62,6 +62,7 @@ public:
     Dir outNorm(int);
     QString beginFlag();
     virtual void setAnimateT(glm::mat4) override;
+    void setId(const char*);
 protected:
     QString m_begin;
     BandEndPtr m_end;

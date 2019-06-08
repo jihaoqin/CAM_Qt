@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     data->bindConnector(w.connector);
     w.show();
     //begin 石膏三通管模型
-    ctrl.addTee(90, 69, 7.5, 7.5);
+    //ctrl.addTee(90, 69, 7.5, 7.5);
     //ctrl.addTee(90, 52.5, 7.5, 7.5);
     //ctrl.addTee(80, 50, 7.5, 7.5);//主管一段-5，支管-12.5
     //ctrl.addTee(65, 40, 7.5, 7.5);//
@@ -31,8 +31,10 @@ int main(int argc, char *argv[])
     //begin 机器人三通管
     //实际尺寸 	ctrl.addTee(440, 230, 54, 25);
     ctrl.addTee(420, 220, 54, 25);
+    //ctrl.addTee(420-24, 220-25, 54, 25);
+    //ctrl.addTee(420, 220-50, 54, 25);
     //end 机器人三通管
-    data->bandWidth(6);
+    data->bandWidth(4);
     data->getEnvelopeIni() = EnvelopData{90, 60, 5};
     return a.exec();
 }

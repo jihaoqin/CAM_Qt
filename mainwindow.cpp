@@ -24,6 +24,7 @@
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 #include <fstream>
+#include "Node.h"
 
 using namespace rapidjson;
 
@@ -77,6 +78,7 @@ void MainWindow::configureMenuBar(){
     menubar->addMenu(bandMenu);
     bandSave = bandMenu->addAction("Save");
     bandOpen = bandMenu->addAction("Open");
+    freeze = bandMenu->addAction("freeze");
 
     //update the status of actions below "File" menu
     connect(fileMenu, &QMenu::aboutToShow, this, &MainWindow::updateAction);
@@ -85,6 +87,7 @@ void MainWindow::configureMenuBar(){
     connect(bandMenu, &QMenu::aboutToShow, this, &MainWindow::updateAction);
     connect(bandSave, &QAction::triggered, this, &MainWindow::saveBand);
     connect(bandOpen, &QAction::triggered, this, &MainWindow::openBand);
+    connect(freeze, &QAction::triggered, this, &MainWindow::freezeBand);
 }
 void MainWindow::saveOrNot(){
     if(ctrl->hasTee()){
@@ -413,5 +416,20 @@ void MainWindow::saveIni(){
         outFile.open(fileName.toLatin1().data());
         outFile<<sb.GetString();
         outFile.close();
+    }
+}
+
+void MainWindow::freezeBand(){
+    auto children = ctrl->getData()->getNodeRoot()->childrenPtrVec();
+    for(auto c:children){
+        DataObjectPtr objPtr = c->getData();
+        QString name = objPtr->getId();
+        if(name.contains("band")){
+            QString ind = name.split('d').at(1);
+            QString newName = QString("Band")+ind;
+            //const char* newName = (QString("Band")+ind).toLatin1().data();
+            auto bandPtr = std::dynamic_pointer_cast<Band>(objPtr);
+            bandPtr->setId(newName.toLatin1().data());
+        }
     }
 }

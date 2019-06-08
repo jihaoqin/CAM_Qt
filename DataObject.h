@@ -42,7 +42,6 @@ protected:
     BoundingBox box;
     std::string type;
     glm::mat4 m_animateT;
-private:
     std::string id;
 };
 
