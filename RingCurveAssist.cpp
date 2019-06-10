@@ -66,7 +66,7 @@ tuple<vector<CPPara>, EdgePtr, float> RingCurveAssist::rungeKutta(vector<float> 
     float spanL = xspan.at(1)-xspan.at(0);
     int sign = spanL>0?1:-1;
     //间隔
-    float h = sign*1;
+    float h = sign*0.1;
     float x_last = xspan.at(0);
     CPPara y_last{p0.u, p0.v, p0.uAng};
     while(length < allLength){
