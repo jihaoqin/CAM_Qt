@@ -292,9 +292,6 @@ void SimulationTab::calAxis4Data(){
     auto& axiss = connector->getData()->getAxissIni();
     vector<glm::mat4> rotxs;
     for(auto i = 0; i < hangPtr->coupleSum(); i++){
-        if(i == 123){
-            int a = 0;
-        }
         AxisMoveData moveData(4);
         glm::mat4 sendT = hangPtr->sendT(i);
         Pos sendPos = hangPtr->sendPos(i);
@@ -308,14 +305,17 @@ void SimulationTab::calAxis4Data(){
         float tempFlip = atan(-1*tempY0/tempY1);
 
         Dir ny = -1.0f*tempNewSendT_Y;
-        float some = glm::dot(Dir{0,0,1}, ny);
-        float some1 = (float) pow(glm::length(ny),2);
-        auto some2 = some/some1*ny;
         Dir dir = Dir{0,0,1}-glm::dot(Dir{0,0,1}, ny)/(float)pow(glm::length(ny),2)*ny;
         dir = glm::normalize(dir);
         Pos tempNewSendT_Pos = tempNewSendT[3];
         Pos head = tempNewSendT_Pos + axiss.getHeadR()*dir;
         float theta = tempTheta + atan2(head.y, head.z);
+        /*
+        //begin 屏蔽
+        head = tempNewSendT_Pos;
+        theta = tempTheta;
+        //end 屏蔽
+        */
         glm::mat4 rotx = utility::rotx(theta);
         glm::mat4 newSendT = rotx*sendT;
         Dir newSendT_Y = newSendT[1];
