@@ -53,7 +53,11 @@ concept Allocator {
 */
 
 
+<<<<<<< HEAD
 /*! \def RAPIDJSON_ALLOCATOR_DEFAULT_CHUNK_CAPACITY
+=======
+/*! \def RAPIDJSON_ALLOCATOR_DEFUALT_CHUNK_CAPACITY
+>>>>>>> aafc70dc613edd22b0225057577a4da4bd2b00cc
     \ingroup RAPIDJSON_CONFIG
     \brief User-defined kDefaultChunkCapacity definition.
 
