@@ -1,9 +1,9 @@
 #include "utility.h"
 #include <iostream>
 #include <sstream>
-#include "find_polynomial_roots_jenkins_traub.h"
 #include <memory>
 #include <set>
+#include <Eigen/Dense>
 using namespace std;
 glm::mat4 utility::createMat(glm::vec3 pos, glm::vec3 zDir, glm::vec3 upDir)
 {
@@ -229,7 +229,7 @@ std::vector<std::complex<double>> utility::findRoot(vector<double> c){
     }
     Eigen::VectorXd real(c.size());
     Eigen::VectorXd imag(c.size());
-    rpoly_plus_plus::FindPolynomialRootsJenkinsTraub(coe, &real, &imag);
+    //rpoly_plus_plus::FindPolynomialRootsJenkinsTraub(coe, &real, &imag);
     std::vector<std::complex<double>> result;
     for(int i = 0; i<c.size()-1; i++){
         std::complex<double> r;

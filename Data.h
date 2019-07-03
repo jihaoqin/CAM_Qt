@@ -2,7 +2,6 @@
 #include "ModelReader.h"
 #include "config.h"
 #include <vector>
-#include "Line.h"
 #include <memory>
 #include "Camera2.h"
 #include "Tee.h"
