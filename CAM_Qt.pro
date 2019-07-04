@@ -33,7 +33,6 @@ SOURCES += \
     Camera2.cpp \
     PerspectiveMat.cpp \
     utility.cpp \
-    Line.cpp \
     Data.cpp \
     Controller.cpp \
     GLMemory.cpp \
@@ -56,11 +55,8 @@ SOURCES += \
     IdGenerator.cpp \
     DataObject.cpp \
     Node.cpp \
-    find_polynomial_roots_jenkins_traub.cpp \
-    polynomial.cpp \
     RingAssist.cpp \
     numpy.cpp \
-    Plane.cpp \
     HalfPoint.cpp \
     TCurve.cpp \
     PosDir.cpp \
@@ -68,7 +64,6 @@ SOURCES += \
     RingCurveAssist.cpp \
     Curve.cpp \
     RingCurve.cpp \
-    CurveController.cpp \
     Edge.cpp \
     TriEdgePlane.cpp \
     TriEdgePlaneAssist.cpp \
@@ -109,8 +104,7 @@ SOURCES += \
     EnvelopData.cpp \
     EnvelopIniDialog.cpp \
     TeePara.cpp \
-    ModelReader.cpp \
-    Model.cpp
+    ModelReader.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -121,7 +115,6 @@ HEADERS += \
     PerspectiveMat.h \
     utility.h \
     config.h \
-    Line.h \
     Data.h \
     Controller.h \
     GLMemory.h \
@@ -130,8 +123,6 @@ HEADERS += \
     LineLight.h \
     Color.h \
     Tee.h \
-    serialization.h \
-    test_only.h \
     TeeParameterDialog.h \
     DataState.h \
     Cylinder.h \
@@ -148,10 +139,7 @@ HEADERS += \
     IdGenerator.h \
     DataObject.h \
     Node.h \
-    find_polynomial_roots_jenkins_traub.h \
-    polynomial.h \
     RingAssist.h \
-    Plane.h \
     HalfPoint.h \
     TCurve.h \
     PosDir.h \
@@ -159,7 +147,6 @@ HEADERS += \
     RingCurveAssist.h \
     Curve.h \
     RingCurve.h \
-    CurveController.h \
     Edge.h \
     TriEdgePlane.h \
     TriEdgePlaneAssist.h \
@@ -201,8 +188,7 @@ HEADERS += \
     EnvelopData.h \
     EnvelopIniDialog.h \
     TeePara.h \
-    ModelReader.h \
-    Model.h
+    ModelReader.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt

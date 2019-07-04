@@ -52,7 +52,6 @@ public:
     void genLeftCurve();
     void genUpCurve();
     void genRightCurve();
-    void closePath();
     void genCylinderCurve(QString);
     void setViewPortRatio(int w, int h);
     void processTranslation(QPoint mPos, QPoint mLastPos, glm::vec4 viewPort);

@@ -785,56 +785,6 @@ void Controller::genRightCurve(){
     genCylinderCurve("right");
 }
 
-void Controller::closePath(){
-    TeePtr tee = dynamic_pointer_cast<Tee>(data->root->findObjectId("tee"));
-    vector<LeftCylinderAssist> assistVec;
-    assistVec.push_back(LeftCylinderAssist(tee, "left"));
-    assistVec.push_back(LeftCylinderAssist(tee, "up"));
-    assistVec.push_back(LeftCylinderAssist(tee, "right"));
-    int unLinkedNum = 0;
-    int ind = 0;
-    for(auto& leftAssist:assistVec){
-        EndPtrVec couplingEndVec;
-        auto children = data->root->childrenPtrVec();
-        for(auto c:children){
-            DataObjectPtr objPtr = c->getData();
-            if(QString(objPtr->getId()).contains("band")){
-                BandPtr band = dynamic_pointer_cast<Band>(objPtr);
-                BandEndPtr bandEnd = band->bandEnd();
-                for(auto end:bandEnd->ends){
-                    if(leftAssist.isReturn(end)){
-                        couplingEndVec.push_back(end);
-                    }
-                }
-            }
-        }
-        for(auto e:couplingEndVec){
-            if(e->isCoupled()){
-                continue;
-            }
-            auto dirEndVec = leftAssist.filterDir(e, couplingEndVec);
-            auto cycleEndVec = leftAssist.filterCycle(e, dirEndVec, allEnds());
-            if(cycleEndVec.size() == 0){
-                ++unLinkedNum;
-                continue;
-            }
-            auto innerFirstEndVec = leftAssist.filterInnerFirst(cycleEndVec, allEnds());
-            auto nearEnd = leftAssist.nearEnd(e, innerFirstEndVec);
-            auto tuple1 = leftAssist.genCircleCurve(e, nearEnd);
-            auto& pds = get<0>(tuple1);
-            auto& strs = get<1>(tuple1);
-            auto band = make_shared<GeneralBand>(pds, strs, data->idGenerator.getBandId(), tee, data->bandWidth());
-            QOpenGLContext* gl = widget->getGLContext();
-            band->setCouple(e);
-            band->setCouple(nearEnd);
-            band->bindGL(gl);
-            data->addBand(band);
-        }
-        ++ind;
-    }
-    assert(unLinkedNum<2);
-}
-
 
 void Controller::allBindGL(){
     auto children = data->root->childrenPtrVec();

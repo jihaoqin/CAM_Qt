@@ -6,7 +6,6 @@
 #include <QTextEdit>
 #include "GLProgram.h"
 #include <memory>
-#include "CurveController.h"
 #include "ObjTreeWidget.h"
 #include "FromPipeCurveTab.h"
 
