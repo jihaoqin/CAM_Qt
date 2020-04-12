@@ -9,6 +9,7 @@
 ![几何元素间的继承关系](https://github.com/jihaoqin/CAM_Qt/blob/master/docs/%E7%BB%A7%E6%89%BF%E5%85%B3%E7%B3%BB.png)
 - 通过存储面片间的拓扑关系，实现跨面片的轨迹生成
 - 通过图形界面对缠绕机形式进行配置
+![](https://github.com/jihaoqin/CAM_Qt/blob/master/docs/%E6%9C%BA%E5%BA%8A%E9%85%8D%E7%BD%AE.png)
 - 避障功能，能够检测执行器和模具、纤维和模具之间的碰撞关系，并给出避障算法
 - 根据缠绕机形式生成G代码
 - 针对西门子840Dsl控制的机器人缠绕系统生成运动代码
