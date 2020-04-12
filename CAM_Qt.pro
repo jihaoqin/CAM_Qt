@@ -104,7 +104,8 @@ SOURCES += \
     EnvelopData.cpp \
     EnvelopIniDialog.cpp \
     TeePara.cpp \
-    ModelReader.cpp
+    ModelReader.cpp \
+    Model.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -188,7 +189,8 @@ HEADERS += \
     EnvelopData.h \
     EnvelopIniDialog.h \
     TeePara.h \
-    ModelReader.h
+    ModelReader.h \
+    Model.h
 include ($$PWD/3rdparty/3rdparty.pri)
 
 LIBS += -L$$PWD/3rdparty/libs/ -lassimp-vc140-mt
@@ -208,17 +210,19 @@ DISTFILES += \
 
 
 # BOOST lib configuration
-DEFINES += LAB
-if(contains(DEFINES, ROOM)){
-        BOOST_ROOT = F:\boost_1_69_0
-}else{
-        BOOST_ROOT = E:\boost_1_69_0
-}
 
-INCLUDEPATH += $$BOOST_ROOT
-LIBS += -L$$BOOST_ROOT\stage\lib -llibboost_serialization-vc141-mt-gd-x32-1_69 \
-        -L$$BOOST_ROOT\stage\lib -llibboost_wserialization-vc141-mt-gd-x32-1_69
-DEPENDPATH += $$BOOST_ROOT\stage
+# DEFINES +=ROOM
+# if(contains(DEFINES, ROOM)){
+#        BOOST_ROOT = F:\boost_1_69_0
+# }else{
+#         BOOST_ROOT = E:\boost_1_69_0
+# }
+
+# INCLUDEPATH += $$BOOST_ROOT
+# DEFINES += LAB
+# LIBS += -L$$BOOST_ROOT\stage\lib -llibboost_serialization-vc141-mt-gd-x32-1_69 \
+#         -L$$BOOST_ROOT\stage\lib -llibboost_wserialization-vc141-mt-gd-x32-1_69
+# DEPENDPATH += $$BOOST_ROOT\stage
 
 RESOURCES += \
     res.qrc

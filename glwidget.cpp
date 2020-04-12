@@ -1,4 +1,4 @@
-#include "glwidget.h"
+﻿#include "glwidget.h"
 #include "utility.h"
 #include <QDebug>
 #include <QMouseEvent>

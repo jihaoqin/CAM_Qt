@@ -1,4 +1,4 @@
-#include "Data.h"
+﻿#include "Data.h"
 #include <fstream>
 #include "Cylinder.h"
 #include "Ring.h"
@@ -8,8 +8,9 @@
 #include "Band.h"
 #include "GuiConnector.h"
 #include "HangingBandSet.h"
-#include "Model.h"
 #include <QMutexLocker>
+#include "Model.h"
+
 using std::shared_ptr;
 using std::make_shared;
 Data::Data():box(), state(), idGenerator(), root(nullptr), connector(nullptr)

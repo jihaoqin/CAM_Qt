@@ -1,4 +1,4 @@
-#include "SimulationTab.h"
+﻿#include "SimulationTab.h"
 #include <QPushButton>
 #include <QSlider>
 #include <QVBoxLayout>
@@ -16,8 +16,8 @@
 #include <fstream>
 #include "HangingBandSet.h"
 #include "Node.h"
-#include "Model.h"
 #include <QLineEdit>
+#include "Model.h"
 
 SimulationTab::SimulationTab(TabBackground* back, GuiConnector* con, QWidget* parent)
     :QWidget(parent), backWidget(back), connector(con)

@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "Data.h"
 #include "Controller.h"
 #include <QApplication>
@@ -17,8 +17,8 @@ int main(int argc, char *argv[])
     data->bindConnector(w.connector);
     w.show();
     //begin 石膏三通管模型
-    ctrl.addTee(90, 69, 7.5, 7.5);
-    //ctrl.addTee(90, 52.5, 7.5, 7.5);
+    //ctrl.addTee(90, 69, 7.5, 7.5);
+    ctrl.addTee(90, 52.5, 7.5, 7.5);
     //ctrl.addTee(80, 50, 7.5, 7.5);//主管一段-5，支管-12.5
     //ctrl.addTee(65, 40, 7.5, 7.5);//
     //ctrl.addTee(70, 30, 7.5, 7.5);//
