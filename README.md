@@ -1,6 +1,5 @@
 # CAM_Qt
 这是一个基于Qt开发的用于CAD/CAM软件，用于三通管纤维缠绕的轨迹生成。
-项目的演示视频，见  https://www.bilibili.com/video/BV1LE411c7n4/
 
 
 ## 项目亮点
